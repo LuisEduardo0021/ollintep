@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollintep Software - Soluciones Tecnológicas de Vanguardia</title>
+    <meta name="description" content="Ollintep Software desarrolla software a medida, brinda consultoría IT y acompaña procesos de transformación digital para empresas que buscan innovar.">
+    <!-- Favicon (Opcional, añade un icono tech aquí) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Iconos (FontAwesome para los iconos de las tarjetas) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Fondo líquido (blobs difuminados, fijos detrás de todo el contenido) -->
+    <div class="liquid-bg" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+    </div>
+
+    <!-- Navegación Principal -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="#inicio" class="logo">
+                <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark">
+                <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">Software</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#inicio" class="active">INICIO</a></li>
+                <li><a href="#servicios">SERVICIOS</a></li>
+                <li><a href="#nosotros">NOSOTROS</a></li>
+                <li><a href="#contacto">CONTACTO</a></li>
+                <li><a href="#proyectos">PROYECTOS</a></li>
+                <li><a href="#blog">BLOG</a></li>
+                <li><i class="fas fa-search search-icon"></i></li>
+            </ul>
+            <!-- Hamburguesa para móvil -->
+            <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Sección Hero (Principal) -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay">
+            <!-- Fondo de red de nodos (simulado con CSS/BG) -->
+            <div class="network-globe"></div>
+        </div>
+        <div class="container hero-content">
+            <h1>SOLUCIONES TECNOLÓGICAS DE VANGUARDIA PARA TU EMPRESA</h1>
+            <p>Innovación, Eficiencia, y Resultados Digitales</p>
+            <div class="hero-btns">
+                <a href="#servicios" class="btn btn-primary">EXPLORAR SERVICIOS</a>
+                <a href="#contacto" class="btn btn-secondary">CONSULTA GRATUITA</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Servicios (Tarjetas Tech) -->
+    <section id="servicios" class="services container">
+        <h2 class="section-title">NUESTROS SERVICIOS</h2>
+        <div class="services-grid">
+
+            <!-- Tarjeta 1: Software -->
+            <div class="service-card">
+                <div class="card-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>DESARROLLO DE SOFTWARE</h3>
+                <p>Construimos aplicaciones web y móviles a medida, con arquitecturas escalables pensadas para crecer junto con tu negocio.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Tarjeta 2: Consultoría -->
+            <div class="service-card active-card"> <!-- Resaltada -->
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>CONSULTORÍA IT</h3>
+                <p>Analizamos tu infraestructura y procesos para recomendar la tecnología correcta, evitando sobrecostos y decisiones improvisadas.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Tarjeta 3: Transformación -->
+            <div class="service-card">
+                <div class="card-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>TRANSFORMACIÓN DIGITAL</h3>
+                <p>Automatizamos flujos de trabajo y migramos operaciones críticas a la nube para que tu equipo trabaje más rápido y con menos fricción.</p>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Nosotros -->
+    <section id="nosotros" class="about container">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2 class="section-title section-title-left">SOBRE OLLINTEP</h2>
+                <p>En OLLINTEP acompañamos a empresas de todos los tamaños a resolver problemas reales con tecnología: desde automatizar un proceso manual hasta construir la plataforma que sostiene toda una operación.</p>
+                <p>Nuestro equipo combina ingeniería de software, estrategia IT y diseño de producto para entregar soluciones que se usan de verdad, no solo que se entregan.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <span class="stat-number">+8</span>
+                    <span class="stat-label">Años de experiencia</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">+40</span>
+                    <span class="stat-label">Proyectos entregados</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">+15</span>
+                    <span class="stat-label">Clientes activos</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Satisfacción</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Últimas Soluciones (Tech Grid) -->
+    <section id="proyectos" class="latest-solutions container">
+        <h2 class="section-title">NUESTRAS ÚLTIMAS SOLUCIONES</h2>
+        <div class="tech-grid">
+            <div class="tech-panel panel-1">
+                <div class="panel-content">
+                    <h3>Plataforma de Gestión Empresarial</h3>
+                    <p>ERP a medida para control de inventario, ventas y finanzas en tiempo real.</p>
+                </div>
+            </div>
+            <div class="tech-panel panel-2">
+                <div class="panel-content">
+                    <h3>App de Logística Inteligente</h3>
+                    <p>Ruteo y seguimiento de entregas con optimización automática de rutas.</p>
+                </div>
+            </div>
+            <div class="tech-panel panel-3">
+                <div class="panel-content">
+                    <h3>Dashboard de Analítica</h3>
+                    <p>Visualización de métricas de negocio en tiempo real para toma de decisiones.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Blog -->
+    <section id="blog" class="blog container">
+        <h2 class="section-title">DESDE EL BLOG</h2>
+        <div class="blog-grid">
+            <article class="blog-card">
+                <span class="blog-date">12 Ago 2026</span>
+                <h3>5 Tendencias en Transformación Digital para 2026</h3>
+                <p>Automatización con IA, integración de datos en tiempo real y más: lo que están priorizando las empresas que innovan.</p>
+            </article>
+            <article class="blog-card">
+                <span class="blog-date">28 Jul 2026</span>
+                <h3>Cómo Elegir la Arquitectura Correcta para tu Software</h3>
+                <p>Monolito, microservicios o serverless: una guía práctica para decidir según el tamaño y etapa de tu proyecto.</p>
+            </article>
+            <article class="blog-card">
+                <span class="blog-date">15 Jul 2026</span>
+                <h3>Ciberseguridad: Lo que Toda PYME Debe Saber</h3>
+                <p>Los riesgos más comunes y las medidas de bajo costo que reducen la mayor parte de la exposición.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact container">
+        <h2 class="section-title">HABLEMOS DE TU PROYECTO</h2>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <p>Cuéntanos qué necesitas y te contactamos en menos de 24 horas hábiles.</p>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contacto@ollintep.com</li>
+                    <li><i class="fas fa-phone"></i> +52 55 0000 0000</li>
+                    <li><i class="fas fa-location-dot"></i> Ciudad de México, México</li>
+                </ul>
+                <div class="social-links">
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary form-submit">ENVIAR MENSAJE</button>
+                <p class="form-success" id="form-success" role="status">¡Gracias! Tu mensaje fue enviado, te responderemos pronto.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-top">
+                <div class="logo">
+                    <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark">
+                    <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">Software</span></span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#proyectos">Proyectos</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón volver arriba -->
+    <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="script/scripts.js"></script>
+</body>
+</html>
