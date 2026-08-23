@@ -872,4 +872,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     .footer-top { flex-direction: column; text-align: center; }
 
     .back-to-top { right: 16px; bottom: 16px; }
+
+    .logo-word {
+        font-size: 1rem;
+        white-space: nowrap;
+    }
 }
