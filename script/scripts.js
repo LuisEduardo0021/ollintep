@@ -56,18 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentYear.textContent = new Date().getFullYear();
     }
 
-    // --- Formulario de contacto ---
-    const contactForm = document.querySelector('#contact-form');
-    const formSuccess = document.querySelector('#form-success');
-
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            contactForm.reset();
-            formSuccess.classList.add('visible');
-        });
-    }
-
     // --- Botón volver arriba ---
     const backToTop = document.querySelector('#back-to-top');
     window.addEventListener('scroll', () => {
@@ -79,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Animación de aparición al hacer scroll ---
     const revealTargets = document.querySelectorAll(
-        '.service-card, .stat, .tech-panel, .blog-card, .contact-form, .contact-info, .section-title, .plan-card'
+        '.service-card, .stat, .tech-panel, .blog-card, .contact-info, .section-title, .plan-card, .video-card'
     );
     revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -209,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canHover) {
         // Brillo que sigue al cursor sobre las tarjetas de vidrio
         const spotlightEls = document.querySelectorAll(
-            '.service-card, .stat, .tech-panel, .blog-card, .contact-form'
+            '.service-card, .stat, .tech-panel, .blog-card, .video-card'
         );
         spotlightEls.forEach(el => {
             el.addEventListener('mousemove', (e) => {

@@ -87,11 +87,11 @@
 .stat,
 .tech-panel,
 .blog-card,
-.contact-form,
 .social-links a,
 .plan-card,
 .orbit-frame,
-.platform-frame {
+.platform-frame,
+.video-card {
     background: var(--surface);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -268,7 +268,7 @@
 
     .panel-3 { background-image: radial-gradient(circle at 40% 70%, rgba(20, 20, 20, 0.05), transparent 60%); }
 
-    .orbit-frame, .platform-frame { background: rgba(255, 255, 255, 0.55); }
+    .orbit-frame, .platform-frame, .video-card { background: rgba(255, 255, 255, 0.55); }
 }
 
 @media (prefers-color-scheme: light) and (max-width: 768px) {
