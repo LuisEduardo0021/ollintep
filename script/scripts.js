@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Animación de aparición al hacer scroll ---
     const revealTargets = document.querySelectorAll(
-        '.service-card, .stat, .tech-panel, .blog-card, .contact-form, .contact-info, .section-title'
+        '.service-card, .stat, .tech-panel, .blog-card, .contact-form, .contact-info, .section-title, .plan-card'
     );
     revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -94,9 +94,117 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealTargets.forEach(el => revealObserver.observe(el));
 
+    // --- Conteo animado de las estadísticas al entrar en pantalla ---
+    const statNumbers = document.querySelectorAll('.stat-number');
+    const prefersReducedMotionForCount = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (statNumbers.length && !prefersReducedMotionForCount) {
+        const parseStat = (text) => {
+            const match = text.trim().match(/^([+-]?)(\d+(?:\.\d+)?)(.*)$/);
+            if (!match) return null;
+            const [, prefix, numberPart, suffix] = match;
+            const decimals = (numberPart.split('.')[1] || '').length;
+            return { prefix, value: parseFloat(numberPart), decimals, suffix };
+        };
+
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                countObserver.unobserve(el);
+
+                const parsed = parseStat(el.textContent);
+                if (!parsed) return;
+
+                const duration = 1200;
+                const start = performance.now();
+
+                const step = (now) => {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = parsed.value * eased;
+                    el.textContent = `${parsed.prefix}${current.toFixed(parsed.decimals)}${parsed.suffix}`;
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            });
+        }, { threshold: 0.5 });
+
+        statNumbers.forEach(el => countObserver.observe(el));
+    }
+
     // --- Interacciones con el mouse (solo en dispositivos con puntero fino) ---
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // --- Sistema orbital: descripción del elemento que está a la derecha ---
+    const orbitRing = document.querySelector('#orbit-ring');
+    const orbitCaption = document.querySelector('#orbit-caption');
+
+    if (orbitRing && orbitCaption) {
+        const ORBIT_DURATION_MS = 26000; // debe coincidir con la duración de @keyframes orbit-spin en styles.css
+        const START_ANGLES = [0, 72, 144, 216, 288]; // grados desde arriba, en sentido horario, uno por .orbit-item-N
+        const items = Array.from(orbitRing.querySelectorAll('.orbit-item'));
+        const captionTitle = orbitCaption.querySelector('.orbit-caption-title');
+        const captionDesc = orbitCaption.querySelector('.orbit-caption-desc');
+        const orbitListItems = document.querySelectorAll('#orbit-list li');
+
+        const angularDistance = (a, b) => {
+            const diff = Math.abs(a - b) % 360;
+            return diff > 180 ? 360 - diff : diff;
+        };
+
+        const closestToRightIndex = (rotationDeg) => {
+            let bestIndex = 0;
+            let bestDistance = Infinity;
+            START_ANGLES.forEach((start, i) => {
+                const distance = angularDistance((start + rotationDeg) % 360, 90);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestIndex = i;
+                }
+            });
+            return bestIndex;
+        };
+
+        const setActiveItem = (index, immediate) => {
+            items.forEach((item, i) => item.classList.toggle('is-active', i === index));
+            orbitListItems.forEach((li, i) => li.classList.toggle('is-active', i === index));
+            const active = items[index];
+
+            const applyText = () => {
+                captionTitle.textContent = active.dataset.title;
+                captionDesc.textContent = active.dataset.desc;
+                orbitCaption.classList.add('is-visible');
+            };
+
+            if (immediate) {
+                applyText();
+                return;
+            }
+            orbitCaption.classList.remove('is-visible');
+            window.setTimeout(applyText, 180);
+        };
+
+        let lastIndex = null;
+        const startTime = performance.now();
+
+        const tick = () => {
+            const rotationDeg = prefersReducedMotion
+                ? 0
+                : (((performance.now() - startTime) / ORBIT_DURATION_MS) * 360) % 360;
+            const index = closestToRightIndex(rotationDeg);
+            if (index !== lastIndex) {
+                setActiveItem(index, lastIndex === null);
+                lastIndex = index;
+            }
+        };
+
+        tick();
+        if (!prefersReducedMotion) {
+            window.setInterval(tick, 200);
+        }
+    }
 
     if (canHover) {
         // Brillo que sigue al cursor sobre las tarjetas de vidrio

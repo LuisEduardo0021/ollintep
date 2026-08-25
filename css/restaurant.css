@@ -1,33 +1,276 @@
-/* --- Paleta cálida "Ollintep for Restaurants" (tomada del gradiente del ícono) --- */
+/* --- Paleta elegante "Ollintep for Restaurants" (azul de marca + acento dorado) --- */
 :root {
-    --accent-blue: #ED4336;         /* Rojo cálido, reemplaza el azul como acento principal */
-    --accent-blue-light: #FF8A65;   /* Coral claro para texto/acentos */
-    --accent-cyan: #FABB14;         /* Dorado, reemplaza el cian en brillos y hovers */
+    --accent-blue: #2F5FD1;           /* Azul de marca, sobrio */
+    --accent-blue-light: #7FA0E8;     /* Azul claro para texto/acentos */
+    --accent-cyan: #C9A227;           /* Dorado, reemplaza el cian neón en brillos y hovers */
+    --accent-glow-rgb: 201, 162, 39;  /* Mismo dorado, en formato r,g,b */
+    --accent-text: #C9A227;           /* Dorado para texto; se oscurece en modo claro por contraste */
+
+    /* Superficies sólidas en vez de vidrio translúcido */
+    --surface: #12151d;
+    --surface-hover: #171b26;
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --surface-border-strong: rgba(201, 162, 39, 0.5);
+    --shadow-elegant: 0 14px 34px rgba(0, 0, 0, 0.35);
+
+    /* Esquinas más cerradas, look más corporativo */
+    --radius-lg: 14px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+
+    color-scheme: dark light;
 }
 
-.blob-1 { background: radial-gradient(circle, #547CC1 0%, transparent 70%); }
-.blob-2 { background: radial-gradient(circle, #ED4336 0%, transparent 70%); }
-.blob-3 { background: radial-gradient(circle, #31A854 0%, transparent 70%); }
+/* --- Fondo: viñeta estática en vez de blobs líquidos --- */
+.liquid-bg {
+    background: radial-gradient(ellipse 900px 600px at 50% -10%, #17203a 0%, var(--bg-base) 65%);
+}
+
+.blob { display: none; }
 
 .network-globe {
     background-image:
-        linear-gradient(rgba(237, 67, 54, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(237, 67, 54, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(47, 95, 209, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47, 95, 209, 0.05) 1px, transparent 1px);
+}
+
+/* --- Navegación: barra sólida, sin desenfoque ni brillo neón --- */
+.header {
+    background: rgba(10, 12, 17, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-elegant);
+}
+
+.nav-links a::after { box-shadow: none; }
+.nav-links a:hover, .nav-links a.active { text-shadow: none; }
+
+@media (max-width: 768px) {
+    .nav-links {
+        background: rgba(10, 12, 17, 0.97);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: 1px solid var(--surface-border);
+        box-shadow: var(--shadow-elegant);
+    }
+}
+
+/* --- Botones: sólidos, sin resplandor --- */
+.btn { border-radius: 8px; }
+
+.btn-primary {
+    background: var(--accent-cyan);
+    color: #14171f;
+    box-shadow: var(--shadow-elegant);
+    border: none;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* --- Tarjetas: superficies sólidas en vez de vidrio --- */
+.service-card,
+.stat,
+.tech-panel,
+.blog-card,
+.contact-form,
+.social-links a,
+.plan-card,
+.orbit-frame,
+.platform-frame {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-elegant);
+}
+
+.service-card.active-card, .service-card:hover {
+    border-color: var(--surface-border-strong);
+    background: var(--surface-hover);
+}
+
+.tech-panel:hover { border-color: var(--surface-border-strong); }
+
+.stat:hover {
+    border-color: var(--surface-border-strong);
+    background: var(--surface-hover);
+}
+
+.blog-card:hover {
+    border-color: var(--surface-border-strong);
+    background: var(--surface-hover);
+}
+
+.social-links a:hover {
+    background: var(--surface-hover);
+    border-color: var(--surface-border-strong);
 }
 
 .card-icon {
-    background: linear-gradient(135deg, rgba(237, 67, 54, 0.25), rgba(250, 187, 20, 0.18));
+    background: linear-gradient(135deg, rgba(47, 95, 209, 0.22), rgba(201, 162, 39, 0.16));
 }
 
 .service-card:hover .card-icon {
-    box-shadow: 0 0 24px rgba(250, 187, 20, 0.4);
+    box-shadow: 0 8px 20px rgba(201, 162, 39, 0.18);
 }
 
-.panel-1 { background-image: radial-gradient(circle at 30% 20%, rgba(84, 124, 193, 0.25), transparent 60%); }
-.panel-2 { background-image: radial-gradient(circle at 70% 30%, rgba(237, 67, 54, 0.25), transparent 60%); }
-.panel-3 { background-image: radial-gradient(circle at 40% 70%, rgba(49, 168, 84, 0.25), transparent 60%); }
+.card-glow { display: none; }
+
+.panel-1 { background-image: radial-gradient(circle at 30% 20%, rgba(47, 95, 209, 0.18), transparent 60%); }
+.panel-2 { background-image: radial-gradient(circle at 70% 30%, rgba(201, 162, 39, 0.16), transparent 60%); }
+.panel-3 { background-image: radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.05), transparent 60%); }
+
+/* --- Formulario: foco nítido, sin resplandor difuso --- */
+.form-group input,
+.form-group textarea {
+    background-color: #0c0e13;
+    border-color: var(--surface-border);
+}
 
 .form-group input:focus,
 .form-group textarea:focus {
-    box-shadow: 0 0 12px rgba(250, 187, 20, 0.25);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+/* --- Footer: sólido --- */
+.footer {
+    background: rgba(8, 10, 14, 0.92);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: 1px solid var(--surface-border);
+}
+
+/* --- Botón volver arriba --- */
+.back-to-top {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-elegant);
+}
+
+.back-to-top:hover { border-color: var(--surface-border-strong); }
+
+/* --- Visual orbital: superficies sólidas y respiración suave en vez de pulso neón --- */
+.orbit-track { border-color: var(--surface-border); }
+
+.orbit-core {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    box-shadow: var(--shadow-elegant);
+    animation: orbit-breathe 4s ease-in-out infinite;
+}
+
+@keyframes orbit-breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.045); }
+}
+
+.orbit-item {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-elegant);
+}
+
+.orbit-item:hover { border-color: var(--surface-border-strong); }
+
+.orbit-item.is-active {
+    background: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    color: #14171f;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.orbit-list li.is-active {
+    background: var(--accent-cyan);
+    color: #14171f;
+    border-color: var(--accent-cyan);
+}
+
+/* --- Precios --- */
+.plan-featured {
+    border-color: var(--accent-cyan);
+    background: var(--surface-hover);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+}
+
+.plan-card:hover { transform: translateY(-5px); border-color: var(--surface-border-strong); }
+.plan-featured:hover { border-color: var(--accent-cyan); }
+
+.plan-badge {
+    background: var(--accent-cyan);
+    color: #14171f;
+}
+
+.plan-featured .plan-price-amount { color: var(--accent-text); }
+
+.plan-features li i { color: var(--accent-text); }
+
+/* --- Tema claro --- */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-base: #f7f5f0;
+        --text-main: #1a1d24;
+        --text-muted: #5c6270;
+        --accent-blue-light: #1d4ed8;
+        --accent-text: #8a6914;
+
+        --surface: #ffffff;
+        --surface-hover: #f4f1ea;
+        --surface-border: rgba(20, 20, 20, 0.08);
+        --surface-border-strong: rgba(201, 162, 39, 0.55);
+        --shadow-elegant: 0 14px 30px rgba(20, 20, 20, 0.08);
+    }
+
+    .liquid-bg {
+        background: radial-gradient(ellipse 900px 600px at 50% -10%, #fdf6e3 0%, var(--bg-base) 65%);
+    }
+
+    .header {
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 10px 26px rgba(20, 20, 20, 0.08);
+    }
+
+    .footer { background: rgba(250, 248, 244, 0.92); }
+
+    .btn-secondary {
+        border-color: rgba(20, 20, 20, 0.15);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(20, 20, 20, 0.04);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        background-color: #ffffff;
+    }
+
+    .panel-3 { background-image: radial-gradient(circle at 40% 70%, rgba(20, 20, 20, 0.05), transparent 60%); }
+
+    .orbit-frame, .platform-frame { background: rgba(255, 255, 255, 0.55); }
+}
+
+@media (prefers-color-scheme: light) and (max-width: 768px) {
+    .nav-links { background: rgba(255, 255, 255, 0.97); }
 }
