@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="../css/restaurant.css">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="../resources/lottie/ollintep-logo-data.js"></script>
 </head>
 <body>
 
@@ -50,11 +53,27 @@
     </header>
 
     <!-- Sección Hero -->
-    <section id="inicio" class="hero">
-        <div class="hero-overlay">
-            <div class="network-globe"></div>
+    <section id="inicio" class="hero-scroll">
+        <div class="hero hero-pin">
+            <div class="hero-overlay">
+                <div class="network-globe"></div>
+            </div>
+            <div class="hero-visual" id="hero-visual">
+                <div class="hero-visual-glow" aria-hidden="true"></div>
+                <div class="hero-visual-ring hero-visual-ring-1" aria-hidden="true"></div>
+                <div class="hero-visual-ring hero-visual-ring-2" aria-hidden="true"></div>
+                <div class="hero-lottie" id="hero-lottie" aria-hidden="true"></div>
+                <div class="hero-chip hero-chip-1" aria-hidden="true"><i class="fas fa-cash-register"></i><span>POS en la nube</span></div>
+                <div class="hero-chip hero-chip-2" aria-hidden="true"><i class="fas fa-motorcycle"></i><span>Pedidos y delivery</span></div>
+                <div class="hero-chip hero-chip-3" aria-hidden="true"><i class="fas fa-calendar-check"></i><span>Reservas</span></div>
+            </div>
+            <div class="hero-scroll-hint" id="hero-scroll-hint" aria-hidden="true"><span></span></div>
         </div>
-        <div class="container hero-content">
+    </section>
+
+    <!-- Texto del Hero: aparece al terminar de hacer scroll sobre la animación -->
+    <section class="hero-text">
+        <div class="container hero-content" id="hero-content">
             <h1>SOFTWARE QUE HACE CRECER TU RESTAURANTE</h1>
             <p>Punto de venta, pedidos, mesas y cocina, todo conectado en un solo lugar</p>
             <div class="hero-btns">
@@ -352,5 +371,95 @@
 
     <!-- Scripts -->
     <script src="../script/scripts.js"></script>
+    <script>
+        (function () {
+            var lottieContainer = document.getElementById('hero-lottie');
+            var heroSection = document.getElementById('inicio');
+            var heroVisual = document.getElementById('hero-visual');
+            var heroTextEl = document.getElementById('hero-content');
+            var scrollHint = document.getElementById('hero-scroll-hint');
+            var header = document.querySelector('.header');
+
+            // El bloque de texto se revela solo cuando entra en pantalla,
+            // es decir, justo cuando termina el scroll fijado de la animación.
+            if (heroTextEl) {
+                if ('IntersectionObserver' in window) {
+                    var textObserver = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('is-revealed');
+                                textObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.3 });
+                    textObserver.observe(heroTextEl);
+                } else {
+                    heroTextEl.classList.add('is-revealed');
+                }
+            }
+
+            if (!window.lottie || !window.OLLINTEP_LOGO_ANIMATION || !lottieContainer) return;
+
+            var reduceMotion = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            var anim = lottie.loadAnimation({
+                container: lottieContainer,
+                renderer: 'svg',
+                loop: reduceMotion,
+                autoplay: reduceMotion,
+                animationData: window.OLLINTEP_LOGO_ANIMATION
+            });
+
+            // Con movimiento reducido: solo un loop suave, sin scroll-scrubbing.
+            if (reduceMotion) {
+                if (heroVisual) heroVisual.classList.add('is-revealed');
+                if (header) header.classList.add('is-visible');
+                return;
+            }
+
+            var totalFrames = 0;
+            var ticking = false;
+            var visualRevealThreshold = 0.5;
+            var headerRevealThreshold = 0.85;
+
+            anim.addEventListener('DOMLoaded', function () {
+                totalFrames = anim.totalFrames;
+                update();
+            });
+
+            function update() {
+                ticking = false;
+                if (!heroSection || !totalFrames) return;
+
+                var rect = heroSection.getBoundingClientRect();
+                var scrollable = heroSection.offsetHeight - window.innerHeight;
+                var progress = scrollable > 0 ? (-rect.top) / scrollable : 0;
+                progress = Math.max(0, Math.min(1, progress));
+
+                anim.goToAndStop(progress * (totalFrames - 1), true);
+
+                if (heroVisual) {
+                    heroVisual.classList.toggle('is-revealed', progress > visualRevealThreshold);
+                }
+                if (scrollHint) {
+                    scrollHint.classList.toggle('is-hidden', progress > 0.03);
+                }
+                if (header) {
+                    header.classList.toggle('is-visible', progress > headerRevealThreshold);
+                }
+            }
+
+            function onScrollOrResize() {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(update);
+                }
+            }
+
+            window.addEventListener('scroll', onScrollOrResize, { passive: true });
+            window.addEventListener('resize', onScrollOrResize);
+        })();
+    </script>
 </body>
 </html>

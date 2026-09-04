@@ -1,16 +1,17 @@
-/* --- Paleta elegante "Ollintep for Restaurants" (azul de marca + acento dorado) --- */
+/* --- Paleta "Ollintep for Restaurants", tomada directamente del isotipo --- */
 :root {
-    --accent-blue: #2F5FD1;           /* Azul de marca, sobrio */
-    --accent-blue-light: #7FA0E8;     /* Azul claro para texto/acentos */
-    --accent-cyan: #C9A227;           /* Dorado, reemplaza el cian neón en brillos y hovers */
-    --accent-glow-rgb: 201, 162, 39;  /* Mismo dorado, en formato r,g,b */
-    --accent-text: #C9A227;           /* Dorado para texto; se oscurece en modo claro por contraste */
+    --accent-blue: #0949AD;           /* Azul medio del logo */
+    --accent-blue-light: #0C5CE0;     /* Azul brillante del logo, para texto/acentos */
+    --accent-cyan: #0A5DDF;           /* Azul del círculo del logo, reemplaza el cian neón en brillos y hovers */
+    --accent-glow-rgb: 10, 93, 223;   /* Mismo azul, en formato r,g,b */
+    --accent-text: #4d8dff;           /* Azul claro para texto; se oscurece en modo claro por contraste */
+    --logo-navy: #193662;             /* Azul marino profundo del logo */
 
     /* Superficies sólidas en vez de vidrio translúcido */
     --surface: #12151d;
     --surface-hover: #171b26;
     --surface-border: rgba(255, 255, 255, 0.08);
-    --surface-border-strong: rgba(201, 162, 39, 0.5);
+    --surface-border-strong: rgba(10, 93, 223, 0.5);
     --shadow-elegant: 0 14px 34px rgba(0, 0, 0, 0.35);
 
     /* Esquinas más cerradas, look más corporativo */
@@ -19,6 +20,242 @@
     --radius-sm: 6px;
 
     color-scheme: dark light;
+}
+
+/* --- La barra de navegación aparece hasta que termina la animación del Hero --- */
+/* Nota: NO tocar `transform` aquí; .header ya usa transform: translateX(-50%)
+   en styles.css para centrarse horizontalmente y sobreescribirlo lo desplaza. */
+.header {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.header.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- Hero cinematográfico: la animación del logo avanza con el scroll --- */
+.hero-scroll {
+    position: relative;
+    height: 260vh;
+}
+
+.hero-pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 90px;
+}
+
+/* --- Visual del Hero: logo + resplandor + anillos + chips flotantes --- */
+/* Ocupa casi toda la pantalla fijada: es el único contenido del pin,
+   así puede ser enorme sin pelear espacio con el texto ni los botones. */
+.hero-visual {
+    position: relative;
+    width: min(98vw, 96vh, 1560px);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-visual-glow {
+    position: absolute;
+    inset: -12%;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--accent-glow-rgb), 0.35) 0%, rgba(var(--accent-glow-rgb), 0.12) 40%, transparent 72%);
+    filter: blur(30px);
+}
+
+.hero-visual-ring {
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    border: 1px dashed var(--surface-border-strong);
+    pointer-events: none;
+}
+
+.hero-visual-ring-1 { inset: 4%; animation: hero-ring-spin 50s linear infinite; }
+.hero-visual-ring-2 { inset: 14%; border-style: solid; border-color: var(--surface-border); animation: hero-ring-spin 70s linear infinite reverse; }
+
+@keyframes hero-ring-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.hero-lottie {
+    position: relative;
+    z-index: 2;
+    width: 74%;
+    aspect-ratio: 640 / 360;
+    margin: 0;
+}
+
+.hero-lottie svg { display: block; }
+
+.hero-chip {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-elegant);
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.hero-chip i { color: var(--accent-blue-light); font-size: 0.95rem; }
+
+.hero-chip-1 { top: 2%; left: -4%; }
+.hero-chip-2 { top: 42%; right: -10%; }
+.hero-chip-3 { bottom: 4%; left: 4%; }
+
+/* Los chips y anillos se revelan sobre la marcha, cuando el scrub va avanzado */
+.hero-visual .hero-chip {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* Los anillos ya rotan por su propia animación: solo se les hace fade in */
+.hero-visual .hero-visual-ring {
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+
+.hero-visual.is-revealed .hero-visual-ring { opacity: 1; transition-delay: 0.04s; }
+.hero-visual.is-revealed .hero-chip-1 { opacity: 1; transform: none; transition-delay: 0.1s; }
+.hero-visual.is-revealed .hero-chip-2 { opacity: 1; transform: none; transition-delay: 0.18s; }
+.hero-visual.is-revealed .hero-chip-3 { opacity: 1; transform: none; transition-delay: 0.26s; }
+
+/* --- Bloque de texto del Hero: sección normal que aparece después del pin --- */
+.hero-text {
+    padding: 70px 20px 90px;
+    text-align: center;
+}
+
+.hero-text h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.hero-text p {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* El texto y los botones esperan a que la sección entre en pantalla */
+.hero-content h1,
+.hero-content p,
+.hero-content .hero-btns {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.hero-content.is-revealed h1 { opacity: 1; transform: none; }
+.hero-content.is-revealed p { opacity: 1; transform: none; transition-delay: 0.08s; }
+.hero-content.is-revealed .hero-btns { opacity: 1; transform: none; transition-delay: 0.16s; }
+
+@media (max-width: 992px) {
+    .hero-text h1 { font-size: 2.2rem; }
+}
+
+@media (max-width: 768px) {
+    .hero-text h1 { font-size: 1.8rem; }
+}
+
+.hero-scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 36px;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 42px;
+    border: 2px solid var(--surface-border-strong);
+    border-radius: 999px;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+    z-index: 2;
+}
+
+.hero-scroll-hint span {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 4px;
+    height: 8px;
+    margin-left: -2px;
+    border-radius: 999px;
+    background: var(--accent-cyan);
+    animation: hero-hint-scroll 1.6s ease infinite;
+}
+
+@keyframes hero-hint-scroll {
+    0% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 0; transform: translateY(14px); }
+    100% { opacity: 0; transform: translateY(0); }
+}
+
+.hero-scroll-hint.is-hidden { opacity: 0; pointer-events: none; }
+
+@media (max-width: 768px) {
+    .hero-scroll { height: 200vh; }
+    .hero-pin { padding-top: 70px; }
+    .hero-visual { width: min(96vw, 82vh, 640px); }
+    .hero-scroll-hint { bottom: 20px; }
+    .hero-chip { display: none; }
+}
+
+@media (max-width: 1100px) {
+    .hero-chip { font-size: 0.75rem; padding: 8px 12px; }
+    .hero-chip-1 { left: -2%; }
+    .hero-chip-2 { right: -4%; }
+    .hero-chip-3 { left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-scroll { height: 100vh; }
+    .hero-pin { position: relative; }
+
+    .hero-visual-ring { animation: none; }
+
+    .hero-content h1,
+    .hero-content p,
+    .hero-content .hero-btns,
+    .hero-visual .hero-visual-ring,
+    .hero-visual .hero-chip {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .hero-scroll-hint,
+    .hero-scroll-hint span { display: none; }
+
+    .header {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        transition: none;
+    }
 }
 
 /* --- Fondo: viñeta estática en vez de blobs líquidos --- */
@@ -61,7 +298,7 @@
 
 .btn-primary {
     background: var(--accent-cyan);
-    color: #14171f;
+    color: #ffffff;
     box-shadow: var(--shadow-elegant);
     border: none;
 }
@@ -122,17 +359,17 @@
 }
 
 .card-icon {
-    background: linear-gradient(135deg, rgba(47, 95, 209, 0.22), rgba(201, 162, 39, 0.16));
+    background: linear-gradient(135deg, rgba(9, 73, 173, 0.22), rgba(10, 93, 223, 0.18));
 }
 
 .service-card:hover .card-icon {
-    box-shadow: 0 8px 20px rgba(201, 162, 39, 0.18);
+    box-shadow: 0 8px 20px rgba(10, 93, 223, 0.2);
 }
 
 .card-glow { display: none; }
 
 .panel-1 { background-image: radial-gradient(circle at 30% 20%, rgba(47, 95, 209, 0.18), transparent 60%); }
-.panel-2 { background-image: radial-gradient(circle at 70% 30%, rgba(201, 162, 39, 0.16), transparent 60%); }
+.panel-2 { background-image: radial-gradient(circle at 70% 30%, rgba(10, 93, 223, 0.16), transparent 60%); }
 .panel-3 { background-image: radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.05), transparent 60%); }
 
 /* --- Formulario: foco nítido, sin resplandor difuso --- */
@@ -145,7 +382,7 @@
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--accent-cyan);
-    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+    box-shadow: 0 0 0 3px rgba(10, 93, 223, 0.18);
 }
 
 /* --- Footer: sólido --- */
@@ -174,7 +411,7 @@
     background: var(--surface);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    border: 1px solid rgba(201, 162, 39, 0.35);
+    border: 1px solid rgba(10, 93, 223, 0.4);
     box-shadow: var(--shadow-elegant);
     animation: orbit-breathe 4s ease-in-out infinite;
 }
@@ -197,13 +434,13 @@
 .orbit-item.is-active {
     background: var(--accent-cyan);
     border-color: var(--accent-cyan);
-    color: #14171f;
+    color: #ffffff;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
 }
 
 .orbit-list li.is-active {
     background: var(--accent-cyan);
-    color: #14171f;
+    color: #ffffff;
     border-color: var(--accent-cyan);
 }
 
@@ -219,7 +456,7 @@
 
 .plan-badge {
     background: var(--accent-cyan);
-    color: #14171f;
+    color: #ffffff;
 }
 
 .plan-featured .plan-price-amount { color: var(--accent-text); }
@@ -233,17 +470,17 @@
         --text-main: #1a1d24;
         --text-muted: #5c6270;
         --accent-blue-light: #1d4ed8;
-        --accent-text: #8a6914;
+        --accent-text: #0949AD;
 
         --surface: #ffffff;
-        --surface-hover: #f4f1ea;
+        --surface-hover: #eef3fc;
         --surface-border: rgba(20, 20, 20, 0.08);
-        --surface-border-strong: rgba(201, 162, 39, 0.55);
+        --surface-border-strong: rgba(10, 93, 223, 0.5);
         --shadow-elegant: 0 14px 30px rgba(20, 20, 20, 0.08);
     }
 
     .liquid-bg {
-        background: radial-gradient(ellipse 900px 600px at 50% -10%, #fdf6e3 0%, var(--bg-base) 65%);
+        background: radial-gradient(ellipse 900px 600px at 50% -10%, #e7edfb 0%, var(--bg-base) 65%);
     }
 
     .header {
