@@ -19,6 +19,9 @@
     --radius-md: 10px;
     --radius-sm: 6px;
 
+    --header-bg-idle: rgba(10, 12, 17, 0.94);
+    --header-bg-scrolled: rgba(10, 12, 17, 0.97);
+
     color-scheme: dark light;
 }
 
@@ -273,10 +276,9 @@
 
 /* --- Navegación: barra sólida, sin desenfoque ni brillo neón --- */
 .header {
-    background: rgba(10, 12, 17, 0.94);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    border: 1px solid var(--surface-border);
+    border-bottom: 1px solid var(--surface-border);
     box-shadow: var(--shadow-elegant);
 }
 
@@ -477,6 +479,9 @@
         --surface-border: rgba(20, 20, 20, 0.08);
         --surface-border-strong: rgba(10, 93, 223, 0.5);
         --shadow-elegant: 0 14px 30px rgba(20, 20, 20, 0.08);
+
+        --header-bg-idle: rgba(255, 255, 255, 0.92);
+        --header-bg-scrolled: rgba(255, 255, 255, 0.97);
     }
 
     .liquid-bg {
@@ -484,7 +489,6 @@
     }
 
     .header {
-        background: rgba(255, 255, 255, 0.92);
         box-shadow: 0 10px 26px rgba(20, 20, 20, 0.08);
     }
 

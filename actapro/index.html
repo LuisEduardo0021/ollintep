@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActaPro - Gestión de Actas y Trámites Administrativos</title>
+    <meta name="description" content="ActaPro, desarrollado por Ollintep Software, es la plataforma para capturar actas, dar seguimiento a pendientes y auditar trámites administrativos desde un solo panel.">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../resources/ollintep-actapro.svg">
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Ajustes puntuales para mostrar capturas reales de ActaPro dentro de
+           las tarjetas de video (mismo componente, con <img> en vez de ícono). */
+        .video-thumb.screenshot-thumb {
+            padding: 0;
+            background: #0b0f1a;
+        }
+        .video-thumb.screenshot-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo líquido -->
+    <div class="liquid-bg" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+    </div>
+
+    <!-- Navegación Principal -->
+    <header class="header">
+        <div class="scroll-progress" id="scroll-progress"></div>
+        <nav class="navbar container">
+            <a href="#inicio" class="logo">
+                <img src="../resources/ollintep-actapro.svg" alt="ActaPro" class="logo-mark">
+                <span class="logo-word"><span class="logo-ollintep">Acta</span><span class="logo-software">Pro</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#inicio" class="active">INICIO</a></li>
+                <li><a href="#caracteristicas">CARACTERÍSTICAS</a></li>
+                <li><a href="#capturas">CAPTURAS</a></li>
+                <li><a href="#nosotros">NOSOTROS</a></li>
+                <li><a href="#contacto">CONTACTO</a></li>
+                <li><i class="fas fa-search search-icon"></i></li>
+            </ul>
+            <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Sección Hero -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay">
+            <div class="network-globe"></div>
+        </div>
+        <div class="container hero-content">
+            <h1>GESTIÓN DE ACTAS Y TRÁMITES, SIN HOJAS DE CÁLCULO NI CARPETAS PERDIDAS</h1>
+            <p>Captura, da seguimiento y audita las actas administrativas de tu organización desde un solo panel, con reportes en tiempo real.</p>
+            <div class="hero-btns">
+                <a href="#caracteristicas" class="btn btn-primary">VER CARACTERÍSTICAS</a>
+                <a href="#contacto" class="btn btn-secondary">AGENDAR DEMO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Características -->
+    <section id="caracteristicas" class="services container">
+        <h2 class="section-title">TODO EL CICLO DE VIDA DE UN TRÁMITE</h2>
+        <p class="services-intro">De la captura inicial al cierre del expediente, con historial completo de cada cambio.</p>
+        <div class="services-grid">
+
+            <div class="service-card">
+                <div class="card-icon">
+                    <i class="fas fa-file-signature"></i>
+                </div>
+                <h3>CAPTURA DE ACTAS</h3>
+                <p>Registra actas ordinarias y extraordinarias con folio, montos, checklist de expediente y evidencias adjuntas.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card active-card">
+                <div class="card-icon">
+                    <i class="fas fa-list-check"></i>
+                </div>
+                <h3>PENDIENTES Y OBSERVACIONES</h3>
+                <p>Cada acta lleva su propio checklist de pendientes por resolver, para que nada se quede a medias entre revisiones.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card">
+                <div class="card-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3>DASHBOARD EN TIEMPO REAL</h3>
+                <p>KPIs, montos y estatus por revisor o capturista, con gráficas que puedes reordenar y guardar a tu gusto.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card">
+                <div class="card-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>ROLES Y PERMISOS</h3>
+                <p>Capturistas, revisores y administradores, cada uno con exactamente los permisos que necesita y nada más.</p>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Capturas -->
+    <section id="capturas" class="videos-section container">
+        <h2 class="section-title">ASÍ SE VE POR DENTRO</h2>
+        <p class="videos-intro">Capturas reales de la plataforma: el mismo panel que usa tu equipo todos los días.</p>
+        <div class="videos-grid">
+            <div class="video-card">
+                <div class="video-thumb screenshot-thumb">
+                    <img src="../resources/actapro/actapro-dashboard.jpg" alt="Dashboard de ActaPro con KPIs y gráficas" loading="lazy">
+                </div>
+                <h3>Dashboard con KPIs y gráficas</h3>
+            </div>
+            <div class="video-card">
+                <div class="video-thumb screenshot-thumb">
+                    <img src="../resources/actapro/actapro-actas.jpg" alt="Listado de actas con filtros en ActaPro" loading="lazy">
+                </div>
+                <h3>Listado y filtros de actas</h3>
+            </div>
+            <div class="video-card">
+                <div class="video-thumb screenshot-thumb">
+                    <img src="../resources/actapro/actapro-dashboard-dark.jpg" alt="ActaPro en modo oscuro" loading="lazy">
+                </div>
+                <h3>Modo claro y oscuro</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Nosotros -->
+    <section id="nosotros" class="about container">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2 class="section-title section-title-left">HECHO PARA OFICINAS QUE VIVEN DE SUS TRÁMITES</h2>
+                <p>ActaPro nace de digitalizar el proceso real de captura y seguimiento de actas de una organización: folios, revisores, pendientes y evidencias que antes vivían en carpetas y hojas de cálculo sueltas.</p>
+                <p>Por eso el panel prioriza claridad sobre adorno: cada usuario ve exactamente lo que necesita para hacer su parte del trámite.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">En la nube</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Modos: claro y oscuro</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Roles: captura, revisión y admin</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Acceso desde cualquier dispositivo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact container">
+        <h2 class="section-title">AGENDA UNA DEMO DE ACTAPRO</h2>
+        <div class="contact-info contact-info-centered">
+            <p>Llámanos, escríbenos o encuéntranos en redes sociales para conocer ActaPro a detalle.</p>
+            <ul>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope"></i> administrador@ollin-tep.com</a></li>
+            </ul>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-top">
+                <div class="logo">
+                    <img src="../resources/ollintep-actapro.svg" alt="ActaPro" class="logo-mark">
+                    <span class="logo-word"><span class="logo-ollintep">Acta</span><span class="logo-software">Pro</span></span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Ollintep Software</a></li>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="#capturas">Capturas</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón volver arriba -->
+    <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../script/scripts.js"></script>
+</body>
+</html>

@@ -21,9 +21,12 @@
     --blur: 22px;
     --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45);
 
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --radius-sm: 10px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+
+    --header-bg-idle: rgba(6, 9, 15, 0.5);
+    --header-bg-scrolled: rgba(6, 9, 15, 0.82);
 
     --font-heading: 'Quicksand', 'Segoe UI', sans-serif;
     --font-body: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -41,7 +44,7 @@ html {
 }
 
 section {
-    scroll-margin-top: 100px;
+    scroll-margin-top: 76px;
 }
 
 body {
@@ -127,28 +130,56 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     html { scroll-behavior: auto; }
 }
 
-/* --- Navegación --- */
+/* --- Navegación ---
+   El fondo se controla con variables (--header-bg-idle/--header-bg-scrolled)
+   en vez de un color fijo: así cualquier tema (claro/oscuro, o el de una
+   página de producto como Restaurants) solo necesita redefinir las
+   variables, sin que la especificidad de .is-scrolled se le imponga. */
 .header {
-    background: rgba(6, 9, 15, 0.55);
+    background: var(--header-bg-idle);
     backdrop-filter: blur(var(--blur)) saturate(160%);
     -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
     position: fixed;
-    top: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 40px);
-    max-width: 1200px;
-    border-radius: 999px;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-highlight);
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
     z-index: 1000;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.header.is-scrolled {
+    background: var(--header-bg-scrolled);
+    border-bottom-color: var(--glass-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 22px;
+    padding: 14px 20px;
+    transition: padding 0.3s ease;
+}
+
+.header.is-scrolled .navbar {
+    padding: 10px 20px;
+}
+
+/* Barra delgada que marca cuánto has avanzado en la página */
+.scroll-progress {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+    transition: width 0.1s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-progress { transition: none; }
 }
 
 .logo {
@@ -237,13 +268,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Hero Section --- */
 .hero {
-    height: 100vh;
+    min-height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
-    padding-top: 110px;
+    padding: 140px 0 70px;
 }
 
 .hero-overlay {
@@ -276,34 +307,34 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 .hero h1 {
-    font-size: 2.8rem;
+    font-size: 2.3rem;
     font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 15px;
-    letter-spacing: -0.5px;
+    line-height: 1.25;
+    margin-bottom: 14px;
+    letter-spacing: -0.4px;
 }
 
 .hero p {
     color: var(--text-muted);
-    font-size: 1.2rem;
-    margin-bottom: 40px;
+    font-size: 1.05rem;
+    margin-bottom: 28px;
 }
 
 .hero-btns {
     display: flex;
-    gap: 20px;
+    gap: 14px;
     justify-content: center;
 }
 
 .btn {
     position: relative;
     overflow: hidden;
-    padding: 14px 32px;
-    border-radius: 999px;
+    padding: 12px 26px;
+    border-radius: var(--radius-sm);
     text-decoration: none;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: var(--transition);
     cursor: pointer;
 }
@@ -354,13 +385,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* --- Títulos de sección --- */
 .section-title {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 50px;
+    letter-spacing: 0.4px;
+    margin-bottom: 32px;
 }
 
-.section-title-left { text-align: left; margin-bottom: 25px; }
+.section-title-left { text-align: left; margin-bottom: 18px; }
 
 /* --- Utilidad de vidrio compartida --- */
 .service-card,
@@ -421,20 +452,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Sección de Servicios --- */
 .services {
-    padding: 80px 0;
+    padding: 56px 0;
 }
 
 .services-intro {
     color: var(--text-muted);
     text-align: center;
     max-width: 560px;
-    margin: -30px auto 50px;
+    margin: -18px auto 34px;
+    font-size: 0.95rem;
 }
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
 }
 
 .service-ai {
@@ -468,7 +500,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .service-card {
     display: block;
-    padding: 40px;
+    padding: 26px;
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
@@ -503,14 +535,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(11, 99, 246, 0.25), rgba(0, 229, 255, 0.15));
     border: 1px solid var(--glass-border);
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     color: var(--accent-text);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     position: relative;
     z-index: 2;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -522,17 +554,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 .service-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     position: relative;
     z-index: 2;
 }
 
 .service-card p {
     color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 14px;
     position: relative;
     z-index: 2;
 }
@@ -810,7 +842,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Compatibilidad multiplataforma --- */
 .platform-section {
-    padding: 20px 0 100px;
+    padding: 16px 0 64px;
     text-align: center;
 }
 
@@ -822,7 +854,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .platform-frame {
     border-radius: var(--radius-lg);
-    padding: 60px 40px;
+    padding: 40px 32px;
 }
 
 .platform-chain {
@@ -925,20 +957,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Sección de Videos --- */
 .videos-section {
-    padding: 20px 0 90px;
+    padding: 16px 0 60px;
     text-align: center;
 }
 
 .videos-intro {
     color: var(--text-muted);
     max-width: 520px;
-    margin: -30px auto 50px;
+    margin: -16px auto 34px;
+    font-size: 0.95rem;
 }
 
 .videos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
 }
 
 .video-card {
@@ -964,25 +997,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 .video-card h3 {
-    padding: 18px 20px 20px;
-    font-size: 1rem;
+    padding: 14px 16px 16px;
+    font-size: 0.95rem;
 }
 
 /* --- Sección de Precios --- */
 .pricing {
-    padding: 40px 0 100px;
+    padding: 30px 0 70px;
     text-align: center;
 }
 
 .pricing-intro {
     color: var(--text-muted);
-    margin: -30px 0 50px;
+    margin: -18px 0 34px;
+    font-size: 0.95rem;
 }
 
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
     align-items: stretch;
     text-align: left;
 }
@@ -990,7 +1024,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .plan-card {
     display: flex;
     flex-direction: column;
-    padding: 40px 32px;
+    padding: 28px 24px;
     border-radius: var(--radius-lg);
     position: relative;
     transition: var(--transition);
@@ -1067,30 +1101,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Sección Nosotros --- */
 .about {
-    padding: 80px 0;
+    padding: 56px 0;
 }
 
 .about-grid {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
-    gap: 50px;
+    gap: 36px;
     align-items: center;
 }
 
 .about-text p {
     color: var(--text-muted);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
 }
 
 .about-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 25px;
+    gap: 16px;
 }
 
 .stat {
     border-radius: var(--radius-md);
-    padding: 25px;
+    padding: 18px;
     text-align: center;
     transition: var(--transition);
 }
@@ -1103,7 +1138,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .stat-number {
     display: block;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: var(--accent-text);
 }
@@ -1155,13 +1190,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Sección Contacto --- */
 .contact {
-    padding: 60px 0 100px;
+    padding: 46px 0 64px;
 }
 
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1.3fr;
-    gap: 50px;
+    gap: 36px;
 }
 
 .contact-info p {
@@ -1204,6 +1239,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     color: var(--accent-text);
     width: 18px;
 }
+
+.contact-info li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-info li a:hover { color: var(--accent-text); }
 
 .social-links {
     display: flex;
@@ -1281,7 +1327,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Footer --- */
 .footer {
-    padding: 50px 0 30px;
+    padding: 36px 0 22px;
     background: rgba(6, 9, 15, 0.4);
     backdrop-filter: blur(var(--blur)) saturate(160%);
     -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
@@ -1376,7 +1422,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* --- Media Queries (Responsividad) --- */
 @media (max-width: 992px) {
-    .hero h1 { font-size: 2.2rem; }
+    .hero h1 { font-size: 2rem; }
     .nav-links { gap: 15px; }
     .tech-grid { grid-template-columns: 1fr; grid-template-rows: repeat(3, 200px); }
     .about-grid { grid-template-columns: 1fr; }
@@ -1387,7 +1433,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     .nav-links {
         display: none;
         position: absolute;
-        top: 68px;
+        top: 64px;
         left: 0;
         right: 0;
         width: auto;
@@ -1405,7 +1451,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
     .menu-toggle { display: block; }
 
-    .hero h1 { font-size: 1.8rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero { min-height: 460px; padding: 110px 0 50px; }
     .hero-btns { flex-direction: column; gap: 10px; }
 
     .services-grid { grid-template-columns: 1fr; }
@@ -1435,13 +1482,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
         --glass-border-strong: rgba(0, 137, 163, 0.4);
         --glass-highlight: rgba(255, 255, 255, 0.85);
         --shadow-glass: 0 8px 28px rgba(15, 23, 42, 0.12);
+
+        --header-bg-idle: rgba(255, 255, 255, 0.6);
+        --header-bg-scrolled: rgba(255, 255, 255, 0.88);
     }
 
     .liquid-bg { background: var(--bg-base); }
     .blob { opacity: 0.18; }
 
     .header {
-        background: rgba(255, 255, 255, 0.75);
         box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 

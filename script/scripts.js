@@ -65,11 +65,40 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    // --- Header dinámico + barra de progreso de scroll ---
+    const header = document.querySelector('.header');
+    const scrollProgress = document.querySelector('#scroll-progress');
+
+    function updateScrollChrome() {
+        const scrollTop = window.scrollY;
+        if (header) header.classList.toggle('is-scrolled', scrollTop > 10);
+        if (scrollProgress) {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+            scrollProgress.style.width = pct + '%';
+        }
+    }
+    window.addEventListener('scroll', updateScrollChrome, { passive: true });
+    updateScrollChrome();
+
     // --- Animación de aparición al hacer scroll ---
     const revealTargets = document.querySelectorAll(
         '.service-card, .stat, .tech-panel, .blog-card, .contact-info, .section-title, .plan-card, .video-card'
     );
     revealTargets.forEach(el => el.classList.add('reveal'));
+
+    // Escalona el orden de aparición: las tarjetas de una misma grid entran
+    // una tras otra en vez de todas de golpe, para que el scroll se sienta
+    // más vivo sin depender de una sola animación grande.
+    const staggerGroups = new Map();
+    revealTargets.forEach(el => {
+        const group = el.parentElement;
+        if (!staggerGroups.has(group)) staggerGroups.set(group, []);
+        staggerGroups.get(group).push(el);
+    });
+    staggerGroups.forEach(group => {
+        group.forEach((el, i) => { el.style.transitionDelay = Math.min(i * 80, 320) + 'ms'; });
+    });
 
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -237,5 +266,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
+    }
+
+    // --- Parallax del hero estático al hacer scroll (no aplica al hero
+    // cinematográfico de Restaurants, que ya tiene su propio scroll-scrubbing) ---
+    const staticHero = document.querySelector('.hero:not(.hero-pin)');
+    if (staticHero && !prefersReducedMotion) {
+        const heroBg = staticHero.querySelector('.hero-overlay');
+        const heroTextBlock = staticHero.querySelector('.hero-content');
+
+        const updateHeroParallax = () => {
+            const rect = staticHero.getBoundingClientRect();
+            const progress = Math.min(Math.max(-rect.top / (rect.height || 1), 0), 1);
+            if (heroBg) heroBg.style.transform = `translateY(${progress * 60}px)`;
+            if (heroTextBlock) {
+                heroTextBlock.style.opacity = String(1 - progress * 0.7);
+                heroTextBlock.style.transform = `translateY(${progress * 30}px)`;
+            }
+        };
+
+        window.addEventListener('scroll', updateHeroParallax, { passive: true });
+        updateHeroParallax();
     }
 });
