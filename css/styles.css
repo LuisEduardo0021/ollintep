@@ -401,7 +401,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .social-links a,
 .orbit-frame,
 .platform-frame,
-.video-card {
+.video-card,
+.plan-card {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--blur)) saturate(160%);
     -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
@@ -1072,6 +1073,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     font-size: 0.85rem;
 }
 
+/* Línea opcional bajo el precio, para planes con costo de entrada aparte
+   del costo periódico (p.ej. "+ $8,500 de implementación, pago único"). */
+.plan-price-note {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: -22px;
+    margin-bottom: 22px;
+}
+
 .plan-features {
     list-style: none;
     margin-bottom: 32px;
@@ -1093,6 +1103,36 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .plan-cta {
     text-align: center;
+}
+
+/* Estado por defecto (tema vidrio/cian base). Una página con su propia
+   paleta, como Restaurants, puede sobreescribir estas reglas en su propio
+   stylesheet, tal como ya hace restaurant.css. */
+.plan-card {
+    transition: var(--transition), transform 0.3s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--glass-border-strong);
+}
+
+.plan-featured {
+    border-color: var(--accent-cyan);
+    background: var(--glass-bg-hover);
+}
+
+.plan-featured:hover {
+    border-color: var(--accent-cyan);
+}
+
+.plan-featured .plan-price-amount {
+    color: var(--accent-text);
+}
+
+.plan-badge {
+    background: var(--accent-cyan);
+    color: #ffffff;
 }
 
 @media (max-width: 992px) {
