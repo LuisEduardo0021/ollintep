@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,8 +22,7 @@
     <meta name="twitter:description" content="ActaPro, desarrollado por Ollintep Software, es la plataforma para capturar actas, dar seguimiento a pendientes y auditar trámites administrativos desde un solo panel.">
     <meta name="twitter:image" content="https://ollin-tep.com/resources/og/actapro-og.jpg">
 
-    <!-- Datos estructurados: describe ActaPro como producto de software,
-         con sus planes de precios, para resultados enriquecidos en Google. -->
+    <!-- Datos estructurados -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -80,14 +79,12 @@
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Hojas de estilo -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo Tailwind compiladas -->
     <link rel="stylesheet" href="../css/styles.css">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Ajustes puntuales para mostrar capturas reales de ActaPro dentro de
-           las tarjetas de video (mismo componente, con <img> en vez de ícono). */
         .video-thumb.screenshot-thumb {
             padding: 0;
             background: #0b0f1a;
@@ -101,7 +98,7 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-actapro bg-slate-950 text-slate-100 antialiased selection:bg-indigo-600 selection:text-white">
 
     <!-- Fondo líquido -->
     <div class="liquid-bg" aria-hidden="true">
@@ -113,9 +110,9 @@
     <!-- Navegación Principal -->
     <header class="header">
         <div class="scroll-progress" id="scroll-progress"></div>
-        <nav class="navbar container">
-            <a href="#inicio" class="logo">
-                <img src="../resources/ollintep-actapro.svg" alt="ActaPro" class="logo-mark">
+        <nav class="navbar">
+            <a href="#inicio" class="logo group">
+                <img src="../resources/ollintep-actapro.svg" alt="ActaPro" class="logo-mark group-hover:scale-110 transition-transform">
                 <span class="logo-word"><span class="logo-ollintep">Acta</span><span class="logo-software">Pro</span></span>
             </a>
             <ul class="nav-links">
@@ -125,7 +122,7 @@
                 <li><a href="#precios">PRECIOS</a></li>
                 <li><a href="#nosotros">NOSOTROS</a></li>
                 <li><a href="#contacto">CONTACTO</a></li>
-                <li><i class="fas fa-search search-icon"></i></li>
+                <li><a href="../index.html" class="product-back-btn text-xs px-3 py-1 rounded-full"><i class="fas fa-arrow-left mr-1"></i>OLLINTEP</a></li>
             </ul>
             <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
                 <span class="bar"></span>
@@ -140,97 +137,134 @@
         <div class="hero-overlay">
             <div class="network-globe"></div>
         </div>
-        <div class="container hero-content">
-            <h1>GESTIÓN DE ACTAS Y TRÁMITES, SIN HOJAS DE CÁLCULO NI CARPETAS PERDIDAS</h1>
-            <p>Captura, da seguimiento y audita las actas administrativas de tu organización desde un solo panel, con reportes en tiempo real.</p>
+        <div class="hero-content vt-card-actapro">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                Gestión y Gobernanza Digital
+            </div>
+            <h1>GESTIÓN DE ACTAS Y TRÁMITES, SIN CARPETAS NI HOJAS PERDIDAS</h1>
+            <p>Captura, da seguimiento y audita las actas administrativas de tu organización desde un solo panel en la nube, con reportes e historial inmutable en tiempo real.</p>
             <div class="hero-btns">
-                <a href="#caracteristicas" class="btn btn-primary">VER CARACTERÍSTICAS</a>
-                <a href="#contacto" class="btn btn-secondary">AGENDAR DEMO</a>
+                <a href="#caracteristicas" class="btn btn-primary">
+                    <span>VER CARACTERÍSTICAS</span>
+                    <i class="fas fa-arrow-down text-xs"></i>
+                </a>
+                <a href="#contacto" class="btn btn-secondary">
+                    <span>AGENDAR DEMO</span>
+                    <i class="fas fa-calendar-check text-xs"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Sección de Características -->
-    <section id="caracteristicas" class="services container">
-        <h2 class="section-title">TODO EL CICLO DE VIDA DE UN TRÁMITE</h2>
-        <p class="services-intro">De la captura inicial al cierre del expediente, con historial completo de cada cambio.</p>
+    <section id="caracteristicas" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">TODO EL CICLO DE VIDA DE UN TRÁMITE</h2>
+            <p class="text-slate-400 text-base md:text-lg">De la captura inicial al cierre del expediente, con historial completo y transparente de cada cambio.</p>
+        </div>
         <div class="services-grid">
 
-            <div class="service-card">
+            <div class="service-card group">
                 <div class="card-icon">
                     <i class="fas fa-file-signature"></i>
                 </div>
                 <h3>CAPTURA DE ACTAS</h3>
-                <p>Registra actas ordinarias y extraordinarias con folio, montos, checklist de expediente y evidencias adjuntas.</p>
+                <p>Registra actas ordinarias y extraordinarias con folio único, montos, checklist de expediente y evidencias adjuntas en segundos.</p>
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card active-card">
+            <div class="service-card active-card group">
                 <div class="card-icon">
                     <i class="fas fa-list-check"></i>
                 </div>
                 <h3>PENDIENTES Y OBSERVACIONES</h3>
-                <p>Cada acta lleva su propio checklist de pendientes por resolver, para que nada se quede a medias entre revisiones.</p>
+                <p>Cada acta lleva su propio checklist de pendientes por resolver, asegurando que ningún detalle quede sin atender entre revisiones.</p>
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card group">
                 <div class="card-icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
                 <h3>DASHBOARD EN TIEMPO REAL</h3>
-                <p>KPIs, montos y estatus por revisor o capturista, con gráficas que puedes reordenar y guardar a tu gusto.</p>
+                <p>KPIs, métricas financieras y estatus por revisor o departamento con gráficas dinámicas ordenables y exportables.</p>
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card group">
                 <div class="card-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
                 <h3>ROLES Y PERMISOS</h3>
-                <p>Capturistas, revisores y administradores, cada uno con exactamente los permisos que necesita y nada más.</p>
+                <p>Capturistas, revisores y administradores: cada perfil con accesos granulares y control riguroso de privilegios.</p>
                 <div class="card-glow"></div>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Capturas -->
-    <section id="capturas" class="videos-section container">
-        <h2 class="section-title">ASÍ SE VE POR DENTRO</h2>
-        <p class="videos-intro">Capturas reales de la plataforma: el mismo panel que usa tu equipo todos los días.</p>
-        <div class="videos-grid">
-            <div class="video-card">
-                <div class="video-thumb screenshot-thumb">
-                    <img src="../resources/actapro/actapro-dashboard.jpg" alt="Dashboard de ActaPro con KPIs y gráficas" loading="lazy">
+    <!-- Sección de Capturas Reales -->
+    <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">PLATAFORMA EN ACCIÓN</h2>
+            <p class="text-slate-400 text-base md:text-lg">Capturas reales de ActaPro en producción: experiencia corporativa de alto rendimiento para el control de acuerdos y trámites.</p>
+        </div>
+        <div class="videos-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="video-card group bg-slate-900/60 rounded-2xl overflow-hidden p-3 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl">
+                <div class="video-thumb screenshot-thumb rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-slate-950">
+                    <img src="../resources/screenshots/actapro-dashboard.png" alt="Dashboard de control y analítica de acuerdos en ActaPro" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
-                <h3>Dashboard con KPIs y gráficas</h3>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold uppercase">Tablero Principal</span>
+                        <span class="text-[10px] text-emerald-400 font-mono">En vivo</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Control de Acuerdos & KPIs</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Monitoreo de asistencia de ediles, semáforo de acuerdos vencidos y agenda de sesiones en tiempo real.</p>
+                </div>
             </div>
-            <div class="video-card">
-                <div class="video-thumb screenshot-thumb">
-                    <img src="../resources/actapro/actapro-actas.jpg" alt="Listado de actas con filtros en ActaPro" loading="lazy">
+
+            <div class="video-card group bg-slate-900/60 rounded-2xl overflow-hidden p-3 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl">
+                <div class="video-thumb screenshot-thumb rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-slate-950">
+                    <img src="../resources/screenshots/actapro-actas.png" alt="Listado y filtrado avanzado de actas institucionales" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
-                <h3>Listado y filtros de actas</h3>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">Gestión de Expedientes</span>
+                        <span class="text-[10px] text-slate-400 font-mono">Filtros Dinámicos</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Explorador y Búsqueda de Actas</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Localización instantánea por número de folio, fecha, revisor asignado y estatus de trámite con exportación a Excel.</p>
+                </div>
             </div>
-            <div class="video-card">
-                <div class="video-thumb screenshot-thumb">
-                    <img src="../resources/actapro/actapro-dashboard-dark.jpg" alt="ActaPro en modo oscuro" loading="lazy">
+
+            <div class="video-card group bg-slate-900/60 rounded-2xl overflow-hidden p-3 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl">
+                <div class="video-thumb screenshot-thumb rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-slate-950">
+                    <img src="../resources/screenshots/actapro-detalle.png" alt="Detalle de acta con flujo de aprobación y trazabilidad legal" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
-                <h3>Modo claro y oscuro</h3>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Flujo Legal</span>
+                        <span class="text-[10px] text-indigo-400 font-mono">4 Etapas</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Expediente y Dictamen Digital</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Trazabilidad completa con estatus de revisión por etapas, condiciones de pago, acuerdos formales e impresión oficial.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Precios
-         Cifras de referencia para validar contra el costo real de infraestructura,
-         soporte e implementación antes de tratarlas como precios definitivos. -->
-    <section id="precios" class="pricing container">
-        <h2 class="section-title">UN PLAN PARA CADA TAMAÑO DE INSTITUCIÓN</h2>
-        <p class="pricing-intro">Del piloto de un solo departamento a la licencia instalada en tu propio servidor.</p>
+    <!-- Sección de Precios -->
+    <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">UN PLAN PARA CADA INSTITUCIÓN</h2>
+            <p class="text-slate-400 text-base md:text-lg">Del piloto por departamento a la infraestructura en nube dedicada o servidor propio.</p>
+        </div>
         <div class="pricing-grid">
 
             <div class="plan-card">
                 <h3 class="plan-name">PILOTO</h3>
-                <p class="plan-tagline">Prueba ActaPro en un solo departamento, sin compromiso.</p>
+                <p class="plan-tagline">Prueba ActaPro en un solo departamento sin compromiso.</p>
                 <div class="plan-price">
                     <span class="plan-price-amount">$1,490</span>
                     <span class="plan-price-period">MXN /mes</span>
@@ -238,77 +272,77 @@
                 <p class="plan-price-note">Sin costo de entrada</p>
                 <ul class="plan-features">
                     <li><i class="fas fa-check"></i> Hasta 3 usuarios · 5 GB de evidencias</li>
-                    <li><i class="fas fa-check"></i> Ambiente en la nube, listo en 1-2 días</li>
-                    <li><i class="fas fa-check"></i> Demo guiada de bienvenida</li>
-                    <li><i class="fas fa-check"></i> Soporte por correo</li>
-                    <li><i class="fas fa-check"></i> Cancela cuando quieras</li>
+                    <li><i class="fas fa-check"></i> Ambiente en la nube listo en 24-48 h</li>
+                    <li><i class="fas fa-check"></i> Demo guiada de inducción</li>
+                    <li><i class="fas fa-check"></i> Soporte técnico por correo</li>
+                    <li><i class="fas fa-check"></i> Cancela en cualquier momento</li>
                 </ul>
-                <a href="#contacto" class="btn btn-secondary plan-cta">EMPEZAR</a>
+                <a href="#contacto" class="btn btn-secondary plan-cta">EMPEZAR PILOTO</a>
             </div>
 
             <div class="plan-card plan-featured">
-                <span class="plan-badge">RECOMENDADO</span>
+                <span class="plan-badge">MÁS POPULAR</span>
                 <h3 class="plan-name">NUBE</h3>
-                <p class="plan-tagline">Ollintep aloja todo; tu equipo solo entra y trabaja.</p>
+                <p class="plan-tagline">Ollintep administra todo el hosting y respaldo; tu equipo solo opera.</p>
                 <div class="plan-price">
                     <span class="plan-price-amount">$3,200</span>
                     <span class="plan-price-period">MXN /mes</span>
                 </div>
                 <p class="plan-price-note">+ $8,500 de implementación (pago único) · hasta 10 usuarios</p>
                 <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> Dominio, SSL y respaldo diario incluidos</li>
-                    <li><i class="fas fa-check"></i> Importación de tus actas desde Excel</li>
-                    <li><i class="fas fa-check"></i> Capacitación y acompañamiento las primeras 2 semanas</li>
-                    <li><i class="fas fa-check"></i> Soporte L-V, respuesta en 24 h hábiles</li>
-                    <li><i class="fas fa-check"></i> Actualizaciones nuevas sin costo extra</li>
+                    <li><i class="fas fa-check"></i> Dominio institucional, SSL y respaldos diarios</li>
+                    <li><i class="fas fa-check"></i> Migración inicial de actas desde Excel</li>
+                    <li><i class="fas fa-check"></i> Capacitación continua durante 2 semanas</li>
+                    <li><i class="fas fa-check"></i> Soporte preferencial L-V</li>
+                    <li><i class="fas fa-check"></i> Actualizaciones automáticas continuas</li>
                 </ul>
-                <a href="#contacto" class="btn btn-primary plan-cta">EMPEZAR</a>
+                <a href="#contacto" class="btn btn-primary plan-cta">ELEGIR PLAN NUBE</a>
             </div>
 
             <div class="plan-card">
                 <h3 class="plan-name">NUBE DEDICADA</h3>
-                <p class="plan-tagline">Infraestructura propia y aislada, para instituciones grandes.</p>
+                <p class="plan-tagline">Infraestructura privada y aislada para organizaciones de alta demanda.</p>
                 <div class="plan-price">
                     <span class="plan-price-amount">Desde $9,500</span>
                     <span class="plan-price-period">MXN /mes</span>
                 </div>
-                <p class="plan-price-note">+ $25,000 de aprovisionamiento inicial · usuarios ilimitados</p>
+                <p class="plan-price-note">+ $25,000 aprovisionamiento · usuarios ilimitados</p>
                 <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> Servidor dedicado, no compartido</li>
-                    <li><i class="fas fa-check"></i> Soporte prioritario con gerente de cuenta</li>
-                    <li><i class="fas fa-check"></i> Respuesta garantizada en 4 h hábiles</li>
-                    <li><i class="fas fa-check"></i> Integración con el directorio de tu institución (SSO)</li>
+                    <li><i class="fas fa-check"></i> Servidor dedicado de alto rendimiento</li>
+                    <li><i class="fas fa-check"></i> Gerente técnico de cuenta asignado</li>
+                    <li><i class="fas fa-check"></i> SLA de respuesta en 4 h hábiles</li>
+                    <li><i class="fas fa-check"></i> Autenticación Single Sign-On (SSO)</li>
                 </ul>
-                <a href="#contacto" class="btn btn-secondary plan-cta">HABLAR CON VENTAS</a>
+                <a href="#contacto" class="btn btn-secondary plan-cta">HABLAR CON ASESOR</a>
             </div>
 
             <div class="plan-card">
                 <h3 class="plan-name">LICENCIA PERPETUA</h3>
-                <p class="plan-tagline">El software vive en tu propio servidor, para siempre.</p>
+                <p class="plan-tagline">Instalación local On-Premise en los servidores de tu institución.</p>
                 <div class="plan-price">
                     <span class="plan-price-amount">$65,000</span>
                     <span class="plan-price-period">MXN, pago único</span>
                 </div>
-                <p class="plan-price-note">Incluye hasta 15 usuarios · póliza de soporte anual opcional</p>
+                <p class="plan-price-note">Hasta 15 usuarios · soporte anual opcional</p>
                 <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> Instalación y migración de datos incluidas</li>
-                    <li><i class="fas fa-check"></i> Recibes el código fuente de esa versión</li>
-                    <li><i class="fas fa-check"></i> Póliza anual opcional: soporte y actualizaciones (18%)</li>
-                    <li><i class="fas fa-check"></i> Sin permanencia ni renovación forzosa</li>
+                    <li><i class="fas fa-check"></i> Despliegue en infraestructura interna</li>
+                    <li><i class="fas fa-check"></i> Entrega de código fuente compilado</li>
+                    <li><i class="fas fa-check"></i> Póliza de soporte y parches opcional (18%)</li>
+                    <li><i class="fas fa-check"></i> Sin cuotas mensuales obligatorias</li>
                 </ul>
-                <a href="#contacto" class="btn btn-secondary plan-cta">HABLAR CON VENTAS</a>
+                <a href="#contacto" class="btn btn-secondary plan-cta">COTIZAR LICENCIA</a>
             </div>
 
         </div>
     </section>
 
     <!-- Sección Nosotros -->
-    <section id="nosotros" class="about container">
+    <section id="nosotros" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
             <div class="about-text">
-                <h2 class="section-title section-title-left">HECHO PARA OFICINAS QUE VIVEN DE SUS TRÁMITES</h2>
-                <p>ActaPro nace de digitalizar el proceso real de captura y seguimiento de actas de una organización: folios, revisores, pendientes y evidencias que antes vivían en carpetas y hojas de cálculo sueltas.</p>
-                <p>Por eso el panel prioriza claridad sobre adorno: cada usuario ve exactamente lo que necesita para hacer su parte del trámite.</p>
+                <h2 class="section-title section-title-left">HECHO PARA EQUIPOS QUE VIVEN DE SUS TRÁMITES</h2>
+                <p>ActaPro surge de sistematizar el proceso real de secretarías, patronatos, comités y asambleas: eliminando las hojas de cálculo vulnerables y carpetas extraviadas.</p>
+                <p>La plataforma prioriza velocidad, claridad visual y seguridad en cada clic, garantizando validez e integridad de los expedientes generados.</p>
             </div>
             <div class="about-stats">
                 <div class="stat">
@@ -317,28 +351,31 @@
                 </div>
                 <div class="stat">
                     <span class="stat-number">2</span>
-                    <span class="stat-label">Modos: claro y oscuro</span>
+                    <span class="stat-label">Modos de interfaz</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">3</span>
-                    <span class="stat-label">Roles: captura, revisión y admin</span>
+                    <span class="stat-label">Roles especializados</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">24/7</span>
-                    <span class="stat-label">Acceso desde cualquier dispositivo</span>
+                    <span class="stat-label">Disponibilidad total</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Sección Contacto -->
-    <section id="contacto" class="contact container">
-        <h2 class="section-title">AGENDA UNA DEMO DE ACTAPRO</h2>
+    <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="section-title">AGENDA UNA DEMO DE ACTAPRO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Prueba la plataforma en vivo con uno de nuestros especialistas.</p>
+        </div>
         <div class="contact-info contact-info-centered">
-            <p>Llámanos, escríbenos o encuéntranos en redes sociales para conocer ActaPro a detalle.</p>
+            <p>Comunícate por teléfono o correo para coordinar tu demostración:</p>
             <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope"></i> administrador@ollin-tep.com</a></li>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-indigo-400"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-indigo-400"></i> administrador@ollin-tep.com</a></li>
             </ul>
             <div class="social-links">
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -349,7 +386,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container footer-content">
+        <div class="footer-content">
             <div class="footer-top">
                 <div class="logo">
                     <img src="../resources/ollintep-actapro.svg" alt="ActaPro" class="logo-mark">
@@ -357,10 +394,10 @@
                 </div>
                 <ul class="footer-links">
                     <li><a href="../index.html">Ollintep Software</a></li>
-                    <li><a href="#caracteristicas">Características</a></li>
-                    <li><a href="#capturas">Capturas</a></li>
-                    <li><a href="#precios">Precios</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="../restaurant/index.html">Restaurants</a></li>
+                    <li><a href="index.html">ActaPro</a></li>
+                    <li><a href="../agrocria/index.html">Agro-Cria Pro</a></li>
+                    <li><a href="../diagmind/index.html">Diagmind</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </div>

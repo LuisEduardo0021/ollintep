@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Cria Pro - Sistema Integral Agropecuario y Botánico | Ollintep Software</title>
+    <meta name="description" content="Agro-Cria Pro, desarrollado por Ollintep Software, es la plataforma de gestión integral para macro-cultivos, ganadería, invernaderos, balance hídrico CROPWAT y telemetría IoT.">
+    <link rel="canonical" href="https://ollin-tep.com/agrocria/">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Ollintep Software">
+    <meta property="og:locale" content="es_MX">
+    <meta property="og:url" content="https://ollin-tep.com/agrocria/">
+    <meta property="og:title" content="Agro-Cria Pro - Sistema Integral Agropecuario y Botánico">
+    <meta property="og:description" content="Plataforma multiplataforma para macro-cultivos, ganadería, botánica, balance hídrico FAO-56 y sensores IoT.">
+    <meta property="og:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Agro-Cria Pro - Sistema Integral Agropecuario y Botánico">
+    <meta name="twitter:description" content="Plataforma multiplataforma para macro-cultivos, ganadería, botánica, balance hídrico FAO-56 y sensores IoT.">
+    <meta name="twitter:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Agro-Cria Pro",
+        "url": "https://ollin-tep.com/agrocria/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Windows, Linux, Android, iOS",
+        "description": "Sistema integral agropecuario y botánico con balance hídrico CROPWAT, gestión de cultivos, ganadería y telemetría IoT.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Ollintep Software",
+            "url": "https://ollin-tep.com/"
+        }
+    }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../resources/ollintep-agrocria.svg">
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo Tailwind compiladas -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="theme-agrocria bg-slate-950 text-slate-100 antialiased selection:bg-emerald-600 selection:text-white">
+
+    <!-- Fondo líquido -->
+    <div class="liquid-bg" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+    </div>
+
+    <!-- Navegación Principal -->
+    <header class="header">
+        <div class="scroll-progress" id="scroll-progress"></div>
+        <nav class="navbar">
+            <a href="#inicio" class="logo group">
+                <img src="../resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="logo-mark group-hover:scale-110 transition-transform">
+                <span class="logo-word"><span class="logo-ollintep">Agro-Cria</span> <span class="logo-software">Pro</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#inicio" class="active">INICIO</a></li>
+                <li><a href="#caracteristicas">CARACTERÍSTICAS</a></li>
+                <li><a href="#capturas">CAPTURAS</a></li>
+                <li><a href="#modulos">MÓDULOS</a></li>
+                <li><a href="#plataformas">PLATAFORMAS</a></li>
+                <li><a href="#precios">PLANES</a></li>
+                <li><a href="#contacto">CONTACTO</a></li>
+                <li><a href="../index.html" class="product-back-btn text-xs px-3 py-1 rounded-full"><i class="fas fa-arrow-left mr-1"></i>OLLINTEP</a></li>
+            </ul>
+            <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Sección Hero -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay">
+            <div class="network-globe"></div>
+        </div>
+        <div class="hero-content vt-card-agrocria">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Agrotecnología & Precisión Hídrica
+            </div>
+            <h1>TECNOLOGÍA DE PRECISIÓN PARA EL CAMPO, INVERNADEROS Y BOTÁNICA</h1>
+            <p>Plataforma integral de gestión agropecuaria con motor determinista de balance hídrico FAO-56/CROPWAT, ganadería y telemetría IoT.</p>
+            <div class="hero-btns">
+                <a href="#caracteristicas" class="btn btn-primary">
+                    <span>EXPLORAR CAPACIDADES</span>
+                    <i class="fas fa-arrow-down text-xs"></i>
+                </a>
+                <a href="#contacto" class="btn btn-secondary">
+                    <span>SOLICITAR DEMO</span>
+                    <i class="fas fa-seedling text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Características -->
+    <section id="caracteristicas" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">CONTROL INTEGRAL DEL ECOSISTEMA PRODUCTIVO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Diseñado para adaptarse a grandes extensiones agrícolas, invernaderos tecnificados, hatos ganaderos y colecciones botánicas.</p>
+        </div>
+        <div class="services-grid">
+
+            <div class="service-card active-card group">
+                <div class="card-icon">
+                    <i class="fas fa-droplet"></i>
+                </div>
+                <h3>BALANCE HÍDRICO CROPWAT</h3>
+                <p>Cálculo determinista de evapotranspiración de cultivo (ETc = ET0 × Kc), agua total y fácilmente aprovechable (TAW/RAW) y prescripción volumétrica exacta de riego.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-wheat-awn"></i>
+                </div>
+                <h3>CULTIVOS EXTENSIVOS E INVERNADEROS</h3>
+                <p>Estructura espacial jerárquica: ranchos, sectores, naves y bancales. Control de siembras, densidades, fenología, sustratos y fertilización N-P-K.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-cow"></i>
+                </div>
+                <h3>HATO GANADERO Y PECUARIO</h3>
+                <p>Control sanitario, aretes de identificación, pesaje dinámico, genealogía, calendario de vacunación y seguimiento estricto de periodos de retiro.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3>TELEMETRÍA Y SENSORES IOT</h3>
+                <p>Monitoreo continuo de sondas de humedad de suelo a múltiples profundidades, temperatura ambiente, conductividad eléctrica (EC) y pH.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h3>BOTÁNICA Y VIVEROS POR QR</h3>
+                <p>Identificación individualizada de especímenes botánicos, orquídeas, bonsáis y plantas madre con fichas de trazabilidad por código QR.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>DIAGNÓSTICO CON IA</h3>
+                <p>Modelos de asistencia inteligente para detección temprana de plagas, carencias nutricionales y recomendaciones automáticas de fertilización.</p>
+                <div class="card-glow"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección de Capturas Reales -->
+    <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">INGENIERÍA AGRONÓMICA EN PANTALLA</h2>
+            <p class="text-slate-400 text-base md:text-lg">Capturas reales de Agro-Cria Pro en campo: telemetría continua por LoRaWAN, balance Penman-Monteith y mapas de vigor vegetal.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-emerald-950/40">
+                    <img src="../resources/screenshots/agrocria-dashboard.png" alt="Dashboard agronómico con polígonos satelitales, CROPWAT y telemetría de suelo" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Satelital & Balances</span>
+                        <span class="text-[10px] text-emerald-400 font-mono">NDVI 0.84 &middot; ET0 4.82 mm/d</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Mapeo Satelital & Balance FAO-56</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Supervisión espectral con delimitación de sectores, control de válvulas matrices de fertirriego y prescripción hídrica exacta calculada por Penman-Monteith.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-emerald-950/40">
+                    <img src="../resources/screenshots/agrocria-telemetry.png" alt="Telemetría IoT de humedad en tres profundidades y microclima en tiempo real" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold uppercase">Telemetría IoT 915 MHz</span>
+                        <span class="text-[10px] text-amber-400 font-mono">VPD 1.12 kPa &middot; 3 Profundidades</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Dinámica Radicular & Microclima</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Lectura continua de sensores capacitivos SDI-12 a 15, 45 y 75 cm, radiación solar global en W/m² y déficit de presión de vapor para evitar estrés estomático.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Módulos -->
+    <section id="modulos" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2 class="section-title section-title-left">ARQUITECTURA MODULAR DE CLASE EMPRESARIAL</h2>
+                <p>Agro-Cria Pro se sustenta sobre un modelo de datos relacional de 23 módulos especializados, validado para SQLite local y PostgreSQL empresarial:</p>
+                <p>Multiempresa, perfiles de suelo, fuentes de agua, sistemas de fertirriego computarizado, inventario de insumos, historial meteorológico y asignación de tareas operativas para cuadrillas de campo.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <span class="stat-number">23</span>
+                    <span class="stat-label">Módulos relacionales</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Ecuaciones FAO-56</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">+10</span>
+                    <span class="stat-label">Tipos de sensores IoT</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">Offline</span>
+                    <span class="stat-label">Soporte en campo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plataformas -->
+    <section id="plataformas" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">MULTIPLATAFORMA NATIVA</h2>
+            <p class="text-slate-400 text-base md:text-lg">Desarrollado con Kotlin Multiplatform y Compose Multiplatform para un rendimiento nativo impecable en cualquier dispositivo.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card group">
+                <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                <h3>ESCRITORIO (WINDOWS & LINUX)</h3>
+                <p>Panel completo para estaciones de trabajo y cuartos de control. Instaladores nativos para Windows (.msi / .exe) y Linux (.deb / .rpm).</p>
+                <div class="card-glow"></div>
+            </div>
+            <div class="service-card group">
+                <div class="card-icon"><i class="fas fa-tablet-screen-button"></i></div>
+                <h3>TABLETS Y DISPOSITIVOS MÓVILES</h3>
+                <p>App táctil diseñada para operar a pie de parcela o dentro del establo, capturando lecturas, aretes y fotos fenológicas sin conexión.</p>
+                <div class="card-glow"></div>
+            </div>
+            <div class="service-card group">
+                <div class="card-icon"><i class="fas fa-cloud"></i></div>
+                <h3>SINCRONIZACIÓN EN NUBE</h3>
+                <p>Consolidación automática en tiempo real cuando el dispositivo recupera cobertura, garantizando que el equipo directivo siempre tenga datos actualizados.</p>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Planes -->
+    <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">PLANES DE ADOPCIÓN E IMPLEMENTACIÓN</h2>
+            <p class="text-slate-400 text-base md:text-lg">Soluciones flexibles desde ranchos familiares hasta corporativos agroindustriales.</p>
+        </div>
+        <div class="pricing-grid">
+
+            <div class="plan-card">
+                <h3 class="plan-name">PRODUCTOR</h3>
+                <p class="plan-tagline">Ideal para ranchos, huertas y viveros independientes.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">$1,890</span>
+                    <span class="plan-price-period">MXN /mes</span>
+                </div>
+                <p class="plan-price-note">Hasta 3 usuarios y 2 zonas de cultivo</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Motor de balance hídrico CROPWAT</li>
+                    <li><i class="fas fa-check"></i> Registro de cultivos y fenología</li>
+                    <li><i class="fas fa-check"></i> App móvil con modo offline</li>
+                    <li><i class="fas fa-check"></i> Soporte por correo y WhatsApp</li>
+                </ul>
+                <a href="#contacto" class="btn btn-secondary plan-cta">SOLICITAR</a>
+            </div>
+
+            <div class="plan-card plan-featured">
+                <span class="plan-badge">MÁS POPULAR</span>
+                <h3 class="plan-name">AGRO-EMPRESA</h3>
+                <p class="plan-tagline">Para operaciones tecnificadas con riego y ganadería.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">$4,500</span>
+                    <span class="plan-price-period">MXN /mes</span>
+                </div>
+                <p class="plan-price-note">Usuarios y zonas ilimitadas</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Integración con sondas y telemetría IoT</li>
+                    <li><i class="fas fa-check"></i> Módulo completo de hato ganadero</li>
+                    <li><i class="fas fa-check"></i> Diagnóstico fenológico y nutricional con IA</li>
+                    <li><i class="fas fa-check"></i> Reportes exportables para certificación</li>
+                    <li><i class="fas fa-check"></i> Soporte prioritario y capacitación</li>
+                </ul>
+                <a href="#contacto" class="btn btn-primary plan-cta">COMENZAR</a>
+            </div>
+
+            <div class="plan-card">
+                <h3 class="plan-name">SERVIDOR DEDICADO</h3>
+                <p class="plan-tagline">Instalación local permanente para centros de investigación o corporativos.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">A MEDIDA</span>
+                    <span class="plan-price-period">Llave en mano</span>
+                </div>
+                <p class="plan-price-note">Infraestructura local o nube privada</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Código y base de datos en tus servidores</li>
+                    <li><i class="fas fa-check"></i> Integración con PLC de riego y estaciones meteorológicas</li>
+                    <li><i class="fas fa-check"></i> Auditoría agronómica y calibración de fórmulas</li>
+                    <li><i class="fas fa-check"></i> Póliza de mantenimiento y soporte 24/7</li>
+                </ul>
+                <a href="#contacto" class="btn btn-secondary plan-cta">CONTACTAR</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="section-title">TRANSFORMA LA GESTIÓN DE TU OPERACIÓN AGROPECUARIA</h2>
+            <p class="text-slate-400 text-base md:text-lg">Agenda una sesión de demostración técnica con nuestros especialistas en ingeniería de software y agronomía.</p>
+        </div>
+        <div class="contact-info contact-info-centered">
+            <p>Comunícate por teléfono o correo para coordinar tu demostración:</p>
+            <ul>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-emerald-400"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-emerald-400"></i> administrador@ollin-tep.com</a></li>
+            </ul>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="logo">
+                    <img src="../resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="logo-mark">
+                    <span class="logo-word"><span class="logo-ollintep">Agro-Cria</span> <span class="logo-software">Pro</span></span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Ollintep Software</a></li>
+                    <li><a href="../restaurant/index.html">Restaurants</a></li>
+                    <li><a href="../actapro/index.html">ActaPro</a></li>
+                    <li><a href="index.html">Agro-Cria Pro</a></li>
+                    <li><a href="../diagmind/index.html">Diagmind</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón volver arriba -->
+    <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../script/scripts.js"></script>
+</body>
+</html>

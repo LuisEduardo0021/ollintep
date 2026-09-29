@@ -1,29 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- Menú Móvil (Hamburguesa) ---
+    // --- Menú Móvil (Hamburguesa) con soporte para View Transitions ---
     const mobileMenu = document.querySelector('#mobile-menu');
     const navLinks = document.querySelector('.nav-links');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    mobileMenu.addEventListener('click', () => {
-        // Alternar clase 'active' en los enlaces
-        navLinks.classList.toggle('active');
-
-        // Animación de la hamburguesa
-        mobileMenu.classList.toggle('is-active');
-        mobileMenu.setAttribute('aria-expanded', navLinks.classList.contains('active'));
-    });
-
-    // Cerrar menú al hacer clic en un enlace (móvil)
-    const navItems = document.querySelectorAll('.nav-links a');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if (navLinks.classList.contains('active')) {
+    if (mobileMenu && navLinks) {
+        const toggleMobileMenu = (forceClose = false) => {
+            if (forceClose) {
                 navLinks.classList.remove('active');
                 mobileMenu.classList.remove('is-active');
                 mobileMenu.setAttribute('aria-expanded', 'false');
+            } else {
+                const isActive = navLinks.classList.toggle('active');
+                mobileMenu.classList.toggle('is-active', isActive);
+                mobileMenu.setAttribute('aria-expanded', String(isActive));
+            }
+        };
+
+        mobileMenu.addEventListener('click', () => {
+            if (document.startViewTransition && !prefersReducedMotion) {
+                navLinks.classList.add('vt-nav');
+                const transition = document.startViewTransition(() => {
+                    toggleMobileMenu();
+                });
+                transition.finished.finally(() => {
+                    navLinks.classList.remove('vt-nav');
+                });
+            } else {
+                toggleMobileMenu();
             }
         });
-    });
+
+        // Cerrar menú al hacer clic en un enlace (móvil)
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    if (document.startViewTransition && !prefersReducedMotion) {
+                        navLinks.classList.add('vt-nav');
+                        const transition = document.startViewTransition(() => {
+                            toggleMobileMenu(true);
+                        });
+                        transition.finished.finally(() => {
+                            navLinks.classList.remove('vt-nav');
+                        });
+                    } else {
+                        toggleMobileMenu(true);
+                    }
+                }
+            });
+        });
+    }
 
     // --- Resaltado de Sección Activa en Scroll ---
     const sections = document.querySelectorAll('section');
@@ -152,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Interacciones con el mouse (solo en dispositivos con puntero fino) ---
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // --- Sistema orbital: descripción del elemento que está a la derecha ---
     const orbitRing = document.querySelector('#orbit-ring');
@@ -199,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 applyText();
                 return;
             }
+
             orbitCaption.classList.remove('is-visible');
             window.setTimeout(applyText, 180);
         };
@@ -288,4 +316,31 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', updateHeroParallax, { passive: true });
         updateHeroParallax();
     }
+
+    // --- Precarga inteligente de enlaces internos para View Transitions instantáneas ---
+    const internalLinks = document.querySelectorAll('a[href$=".html"], a[href^="./"], a[href^="../"], a[href*="/"]');
+    const prefetchedUrls = new Set();
+
+    const prefetchUrl = (url) => {
+        if (!url || prefetchedUrls.has(url) || url.startsWith('#') || url.startsWith('mailto:') || url.startsWith('tel:') || url.startsWith('javascript:')) return;
+        try {
+            const resolved = new URL(url, window.location.href);
+            if (resolved.origin !== window.location.origin) return;
+            if (resolved.pathname === window.location.pathname) return;
+            prefetchedUrls.add(url);
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = resolved.href;
+            document.head.appendChild(link);
+        } catch (_) {}
+    };
+
+    internalLinks.forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && !href.startsWith('#')) {
+            a.addEventListener('mouseenter', () => prefetchUrl(href), { passive: true, once: true });
+            a.addEventListener('touchstart', () => prefetchUrl(href), { passive: true, once: true });
+            a.addEventListener('focus', () => prefetchUrl(href), { passive: true, once: true });
+        }
+    });
 });

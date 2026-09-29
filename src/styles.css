@@ -1,0 +1,1662 @@
+@import "tailwindcss";
+@source "../index.html";
+@source "../*.html";
+@source "../**/*.html";
+@source "../script/**/*.js";
+
+@layer base {
+  :root {
+    /* --- Material 3 Expressive (M3E) Tonal Palette --- */
+    --md-sys-color-surface: #090d16;
+    --md-sys-color-surface-dim: #060910;
+    --md-sys-color-surface-container-lowest: #0c121e;
+    --md-sys-color-surface-container-low: #101726;
+    --md-sys-color-surface-container: #141d2f;
+    --md-sys-color-surface-container-high: #1a253c;
+    --md-sys-color-surface-container-highest: #202e49;
+
+    --md-sys-color-primary: #38bdf8;          /* Sky 400 */
+    --md-sys-color-on-primary: #04101e;
+    --md-sys-color-primary-container: rgba(56, 189, 248, 0.15);
+    --md-sys-color-on-primary-container: #bae6fd;
+
+    --md-sys-color-secondary: #818cf8;        /* Indigo 400 */
+    --md-sys-color-secondary-container: rgba(129, 140, 248, 0.15);
+    --md-sys-color-on-secondary-container: #c7d2fe;
+
+    --md-sys-color-tertiary: #34d399;         /* Emerald 400 */
+    --md-sys-color-tertiary-container: rgba(52, 211, 153, 0.15);
+    --md-sys-color-on-tertiary-container: #a7f3d0;
+
+    /* Bordes transparentes: componentes limpios sin trazos de color */
+    --md-sys-color-outline: transparent;
+    --md-sys-color-outline-variant: transparent;
+
+    --md-sys-color-on-surface: #f1f5f9;
+    --md-sys-color-on-surface-variant: #94a3b8;
+
+    /* --- Tokens dinámicos de acento y brillo por servicio --- */
+    --hero-gradient-end: #7dd3fc;
+    --service-btn-hover: #7dd3fc;
+    --service-glow: rgba(56, 189, 248, 0.28);
+    --service-glow-hover: rgba(56, 189, 248, 0.38);
+    --service-card-glow: rgba(56, 189, 248, 0.12);
+    --service-plan-glow: rgba(56, 189, 248, 0.25);
+    --service-subtle-glow: rgba(56, 189, 248, 0.1);
+    --service-icon-hover: rgba(56, 189, 248, 0.22);
+    --service-orbit-border: rgba(56, 189, 248, 0.2);
+    --service-orbit-glow: rgba(56, 189, 248, 0.25);
+    --service-connector: rgba(56, 189, 248, 0.2);
+
+    /* --- M3 Expressive Shapes --- */
+    --md-sys-shape-corner-full: 9999px;
+    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-large: 20px;
+    --md-sys-shape-corner-medium: 14px;
+    --md-sys-shape-corner-small: 8px;
+
+    /* --- Tipografías --- */
+    --font-heading: 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    font-family: var(--font-body);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  section {
+    scroll-margin-top: 5rem;
+  }
+
+  body {
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    background-color: var(--md-sys-color-surface);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* --- Fondo Ambiental Suave M3 --- */
+.liquid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.liquid-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.65;
+  will-change: transform;
+}
+
+.liquid-bg .blob-1 {
+  width: 550px;
+  height: 550px;
+  top: -100px;
+  left: 20%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+  animation: m3-pulse 16s ease-in-out infinite alternate;
+}
+
+.liquid-bg .blob-2 {
+  width: 600px;
+  height: 600px;
+  top: 45%;
+  right: -5%;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.12) 0%, transparent 70%);
+  animation: m3-pulse 20s ease-in-out infinite alternate-reverse;
+}
+
+.liquid-bg .blob-3 {
+  width: 480px;
+  height: 480px;
+  bottom: 5%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, transparent 70%);
+  animation: m3-pulse 18s ease-in-out infinite alternate;
+}
+
+@keyframes m3-pulse {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.08) translate(25px, 20px); }
+  100% { transform: scale(0.95) translate(-20px, -25px); }
+}
+
+/* --- Barra de Progreso M3 --- */
+.scroll-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #34d399);
+  width: 0%;
+  transition: width 0.1s linear;
+  z-index: 100;
+  border-radius: 0 2px 2px 0;
+}
+
+/* --- Header / Top App Bar M3E --- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  padding: 1.25rem 0;
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.header.is-scrolled {
+  padding: 0.75rem 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: rgba(16, 23, 38, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+  transition: all 0.3s ease;
+}
+
+.header.is-scrolled .navbar {
+  background: rgba(20, 29, 47, 0.95);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.logo-mark {
+  height: 32px;
+  width: auto;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.logo:hover .logo-mark {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.logo-ollintep {
+  color: #ffffff;
+}
+
+.logo-software {
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 1rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.nav-links a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-links a.active {
+  color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-primary-container);
+}
+
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menu-toggle .bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 5px auto;
+  background-color: var(--md-sys-color-on-surface);
+  transition: all 0.25s ease;
+  border-radius: 2px;
+}
+
+.menu-toggle.is-active .bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.is-active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.is-active .bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 868px) {
+  .navbar {
+    border-radius: var(--md-sys-shape-corner-large);
+    margin: 0 1rem;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 340px;
+    height: 100vh;
+    background: rgba(16, 23, 38, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 3rem 2rem;
+    gap: 1.25rem;
+    transition: right 0.35s cubic-bezier(0.2, 0, 0, 1);
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .nav-links a {
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+/* --- Hero Section M3E --- */
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8.5rem 1.5rem 5rem;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 860px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: clamp(2.25rem, 5.2vw, 3.85rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 20%, #e2e8f0 60%, var(--hero-gradient-end, #7dd3fc) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 660px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.65;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* --- Material 3 Expressive Buttons --- */
+.btn,
+.m3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.85rem 2rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+  cursor: pointer;
+}
+
+/* Filled Button M3E */
+.btn-primary,
+.m3-btn-filled {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  box-shadow: 0 4px 14px var(--service-glow);
+}
+
+.btn-primary:hover,
+.m3-btn-filled:hover {
+  background: var(--service-btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px var(--service-glow-hover);
+}
+
+/* Tonal / Elevated Button M3E (Sin bordes) */
+.btn-secondary,
+.m3-btn-tonal {
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border: none;
+}
+
+.btn-secondary:hover,
+.m3-btn-tonal:hover {
+  background: var(--md-sys-color-surface-container-highest);
+  transform: translateY(-2px);
+  color: var(--md-sys-color-primary);
+}
+
+/* Outlined Button M3E (Convertido a Tonal suave) */
+.m3-btn-outlined {
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border: none;
+}
+
+.m3-btn-outlined:hover {
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-primary);
+}
+
+/* --- M3 Expressive Chips (Sin bordes) --- */
+.m3-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  color: var(--md-sys-color-on-surface);
+  transition: all 0.2s ease;
+}
+
+.m3-chip-primary {
+  background: var(--md-sys-color-primary-container);
+  border: none;
+  color: var(--md-sys-color-on-primary-container);
+}
+
+/* --- M3 Expressive Cards & Surfaces (Sin bordes) --- */
+.m3-surface-container {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  border: none;
+}
+
+.m3-surface-high {
+  background: var(--md-sys-color-surface-container-high);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  border: none;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.service-card,
+.m3-card {
+  position: relative;
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-large); /* 28px M3 shape */
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.28s cubic-bezier(0.2, 0, 0, 1);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.service-card:hover,
+.m3-card:hover {
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.45), 0 0 20px -5px var(--service-card-glow);
+}
+
+.service-card.active-card {
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+}
+
+.card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--md-sys-shape-corner-large);
+  background: var(--md-sys-color-primary-container);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-primary);
+  font-size: 1.45rem;
+  margin-bottom: 1.35rem;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.service-card:hover .card-icon {
+  transform: scale(1.08);
+  background: var(--service-icon-hover);
+}
+
+.service-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+.service-card p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.service-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  transition: gap 0.2s ease;
+}
+
+.service-card:hover .service-card-cta {
+  gap: 0.75rem;
+}
+
+.card-glow {
+  position: absolute;
+  top: var(--my, 50%);
+  left: var(--mx, 50%);
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, var(--service-subtle-glow) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.service-card:hover .card-glow {
+  opacity: 1;
+}
+
+/* --- Sección Títulos --- */
+.section-title {
+  font-size: clamp(1.85rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.section-title-left {
+  text-align: left;
+}
+
+/* --- Sección Nosotros M3E (Sin bordes) --- */
+.about {
+  padding: 6rem 1.5rem;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3.5rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 968px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.about-text p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.stat {
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 1.85rem 1.5rem;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.stat:hover {
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.75rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--md-sys-color-primary);
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-label {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* --- Sección Contacto M3E (Sin bordes) --- */
+.contact {
+  padding: 6rem 1.5rem;
+}
+
+.contact-info-centered {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 3rem 2.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.contact-info-centered p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+.contact-info-centered ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.contact-info-centered li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.contact-info-centered li a:hover {
+  color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-surface-container-highest);
+  transform: translateY(-2px);
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-links a {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.social-links a:hover {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  transform: translateY(-2px);
+}
+
+/* --- Footer M3E (Sin bordes) --- */
+.footer {
+  border: none;
+  background: var(--md-sys-color-surface-dim);
+  padding: 4rem 1.5rem 2.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding-bottom: 2.25rem;
+  border: none;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links a {
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--md-sys-color-primary);
+}
+
+.footer-copy {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-top: 2.25rem;
+}
+
+/* --- Botón Volver Arriba M3E FAB (Sin bordes) --- */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-highest);
+  border: none;
+  color: var(--md-sys-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  z-index: 90;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px var(--service-glow);
+}
+
+/* --- Pricing Plans M3E (Sin bordes) --- */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.plan-card {
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  border: none;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.45);
+}
+
+.plan-featured {
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  box-shadow: 0 0 35px -8px var(--service-plan-glow);
+}
+
+.plan-badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--md-sys-shape-corner-full);
+}
+
+.plan-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.plan-tagline {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  min-height: 2.7rem;
+}
+
+.plan-price {
+  margin-bottom: 1.75rem;
+}
+
+.plan-price-amount {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.plan-price-period {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
+}
+
+.plan-price-note {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  flex-grow: 1;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  margin-bottom: 0.85rem;
+}
+
+.plan-features li i {
+  color: var(--md-sys-color-primary);
+  margin-top: 0.2rem;
+}
+
+.plan-cta {
+  width: 100%;
+}
+
+/* Video / Showcase Grid (Sin bordes) */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+.video-card {
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  border: none;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.4);
+}
+
+.video-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #060910;
+  overflow: hidden;
+  position: relative;
+}
+
+.video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.video-card:hover .video-thumb img {
+  transform: scale(1.03);
+}
+
+.video-card h3 {
+  padding: 1.25rem 1.5rem 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.video-card p {
+  padding: 0 1.5rem 1.5rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* --- Visual Orbital M3E (Ollintep for Restaurants) --- */
+.orbit-section {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.orbit-intro {
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 540px;
+  margin: 0 auto 2.5rem;
+  font-size: 1rem;
+}
+
+.orbit-frame {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  border: none;
+  padding: 4rem 2rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.orbit-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+}
+
+.orbit {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  flex-shrink: 0;
+}
+
+.orbit-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed var(--service-orbit-border);
+}
+
+.orbit-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-sys-color-surface-container-high);
+  border: none;
+  box-shadow: 0 0 35px var(--service-orbit-glow);
+  animation: m3-orbit-pulse 4s ease-in-out infinite;
+}
+
+.orbit-core img {
+  width: 56px;
+  height: auto;
+}
+
+@keyframes m3-orbit-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
+  50% { transform: translate(-50%, -50%) scale(1.05); filter: brightness(1.15); }
+}
+
+.orbit-ring {
+  position: absolute;
+  inset: 0;
+  animation: m3-orbit-spin 26s linear infinite;
+}
+
+@keyframes m3-orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+.orbit-item {
+  --radius: 180px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  margin: -26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--md-sys-color-surface-container-highest);
+  border: none;
+  color: var(--md-sys-color-primary);
+  font-size: 1.15rem;
+  transform: translate(var(--tx), var(--ty));
+  animation: m3-orbit-counter 26s linear infinite;
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.orbit-item:hover {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  transform: translate(var(--tx), var(--ty)) scale(1.15);
+}
+
+.orbit-item.is-active {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: 0 0 24px var(--service-orbit-glow);
+}
+
+@keyframes m3-orbit-counter {
+  from { transform: translate(var(--tx), var(--ty)) rotate(0deg); }
+  to   { transform: translate(var(--tx), var(--ty)) rotate(-360deg); }
+}
+
+.orbit-item-1 { --tx: 0px; --ty: calc(var(--radius) * -1); }
+.orbit-item-2 { --tx: calc(var(--radius) * 0.951); --ty: calc(var(--radius) * -0.309); }
+.orbit-item-3 { --tx: calc(var(--radius) * 0.588); --ty: calc(var(--radius) * 0.809); }
+.orbit-item-4 { --tx: calc(var(--radius) * -0.588); --ty: calc(var(--radius) * 0.809); }
+.orbit-item-5 { --tx: calc(var(--radius) * -0.951); --ty: calc(var(--radius) * -0.309); }
+
+.orbit-caption {
+  width: 300px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.orbit-caption-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.orbit-caption-desc {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+}
+
+.orbit-caption.is-visible .orbit-caption-title,
+.orbit-caption.is-visible .orbit-caption-desc {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.orbit-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+}
+
+.orbit-list li {
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: default;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.orbit-list li.is-active {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+@media (max-width: 768px) {
+  .orbit-frame { padding: 2rem 1rem; }
+  .orbit-stage { flex-direction: column; gap: 2rem; }
+  .orbit { width: 300px; height: 300px; }
+  .orbit-core { width: 88px; height: 88px; }
+  .orbit-core img { width: 40px; }
+  .orbit-item { --radius: 118px; width: 44px; height: 44px; margin: -22px; font-size: 1rem; }
+  .orbit-caption { width: 100%; max-width: 320px; text-align: center; }
+}
+
+/* --- Multiplataforma M3E --- */
+.platform-section {
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.platform-intro {
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  font-size: 1rem;
+}
+
+.platform-frame {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  border: none;
+  padding: 3.5rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.platform-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.platform-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  width: 90px;
+}
+
+.platform-node .card-icon {
+  margin-bottom: 0;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--md-sys-shape-corner-full);
+}
+
+.platform-icon-hub {
+  width: 74px;
+  height: 74px;
+  background: var(--md-sys-color-surface-container-highest);
+}
+
+.platform-icon-hub img {
+  width: 36px;
+  height: auto;
+}
+
+.platform-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+}
+
+.platform-node-hub .platform-label {
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
+}
+
+.platform-connector {
+  position: relative;
+  flex: 1 1 50px;
+  max-width: 120px;
+  height: 2px;
+  background: var(--service-connector);
+}
+
+.platform-pulse {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  box-shadow: 0 0 10px var(--md-sys-color-primary);
+  transform: translate(-50%, -50%);
+  animation: platform-flow-h 2.4s linear infinite;
+}
+
+.platform-connector-2 .platform-pulse { animation-delay: 0.6s; }
+.platform-connector-3 .platform-pulse { animation-delay: 1.2s; }
+.platform-connector-4 .platform-pulse { animation-delay: 1.8s; }
+
+@keyframes platform-flow-h {
+  0% { left: 0%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .platform-chain { flex-wrap: wrap; gap: 1.5rem; }
+  .platform-connector { display: none; }
+}
+
+/* Service AI pill for Restaurant solutions */
+.service-ai {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+}
+
+.service-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-primary-container);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  margin-bottom: 0.35rem;
+}
+
+.service-ai-desc {
+  font-size: 0.8rem;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.45;
+}
+
+/* Scroll Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.2, 0, 0, 1), transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Logo Marquee (Proyectos de Ollintep) --- */
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+  padding: 0.5rem 0;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* --- View Transitions API (W3C Cross-Document & In-Page) --- */
+@view-transition {
+  navigation: auto;
+}
+
+/* Nombres de elementos compartidos para persistencia y metamorfosis visual */
+.header {
+  view-transition-name: app-header;
+}
+
+.header .logo {
+  view-transition-name: app-brand-logo;
+}
+
+.liquid-bg {
+  view-transition-name: app-liquid-backdrop;
+}
+
+.back-to-top {
+  view-transition-name: app-back-to-top;
+}
+
+/* Transiciones de elementos compartidos entre catálogo y páginas de producto */
+.vt-card-restaurant {
+  view-transition-name: card-restaurant;
+}
+
+.vt-card-actapro {
+  view-transition-name: card-actapro;
+}
+
+.vt-card-agrocria {
+  view-transition-name: card-agrocria;
+}
+
+.vt-card-diagmind {
+  view-transition-name: card-diagmind;
+}
+
+/* Animaciones de cambio de página con curvas Material 3 Expressive */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: m3-view-transition-exit;
+}
+
+::view-transition-new(root) {
+  animation-name: m3-view-transition-enter;
+}
+
+::view-transition-group(app-header),
+::view-transition-group(app-brand-logo),
+::view-transition-group(app-liquid-backdrop),
+::view-transition-group(app-back-to-top),
+::view-transition-group(card-restaurant),
+::view-transition-group(card-actapro),
+::view-transition-group(card-agrocria),
+::view-transition-group(card-diagmind) {
+  animation-duration: 0.38s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes m3-view-transition-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.992) translateY(-6px);
+  }
+}
+
+@keyframes m3-view-transition-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.992) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Transición específica para menú móvil in-page */
+.nav-links.vt-nav {
+  view-transition-name: mobile-navigation;
+}
+
+::view-transition-old(mobile-navigation),
+::view-transition-new(mobile-navigation) {
+  animation-duration: 0.25s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Accesibilidad: Respetar preferencias de reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   HELPER PARA BOTÓN RETORNO A OLLINTEP
+   ========================================================================== */
+.product-back-btn {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.product-back-btn:hover {
+  background: var(--service-glow);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   PALETAS Y TEMAS POR SERVICIO / PRODUCTO
+   ========================================================================== */
+
+/* --- 1. ActaPro: Tema Índigo / Royal Tech (Gobernanza y Actas) --- */
+body.theme-actapro {
+  --md-sys-color-primary: #818cf8;          /* Indigo 400 */
+  --md-sys-color-on-primary: #0a0e1a;
+  --md-sys-color-primary-container: rgba(129, 140, 248, 0.16);
+  --md-sys-color-on-primary-container: #e0e7ff;
+  --md-sys-color-secondary: #a78bfa;        /* Purple 400 */
+  --md-sys-color-secondary-container: rgba(167, 139, 250, 0.16);
+  --md-sys-color-on-secondary-container: #ede9fe;
+
+  --hero-gradient-end: #a5b4fc;
+  --service-btn-hover: #a5b4fc;
+  --service-glow: rgba(99, 102, 241, 0.35);
+  --service-glow-hover: rgba(129, 140, 248, 0.45);
+  --service-card-glow: rgba(99, 102, 241, 0.18);
+  --service-plan-glow: rgba(99, 102, 241, 0.3);
+  --service-subtle-glow: rgba(129, 140, 248, 0.14);
+  --service-icon-hover: rgba(129, 140, 248, 0.24);
+  --service-orbit-border: rgba(129, 140, 248, 0.22);
+  --service-orbit-glow: rgba(99, 102, 241, 0.3);
+  --service-connector: rgba(129, 140, 248, 0.22);
+}
+
+body.theme-actapro .liquid-bg .blob-1 {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, transparent 70%);
+}
+body.theme-actapro .liquid-bg .blob-2 {
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.18) 0%, transparent 70%);
+}
+body.theme-actapro .liquid-bg .blob-3 {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.14) 0%, transparent 70%);
+}
+body.theme-actapro .scroll-progress {
+  background: linear-gradient(90deg, #4f46e5, #818cf8, #c084fc);
+}
+body.theme-actapro .btn-primary,
+body.theme-actapro .m3-btn-filled {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #ffffff;
+}
+body.theme-actapro .btn-primary:hover,
+body.theme-actapro .m3-btn-filled:hover {
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: #ffffff;
+}
+
+/* --- 2. Agro-Cria Pro: Tema Esmeralda / Bio Green (Agrotecnología & Hídrico) --- */
+body.theme-agrocria {
+  --md-sys-color-primary: #10b981;          /* Emerald 500 */
+  --md-sys-color-on-primary: #022c22;
+  --md-sys-color-primary-container: rgba(16, 185, 129, 0.16);
+  --md-sys-color-on-primary-container: #d1fae5;
+  --md-sys-color-secondary: #14b8a6;        /* Teal 500 */
+  --md-sys-color-secondary-container: rgba(20, 184, 166, 0.16);
+  --md-sys-color-on-secondary-container: #ccfbf1;
+
+  --hero-gradient-end: #6ee7b7;
+  --service-btn-hover: #34d399;
+  --service-glow: rgba(16, 185, 129, 0.35);
+  --service-glow-hover: rgba(52, 211, 153, 0.45);
+  --service-card-glow: rgba(16, 185, 129, 0.18);
+  --service-plan-glow: rgba(16, 185, 129, 0.3);
+  --service-subtle-glow: rgba(16, 185, 129, 0.14);
+  --service-icon-hover: rgba(16, 185, 129, 0.24);
+  --service-orbit-border: rgba(16, 185, 129, 0.22);
+  --service-orbit-glow: rgba(16, 185, 129, 0.3);
+  --service-connector: rgba(16, 185, 129, 0.25);
+}
+
+body.theme-agrocria .liquid-bg .blob-1 {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, transparent 70%);
+}
+body.theme-agrocria .liquid-bg .blob-2 {
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.18) 0%, transparent 70%);
+}
+body.theme-agrocria .liquid-bg .blob-3 {
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.14) 0%, transparent 70%);
+}
+body.theme-agrocria .scroll-progress {
+  background: linear-gradient(90deg, #059669, #10b981, #34d399);
+}
+body.theme-agrocria .btn-primary,
+body.theme-agrocria .m3-btn-filled {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #022c22;
+  font-weight: 700;
+}
+body.theme-agrocria .btn-primary:hover,
+body.theme-agrocria .m3-btn-filled:hover {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #022c22;
+}
+
+/* --- 3. Diagmind: Tema Cyber Sky & Cyan Eléctrico (Auditoría Android & Telemetría) --- */
+body.theme-diagmind {
+  --md-sys-color-primary: #38bdf8;          /* Sky 400 */
+  --md-sys-color-on-primary: #04101e;
+  --md-sys-color-primary-container: rgba(56, 189, 248, 0.16);
+  --md-sys-color-on-primary-container: #bae6fd;
+  --md-sys-color-secondary: #06b6d4;        /* Cyan 500 */
+  --md-sys-color-secondary-container: rgba(6, 182, 212, 0.16);
+  --md-sys-color-on-secondary-container: #cffafe;
+
+  --hero-gradient-end: #7dd3fc;
+  --service-btn-hover: #7dd3fc;
+  --service-glow: rgba(56, 189, 248, 0.35);
+  --service-glow-hover: rgba(56, 189, 248, 0.45);
+  --service-card-glow: rgba(56, 189, 248, 0.18);
+  --service-plan-glow: rgba(56, 189, 248, 0.3);
+  --service-subtle-glow: rgba(56, 189, 248, 0.14);
+  --service-icon-hover: rgba(56, 189, 248, 0.24);
+  --service-orbit-border: rgba(56, 189, 248, 0.22);
+  --service-orbit-glow: rgba(56, 189, 248, 0.3);
+  --service-connector: rgba(56, 189, 248, 0.22);
+}
+
+body.theme-diagmind .liquid-bg .blob-1 {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, transparent 70%);
+}
+body.theme-diagmind .liquid-bg .blob-2 {
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.18) 0%, transparent 70%);
+}
+body.theme-diagmind .liquid-bg .blob-3 {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, transparent 70%);
+}
+body.theme-diagmind .scroll-progress {
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #06b6d4);
+}
+body.theme-diagmind .btn-primary,
+body.theme-diagmind .m3-btn-filled {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: #04101e;
+  font-weight: 700;
+}
+body.theme-diagmind .btn-primary:hover,
+body.theme-diagmind .m3-btn-filled:hover {
+  background: linear-gradient(135deg, #38bdf8, #7dd3fc);
+  color: #04101e;
+}
+
+/* --- 4. Ollintep for Restaurants: Tema Ámbar Gourmet & Warm Gold (POS & KDS Gastronómico) --- */
+body.theme-restaurant {
+  --md-sys-color-primary: #f59e0b;          /* Amber 500 */
+  --md-sys-color-on-primary: #3b1803;
+  --md-sys-color-primary-container: rgba(245, 158, 11, 0.16);
+  --md-sys-color-on-primary-container: #fef3c7;
+  --md-sys-color-secondary: #f97316;        /* Orange 500 */
+  --md-sys-color-secondary-container: rgba(249, 115, 22, 0.16);
+  --md-sys-color-on-secondary-container: #ffedd5;
+
+  --hero-gradient-end: #fcd34d;
+  --service-btn-hover: #fbbf24;
+  --service-glow: rgba(245, 158, 11, 0.35);
+  --service-glow-hover: rgba(251, 191, 36, 0.45);
+  --service-card-glow: rgba(245, 158, 11, 0.18);
+  --service-plan-glow: rgba(245, 158, 11, 0.3);
+  --service-subtle-glow: rgba(245, 158, 11, 0.14);
+  --service-icon-hover: rgba(245, 158, 11, 0.24);
+  --service-orbit-border: rgba(245, 158, 11, 0.22);
+  --service-orbit-glow: rgba(245, 158, 11, 0.3);
+  --service-connector: rgba(245, 158, 11, 0.22);
+}
+
+body.theme-restaurant .liquid-bg .blob-1 {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, transparent 70%);
+}
+body.theme-restaurant .liquid-bg .blob-2 {
+  background: radial-gradient(circle, rgba(217, 119, 6, 0.18) 0%, transparent 70%);
+}
+body.theme-restaurant .liquid-bg .blob-3 {
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%);
+}
+body.theme-restaurant .scroll-progress {
+  background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24);
+}
+body.theme-restaurant .btn-primary,
+body.theme-restaurant .m3-btn-filled {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: #1c0e01;
+  font-weight: 700;
+}
+body.theme-restaurant .btn-primary:hover,
+body.theme-restaurant .m3-btn-filled:hover {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #1c0e01;
+}
+

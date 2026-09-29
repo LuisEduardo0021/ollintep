@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,17 +70,13 @@
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Hojas de estilo -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo Tailwind compiladas -->
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/restaurant.css">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Lottie -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    <script src="../resources/lottie/ollintep-logo-data.js"></script>
 </head>
-<body>
+<body class="theme-restaurant bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
 
     <!-- Fondo líquido -->
     <div class="liquid-bg" aria-hidden="true">
@@ -92,18 +88,19 @@
     <!-- Navegación Principal -->
     <header class="header">
         <div class="scroll-progress" id="scroll-progress"></div>
-        <nav class="navbar container">
-            <a href="#inicio" class="logo">
-                <img src="../resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="logo-mark">
+        <nav class="navbar">
+            <a href="#inicio" class="logo group">
+                <img src="../resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="logo-mark group-hover:scale-110 transition-transform">
                 <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">for Restaurants</span></span>
             </a>
             <ul class="nav-links">
                 <li><a href="#inicio" class="active">INICIO</a></li>
                 <li><a href="#soluciones">SOLUCIONES</a></li>
+                <li><a href="#capturas">CAPTURAS</a></li>
                 <li><a href="#precios">PRECIOS</a></li>
                 <li><a href="#nosotros">NOSOTROS</a></li>
                 <li><a href="#contacto">CONTACTO</a></li>
-                <li><i class="fas fa-search search-icon"></i></li>
+                <li><a href="../index.html" class="product-back-btn text-xs px-3 py-1 rounded-full"><i class="fas fa-arrow-left mr-1"></i>OLLINTEP</a></li>
             </ul>
             <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
                 <span class="bar"></span>
@@ -113,41 +110,37 @@
         </nav>
     </header>
 
-    <!-- Sección Hero -->
-    <section id="inicio" class="hero-scroll">
-        <div class="hero hero-pin">
-            <div class="hero-overlay">
-                <div class="network-globe"></div>
-            </div>
-            <div class="hero-visual" id="hero-visual">
-                <div class="hero-visual-glow" aria-hidden="true"></div>
-                <div class="hero-visual-ring hero-visual-ring-1" aria-hidden="true"></div>
-                <div class="hero-visual-ring hero-visual-ring-2" aria-hidden="true"></div>
-                <div class="hero-lottie" id="hero-lottie" aria-hidden="true"></div>
-                <div class="hero-chip hero-chip-1" aria-hidden="true"><i class="fas fa-cash-register"></i><span>POS en la nube</span></div>
-                <div class="hero-chip hero-chip-2" aria-hidden="true"><i class="fas fa-motorcycle"></i><span>Pedidos y delivery</span></div>
-                <div class="hero-chip hero-chip-3" aria-hidden="true"><i class="fas fa-calendar-check"></i><span>Reservas</span></div>
-            </div>
-            <div class="hero-scroll-hint" id="hero-scroll-hint" aria-hidden="true"><span></span></div>
+    <!-- Sección Hero M3E -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay">
+            <div class="network-globe"></div>
         </div>
-    </section>
-
-    <!-- Texto del Hero: aparece al terminar de hacer scroll sobre la animación -->
-    <section class="hero-text">
-        <div class="container hero-content" id="hero-content">
+        <div class="hero-content vt-card-restaurant">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                Offline-First POS & Cocina en Tiempo Real
+            </div>
             <h1>SOFTWARE QUE HACE CRECER TU RESTAURANTE</h1>
-            <p>Punto de venta, pedidos, mesas y cocina, todo conectado en un solo lugar</p>
+            <p>Punto de venta integral, pedidos en línea, comandero digital y cocina sincronizada. Opera sin internet y sincroniza automáticamente.</p>
             <div class="hero-btns">
-                <a href="#soluciones" class="btn btn-primary">VER SOLUCIONES</a>
-                <a href="#contacto" class="btn btn-secondary">AGENDAR DEMO</a>
+                <a href="#soluciones" class="btn btn-primary">
+                    <span>VER SOLUCIONES</span>
+                    <i class="fas fa-arrow-down text-xs"></i>
+                </a>
+                <a href="#contacto" class="btn btn-secondary">
+                    <span>AGENDAR DEMO</span>
+                    <i class="fas fa-calendar-check text-xs"></i>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Visual orbital -->
-    <section class="orbit-section container">
-        <h2 class="section-title">TODO TU RESTAURANTE, CONECTADO</h2>
-        <p class="orbit-intro">Pagos, recibos, ventas y pedidos, siempre sincronizados alrededor de tu negocio.</p>
+    <!-- Visual orbital M3E -->
+    <section class="orbit-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">TODO TU RESTAURANTE, CONECTADO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Pagos, recibos, ventas y pedidos, siempre sincronizados alrededor de tu negocio.</p>
+        </div>
         <div class="orbit-frame">
         <div class="orbit-stage">
             <div class="orbit">
@@ -198,41 +191,50 @@
         </div>
     </section>
 
-    <!-- Compatibilidad multiplataforma -->
-    <section class="platform-section container">
-        <h2 class="section-title">EN TODOS TUS DISPOSITIVOS</h2>
-        <p class="platform-intro">Un mismo sistema, sincronizado en tiempo real entre la caja, la cocina y la oficina.</p>
+    <!-- Compatibilidad multiplataforma M3E (Centrado y simétrico) -->
+    <section class="platform-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">EN TODOS TUS DISPOSITIVOS</h2>
+            <p class="text-slate-400 text-base md:text-lg">Un mismo sistema, sincronizado en tiempo real entre la caja, la cocina y la oficina.</p>
+        </div>
         <div class="platform-frame">
             <div class="platform-chain">
                 <div class="platform-node">
                     <div class="card-icon"><i class="fab fa-windows"></i></div>
-                    <span class="platform-label">Windows</span>
+                    <span class="platform-label">Windows (POS)</span>
                 </div>
                 <div class="platform-connector platform-connector-1"><span class="platform-pulse"></span></div>
+                <div class="platform-node">
+                    <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                    <span class="platform-label">Web (KDS)</span>
+                </div>
+                <div class="platform-connector platform-connector-2"><span class="platform-pulse"></span></div>
                 <div class="platform-node platform-node-hub">
                     <div class="card-icon platform-icon-hub">
                         <img src="../resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants">
                     </div>
                     <span class="platform-label">Ollintep Cloud</span>
                 </div>
-                <div class="platform-connector platform-connector-2"><span class="platform-pulse"></span></div>
+                <div class="platform-connector platform-connector-3"><span class="platform-pulse"></span></div>
                 <div class="platform-node">
                     <div class="card-icon"><i class="fab fa-android"></i></div>
                     <span class="platform-label">Android</span>
                 </div>
-                <div class="platform-connector platform-connector-3"><span class="platform-pulse"></span></div>
+                <div class="platform-connector platform-connector-4"><span class="platform-pulse"></span></div>
                 <div class="platform-node">
                     <div class="card-icon"><i class="fab fa-apple"></i></div>
-                    <span class="platform-label">iOS</span>
+                    <span class="platform-label">iOS / iPad</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Soluciones -->
-    <section id="soluciones" class="services container">
-        <h2 class="section-title">SOLUCIONES PARA TU OPERACIÓN</h2>
-        <p class="services-intro">Cada solución está disponible en versión Base o con IA estadística: modelos que corren en tu propio equipo, sin depender de la nube.</p>
+    <!-- Sección de Soluciones M3E -->
+    <section id="soluciones" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">SOLUCIONES PARA TU OPERACIÓN</h2>
+            <p class="text-slate-400 text-base md:text-lg">Cada solución está disponible en versión Base o con IA estadística: modelos locales que corren en tu propio equipo sin depender de la nube.</p>
+        </div>
         <div class="services-grid">
 
             <div class="service-card">
@@ -276,36 +278,49 @@
         </div>
     </section>
 
-    <!-- Sección de Videos -->
-    <section class="videos-section container">
-        <h2 class="section-title">MIRA CÓMO FUNCIONA</h2>
-        <p class="videos-intro">Un vistazo rápido a la plataforma en video.</p>
-        <div class="videos-grid">
-            <div class="video-card">
-                <div class="video-thumb">
-                    <i class="fas fa-circle-play"></i>
+    <!-- Sección de Capturas Reales M3E -->
+    <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">EL SISTEMA EN TU RESTAURANTE</h2>
+            <p class="text-slate-400 text-base md:text-lg">Capturas reales de Ollintep for Restaurants: arquitectura offline-first con sincronización instantánea entre el comandeo y la cocina.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-amber-950/40">
+                    <img src="../resources/screenshots/restaurant-pos.png" alt="Terminal táctil POS de comandeo en mesa, carrito y cobro múltiple" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
-                <h3>Recorrido por el POS</h3>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Terminal Táctil POS</span>
+                        <span class="text-[10px] text-emerald-400 font-mono">Offline-First LAN</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Comandeo en Mesa & Cobro Rápido</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Catálogo táctil con control de existencias en tiempo real, desglose de términos de carne, modificadores de comanda, división de cuentas y cobro con terminal integrada sin depender de internet.</p>
+                </div>
             </div>
-            <div class="video-card">
-                <div class="video-thumb">
-                    <i class="fas fa-circle-play"></i>
+
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-amber-950/40">
+                    <img src="../resources/screenshots/restaurant-kds.png" alt="Kitchen Display System KDS con colas por partidas, tiempos y alertas" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
-                <h3>Pedidos y delivery en acción</h3>
-            </div>
-            <div class="video-card">
-                <div class="video-thumb">
-                    <i class="fas fa-circle-play"></i>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold uppercase">Kitchen Display System (KDS)</span>
+                        <span class="text-[10px] text-amber-400 font-mono">Tiempo Prom. 14m 12s</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Organización de Cocina & Despacho</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Comandas digitales organizadas por partida (Parrilla, Frío, Sartenes, Postres) con cronómetros por semáforo de tiempo, alertas de alergias en rojo y notificación de entrega para meseros.</p>
                 </div>
-                <h3>Reportes y analítica en vivo</h3>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Precios -->
-    <section id="precios" class="pricing container">
-        <h2 class="section-title">PLANES PARA CADA ETAPA DE TU RESTAURANTE</h2>
-        <p class="pricing-intro">Empieza simple y crece sin cambiar de sistema.</p>
+    <!-- Sección de Precios M3E -->
+    <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">PLANES PARA CADA ETAPA DE TU RESTAURANTE</h2>
+            <p class="text-slate-400 text-base md:text-lg">Empieza simple y crece sin cambiar de sistema.</p>
+        </div>
         <div class="pricing-grid">
 
             <div class="plan-card">
@@ -361,8 +376,8 @@
         </div>
     </section>
 
-    <!-- Sección Nosotros -->
-    <section id="nosotros" class="about container">
+    <!-- Sección Nosotros M3E -->
+    <section id="nosotros" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
             <div class="about-text">
                 <h2 class="section-title section-title-left">HECHO PARA LA OPERACIÓN REAL DE UN RESTAURANTE</h2>
@@ -390,14 +405,16 @@
         </div>
     </section>
 
-    <!-- Sección Contacto -->
-    <section id="contacto" class="contact container">
-        <h2 class="section-title">AGENDA UNA DEMO</h2>
+    <!-- Sección Contacto M3E -->
+    <section id="contacto" class="contact max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">AGENDA UNA DEMO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Llámanos, escríbenos o encuéntranos en redes sociales para agendar tu demo personalizada.</p>
+        </div>
         <div class="contact-info contact-info-centered">
-            <p>Llámanos, escríbenos o encuéntranos en redes sociales para agendar tu demo.</p>
             <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope"></i> administrador@ollin-tep.com</a></li>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-amber-400"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-amber-400"></i> administrador@ollin-tep.com</a></li>
             </ul>
             <div class="social-links">
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -408,7 +425,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container footer-content">
+        <div class="max-w-7xl mx-auto px-6 footer-content">
             <div class="footer-top">
                 <div class="logo">
                     <img src="../resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="logo-mark">
@@ -416,9 +433,10 @@
                 </div>
                 <ul class="footer-links">
                     <li><a href="../index.html">Ollintep Software</a></li>
-                    <li><a href="#soluciones">Soluciones</a></li>
-                    <li><a href="#precios">Precios</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="index.html">Ollintep for Restaurants</a></li>
+                    <li><a href="../actapro/index.html">ActaPro</a></li>
+                    <li><a href="../agrocria/index.html">Agro-Cria Pro</a></li>
+                    <li><a href="../diagmind/index.html">Diagmind</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </div>
@@ -433,95 +451,5 @@
 
     <!-- Scripts -->
     <script src="../script/scripts.js"></script>
-    <script>
-        (function () {
-            var lottieContainer = document.getElementById('hero-lottie');
-            var heroSection = document.getElementById('inicio');
-            var heroVisual = document.getElementById('hero-visual');
-            var heroTextEl = document.getElementById('hero-content');
-            var scrollHint = document.getElementById('hero-scroll-hint');
-            var header = document.querySelector('.header');
-
-            // El bloque de texto se revela solo cuando entra en pantalla,
-            // es decir, justo cuando termina el scroll fijado de la animación.
-            if (heroTextEl) {
-                if ('IntersectionObserver' in window) {
-                    var textObserver = new IntersectionObserver(function (entries) {
-                        entries.forEach(function (entry) {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add('is-revealed');
-                                textObserver.unobserve(entry.target);
-                            }
-                        });
-                    }, { threshold: 0.3 });
-                    textObserver.observe(heroTextEl);
-                } else {
-                    heroTextEl.classList.add('is-revealed');
-                }
-            }
-
-            if (!window.lottie || !window.OLLINTEP_LOGO_ANIMATION || !lottieContainer) return;
-
-            var reduceMotion = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            var anim = lottie.loadAnimation({
-                container: lottieContainer,
-                renderer: 'svg',
-                loop: reduceMotion,
-                autoplay: reduceMotion,
-                animationData: window.OLLINTEP_LOGO_ANIMATION
-            });
-
-            // Con movimiento reducido: solo un loop suave, sin scroll-scrubbing.
-            if (reduceMotion) {
-                if (heroVisual) heroVisual.classList.add('is-revealed');
-                if (header) header.classList.add('is-visible');
-                return;
-            }
-
-            var totalFrames = 0;
-            var ticking = false;
-            var visualRevealThreshold = 0.5;
-            var headerRevealThreshold = 0.85;
-
-            anim.addEventListener('DOMLoaded', function () {
-                totalFrames = anim.totalFrames;
-                update();
-            });
-
-            function update() {
-                ticking = false;
-                if (!heroSection || !totalFrames) return;
-
-                var rect = heroSection.getBoundingClientRect();
-                var scrollable = heroSection.offsetHeight - window.innerHeight;
-                var progress = scrollable > 0 ? (-rect.top) / scrollable : 0;
-                progress = Math.max(0, Math.min(1, progress));
-
-                anim.goToAndStop(progress * (totalFrames - 1), true);
-
-                if (heroVisual) {
-                    heroVisual.classList.toggle('is-revealed', progress > visualRevealThreshold);
-                }
-                if (scrollHint) {
-                    scrollHint.classList.toggle('is-hidden', progress > 0.03);
-                }
-                if (header) {
-                    header.classList.toggle('is-visible', progress > headerRevealThreshold);
-                }
-            }
-
-            function onScrollOrResize() {
-                if (!ticking) {
-                    ticking = true;
-                    window.requestAnimationFrame(update);
-                }
-            }
-
-            window.addEventListener('scroll', onScrollOrResize, { passive: true });
-            window.addEventListener('resize', onScrollOrResize);
-        })();
-    </script>
 </body>
 </html>

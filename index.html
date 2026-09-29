@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,8 +22,7 @@
     <meta name="twitter:description" content="Ollintep Software desarrolla software a medida, brinda consultoría IT y acompaña procesos de transformación digital para empresas que buscan innovar.">
     <meta name="twitter:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
 
-    <!-- Datos estructurados (schema.org): le dice a Google qué es esta
-         organización, para que pueda mostrarlo en el Knowledge Panel. -->
+    <!-- Datos estructurados (schema.org) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -37,7 +36,9 @@
         "areaServed": "MX",
         "makesOffer": [
             { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "ActaPro", "url": "https://ollin-tep.com/actapro/" } },
-            { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Ollintep for Restaurants", "url": "https://ollin-tep.com/restaurant/" } }
+            { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Ollintep for Restaurants", "url": "https://ollin-tep.com/restaurant/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Agro-Cria Pro", "url": "https://ollin-tep.com/agrocria/" } },
+            { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Diagmind", "url": "https://ollin-tep.com/diagmind/" } }
         ]
     }
     </script>
@@ -47,27 +48,27 @@
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Hojas de estilo -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo Tailwind + Material 3E -->
     <link rel="stylesheet" href="css/styles.css">
-    <!-- Iconos (FontAwesome para los iconos de las tarjetas) -->
+    <!-- Iconos (FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="selection:bg-sky-400 selection:text-slate-950">
 
-    <!-- Fondo líquido (blobs difuminados, fijos detrás de todo el contenido) -->
+    <!-- Fondo ambiental líquido M3 -->
     <div class="liquid-bg" aria-hidden="true">
         <span class="blob blob-1"></span>
         <span class="blob blob-2"></span>
         <span class="blob blob-3"></span>
     </div>
 
-    <!-- Navegación Principal -->
+    <!-- Navegación Principal: Top App Bar Flotante M3E -->
     <header class="header">
         <div class="scroll-progress" id="scroll-progress"></div>
-        <nav class="navbar container">
-            <a href="#inicio" class="logo">
-                <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark">
+        <nav class="navbar">
+            <a href="#inicio" class="logo group">
+                <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark group-hover:scale-105 transition-transform">
                 <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">Software</span></span>
             </a>
             <ul class="nav-links">
@@ -75,7 +76,6 @@
                 <li><a href="#servicios">SERVICIOS</a></li>
                 <li><a href="#nosotros">NOSOTROS</a></li>
                 <li><a href="#contacto">CONTACTO</a></li>
-                <li><i class="fas fa-search search-icon"></i></li>
             </ul>
             <!-- Hamburguesa para móvil -->
             <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
@@ -86,88 +86,231 @@
         </nav>
     </header>
 
-    <!-- Sección Hero (Principal) -->
+    <!-- Sección Hero (Principal) M3E -->
     <section id="inicio" class="hero">
         <div class="hero-overlay">
-            <!-- Fondo de red de nodos (simulado con CSS/BG) -->
             <div class="network-globe"></div>
         </div>
-        <div class="container hero-content">
+        <div class="hero-content">
+            <!-- M3 Expressive Assist Chip -->
+            <div class="m3-chip m3-chip-primary mb-6 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+                <span>Ecosistema de Software e Innovación</span>
+            </div>
             <h1>SOLUCIONES TECNOLÓGICAS DE VANGUARDIA PARA TU EMPRESA</h1>
-            <p>Innovación, Eficiencia, y Resultados Digitales</p>
+            <p>Ingeniería de software de alta fidelidad, plataformas nativas y transformación digital con arquitectura escalable.</p>
             <div class="hero-btns">
-                <a href="#servicios" class="btn btn-primary">EXPLORAR SERVICIOS</a>
-                <a href="#contacto" class="btn btn-secondary">CONSULTA GRATUITA</a>
+                <a href="#servicios" class="m3-btn m3-btn-filled shadow-md">
+                    <span>Explorar Servicios</span>
+                    <i class="fas fa-arrow-down text-xs"></i>
+                </a>
+                <a href="#contacto" class="m3-btn m3-btn-tonal">
+                    <span>Consulta Gratuita</span>
+                    <i class="fas fa-comments text-xs"></i>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Servicios (Tarjetas Tech) -->
-    <section id="servicios" class="services container">
-        <h2 class="section-title">NUESTROS SERVICIOS</h2>
+    <!-- Sección Logo Marquee de Proyectos -->
+    <section class="relative z-10 py-12 overflow-hidden" aria-label="Ecosistema de proyectos Ollintep">
+        <div class="max-w-7xl mx-auto px-6 mb-6 text-center">
+            <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold font-mono">
+                Ecosistema de Plataformas &middot; Software Propietario
+            </p>
+        </div>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <!-- Grupo 1 -->
+                <a href="restaurant/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
+                    <img src="resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Restaurants</span>
+                        <span class="text-[11px] text-amber-400 font-mono">Offline-First POS</span>
+                    </div>
+                </a>
+
+                <a href="actapro/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
+                    <img src="resources/ollintep-actapro.svg" alt="ActaPro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">ActaPro</span>
+                        <span class="text-[11px] text-indigo-400 font-mono">Gobernanza & Actas</span>
+                    </div>
+                </a>
+
+                <a href="agrocria/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
+                    <img src="resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Agro-Cria Pro</span>
+                        <span class="text-[11px] text-emerald-400 font-mono">CROPWAT & IoT</span>
+                    </div>
+                </a>
+
+                <a href="diagmind/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
+                    <img src="resources/ollintep-diagmind.svg" alt="Diagmind" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Diagmind</span>
+                        <span class="text-[11px] text-sky-400 font-mono">ADB & Rust Probe</span>
+                    </div>
+                </a>
+
+                <!-- Grupo 2 (duplicado para scroll infinito continuo) -->
+                <a href="restaurant/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
+                    <img src="resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Restaurants</span>
+                        <span class="text-[11px] text-amber-400 font-mono">Offline-First POS</span>
+                    </div>
+                </a>
+
+                <a href="actapro/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
+                    <img src="resources/ollintep-actapro.svg" alt="ActaPro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">ActaPro</span>
+                        <span class="text-[11px] text-indigo-400 font-mono">Gobernanza & Actas</span>
+                    </div>
+                </a>
+
+                <a href="agrocria/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
+                    <img src="resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Agro-Cria Pro</span>
+                        <span class="text-[11px] text-emerald-400 font-mono">CROPWAT & IoT</span>
+                    </div>
+                </a>
+
+                <a href="diagmind/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-all shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
+                    <img src="resources/ollintep-diagmind.svg" alt="Diagmind" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm font-bold font-heading leading-tight text-white">Diagmind</span>
+                        <span class="text-[11px] text-sky-400 font-mono">ADB & Rust Probe</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Servicios y Productos M3E -->
+    <section id="servicios" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="m3-chip mb-3">
+                <i class="fas fa-cubes text-xs text-sky-400"></i>
+                <span>Catálogo de Soluciones</span>
+            </div>
+            <h2 class="section-title">SERVICIOS Y PLATAFORMAS</h2>
+            <p class="text-slate-400 text-base md:text-lg">Herramientas especializadas con arquitectura nativa, soporte offline-first y los más altos estándares técnicos.</p>
+        </div>
+
         <div class="services-grid">
 
             <!-- Tarjeta 1: Software -->
-            <div class="service-card">
+            <div class="service-card group">
                 <div class="card-icon">
                     <i class="fas fa-laptop-code"></i>
                 </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Servicio IT</span>
+                </div>
                 <h3>DESARROLLO DE SOFTWARE</h3>
-                <p>Construimos aplicaciones web y móviles a medida, con arquitecturas escalables pensadas para crecer junto con tu negocio.</p>
+                <p>Construimos aplicaciones web, móviles y sistemas de escritorio a medida, con arquitecturas limpias y seguras pensadas para escalar con tu negocio.</p>
                 <div class="card-glow"></div>
             </div>
 
             <!-- Tarjeta 2: Consultoría -->
-            <div class="service-card active-card"> <!-- Resaltada -->
+            <div class="service-card active-card group">
                 <div class="card-icon">
                     <i class="fas fa-brain"></i>
                 </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip m3-chip-primary text-[11px] py-0.5 px-2.5">Estrategia</span>
+                </div>
                 <h3>CONSULTORÍA IT</h3>
-                <p>Analizamos tu infraestructura y procesos para recomendar la tecnología correcta, evitando sobrecostos y decisiones improvisadas.</p>
+                <p>Analizamos infraestructura, procesos y deuda técnica para orientar la adopción de arquitecturas modernas y rentables sin improvisaciones.</p>
                 <div class="card-glow"></div>
             </div>
 
             <!-- Tarjeta 3: Transformación -->
-            <div class="service-card">
+            <div class="service-card group">
                 <div class="card-icon">
                     <i class="fas fa-rocket"></i>
                 </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Cloud & DevOps</span>
+                </div>
                 <h3>TRANSFORMACIÓN DIGITAL</h3>
-                <p>Automatizamos flujos de trabajo y migramos operaciones críticas a la nube para que tu equipo trabaje más rápido y con menos fricción.</p>
+                <p>Automatización de flujos de trabajo, modernización operativa y migración a infraestructuras cloud de alta disponibilidad y tolerancia a fallos.</p>
                 <div class="card-glow"></div>
             </div>
 
             <!-- Tarjeta 4: Ollintep for Restaurants -->
-            <a href="restaurant/index.html" class="service-card service-card-link">
+            <a href="restaurant/index.html" class="service-card service-card-link vt-card-restaurant group">
                 <div class="card-icon">
                     <i class="fas fa-utensils"></i>
                 </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Offline-First POS</span>
+                </div>
                 <h3>OLLINTEP FOR RESTAURANTS</h3>
-                <p>Una plataforma dedicada para restaurantes: punto de venta, pedidos, reservas y reportes en un solo lugar.</p>
-                <span class="service-card-cta">Conocer más <i class="fas fa-arrow-right"></i></span>
+                <p>Punto de venta integral, comandero digital y sistema de cocina en tiempo real. Opera sin internet y sincroniza automáticamente.</p>
+                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
                 <div class="card-glow"></div>
             </a>
 
             <!-- Tarjeta 5: ActaPro -->
-            <a href="actapro/index.html" class="service-card service-card-link">
+            <a href="actapro/index.html" class="service-card service-card-link vt-card-actapro group">
                 <div class="card-icon">
                     <i class="fas fa-file-signature"></i>
                 </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Gobernanza</span>
+                </div>
                 <h3>ACTAPRO</h3>
-                <p>Plataforma para capturar actas, dar seguimiento a pendientes y auditar trámites administrativos desde un solo panel.</p>
-                <span class="service-card-cta">Conocer más <i class="fas fa-arrow-right"></i></span>
+                <p>Gestión digital de asambleas, actas administrativas, votaciones seguras y auditoría de trámites con historial inmutable.</p>
+                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
+                <div class="card-glow"></div>
+            </a>
+
+            <!-- Tarjeta 6: Agro-Cria Pro -->
+            <a href="agrocria/index.html" class="service-card service-card-link vt-card-agrocria group">
+                <div class="card-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">FAO-56 CROPWAT</span>
+                </div>
+                <h3>AGRO-CRIA PRO</h3>
+                <p>Plataforma agropecuaria integral: balance hídrico evapotranspiración CROPWAT, trazabilidad ganadera, macro-cultivos y telemetría IoT.</p>
+                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
+                <div class="card-glow"></div>
+            </a>
+
+            <!-- Tarjeta 7: Diagmind -->
+            <a href="diagmind/index.html" class="service-card service-card-link vt-card-diagmind group">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                </div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Rust & ADB</span>
+                </div>
+                <h3>DIAGMIND</h3>
+                <p>Auditoría y diagnóstico profundo de dispositivos Android vía ADB (sin root), companion probe de telemetría e IA local para técnicos.</p>
+                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
                 <div class="card-glow"></div>
             </a>
         </div>
     </section>
 
-    <!-- Sección Nosotros -->
-    <section id="nosotros" class="about container">
+    <!-- Sección Nosotros M3E -->
+    <section id="nosotros" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
             <div class="about-text">
-                <h2 class="section-title section-title-left">SOBRE OLLINTEP</h2>
-                <p>En OLLINTEP acompañamos a empresas de todos los tamaños a resolver problemas reales con tecnología: desde automatizar un proceso manual hasta construir la plataforma que sostiene toda una operación.</p>
-                <p>Nuestro equipo combina ingeniería de software, estrategia IT y diseño de producto para entregar soluciones que se usan de verdad, no solo que se entregan.</p>
+                <div class="m3-chip mb-4">
+                    <i class="fas fa-shield-halved text-xs text-sky-400"></i>
+                    <span>Nuestra Filosofía</span>
+                </div>
+                <h2 class="section-title section-title-left">INGENIERÍA RIGUROSA, IMPACTO REAL</h2>
+                <p>En <strong>Ollintep Software</strong> diseñamos sistemas que resuelven problemas operativos reales: desde herramientas de diagnóstico y puntos de venta offline-first hasta plataformas complejas de gestión agropecuaria y gobernanza.</p>
+                <p>Nuestro enfoque combina arquitectura de software nativa, diseño centrado en el usuario y seguridad por diseño para garantizar que cada producto sea confiable, rápido y verdaderamente útil.</p>
             </div>
             <div class="about-stats">
                 <div class="stat">
@@ -184,31 +327,39 @@
                 </div>
                 <div class="stat">
                     <span class="stat-number">98%</span>
-                    <span class="stat-label">Satisfacción</span>
+                    <span class="stat-label">Satisfacción garantizada</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección Contacto -->
-    <section id="contacto" class="contact container">
-        <h2 class="section-title">HABLEMOS DE TU PROYECTO</h2>
+    <!-- Sección Contacto M3E -->
+    <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center mb-12">
+            <div class="m3-chip mb-3">
+                <i class="fas fa-paper-plane text-xs text-sky-400"></i>
+                <span>Canales Directos</span>
+            </div>
+            <h2 class="section-title">HABLEMOS DE TU PROYECTO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Estamos listos para impulsar tu visión con tecnología sólida y a medida.</p>
+        </div>
         <div class="contact-info contact-info-centered">
-            <p>Escríbenos por teléfono, correo o encuéntranos en redes sociales.</p>
+            <p>Contáctanos directamente o agenda una sesión de asesoría técnica:</p>
             <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope"></i> administrador@ollin-tep.com</a></li>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-sky-400"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-sky-400"></i> administrador@ollin-tep.com</a></li>
             </ul>
             <div class="social-links">
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://github.com" aria-label="GitHub"><i class="fab fa-github"></i></a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer M3E -->
     <footer class="footer">
-        <div class="container footer-content">
+        <div class="footer-content">
             <div class="footer-top">
                 <div class="logo">
                     <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark">
@@ -218,15 +369,17 @@
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#nosotros">Nosotros</a></li>
                     <li><a href="#contacto">Contacto</a></li>
-                    <li><a href="restaurant/index.html">Ollintep for Restaurants</a></li>
+                    <li><a href="restaurant/index.html">Restaurants</a></li>
                     <li><a href="actapro/index.html">ActaPro</a></li>
+                    <li><a href="agrocria/index.html">Agro-Cria Pro</a></li>
+                    <li><a href="diagmind/index.html">Diagmind</a></li>
                 </ul>
             </div>
             <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Botón volver arriba -->
+    <!-- Botón volver arriba M3E FAB -->
     <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
         <i class="fas fa-arrow-up"></i>
     </button>

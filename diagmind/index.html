@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagmind - Diagnóstico Técnico Inteligente de Dispositivos Android | Ollintep Software</title>
+    <meta name="description" content="Diagmind, desarrollado por Ollintep Software, es la plataforma profesional de diagnóstico de teléfonos Android vía ADB sin root, con telemetría de hardware, companion probe e IA local.">
+    <link rel="canonical" href="https://ollin-tep.com/diagmind/">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Ollintep Software">
+    <meta property="og:locale" content="es_MX">
+    <meta property="og:url" content="https://ollin-tep.com/diagmind/">
+    <meta property="og:title" content="Diagmind - Diagnóstico Técnico Inteligente de Dispositivos Android">
+    <meta property="og:description" content="Software profesional de diagnóstico de hardware y software Android vía ADB sin root, 100% local con IA para talleres.">
+    <meta property="og:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Diagmind - Diagnóstico Técnico Inteligente de Dispositivos Android">
+    <meta name="twitter:description" content="Software profesional de diagnóstico de hardware y software Android vía ADB sin root, 100% local con IA para talleres.">
+    <meta name="twitter:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Diagmind",
+        "url": "https://ollin-tep.com/diagmind/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Windows, Linux",
+        "description": "Herramienta técnica de diagnóstico y telemetría de dispositivos Android vía ADB (sin root) con asistencia de IA local.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Ollintep Software",
+            "url": "https://ollin-tep.com/"
+        }
+    }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../resources/ollintep-diagmind.svg">
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo Tailwind compiladas -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="theme-diagmind bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Fondo líquido -->
+    <div class="liquid-bg" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+    </div>
+
+    <!-- Navegación Principal -->
+    <header class="header">
+        <div class="scroll-progress" id="scroll-progress"></div>
+        <nav class="navbar">
+            <a href="#inicio" class="logo group">
+                <img src="../resources/ollintep-diagmind.svg" alt="Diagmind" class="logo-mark group-hover:scale-110 transition-transform">
+                <span class="logo-word"><span class="logo-ollintep">Diag</span><span class="logo-software">mind</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#inicio" class="active">INICIO</a></li>
+                <li><a href="#caracteristicas">CARACTERÍSTICAS</a></li>
+                <li><a href="#capturas">CAPTURAS</a></li>
+                <li><a href="#tecnologia">TECNOLOGÍA</a></li>
+                <li><a href="#precios">LICENCIAS</a></li>
+                <li><a href="#contacto">CONTACTO</a></li>
+                <li><a href="../index.html" class="product-back-btn text-xs px-3 py-1 rounded-full"><i class="fas fa-arrow-left mr-1"></i>OLLINTEP</a></li>
+            </ul>
+            <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Sección Hero -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay">
+            <div class="network-globe"></div>
+        </div>
+        <div class="hero-content vt-card-diagmind">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                Auditoría Android & Telemetría Rust
+            </div>
+            <h1>DIAGNÓSTICO TÉCNICO PROFESIONAL PARA DISPOSITIVOS ANDROID</h1>
+            <p>Auditoría profunda de hardware y software vía ADB sin root: batería, pantalla, sensores, CPU y almacenamiento, 100% local y asistido por IA.</p>
+            <div class="hero-btns">
+                <a href="#caracteristicas" class="btn btn-primary">
+                    <span>VER CARACTERÍSTICAS</span>
+                    <i class="fas fa-arrow-down text-xs"></i>
+                </a>
+                <a href="#contacto" class="btn btn-secondary">
+                    <span>SOLICITAR VERSIÓN TALLER</span>
+                    <i class="fas fa-screwdriver-wrench text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Características -->
+    <section id="caracteristicas" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">DIAGNÓSTICO DE PRECISIÓN EN SEGUNDOS</h2>
+            <p class="text-slate-400 text-base md:text-lg">Optimizado para talleres de reparación, centros de servicio técnico y empresas de reacondicionamiento móvil.</p>
+        </div>
+        <div class="services-grid">
+
+            <div class="service-card active-card group">
+                <div class="card-icon">
+                    <i class="fas fa-usb"></i>
+                </div>
+                <h3>CONEXIÓN ADB SIN ROOT</h3>
+                <p>Inspección completa por cable USB sin anular garantías ni requerir permisos de superusuario. Detección automática instantánea al enchufar el teléfono.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-battery-half"></i>
+                </div>
+                <h3>SALUD Y CICLOS DE BATERÍA</h3>
+                <p>Lectura real de ciclos de carga, salud porcentual, temperatura de operación, voltaje instantáneo y tasa de degradación química de la celda.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3>CPU, MEMORIA Y ALMACENAMIENTO</h3>
+                <p>Identificación precisa de SoC, núcleos activos, estado de la memoria RAM (libre/swap) y salud de la memoria interna NAND (sectores y velocidad).</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                </div>
+                <h3>PANTALLA Y SENSORES TÁCTILES</h3>
+                <p>Pruebas interactivas de digitalizador táctil, detección de zonas muertas, verificación de colores RGB y matriz de sensores de proximidad y luz.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h3>COMPANION PROBE AUTOMÁTICO</h3>
+                <p>La app complementaria "Diagmind Probe" se despliega por USB para telemetría profunda en tiempo real y pruebas activas de periféricos sin configuración manual.</p>
+                <div class="card-glow"></div>
+            </div>
+
+            <div class="service-card group">
+                <div class="card-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>ASISTENTE DE IA LOCAL</h3>
+                <p>Correlación de logs del sistema (logcat) y métricas de hardware mediante IA que se ejecuta 100% en la computadora del técnico, sin enviar datos a internet.</p>
+                <div class="card-glow"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección de Capturas Reales -->
+    <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">SUITE FORENSE EN ACCIÓN</h2>
+            <p class="text-slate-400 text-base md:text-lg">Capturas reales de Diagmind: inspección de silicio a nivel de placa madre, telemetría de bus de datos y certificación por IA local.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-sky-950/40">
+                    <img src="../resources/screenshots/diagmind-pcb.png" alt="Esquema interactivo de placa madre PCB con Snapdragon 8 Gen 3 e inspección de buses" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold uppercase">Topología de Placa Madre</span>
+                        <span class="text-[10px] text-emerald-400 font-mono">SoC &middot; UFS 4.0 &middot; PMIC</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Inspección de Circuitos en Tiempo Real</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Mapeo esquemático interactivo de pistas de cobre y circuitos integrados. Monitorea temperaturas de silicio, voltajes VBAT y detección de throttling térmico sin desarmar el teléfono.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-all shadow-md hover:shadow-xl group">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-sky-950/40">
+                    <img src="../resources/screenshots/diagmind-report.png" alt="Informe forense de hardware, salud de batería, originalidad AMOLED y Knox" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="px-2 pb-2">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">Auditoría Técnica</span>
+                        <span class="text-[10px] text-sky-400 font-mono">Grado A+ &middot; Knox 0x0</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1.5">Certificado de Grado & Originalidad</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">Auditoría con validación de ciclos de batería, velocidad secuencial UFS 4.0 (4,180 MB/s), firma criptográfica de pantalla original AMOLED DDC-CI y dictamen emitido por IA local (Phi-3).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Tecnología -->
+    <section id="tecnologia" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2 class="section-title section-title-left">CONSTRUIDO PARA VELOCIDAD Y PRIVACIDAD TOTAL</h2>
+                <p>Diagmind está desarrollado con <strong>Rust + Tauri 2.0</strong>, <strong>React 19</strong> y <strong>SQLite</strong>. Esta arquitectura garantiza tiempos de respuesta instantáneos y un consumo mínimo de memoria RAM en la computadora anfitriona.</p>
+                <p>Toda la información de diagnóstico permanece en tu equipo de trabajo: sin cuentas obligatorias en la nube ni fuga de datos confidenciales de tus clientes.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <span class="stat-number">&lt; 3s</span>
+                    <span class="stat-label">Detección y lectura</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Privacidad local</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">+80</span>
+                    <span class="stat-label">Puntos de prueba</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">0 root</span>
+                    <span class="stat-label">Seguro y sin riesgo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compatibilidad de Sistemas -->
+    <section class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">INSTALADORES DE ESCRITORIO</h2>
+            <p class="text-slate-400 text-base md:text-lg">Disponible para los dos sistemas operativos dominantes en estaciones técnicas.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card group">
+                <div class="card-icon"><i class="fab fa-windows"></i></div>
+                <h3>WINDOWS 10 & 11</h3>
+                <p>Instalador gráfico (.exe NSIS) con configuración automática de reglas de Firewall y controladores de dispositivo ADB listos para usar.</p>
+                <div class="card-glow"></div>
+            </div>
+            <div class="service-card group">
+                <div class="card-icon"><i class="fab fa-linux"></i></div>
+                <h3>LINUX (DEB, RPM, APPIMAGE)</h3>
+                <p>Integración nativa con reglas udev y permisos en grupo plugdev para acceder a teléfonos por USB sin necesidad de permisos sudo.</p>
+                <div class="card-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Precios / Licencias -->
+    <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="section-title">LICENCIAMIENTO PROFESIONAL</h2>
+            <p class="text-slate-400 text-base md:text-lg">Escoge la modalidad que mejor impulse la productividad de tu taller.</p>
+        </div>
+        <div class="pricing-grid">
+
+            <div class="plan-card">
+                <h3 class="plan-name">TÉCNICO INDIVIDUAL</h3>
+                <p class="plan-tagline">Para técnicos de reparación freelance y especialistas independientes.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">$790</span>
+                    <span class="plan-price-period">MXN /mes</span>
+                </div>
+                <p class="plan-price-note">1 estación de trabajo</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Diagnósticos ilimitados de teléfonos</li>
+                    <li><i class="fas fa-check"></i> Pruebas de batería, CPU y pantalla</li>
+                    <li><i class="fas fa-check"></i> Generación de fichas técnicas en PDF</li>
+                    <li><i class="fas fa-check"></i> Actualizaciones continuas de modelos</li>
+                </ul>
+                <a href="#contacto" class="btn btn-secondary plan-cta">ELEGIR</a>
+            </div>
+
+            <div class="plan-card plan-featured">
+                <span class="plan-badge">RECOMENDADO</span>
+                <h3 class="plan-name">CENTRO DE SERVICIO</h3>
+                <p class="plan-tagline">Para talleres comerciales con múltiples bancos de trabajo.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">$1,990</span>
+                    <span class="plan-price-period">MXN /mes</span>
+                </div>
+                <p class="plan-price-note">Hasta 5 estaciones simultáneas</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Diagnóstico por lote (múltiples teléfonos USB)</li>
+                    <li><i class="fas fa-check"></i> Asistente de IA local para análisis de fallas</li>
+                    <li><i class="fas fa-check"></i> Reportes personalizados con el logo de tu taller</li>
+                    <li><i class="fas fa-check"></i> Companion probe con pruebas automatizadas</li>
+                    <li><i class="fas fa-check"></i> Soporte técnico prioritario</li>
+                </ul>
+                <a href="#contacto" class="btn btn-primary plan-cta">COMENZAR</a>
+            </div>
+
+            <div class="plan-card">
+                <h3 class="plan-name">REACONDICIONADORES</h3>
+                <p class="plan-tagline">Para empresas de recertificación y volumen masivo.</p>
+                <div class="plan-price">
+                    <span class="plan-price-amount">A MEDIDA</span>
+                    <span class="plan-price-period">Licencia enterprise</span>
+                </div>
+                <p class="plan-price-note">Estaciones ilimitadas e integración ERP</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Integración directa vía API / CLI</li>
+                    <li><i class="fas fa-check"></i> Pruebas guiadas para líneas de producción</li>
+                    <li><i class="fas fa-check"></i> Base de datos SQLite / PostgreSQL corporativa</li>
+                    <li><i class="fas fa-check"></i> Póliza de soporte y desarrollo a la medida</li>
+                </ul>
+                <a href="#contacto" class="btn btn-secondary plan-cta">CONTACTAR</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="section-title">EQUIPA TU TALLER CON DIAGMIND</h2>
+            <p class="text-slate-400 text-base md:text-lg">Prueba Diagmind en tus bancos de trabajo y eleva la confianza de tus clientes con reportes certificados.</p>
+        </div>
+        <div class="contact-info contact-info-centered">
+            <p>Contáctanos para habilitar una licencia de prueba en tu taller:</p>
+            <ul>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-cyan-400"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-cyan-400"></i> administrador@ollin-tep.com</a></li>
+            </ul>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="logo">
+                    <img src="../resources/ollintep-diagmind.svg" alt="Diagmind" class="logo-mark">
+                    <span class="logo-word"><span class="logo-ollintep">Diag</span><span class="logo-software">mind</span></span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Ollintep Software</a></li>
+                    <li><a href="../restaurant/index.html">Restaurants</a></li>
+                    <li><a href="../actapro/index.html">ActaPro</a></li>
+                    <li><a href="../agrocria/index.html">Agro-Cria Pro</a></li>
+                    <li><a href="index.html">Diagmind</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón volver arriba -->
+    <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../script/scripts.js"></script>
+</body>
+</html>
