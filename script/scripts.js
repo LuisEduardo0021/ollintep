@@ -795,6 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ['Agro-Cria Pro', T('Agricultura y ganadería', 'Farming and livestock'), raizIdioma + 'agrocria/index.html', 'fa-seedling'],
         ['Diagmind', T('Diagnóstico Android', 'Android diagnostics'), raizIdioma + 'diagmind/index.html', 'fa-mobile-screen-button'],
         [T('Software a medida', 'Custom software'), T('Plataformas y consultoría', 'Platforms and consulting'), raizIdioma + 'index.html#a-medida', 'fa-laptop-code'],
+        [T('Tepic, Nayarit', 'Tepic, Nayarit'), T('Nuestra región, en pixel art', 'Our region, in pixel art'), raizIdioma + 'index.html#nayarit', 'fa-location-dot'],
         [T('Servicio técnico', 'Technical service'), T('Mantenimiento de hardware y firmware', 'Hardware and firmware maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-screwdriver-wrench'],
         [T('Armado de PC', 'PC building'), T('Armamos tu PC', 'We build your PC'), raizIdioma + 'index.html#servicio-tecnico', 'fa-desktop'],
         [T('PC y servidores', 'PCs and servers'), T('Mantenimiento', 'Maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-server'],

@@ -5934,6 +5934,14 @@ html {
 .pajaro { position: absolute; right: 19%; top: -92px; z-index: 12; width: 120px; height: 100px; image-rendering: pixelated; pointer-events: none; }
 .pajaro-404 { position: static; display: block; margin: 0 auto .5rem; }
 .pixel { image-rendering: pixelated; pointer-events: none; }
+.chaquira { height: 39px; background-repeat: repeat-x; background-size: 108px 39px; image-rendering: pixelated; border-radius: 4px; }
+#nayarit .block-head { margin-top: 2.5rem; }
+.region-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr)); gap: 1.75rem 1rem; margin: 2.5rem 0 2rem; }
+.region-item { margin: 0; text-align: center; }
+.region-item canvas { display: block; width: 96px; height: 96px; margin: 0 auto .75rem; }
+.region-item strong { display: block; color: var(--md-sys-color-on-surface); font-size: .95rem; font-weight: 600; }
+.region-item span { display: block; margin-top: .2rem; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; line-height: 1.35; }
+.region-nota { margin: 0 0 2rem; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; }
 .pixel-percha { position: absolute; right: 19%; top: -96px; z-index: 12; width: 96px; height: 96px; }
 .pixel-linea { display: block; width: 72px; height: 72px; margin-bottom: 1rem; }
 .pixel-flota { position: absolute; right: 2.5rem; top: -2.75rem; z-index: 3; width: 64px; height: 64px; }
