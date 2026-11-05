@@ -5905,6 +5905,12 @@ html {
 /* Dithering */
 .dither-banda { height: 120px; margin-top: 3rem; background-repeat: repeat-x; background-size: 24px 120px; image-rendering: pixelated; opacity: .5; pointer-events: none; }
 
+.footer-origen { display: flex; align-items: center; gap: .5rem; margin-top: .6rem; color: var(--md-sys-color-on-surface-variant); font-size: .85rem; }
+.footer-copy + .footer-origen { justify-content: center; margin-top: .35rem; }
+/* Con el menú más largo, el logo no se parte en dos líneas: se queda solo con la marca hasta que cabe todo */
+.logo-word { white-space: nowrap; }
+@media (min-width: 869px) and (max-width: 1260px) { .navbar .logo-software { display: none; } }
+
 /* Sin desbordes laterales en móvil: una rejilla no puede ensancharse por su contenido ni exigir más ancho que la pantalla */
 .about-grid > *, .about-stats > *, .videos-grid > * { min-width: 0; }
 .videos-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }

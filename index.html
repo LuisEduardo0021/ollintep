@@ -7,7 +7,7 @@
     <script>/*intro*/(function(){try{var r=document.documentElement;if(sessionStorage.getItem('ollintep-intro')||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches||document.referrer.indexOf(location.origin)===0)return;r.classList.add('intro-marca');setTimeout(function(){r.classList.remove('intro-marca')},6500)}catch(e){}})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ollin-Tep Software · Suite CroHub y software a medida</title>
-    <meta name="description" content="Ollin-Tep Software crea la suite CroHub —apps de escritorio para documentos, fotos, video, audio y música— y desarrolla plataformas a medida para comercios, instituciones, el campo y talleres técnicos.">
+    <meta name="description" content="Ollin-Tep Software crea la suite CroHub —apps de escritorio para documentos, fotos, video, audio y música— y desarrolla plataformas a medida para comercios, instituciones, el campo y talleres técnicos. También mantenimiento de hardware y firmware, desde Tepic, Nayarit.">
     <link rel="canonical" href="https://ollin-tep.com/">
     <link rel="alternate" hreflang="es" href="https://ollin-tep.com/">
     <link rel="alternate" hreflang="en" href="https://ollin-tep.com/en/">
@@ -41,7 +41,14 @@
         "email": "administrador@ollin-tep.com",
         "telephone": "+52-311-127-5020",
         "areaServed": "MX",
+        "address": { "@type": "PostalAddress", "addressLocality": "Tepic", "addressRegion": "Nayarit", "addressCountry": "MX" },
         "makesOffer": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Armado de PC" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PC y servidores" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Mantenimiento de hardware" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Actualización de firmware" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Impresoras y photobooths" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "GrapheneOS en Pixel" } },
             { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "ActaPro", "url": "https://ollin-tep.com/actapro/" } },
             { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Centzontle", "url": "https://ollin-tep.com/centzontle/" } },
             { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Agro-Cria Pro", "url": "https://ollin-tep.com/agrocria/" } },
@@ -66,7 +73,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=5.6">
+    <link rel="stylesheet" href="css/styles.css?v=5.7">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -90,6 +97,7 @@
             <ul class="nav-links" id="nav-links">
                 <li><a href="#suite">Suite CroHub</a></li>
                 <li><a href="#a-medida">A medida</a></li>
+                <li><a href="#servicio-tecnico">Servicio técnico</a></li>
                 <li><a href="#principios">Cómo trabajamos</a></li>
                 <li><a href="#contacto">Contacto</a></li>
                 <li class="nav-cta"><a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled btn-sm">Descargar CroHub</a></li>
@@ -109,7 +117,7 @@
         <div class="hero-content">
             <span class="morph-liquido" aria-hidden="true"></span>
             <div class="logo3d" aria-hidden="true"><div class="logo3d-mano"><div class="logo3d-giro"><img src="resources/ollintep.svg" alt="" width="88" height="84"></div></div></div>
-            <p class="eyebrow"><span class="eyebrow-dot"></span>Ollin-Tep Software</p>
+            <p class="eyebrow"><span class="eyebrow-dot"></span>Ollin-Tep Software · Tepic, Nayarit, México</p>
             <h1>Software hecho con oficio.<span class="h1-sub">Para tu escritorio y para tu negocio.</span></h1>
             <p class="hero-lead">Creamos CroHub, una suite de nueve apps de escritorio, y desarrollamos plataformas a medida para comercios, instituciones, el campo y talleres técnicos.</p>
         </div>
@@ -325,6 +333,26 @@
         </ul>
     </section>
 
+    <!-- Servicio técnico -->
+    <section id="servicio-tecnico" class="section-block" data-ambiente="azul">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Servicio técnico</p>
+                <h2 class="block-title">También cuidamos el equipo.</h2>
+                <p class="block-lead">Además del software, armamos PC, damos mantenimiento al hardware y actualizamos su firmware.</p>
+                <a href="#contacto" class="m3-btn m3-btn-filled block-cta">Pedir servicio técnico <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
+            </div>
+        </header>
+        <ul class="service-list">
+            <li><i class="fas fa-desktop" aria-hidden="true"></i><h3>Armado de PC</h3><p>Armamos tu PC.</p></li>
+            <li><i class="fas fa-server" aria-hidden="true"></i><h3>PC y servidores</h3><p>Damos mantenimiento a PC y servidores.</p></li>
+            <li><i class="fas fa-screwdriver-wrench" aria-hidden="true"></i><h3>Mantenimiento de hardware</h3><p>Damos mantenimiento a todo lo que es hardware.</p></li>
+            <li><i class="fas fa-microchip" aria-hidden="true"></i><h3>Actualización de firmware</h3><p>Actualizamos el firmware de tus equipos.</p></li>
+            <li><i class="fas fa-print" aria-hidden="true"></i><h3>Impresoras y photobooths</h3><p>Mantenimiento a impresoras industriales como HiTi y a photobooths.</p></li>
+            <li><i class="fas fa-mobile-screen-button" aria-hidden="true"></i><h3>GrapheneOS en Pixel</h3><p>Instalamos GrapheneOS en teléfonos Google Pixel.</p></li>
+        </ul>
+    </section>
+
     <div class="ascii-banda" data-ascii="ollintep.svg" data-color="#6ea2ff" aria-hidden="true"></div>
 
     <!-- Cómo trabajamos -->
@@ -376,6 +404,7 @@
                     <span class="logo-word"><span class="logo-ollintep">Ollin-Tep</span> <span class="logo-software">Software</span></span>
                 </a>
                 <p>Software hecho con oficio: la suite CroHub y plataformas a medida.</p>
+                <p class="footer-origen"><i class="fas fa-location-dot" aria-hidden="true"></i>Originarios de Tepic, Nayarit, México</p>
             </div>
             <nav class="footer-col" aria-label="Suite CroHub">
                 <h3>Suite CroHub</h3>
@@ -409,7 +438,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=5.6"></script>
-    <script src="script/efectos.js?v=5.6"></script>
+    <script src="script/scripts.js?v=5.7"></script>
+    <script src="script/efectos.js?v=5.7"></script>
 </body>
 </html>

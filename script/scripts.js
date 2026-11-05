@@ -795,6 +795,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ['Agro-Cria Pro', T('Agricultura y ganadería', 'Farming and livestock'), raizIdioma + 'agrocria/index.html', 'fa-seedling'],
         ['Diagmind', T('Diagnóstico Android', 'Android diagnostics'), raizIdioma + 'diagmind/index.html', 'fa-mobile-screen-button'],
         [T('Software a medida', 'Custom software'), T('Plataformas y consultoría', 'Platforms and consulting'), raizIdioma + 'index.html#a-medida', 'fa-laptop-code'],
+        [T('Servicio técnico', 'Technical service'), T('Mantenimiento de hardware y firmware', 'Hardware and firmware maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-screwdriver-wrench'],
+        [T('Armado de PC', 'PC building'), T('Armamos tu PC', 'We build your PC'), raizIdioma + 'index.html#servicio-tecnico', 'fa-desktop'],
+        [T('PC y servidores', 'PCs and servers'), T('Mantenimiento', 'Maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-server'],
+        [T('Impresoras y photobooths', 'Printers and photobooths'), T('Mantenimiento, también HiTi', 'Maintenance, including HiTi'), raizIdioma + 'index.html#servicio-tecnico', 'fa-print'],
+        [T('GrapheneOS en Pixel', 'GrapheneOS on Pixel'), T('Instalación en Google Pixel', 'Installed on Google Pixel'), raizIdioma + 'index.html#servicio-tecnico', 'fa-mobile-screen-button'],
         [T('Cómo trabajamos', 'How we work'), T('Principios y cifras', 'Principles and numbers'), raizIdioma + 'index.html#principios', 'fa-pen-ruler'],
         [T('Contacto', 'Contact'), T('Correo y teléfono', 'Email and phone'), raizIdioma + 'index.html#contacto', 'fa-envelope'],
     ];
