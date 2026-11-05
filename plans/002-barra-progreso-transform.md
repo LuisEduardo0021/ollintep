@@ -1,6 +1,6 @@
 # 002 — La barra de progreso de scroll anima `transform`, no `width`
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 680ed60
 - **Severity**: HIGH
 - **Category**: Performance

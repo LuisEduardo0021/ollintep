@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (header) header.classList.toggle('is-scrolled', scrollTop > 10);
         if (scrollProgress) {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-            scrollProgress.style.width = pct + '%';
+            const p = docHeight > 0 ? Math.min(1, scrollTop / docHeight) : 0;
+            scrollProgress.style.transform = `scaleX(${p})`;
         }
     }
     window.addEventListener('scroll', updateScrollChrome, { passive: true });

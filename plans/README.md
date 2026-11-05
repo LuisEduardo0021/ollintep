@@ -6,7 +6,7 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 | # | Plan | Gravedad | Estado |
 | --- | --- | --- | --- |
 | 001 | [Añadir la sección «Suite CroHub» a la portada](001-seccion-suite-crohub.md) | HIGH | TODO |
-| 002 | [La barra de progreso anima `transform`, no `width`](002-barra-progreso-transform.md) | HIGH | TODO |
+| 002 | [La barra de progreso anima `transform`, no `width`](002-barra-progreso-transform.md) | HIGH | DONE |
 | 003 | [Sustituir `transition: all` por las propiedades exactas](003-quitar-transition-all.md) | HIGH | DONE |
 | 004 | [Respetar «reducir movimiento» en todo el sitio](004-reducir-movimiento-completo.md) | MEDIUM | TODO |
 | 005 | [Respuesta al pulsar (`:active`)](005-respuesta-al-pulsar.md) | MEDIUM | TODO |
