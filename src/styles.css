@@ -4175,35 +4175,6 @@ body.theme-restaurant .m3-btn-filled:hover {
   stroke-dashoffset: 1;
 }
 
-/* --- Centzontle: la palabra rueda entre los giros --- */
-.giro-roll {
-  margin: -1rem 0 2rem;
-  font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2.3rem);
-  font-weight: 650;
-  letter-spacing: -0.03em;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.giro-palabra {
-  display: inline-block;
-  color: #9cc0ff;
-  transition: transform 0.28s var(--ease-out), opacity 0.2s ease, filter 0.2s ease;
-}
-
-.giro-palabra.sale {
-  transform: translateY(-40%);
-  opacity: 0;
-  filter: blur(4px);
-}
-
-.giro-palabra.entra {
-  transform: translateY(40%);
-  opacity: 0;
-  filter: blur(4px);
-  transition: none;
-}
-
 /* --- Productos: las capturas se revelan igual que en la portada --- */
 .video-card.reveal .video-thumb img {
   clip-path: inset(10% 10% 10% 10% round 14px);
@@ -4931,6 +4902,210 @@ html {
 
   .logo:hover .logo-mark {
     transform: perspective(240px) rotateY(360deg);
+  }
+}
+
+/* ==========================================================================
+   DEMOS: comparador de temas (ActaPro) y vocabulario por giro (Centzontle)
+   ========================================================================== */
+.comparador {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-radius: 22px;
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 40px 80px -40px #000;
+  background: #060910;
+}
+
+.comparador img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comparador-arriba {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.comparador-linea {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: #ffffff;
+  box-shadow: 0 0 18px rgba(110, 162, 255, 0.8);
+  pointer-events: none;
+}
+
+.comparador-linea i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  color: #0a1224;
+  background: #ffffff;
+  box-shadow: 0 8px 22px -6px #000;
+}
+
+.comparador input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  appearance: none;
+  touch-action: pan-y;
+  cursor: ew-resize;
+}
+
+/* perilla mínima: así la línea queda justo donde se toca, también en los extremos */
+.comparador input::-webkit-slider-thumb {
+  appearance: none;
+  width: 2px;
+  height: 100%;
+}
+
+.comparador input::-moz-range-thumb {
+  width: 2px;
+  height: 100%;
+  border: 0;
+}
+
+.comparador input:focus-visible ~ .comparador-linea,
+.comparador:has(input:focus-visible) .comparador-linea {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 3px;
+}
+
+.voc-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem 2rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.voc-giros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.voc-giros button {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 11px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px var(--line);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, scale 0.16s var(--ease-out);
+}
+
+.voc-giros button:active {
+  scale: 0.96;
+}
+
+.voc-giros button[aria-pressed="true"] {
+  color: #0a1224;
+  background: #f3f6fb;
+}
+
+.voc-panel {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border-radius: 18px;
+  background: var(--surface-raise), var(--md-sys-color-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.voc-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.voc-cab small {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.voc-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: var(--md-sys-color-on-surface-variant);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.voc-fila i {
+  width: 1.2rem;
+  text-align: center;
+  color: var(--md-sys-color-primary);
+}
+
+.voc-fila span,
+.voc-cab span {
+  display: inline-block;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.voc-fila .voc-min {
+  text-transform: lowercase;
+}
+
+.voc-accion {
+  color: #0a1224;
+  background: #f3f6fb;
+}
+
+.voc-accion i,
+.voc-accion span {
+  color: #0a1224;
+}
+
+.voc-nota {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .voc-giros button:hover:not([aria-pressed="true"]) {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.09);
+  }
+}
+
+@media (max-width: 760px) {
+  .voc-demo {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

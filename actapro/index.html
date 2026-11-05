@@ -85,7 +85,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=4.8">
+    <link rel="stylesheet" href="../css/styles.css?v=4.9">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
@@ -262,6 +262,23 @@
         </div>
     </section>
 
+    <!-- Comparador de temas -->
+    <section class="section-block" id="temas">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Tema claro y oscuro</p>
+                <h2 class="block-title">Claro de día, oscuro de noche.</h2>
+                <p class="block-lead">ActaPro incluye los dos temas. Arrastra la línea para comparar el panel en cada uno.</p>
+            </div>
+        </header>
+        <div class="comparador" style="--pos: 50%">
+            <img src="../resources/actapro/actapro-dashboard.jpg" alt="Panel de ActaPro en tema claro" width="1280" height="800" loading="lazy">
+            <img class="comparador-arriba" src="../resources/actapro/actapro-dashboard-dark.jpg" alt="Panel de ActaPro en tema oscuro" width="1280" height="800" loading="lazy">
+            <span class="comparador-linea" aria-hidden="true"><i class="fas fa-left-right"></i></span>
+            <input type="range" min="0" max="100" value="50" aria-label="Comparar tema oscuro y claro">
+        </div>
+    </section>
+
     <!-- Sección de Precios -->
     <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -415,6 +432,6 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=4.8"></script>
+    <script src="../script/scripts.js?v=4.9"></script>
 </body>
 </html>

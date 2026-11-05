@@ -439,6 +439,12 @@
   "Balance FAO-56": "FAO-56 balance",
   "Hato ganadero": "Livestock herd",
   "Sin root": "No root",
+  "Tema claro y oscuro": "Light and dark theme",
+  "Claro de día, oscuro de noche.": "Light by day, dark by night.",
+  "ActaPro incluye los dos temas. Arrastra la línea para comparar el panel en cada uno.": "ActaPro includes both themes. Drag the line to compare the dashboard in each one.",
+  "Panel de ActaPro en tema claro": "ActaPro dashboard in light theme",
+  "Panel de ActaPro en tema oscuro": "ActaPro dashboard in dark theme",
+  "Comparar tema oscuro y claro": "Compare dark and light theme",
   "y": "and",
   "o": "or"
 }

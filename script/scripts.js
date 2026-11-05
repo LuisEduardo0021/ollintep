@@ -827,25 +827,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Centzontle: la palabra rueda entre los giros; se para si no se ve o la pestaña está oculta ---
-    const palabraGiro = document.querySelector('.giro-palabra');
-    if (palabraGiro && !prefersReducedMotion) {
-        const GIROS = T(['restaurante', 'farmacia', 'boutique', 'minisúper', 'cafetería', 'ferretería', 'barbería', 'taller', 'papelería', 'carnicería', 'bar'], ['restaurant', 'pharmacy', 'boutique', 'grocery store', 'café', 'hardware store', 'barbershop', 'repair shop', 'stationery store', 'butcher shop', 'bar']);
-        let n = 0, visible = false;
-        new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(palabraGiro);
-        setInterval(() => {
-            if (!visible || document.hidden) return;
-            n = (n + 1) % GIROS.length;
-            palabraGiro.classList.add('sale');
-            setTimeout(() => {
-                palabraGiro.textContent = GIROS[n];
-                palabraGiro.classList.remove('sale');
-                palabraGiro.classList.add('entra');
-                requestAnimationFrame(() => requestAnimationFrame(() => palabraGiro.classList.remove('entra')));
-            }, 220);
-        }, 2000);
-    }
-
     // --- Logo en volumen: copias del logo a distinta profundidad (solo si no se pide reducir movimiento) ---
     const giroLogo = document.querySelector('.logo3d-giro');
     if (giroLogo && !prefersReducedMotion) {
@@ -1159,5 +1140,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         });
+    }
+
+    // --- Comparador de ActaPro: la línea se arrastra (es un <input range>, así también funciona con teclado) ---
+    document.querySelectorAll('.comparador').forEach(c => {
+        const r = c.querySelector('input');
+        const poner = v => { c.style.setProperty('--pos', v + '%'); };
+        let tocado = false;
+        r.addEventListener('input', () => { tocado = true; poner(r.value); });
+        r.addEventListener('pointerdown', () => { tocado = true; });
+        if (prefersReducedMotion) return;
+        // la primera vez que se ve, la línea se mueve sola para enseñar que se puede arrastrar
+        const obs = new IntersectionObserver(([e]) => {
+            if (!e.isIntersecting) return;
+            obs.disconnect();
+            const t0 = performance.now();
+            const paso = (a) => {
+                if (tocado) return;
+                const p = (a - t0) / 1400;
+                if (p >= 1) { poner(50); r.value = 50; return; }
+                const v = 50 + Math.sin(p * Math.PI * 2) * 22 * (1 - p);
+                poner(v.toFixed(1)); r.value = v;
+                requestAnimationFrame(paso);
+            };
+            requestAnimationFrame(paso);
+        }, { threshold: 0.5 });
+        obs.observe(c);
+    });
+
+    // --- Centzontle: elige un giro y la interfaz cambia sus palabras (el vocabulario es el de la app) ---
+    const vocDemo = document.querySelector('#voc-demo');
+    if (vocDemo) {
+        const COMIDA = T({ mesa: 'Mesa', producto: 'Platillo', comanda: 'Comanda', negocio: 'Restaurante', menu: 'Menú' }, { mesa: 'Table', producto: 'Dish', comanda: 'Order', negocio: 'Restaurant', menu: 'Menu' });
+        const TIENDA = T({ mesa: 'Cliente', producto: 'Producto', comanda: 'Venta', negocio: 'Negocio', menu: 'Catálogo' }, { mesa: 'Customer', producto: 'Product', comanda: 'Sale', negocio: 'Business', menu: 'Catalog' });
+        const VOC = [
+            [T('Restaurante', 'Restaurant'), COMIDA],
+            ['Bar', { ...COMIDA, negocio: 'Bar' }],
+            [T('Cafetería', 'Coffee shop'), { ...COMIDA, mesa: TIENDA.mesa, producto: TIENDA.producto, negocio: T('Cafetería', 'Coffee shop') }],
+            [T('Abarrotes', 'Grocery'), { ...TIENDA, negocio: T('Tienda', 'Store') }],
+            [T('Carnicería', 'Butcher shop'), TIENDA],
+            [T('Farmacia', 'Pharmacy'), { ...TIENDA, negocio: T('Farmacia', 'Pharmacy') }],
+            [T('Ferretería', 'Hardware'), { ...TIENDA, negocio: T('Ferretería', 'Hardware store') }],
+            [T('Boutique', 'Boutique'), { ...TIENDA, negocio: T('Tienda', 'Store') }],
+            [T('Papelería', 'Stationery'), { ...TIENDA, negocio: T('Papelería', 'Stationery store') }],
+            [T('Estética', 'Salon'), { ...TIENDA, producto: T('Servicio', 'Service'), negocio: T('Estética', 'Salon') }],
+            [T('Taller', 'Repair shop'), { ...TIENDA, producto: T('Servicio', 'Service'), comanda: T('Orden', 'Work order'), negocio: T('Taller', 'Repair shop') }],
+            [T('Otro', 'Other'), TIENDA],
+        ];
+        const pintarPalabras = (v) => vocDemo.querySelectorAll('[data-p]').forEach(el => {
+            const nueva = v[el.dataset.p];
+            if (el.textContent === nueva) return;
+            if (prefersReducedMotion || !el.textContent) { el.textContent = nueva; return; }
+            el.animate([{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: 'translateY(-45%)', filter: 'blur(3px)' }], { duration: 130, easing: 'ease-out' }).onfinish = () => {
+                el.textContent = nueva;
+                el.animate([{ opacity: 0, transform: 'translateY(45%)', filter: 'blur(3px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+            };
+        });
+        vocDemo.innerHTML = `<div class="voc-giros" role="group" aria-label="${T('Elige un giro', 'Choose a business type')}"></div>
+            <div class="voc-panel" aria-live="polite">
+                <div class="voc-cab"><span data-p="negocio"></span><small>Centzontle</small></div>
+                <div class="voc-fila"><i class="fas fa-book-open" aria-hidden="true"></i><span data-p="menu"></span></div>
+                <div class="voc-fila"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>${T('Buscar', 'Search')} <span class="voc-min" data-p="producto"></span></div>
+                <div class="voc-fila"><i class="fas fa-user" aria-hidden="true"></i><span data-p="mesa"></span> 7</div>
+                <div class="voc-fila voc-accion"><i class="fas fa-plus" aria-hidden="true"></i>${T('Nueva', 'New')} <span class="voc-min" data-p="comanda"></span></div>
+            </div>
+            ${EN ? '<p class="voc-nota">Words shown in English for reference; the app itself is in Spanish.</p>' : ''}`;
+        const grupo = vocDemo.querySelector('.voc-giros');
+        VOC.forEach(([nombre, v], k) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = nombre;
+            b.setAttribute('aria-pressed', String(k === 0));
+            b.addEventListener('click', () => {
+                grupo.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+                pintarPalabras(v);
+            });
+            grupo.append(b);
+        });
+        pintarPalabras(VOC[0][1]);
     }
 });
