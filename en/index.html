@@ -58,7 +58,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=5.0">
+    <link rel="stylesheet" href="../css/styles.css?v=5.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
@@ -195,6 +195,28 @@
             <li class="app-tile" style="--app: #22E1F0"><img src="../resources/suite/cromix-icono.svg" alt="" width="46" height="46"><div><h3>CroGroove</h3><p class="app-cat">Music and DJ</p><p>Mix like a DJ: 4 decks, effects, stems, sampler and controllers.</p></div></li>
             <li class="app-tile" style="--app: #4FC4FF"><img src="../resources/suite/croguard-icono.svg" alt="" width="46" height="46"><div><h3>CroGuard</h3><p class="app-cat">VPN</p><p>VPN, antivirus and network tools to protect your computer.</p></div></li>
         </ul>
+
+        <div class="lanzador" id="lanzador">
+            <div class="lz-barra">
+                <img src="../resources/suite/crohub.svg" alt="" width="20" height="22">
+                <strong>CroHub</strong>
+                <span>by Ollin-Tep</span>
+                <small>Simulation: nothing gets installed here.</small>
+            </div>
+            <div class="lz-cab">
+                <div>
+                    <p class="lz-titulo"><span class="lz-ini">Try the launcher: install the suite.</span><span class="lz-fin">Nine apps ready. Now do it for real.</span></p>
+                    <p class="lz-cuenta" aria-live="polite"></p>
+                </div>
+                <div class="lz-acciones">
+                    <button type="button" class="m3-btn m3-btn-filled lz-ini" data-a="todas">Install all</button>
+                    <a href="https://activation.ollin-tep.com/descargar?lang=en" class="m3-btn m3-btn-filled lz-fin">Download CroHub <i class="fas fa-download text-xs" aria-hidden="true"></i></a>
+                    <button type="button" class="m3-btn m3-btn-tonal lz-fin" data-a="reiniciar">Start over</button>
+                </div>
+            </div>
+            <ul class="lz-apps"></ul>
+            <div class="lz-abriendo" aria-hidden="true"><strong></strong></div>
+        </div>
     </section>
 
     <section class="cinta" aria-hidden="true">
@@ -329,6 +351,6 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=5.0"></script>
+    <script src="../script/scripts.js?v=5.1"></script>
 </body>
 </html>

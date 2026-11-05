@@ -1332,4 +1332,98 @@ document.addEventListener('DOMContentLoaded', () => {
             }).observe(capasDemo);
         }
     }
+
+    // --- Portada: lanzador simulado. Las apps salen de .app-grid; nada se instala de verdad ---
+    const lanzador = document.querySelector('#lanzador');
+    if (lanzador) {
+        const lista = lanzador.querySelector('.lz-apps');
+        const cuenta = lanzador.querySelector('.lz-cuenta');
+        const capa = lanzador.querySelector('.lz-abriendo');
+        const dos = n => String(n).padStart(2, '0');
+        const ESTADOS = { disponible: T('Disponible', 'Available'), bajando: T('Descargando', 'Downloading'), instalando: T('Instalando', 'Installing'), lista: T('Instalada', 'Installed') };
+        const apps = [...document.querySelectorAll('.app-grid .app-tile')].map(tile => {
+            const li = document.createElement('li');
+            li.className = 'lz-app';
+            li.style.setProperty('--app', tile.style.getPropertyValue('--app'));
+            li.innerHTML = `<img src="${tile.querySelector('img').getAttribute('src')}" alt="" width="42" height="42"><div><h3></h3><span class="lz-estado"></span></div><button type="button" class="lz-btn"><span class="lz-relleno"></span><span class="lz-texto"></span></button>`;
+            const app = { li, nombre: tile.querySelector('h3').textContent, estado: 'disponible', icono: li.querySelector('img'), btn: li.querySelector('button'), relleno: li.querySelector('.lz-relleno'), texto: li.querySelector('.lz-texto'), marca: li.querySelector('.lz-estado') };
+            li.querySelector('h3').textContent = app.nombre;
+            lista.append(li);
+            return app;
+        });
+        const pintarCuenta = () => {
+            const n = apps.filter(a => a.estado === 'lista').length;
+            cuenta.textContent = T(`${dos(apps.length)} apps · ${dos(n)} instaladas · ${dos(apps.length - n)} disponibles`, `${dos(apps.length)} apps · ${dos(n)} installed · ${dos(apps.length - n)} available`);
+            return n;
+        };
+        const ponerEstado = (app, estado) => {
+            app.estado = estado;
+            app.li.dataset.estado = estado;
+            app.marca.textContent = ESTADOS[estado];
+            if (estado === 'disponible') app.texto.textContent = T('Instalar', 'Install');
+            if (estado === 'lista') app.texto.textContent = T('Abrir', 'Open');
+            app.btn.setAttribute('aria-label', `${app.texto.textContent} ${app.nombre}`);
+        };
+        const alTerminar = () => {
+            if (pintarCuenta() !== apps.length) return;
+            const conFoco = document.activeElement === lanzador.querySelector('[data-a="todas"]');
+            lanzador.classList.add('listo');
+            if (conFoco) lanzador.querySelector('[data-a="reiniciar"]').focus();
+            if (prefersReducedMotion) return;
+            // ola de luz por las nueve apps: solo ocurre al completar la suite
+            apps.forEach((a, k) => a.icono.animate([{ scale: 1 }, { scale: 1.2, filter: 'brightness(1.25)' }, { scale: 1 }], { duration: 480, delay: k * 55, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }));
+        };
+        const instalar = app => {
+            if (app.estado !== 'disponible') return;
+            if (prefersReducedMotion) { ponerEstado(app, 'lista'); alTerminar(); return; }
+            ponerEstado(app, 'bajando');
+            const inicio = performance.now(), dura = 1300 + Math.random() * 900;
+            const paso = ahora => {
+                const p = Math.min(1, (ahora - inicio) / dura);
+                app.relleno.style.transform = `scaleX(${p.toFixed(3)})`;
+                app.texto.textContent = Math.round(p * 100) + ' %';
+                if (p > 0.7 && app.estado === 'bajando') ponerEstado(app, 'instalando');
+                if (p < 1) { requestAnimationFrame(paso); return; }
+                app.relleno.style.transform = '';
+                ponerEstado(app, 'lista');
+                app.icono.animate([{ scale: 1 }, { scale: 1.14 }, { scale: 1 }], { duration: 320, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+                alTerminar();
+            };
+            requestAnimationFrame(paso);
+        };
+        // Abrir: el icono viaja de su tarjeta al centro, como al lanzar la app
+        let abriendo = false;
+        const abrir = async app => {
+            if (abriendo) return;
+            abriendo = true;
+            cuenta.textContent = T(`Abriendo ${app.nombre}`, `Opening ${app.nombre}`);
+            capa.style.setProperty('--app', app.li.style.getPropertyValue('--app'));
+            capa.querySelector('strong').textContent = app.nombre;
+            const clon = app.icono.cloneNode();
+            capa.prepend(clon);
+            capa.classList.add('visible');
+            if (!prefersReducedMotion) {
+                const de = app.icono.getBoundingClientRect(), a = clon.getBoundingClientRect();
+                const desde = `translate(${de.left + de.width / 2 - a.left - a.width / 2}px, ${de.top + de.height / 2 - a.top - a.height / 2}px) scale(${de.width / a.width})`;
+                await clon.animate([{ transform: desde }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).finished;
+            }
+            await new Promise(r => setTimeout(r, 750));
+            capa.classList.remove('visible');
+            setTimeout(() => { clon.remove(); abriendo = false; pintarCuenta(); }, 200);
+        };
+        apps.forEach(app => {
+            ponerEstado(app, 'disponible');
+            app.btn.addEventListener('click', () => (app.estado === 'lista' ? abrir(app) : instalar(app)));
+        });
+        lanzador.querySelector('[data-a="todas"]').addEventListener('click', () => {
+            apps.filter(a => a.estado === 'disponible').forEach((a, k) => setTimeout(() => instalar(a), prefersReducedMotion ? 0 : k * 170));
+        });
+        lanzador.querySelector('[data-a="reiniciar"]').addEventListener('click', () => {
+            apps.forEach(a => ponerEstado(a, 'disponible'));
+            lanzador.classList.remove('listo');
+            lanzador.querySelector('[data-a="todas"]').focus();
+            pintarCuenta();
+        });
+        pintarCuenta();
+    }
 });

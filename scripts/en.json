@@ -462,6 +462,11 @@
   "Ciclos de carga, salud, temperatura y voltaje.": "Charge cycles, health, temperature and voltage.",
   "SoC, núcleos, RAM y salud de la memoria interna.": "SoC, cores, RAM and internal storage health.",
   "Detecta el teléfono al conectarlo por USB, sin anular la garantía.": "Detects the phone when plugged in over USB, without voiding the warranty.",
+  "Simulación: aquí no se instala nada.": "Simulation: nothing gets installed here.",
+  "Prueba el lanzador: instala la suite.": "Try the launcher: install the suite.",
+  "Nueve apps listas. Ahora hazlo de verdad.": "Nine apps ready. Now do it for real.",
+  "Instalar todas": "Install all",
+  "Reiniciar": "Start over",
   "y": "and",
   "o": "or"
 }
