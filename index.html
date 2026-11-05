@@ -60,11 +60,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=3.4">
+    <link rel="stylesheet" href="css/styles.css?v=3.5">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
+    <a class="skip-link" href="#inicio">Saltar al contenido</a>
 
     <div class="liquid-bg" aria-hidden="true">
         <span class="blob blob-1"></span>
@@ -155,6 +156,11 @@
         </dl>
     </section>
 
+    <!-- Manifiesto: las palabras se iluminan con el scroll -->
+    <section class="manifesto" aria-label="Nuestra forma de trabajar">
+        <p class="manifesto-text">Cuidamos cada pantalla, cada animación y cada línea de código como si fuera lo único que vas a ver de nosotros. Porque a veces lo es.</p>
+    </section>
+
     <!-- Suite CroHub -->
     <section id="suite" class="section-block">
         <header class="block-head block-head-orbit">
@@ -182,7 +188,7 @@
         </header>
 
         <figure class="product-shot suite-shot">
-            <img src="resources/screenshots/crohub-apps.png" alt="El lanzador CroHub con las apps de la suite, su estado de instalación, su versión y su licencia" width="1196" height="720" loading="lazy">
+            <img src="resources/screenshots/crohub-apps.webp" alt="El lanzador CroHub con las apps de la suite, su estado de instalación, su versión y su licencia" width="1196" height="720" loading="lazy">
         </figure>
 
         <ul class="app-grid">
@@ -210,7 +216,7 @@
 
         <div class="work-grid">
             <a href="centzontle/index.html" class="work-card" style="--work: #4f8bff">
-                <div class="work-shot"><img src="resources/screenshots/centzontle-resumen.png" alt="Panel «Resumen» de Centzontle con las ventas del mes, la meta y el margen" width="1440" height="900" loading="lazy"></div>
+                <div class="work-shot"><img src="resources/screenshots/centzontle-resumen.webp" alt="Panel «Resumen» de Centzontle con las ventas del mes, la meta y el margen" width="1440" height="900" loading="lazy"></div>
                 <div class="work-body">
                     <div class="work-name"><img src="resources/centzontle.png" alt="" width="26" height="26" class="icon-app"><h3>Centzontle</h3></div>
                     <p>Punto de venta multigiro: caja, mesas, cocina, inventario, crédito y citas, para restaurantes, abarrotes, farmacias, boutiques, talleres y más.</p>
@@ -226,7 +232,7 @@
                 </div>
             </a>
             <a href="agrocria/index.html" class="work-card" style="--work: #10b981">
-                <div class="work-shot"><img src="resources/screenshots/agrocria-dashboard.png" alt="Panel de Agro-Cria Pro con humedad del suelo, mapa NDVI y balance hídrico" width="1440" height="900" loading="lazy"></div>
+                <div class="work-shot"><img src="resources/screenshots/agrocria-dashboard.webp" alt="Panel de Agro-Cria Pro con humedad del suelo, mapa NDVI y balance hídrico" width="1440" height="900" loading="lazy"></div>
                 <div class="work-body">
                     <div class="work-name"><img src="resources/ollintep-agrocria.svg" alt="" width="26" height="26"><h3>Agro-Cria Pro</h3></div>
                     <p>Balance hídrico FAO-56 (CROPWAT), trazabilidad ganadera, cultivos y telemetría de suelo por IoT.</p>
@@ -234,7 +240,7 @@
                 </div>
             </a>
             <a href="diagmind/index.html" class="work-card" style="--work: #38bdf8">
-                <div class="work-shot"><img src="resources/screenshots/diagmind-report.png" alt="Informe de diagnóstico de un dispositivo Android en Diagmind" width="1440" height="900" loading="lazy"></div>
+                <div class="work-shot"><img src="resources/screenshots/diagmind-report.webp" alt="Informe de diagnóstico de un dispositivo Android en Diagmind" width="1440" height="900" loading="lazy"></div>
                 <div class="work-body">
                     <div class="work-name"><img src="resources/ollintep-diagmind.svg" alt="" width="26" height="26"><h3>Diagmind</h3></div>
                     <p>Diagnóstico profundo de dispositivos Android por ADB, sin root, con telemetría e IA local para técnicos.</p>
@@ -330,6 +336,6 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=3.4"></script>
+    <script src="script/scripts.js?v=3.5"></script>
 </body>
 </html>

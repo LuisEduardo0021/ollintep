@@ -428,4 +428,147 @@ document.addEventListener('DOMContentLoaded', () => {
             a.addEventListener('focus', () => prefetchUrl(href), { passive: true, once: true });
         }
     });
+
+    // --- Manifiesto: cada palabra se ilumina según el scroll (--p: su posición de 0 a 1; el CSS hace el resto) ---
+    document.querySelectorAll('.manifesto-text').forEach(el => {
+        const palabras = el.textContent.trim().split(/\s+/);
+        el.setAttribute('aria-label', el.textContent.trim());
+        el.textContent = '';
+        palabras.forEach((p, i) => {
+            const w = document.createElement('span');
+            w.className = 'mw';
+            w.setAttribute('aria-hidden', 'true');
+            w.style.setProperty('--p', (i / palabras.length).toFixed(3));
+            w.textContent = p;
+            el.append(w, ' ');
+        });
+    });
+
+    // --- Plataformas apiladas: la tarjeta cubierta por la siguiente se encoge y se oscurece ---
+    const apiladas = [...document.querySelectorAll('.work-grid .work-card')];
+    const pilaActiva = window.matchMedia('(min-width: 961px)');
+    if (apiladas.length && !prefersReducedMotion) {
+        const sombras = apiladas.map(c => { const s = document.createElement('span'); s.className = 'stack-shade'; c.append(s); return s; });
+        let pendiente = false;
+        const actualizar = () => {
+            pendiente = false;
+            apiladas.forEach((c, i) => {
+                const sig = apiladas[i + 1];
+                let k = 0;
+                if (sig && pilaActiva.matches) {
+                    const a = c.getBoundingClientRect(), b = sig.getBoundingClientRect();
+                    k = Math.min(1, Math.max(0, 1 - (b.top - a.top) / a.height));
+                }
+                c.style.scale = k ? (1 - k * 0.05).toFixed(4) : '';
+                sombras[i].style.opacity = (k * 0.55).toFixed(3);
+            });
+        };
+        window.addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }, { passive: true });
+        pilaActiva.addEventListener('change', actualizar);
+    }
+
+    // --- Botones principales magnéticos: se acercan un poco al cursor (propiedad translate, se suma al hover) ---
+    if (canHover && !prefersReducedMotion) {
+        document.querySelectorAll('.m3-btn-filled, .btn-primary').forEach(b => {
+            let tx = 0, ty = 0, x = 0, y = 0, frame = 0;
+            const mover = () => {
+                x += (tx - x) * 0.18;
+                y += (ty - y) * 0.18;
+                b.style.translate = Math.abs(x) + Math.abs(y) < 0.05 && !tx && !ty ? '' : `${x.toFixed(2)}px ${y.toFixed(2)}px`;
+                frame = Math.abs(tx - x) < 0.05 && Math.abs(ty - y) < 0.05 ? 0 : requestAnimationFrame(mover);
+            };
+            b.addEventListener('pointermove', (e) => {
+                const r = b.getBoundingClientRect();
+                tx = ((e.clientX - r.left) / r.width - 0.5) * 10;
+                ty = ((e.clientY - r.top) / r.height - 0.5) * 8;
+                if (!frame) frame = requestAnimationFrame(mover);
+            }, { passive: true });
+            b.addEventListener('pointerleave', () => { tx = 0; ty = 0; if (!frame) frame = requestAnimationFrame(mover); });
+        });
+    }
+
+    // --- Buscador (Ctrl/⌘ K): se abre al instante, sin animación, porque es una acción de teclado ---
+    const scriptTag = document.querySelector('script[src*="scripts.js"]');
+    const base = scriptTag ? scriptTag.getAttribute('src').replace(/script\/scripts\.js.*$/, '') : '';
+    const DESCARGA = 'https://activation.ollin-tep.com/descargar';
+    const ENTRADAS = [
+        ['Descargar CroHub', 'Lanzador de la suite', DESCARGA, 'fa-download'],
+        ['Suite CroHub', 'Las nueve apps', base + 'index.html#suite', 'fa-cubes'],
+        ['Crovite PDF', 'Documentos PDF', base + 'index.html#suite', 'fa-file-pdf'],
+        ['Croma Studio', 'Fotos y montajes', base + 'index.html#suite', 'fa-image'],
+        ['Cronmy', 'Fotos y color', base + 'index.html#suite', 'fa-palette'],
+        ['Crovect Studio', 'Diseño vectorial', base + 'index.html#suite', 'fa-bezier-curve'],
+        ['Cromofi', 'Video', base + 'index.html#suite', 'fa-film'],
+        ['Croudio', 'Audio', base + 'index.html#suite', 'fa-microphone'],
+        ['CroBeat', 'Música', base + 'index.html#suite', 'fa-drum'],
+        ['CroGroove', 'Música y DJ', base + 'index.html#suite', 'fa-compact-disc'],
+        ['CroGuard', 'VPN y seguridad', base + 'index.html#suite', 'fa-shield-halved'],
+        ['Centzontle', 'Punto de venta multigiro', base + 'centzontle/index.html', 'fa-cash-register'],
+        ['ActaPro', 'Actas y trámites', base + 'actapro/index.html', 'fa-file-signature'],
+        ['Agro-Cria Pro', 'Agricultura y ganadería', base + 'agrocria/index.html', 'fa-seedling'],
+        ['Diagmind', 'Diagnóstico Android', base + 'diagmind/index.html', 'fa-mobile-screen-button'],
+        ['Software a medida', 'Plataformas y consultoría', base + 'index.html#a-medida', 'fa-laptop-code'],
+        ['Cómo trabajamos', 'Principios y cifras', base + 'index.html#principios', 'fa-pen-ruler'],
+        ['Contacto', 'Correo y teléfono', base + 'index.html#contacto', 'fa-envelope'],
+    ];
+    const navUlBuscar = document.querySelector('.nav-links');
+    if (navUlBuscar) {
+        const sinAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+        const esMac = /Mac|iPhone|iPad/.test(navigator.platform);
+        const dlg = document.createElement('dialog');
+        dlg.className = 'cmdk';
+        dlg.setAttribute('aria-label', 'Buscar en el sitio');
+        dlg.innerHTML = `<div class="cmdk-box">
+            <div class="cmdk-input"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" placeholder="Busca una app, una plataforma o una sección" aria-label="Buscar" role="combobox" aria-expanded="true" aria-controls="cmdk-lista" autocomplete="off" spellcheck="false">
+                <kbd>Esc</kbd></div>
+            <ul class="cmdk-lista" id="cmdk-lista" role="listbox"></ul>
+            <p class="cmdk-vacio" hidden>Sin resultados.</p>
+        </div>`;
+        document.body.append(dlg);
+        const input = dlg.querySelector('input'), lista = dlg.querySelector('ul'), vacio = dlg.querySelector('.cmdk-vacio');
+        let visibles = [], sel = 0;
+        const pintar = () => {
+            const q = sinAcentos(input.value.trim());
+            visibles = ENTRADAS.filter(e => !q || sinAcentos(e[0] + ' ' + e[1]).includes(q));
+            sel = Math.min(sel, Math.max(0, visibles.length - 1));
+            lista.innerHTML = '';
+            visibles.forEach((e, i) => {
+                const li = document.createElement('li');
+                li.id = 'cmdk-op-' + i;
+                li.setAttribute('role', 'option');
+                li.setAttribute('aria-selected', String(i === sel));
+                li.innerHTML = `<i class="fas ${e[3]}" aria-hidden="true"></i><span class="cmdk-t"></span><span class="cmdk-s"></span>`;
+                li.querySelector('.cmdk-t').textContent = e[0];
+                li.querySelector('.cmdk-s').textContent = e[1];
+                li.addEventListener('pointermove', () => { if (sel !== i) { sel = i; marcar(); } });
+                li.addEventListener('click', () => ir(e));
+                lista.append(li);
+            });
+            vacio.hidden = visibles.length > 0;
+            marcar();
+        };
+        const marcar = () => {
+            [...lista.children].forEach((li, i) => li.setAttribute('aria-selected', String(i === sel)));
+            input.setAttribute('aria-activedescendant', visibles.length ? 'cmdk-op-' + sel : '');
+            lista.children[sel]?.scrollIntoView({ block: 'nearest' });
+        };
+        const ir = (e) => { dlg.close(); window.location.href = e[2]; };
+        const abrir = () => { input.value = ''; sel = 0; pintar(); dlg.showModal(); input.focus(); };
+        input.addEventListener('input', () => { sel = 0; pintar(); });
+        input.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown') { ev.preventDefault(); sel = (sel + 1) % (visibles.length || 1); marcar(); }
+            else if (ev.key === 'ArrowUp') { ev.preventDefault(); sel = (sel - 1 + visibles.length) % (visibles.length || 1); marcar(); }
+            else if (ev.key === 'Enter' && visibles[sel]) { ev.preventDefault(); ir(visibles[sel]); }
+        });
+        dlg.addEventListener('click', (ev) => { if (ev.target === dlg) dlg.close(); });
+        document.addEventListener('keydown', (ev) => {
+            if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'k') { ev.preventDefault(); dlg.open ? dlg.close() : abrir(); }
+        });
+        const li = document.createElement('li');
+        li.className = 'nav-buscar';
+        li.innerHTML = `<button type="button" class="cmdk-btn" aria-label="Buscar en el sitio" title="Buscar (${esMac ? '⌘' : 'Ctrl'} K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-btn-txt">Buscar</span></button>`;
+        li.querySelector('button').addEventListener('click', () => { if (navUlBuscar.classList.contains('active')) mobileMenu?.click(); abrir(); });
+        navUlBuscar.append(li);
+    }
 });

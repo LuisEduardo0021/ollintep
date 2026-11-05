@@ -3595,3 +3595,340 @@ body.theme-restaurant .m3-btn-filled:hover {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   OFICIO 2026: plataformas apiladas, manifiesto, marca en el pie, buscador y accesos
+   ========================================================================== */
+
+/* --- Saltar al contenido: solo aparece al llegar con el tabulador --- */
+.skip-link {
+  position: fixed;
+  z-index: 200;
+  left: 1rem;
+  top: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 10px;
+  background: #f3f6fb;
+  color: #0a1224;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* --- Manifiesto: palabras que se iluminan con el scroll --- */
+.manifesto {
+  position: relative;
+  z-index: 10;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 1rem;
+  view-timeline-name: --manifiesto;
+}
+
+.manifesto-text {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  font-weight: 650;
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+@supports (animation-timeline: view()) {
+  .mw {
+    animation: palabra linear both;
+    animation-timeline: --manifiesto;
+    animation-range: cover calc(16% + var(--p) * 42%) cover calc(22% + var(--p) * 42%);
+  }
+
+  @keyframes palabra {
+    from {
+      opacity: 0.16;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* --- Plataformas apiladas (escritorio): cada tarjeta se queda fija y la siguiente la cubre --- */
+.stack-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: #05080f;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 961px) {
+  .work-grid {
+    display: block;
+    padding-bottom: 0.5rem;
+  }
+
+  .work-grid .work-card {
+    position: sticky;
+    top: calc(6rem + var(--pila, 0) * 14px);
+    flex-direction: row;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+    transform-origin: 50% 0%;
+    background: linear-gradient(180deg, #111a2c, #0c1321);
+  }
+
+  .work-grid .work-card:nth-child(2) { --pila: 1; }
+  .work-grid .work-card:nth-child(3) { --pila: 2; }
+  .work-grid .work-card:nth-child(4) { --pila: 3; }
+
+  .work-grid .work-card:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .work-grid .work-shot {
+    flex: 1.5 1 0;
+    min-width: 0;
+    margin: 0.6rem;
+  }
+
+  .work-grid .work-body {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    padding: 2.5rem;
+  }
+
+  .work-grid .work-name h3 {
+    font-size: 1.7rem;
+  }
+
+  .work-grid .work-card .link-arrow {
+    margin-top: 0.75rem;
+  }
+}
+
+/* --- Marca gigante en el pie --- */
+.footer {
+  overflow: hidden;
+}
+
+.footer::after {
+  content: "Ollintep";
+  display: block;
+  margin: 2.5rem auto -0.28em;
+  max-width: 1200px;
+  font-family: var(--font-heading);
+  font-size: clamp(5rem, 21vw, 19rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.2), transparent 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+@supports (animation-timeline: view()) {
+  .footer::after {
+    animation: marca-sube linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  @keyframes marca-sube {
+    from {
+      transform: translateY(35%);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+/* --- Buscador --- */
+.nav-buscar {
+  display: flex;
+  align-items: center;
+}
+
+.cmdk-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: 0.25rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, scale 0.16s var(--ease-out);
+}
+
+.cmdk-btn:active {
+  scale: 0.94;
+}
+
+.cmdk-btn-txt {
+  display: none;
+}
+
+.cmdk {
+  width: min(640px, calc(100vw - 2rem));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: #0d1424;
+  color: var(--md-sys-color-on-surface);
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 40px 90px -20px #000;
+}
+
+.cmdk::backdrop {
+  background: rgba(4, 7, 14, 0.7);
+  backdrop-filter: blur(6px);
+}
+
+.cmdk-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.cmdk-input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: #ffffff;
+  font: inherit;
+  font-size: 1rem;
+}
+
+.cmdk kbd {
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.72rem;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.cmdk-lista {
+  max-height: min(52vh, 420px);
+  margin: 0;
+  padding: 0.5rem;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.cmdk-lista li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.cmdk-lista li[aria-selected="true"] {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cmdk-lista i {
+  width: 1.2rem;
+  text-align: center;
+  color: var(--md-sys-color-primary);
+}
+
+.cmdk-t {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.cmdk-s {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.cmdk-vacio {
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cmdk-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 868px) {
+  .nav-buscar {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .cmdk-btn {
+    display: flex;
+    gap: 0.6rem;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    justify-content: flex-start;
+    font-size: 1.15rem;
+  }
+
+  .cmdk-btn-txt {
+    display: inline;
+  }
+
+  .cmdk-s {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mw,
+  .footer::after {
+    animation: none;
+  }
+
+  .work-grid .work-card {
+    position: relative;
+    top: auto;
+  }
+}
+
+/* Cabecera en anchos intermedios: las páginas de producto tienen muchos enlaces */
+@media (min-width: 869px) and (max-width: 1024px) {
+  .logo-by {
+    display: none;
+  }
+
+  .nav-links a {
+    padding: 0.5rem 0.55rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+}
