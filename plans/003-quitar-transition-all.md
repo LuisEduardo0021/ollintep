@@ -1,6 +1,6 @@
 # 003 — Sustituir `transition: all` por las propiedades exactas
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 680ed60
 - **Severity**: HIGH
 - **Category**: Performance
