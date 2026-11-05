@@ -288,7 +288,7 @@
   .nav-links {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 80%;
     max-width: 340px;
     height: 100vh;
@@ -301,12 +301,16 @@
     align-items: flex-start;
     padding: 3rem 2rem;
     gap: 1.25rem;
-    transition: right 0.35s cubic-bezier(0.2, 0, 0, 1);
     box-shadow: -15px 0 40px rgba(0, 0, 0, 0.5);
+    transform: translateX(calc(100% + 40px)); /* + la sombra, para que no asome */
+    visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 0.35s;
   }
 
   .nav-links.active {
-    right: 0;
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 0s;
   }
 
   .nav-links a {
@@ -1446,17 +1450,6 @@
   }
 }
 
-/* Transición específica para menú móvil in-page */
-.nav-links.vt-nav {
-  view-transition-name: mobile-navigation;
-}
-
-::view-transition-old(mobile-navigation),
-::view-transition-new(mobile-navigation) {
-  animation-duration: 0.25s;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-}
-
 /* --- Respuesta al pulsar --- */
 .btn:active,
 .m3-btn:active,
@@ -1509,6 +1502,12 @@
 
   .marquee-track > [aria-hidden="true"] {
     display: none;
+  }
+
+  /* Menú móvil: abre y cierra sin deslizarse */
+  .nav-links,
+  .nav-links.active {
+    transition: none;
   }
 
   /* Aparición al hacer scroll: solo fundido, sin subir */

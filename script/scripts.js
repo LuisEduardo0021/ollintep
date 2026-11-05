@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- Menú Móvil (Hamburguesa) con soporte para View Transitions ---
+    // --- Menú Móvil (Hamburguesa): el panel se desliza con una transición CSS de transform ---
     const mobileMenu = document.querySelector('#mobile-menu');
     const navLinks = document.querySelector('.nav-links');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,37 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        mobileMenu.addEventListener('click', () => {
-            if (document.startViewTransition && !prefersReducedMotion) {
-                navLinks.classList.add('vt-nav');
-                const transition = document.startViewTransition(() => {
-                    toggleMobileMenu();
-                });
-                transition.finished.finally(() => {
-                    navLinks.classList.remove('vt-nav');
-                });
-            } else {
-                toggleMobileMenu();
-            }
-        });
+        mobileMenu.addEventListener('click', () => toggleMobileMenu());
 
         // Cerrar menú al hacer clic en un enlace (móvil)
-        const navItems = document.querySelectorAll('.nav-links a');
-        navItems.forEach(item => {
+        document.querySelectorAll('.nav-links a').forEach(item => {
             item.addEventListener('click', () => {
-                if (navLinks.classList.contains('active')) {
-                    if (document.startViewTransition && !prefersReducedMotion) {
-                        navLinks.classList.add('vt-nav');
-                        const transition = document.startViewTransition(() => {
-                            toggleMobileMenu(true);
-                        });
-                        transition.finished.finally(() => {
-                            navLinks.classList.remove('vt-nav');
-                        });
-                    } else {
-                        toggleMobileMenu(true);
-                    }
-                }
+                if (navLinks.classList.contains('active')) toggleMobileMenu(true);
             });
         });
     }

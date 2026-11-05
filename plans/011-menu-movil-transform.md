@@ -1,6 +1,6 @@
 # 011 — Menú móvil: una sola animación, con `transform`
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: MEDIUM
 - **Category**: Performance / Interruptibility
