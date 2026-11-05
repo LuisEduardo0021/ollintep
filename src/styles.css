@@ -2323,6 +2323,213 @@ button:focus-visible {
   text-align: left;
 }
 
+/* ==========================================================================
+   PÁGINAS DE PRODUCTO CON EL SISTEMA NUEVO (Centzontle)
+   ========================================================================== */
+.work-name img.icon-app {
+  border-radius: 7px;
+}
+
+.path-icons img.icon-app {
+  height: 42px;
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.logo-mark-app {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+
+.hero-home .hero-btns {
+  margin-top: 2.25rem;
+}
+
+/* Captura grande bajo el hero, enmarcada */
+.product-shot {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0;
+  padding: 0.6rem;
+  border-radius: 24px;
+  background: var(--surface-raise), rgba(12, 18, 32, 0.8);
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 40px 80px -40px rgba(0, 0, 0, 0.9), 0 0 60px -20px var(--service-card-glow);
+}
+
+.product-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+}
+
+/* Giros */
+.giro-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.giro-grid li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: 14px;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  background: var(--surface-raise), var(--md-sys-color-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.giro-grid i {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+  color: var(--md-sys-color-primary);
+}
+
+/* Funciones en columnas */
+.feature-cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.feature-col {
+  padding: 1.6rem;
+  border-radius: 18px;
+  background: var(--surface-raise), var(--md-sys-color-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.feature-col h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.1rem;
+  font-size: 1.1rem;
+  font-weight: 650;
+  color: #ffffff;
+}
+
+.feature-col h3 i {
+  font-size: 0.95rem;
+  color: var(--md-sys-color-primary);
+}
+
+.feature-col ul {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-col li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.feature-col li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+}
+
+/* Galería de capturas */
+.shot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.shot {
+  margin: 0;
+  padding-bottom: 1.25rem;
+  border-radius: 22px;
+  background: var(--surface-raise), var(--md-sys-color-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow: hidden;
+}
+
+.shot-wide {
+  grid-column: 1 / -1;
+}
+
+.shot figcaption {
+  padding: 1.1rem 1.4rem 0;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.shot figcaption strong {
+  color: #ffffff;
+  font-weight: 650;
+}
+
+.principles-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.platform-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.platform-note i {
+  font-size: 1.1rem;
+  color: var(--md-sys-color-on-surface);
+}
+
+@media (max-width: 1080px) {
+  .giro-grid,
+  .feature-cols,
+  .principles-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .giro-grid,
+  .feature-cols,
+  .principles-4,
+  .shot-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .product-shot {
+    padding: 0.35rem;
+    border-radius: 16px;
+  }
+
+  .product-shot img {
+    border-radius: 12px;
+  }
+}
+
 /* Hovers solo con ratón (en táctil se quedan pegados) */
 @media (hover: hover) and (pointer: fine) {
   .link-arrow:hover i,
