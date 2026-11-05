@@ -3,6 +3,7 @@
 @source "../*.html";
 @source "../**/*.html";
 @source "../script/**/*.js";
+@source not "../plans";
 
 @layer base {
   :root {
