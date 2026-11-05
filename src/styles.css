@@ -4453,3 +4453,173 @@ html {
   }
 }
 
+/* ==========================================================================
+   HOLO 2026: modo ligero, brillo holográfico, abanico de planes, principios que giran y riel lateral
+   ========================================================================== */
+
+/* --- Modo ligero (lo pone el JS según el equipo) --- */
+.ligero .estrellas,
+.ligero .cursor-luz {
+  display: none;
+}
+
+.ligero .hero::before,
+.ligero .liquid-bg .blob,
+.ligero .hero-home .hero-overlay::before,
+.ligero .ring-luz > span {
+  animation: none;
+}
+
+/* --- Brillo holográfico: iridiscencia que sigue al cursor (--gx/--gy) --- */
+.app-tile.glow-card::before,
+.work-card.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(320px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.1), transparent 70%),
+    conic-gradient(from 210deg at var(--gx, 50%) var(--gy, 50%), rgba(255, 90, 160, 0.13), rgba(255, 207, 58, 0.11), rgba(47, 214, 196, 0.13), rgba(110, 162, 255, 0.14), rgba(199, 125, 255, 0.13), rgba(255, 90, 160, 0.13));
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .app-tile.glow-card:hover::before,
+  .work-card.glow-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* --- Planes de precios en abanico; principios que giran como cartas --- */
+.pricing-grid {
+  perspective: 1500px;
+}
+
+@supports (animation-timeline: view()) {
+  .plan-card {
+    --lado: 0;
+    transform-origin: 50% 100%;
+    animation: plan-abanico linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 32%;
+  }
+
+  .plan-card:first-child { --lado: -1; }
+  .plan-card:last-child { --lado: 1; }
+
+  @keyframes plan-abanico {
+    from {
+      opacity: 0;
+      transform: translateX(calc(var(--lado) * -70px)) translateY(50px) rotateY(calc(var(--lado) * -32deg)) rotateZ(calc(var(--lado) * 5deg));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .principle {
+    transform-origin: 0% 50%;
+    animation: carta-gira linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+
+  @keyframes carta-gira {
+    from {
+      opacity: 0;
+      transform: rotateY(-62deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* --- Riel lateral de secciones --- */
+.riel {
+  position: fixed;
+  z-index: 40;
+  right: 10px;
+  top: 50%;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  transform: translateY(-50%);
+}
+
+.riel a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 24px;
+}
+
+.riel a::before {
+  content: "";
+  width: 3px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--line-strong);
+  transition: transform 0.35s var(--ease-out), background-color 0.25s ease;
+}
+
+.riel a.is-on::before {
+  background: var(--md-sys-color-primary);
+  transform: scaleY(1.9);
+}
+
+.riel a::after {
+  content: attr(data-nombre);
+  position: absolute;
+  right: 24px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: #ffffff;
+  background: #0f1626;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  opacity: 0;
+  transform: translateX(4px) scale(0.97);
+  transform-origin: 100% 50%;
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s var(--ease-out);
+}
+
+@media (min-width: 1270px) {
+  .riel {
+    display: flex;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .riel a:hover::after,
+  .riel a:focus-visible::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .riel a:hover::before {
+    background: #ffffff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card,
+  .principle {
+    animation: none;
+  }
+
+  .riel a::before,
+  .riel a::after {
+    transition: none;
+  }
+}
+

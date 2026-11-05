@@ -1,3 +1,24 @@
+// --- Modo ligero: en equipos modestos se apagan los efectos caros (estrellas, aurora, luz del cursor) ---
+// Se decide por el hardware al cargar y, después, midiendo los fotogramas reales una vez pasada la entrada del hero
+(() => {
+    const raiz = document.documentElement;
+    if (navigator.hardwareConcurrency <= 2 || navigator.deviceMemory <= 2) raiz.classList.add('ligero');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || raiz.classList.contains('ligero')) return;
+    setTimeout(() => {
+        if (document.hidden) return;
+        let fotogramas = 0;
+        const t0 = performance.now();
+        const contar = (ahora) => {
+            fotogramas++;
+            if (ahora - t0 < 2000) { requestAnimationFrame(contar); return; }
+            const fps = fotogramas * 1000 / (ahora - t0);
+            raiz.dataset.fps = Math.round(fps);
+            if (fps < 35 && !document.hidden) raiz.classList.add('ligero');
+        };
+        requestAnimationFrame(contar);
+    }, 3000);
+})();
+
 // --- Transición entre páginas: la captura de la plataforma vuela hasta la captura grande de su página, y al revés ---
 // Fuera de DOMContentLoaded porque pagereveal llega antes del primer pintado. El nombre solo se pone si la captura se ve:
 // si estuviera fuera de pantalla, entraría volando desde lejos.
@@ -110,6 +131,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const anchorById = new Map(navAnchors.map(a => [a.getAttribute('href').slice(1), a]));
     const trackedSections = [...document.querySelectorAll('section[id]')].filter(s => anchorById.has(s.id));
 
+    // Riel lateral: un punto por sección (solo en pantallas anchas, lo oculta el CSS)
+    const puntosRiel = new Map();
+    if (trackedSections.length > 1) {
+        const riel = document.createElement('nav');
+        riel.className = 'riel';
+        riel.setAttribute('aria-label', 'Secciones de la página');
+        trackedSections.forEach(s => {
+            const a = document.createElement('a');
+            a.href = '#' + s.id;
+            a.setAttribute('aria-label', anchorById.get(s.id).textContent.trim());
+            a.dataset.nombre = anchorById.get(s.id).textContent.trim();
+            riel.append(a);
+            puntosRiel.set(s.id, a);
+        });
+        document.body.append(riel);
+    }
+
     if (trackedSections.length) {
         const inBand = new Set();
         const sectionObserver = new IntersectionObserver((entries) => {
@@ -117,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const current = trackedSections.find(s => inBand.has(s));
             if (!current) return; // entre secciones: se queda la última activa
             navAnchors.forEach(a => a.classList.toggle('active', a === anchorById.get(current.id)));
+            puntosRiel.forEach((p, id) => p.classList.toggle('is-on', id === current.id));
             moverPildora();
         }, { rootMargin: '-150px 0px -55% 0px' });
         trackedSections.forEach(s => sectionObserver.observe(s));
@@ -263,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
         document.querySelectorAll('.work-card').forEach(el => inclinar(el, 6));
         document.querySelectorAll('.app-tile, .principle').forEach(el => inclinar(el, 8));
+        document.querySelectorAll('.cta-band').forEach(el => inclinar(el, 3));
         if (!window.matchMedia('(min-width: 961px)').matches) document.querySelectorAll('.shot, .video-card').forEach(el => inclinar(el, 6));
         document.querySelectorAll('.hero-home').forEach(el => {
             const texto = el.querySelector('.hero-content');
@@ -833,6 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
             estrellas = Array.from({ length: n }, () => nueva());
         };
         const dibujar = () => {
+            if (document.documentElement.classList.contains('ligero')) { marco = 0; return; }
             const y = window.scrollY;
             impulso += (Math.abs(y - ultimoY) * 0.00012 - impulso) * 0.1;
             ultimoY = y;
