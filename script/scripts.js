@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const activo = navUl.querySelector('a.active');
         if (!activo || window.innerWidth <= 868) { pildora.classList.remove('is-on'); return; }
         pildora.style.width = activo.offsetWidth + 'px';
-        pildora.style.transform = `translateX(${activo.offsetLeft}px)`;
+        pildora.style.translate = `${activo.offsetLeft}px 0`;
         pildora.classList.add('is-on');
     }
     window.addEventListener('resize', moverPildora, { passive: true });
@@ -1117,7 +1117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             a.addEventListener('pointerenter', () => {
                 if (window.innerWidth <= 868) return;
                 pildora.style.width = a.offsetWidth + 'px';
-                pildora.style.transform = `translateX(${a.offsetLeft}px)`;
+                pildora.style.translate = `${a.offsetLeft}px 0`;
                 pildora.classList.add('is-on');
             });
         });

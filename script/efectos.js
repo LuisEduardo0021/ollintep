@@ -1023,7 +1023,7 @@
             t += .016;
             nivel += (objetivo - nivel) * .09;
             // Al saltar de un enlace a otro el recuadro se mueve y el agua se balancea
-            const pos = pildora.getBoundingClientRect().left;
+            const pos = parseFloat(getComputedStyle(pildora).translate) || 0;   // la posición real, sin contar el estirón
             // La forma también es líquida: se estira en la dirección del salto y recupera la gota al frenar
             const rapidez = ultimaPos === null ? 0 : Math.abs(pos - ultimaPos);
             estiron += (Math.min(rapidez, 40) - estiron) * .22;
