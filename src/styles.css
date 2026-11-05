@@ -16,7 +16,7 @@
     --md-sys-color-surface-container-high: #172136;
     --md-sys-color-surface-container-highest: #1d2942;
 
-    --md-sys-color-primary: #6ea2ff;          /* Azul Ollin-tep (logo #1A56DB, aclarado para fondo oscuro) */
+    --md-sys-color-primary: #6ea2ff;          /* Azul Ollin-Tep (logo #1A56DB, aclarado para fondo oscuro) */
     --md-sys-color-on-primary: #06122b;
     --md-sys-color-primary-container: rgba(110, 162, 255, 0.14);
     --md-sys-color-on-primary-container: #dbe7ff;
@@ -36,7 +36,7 @@
     --md-sys-color-on-surface: #eef2f8;
     --md-sys-color-on-surface-variant: #a1adc2;
 
-    /* --- Sistema visual Ollin-tep: líneas finas, texto, acento de CroHub y curvas --- */
+    /* --- Sistema visual Ollin-Tep: líneas finas, texto, acento de CroHub y curvas --- */
     --line: rgba(148, 163, 184, 0.14);
     --line-strong: rgba(148, 163, 184, 0.26);
     --surface-raise: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
@@ -1001,7 +1001,7 @@
   line-height: 1.55;
 }
 
-/* --- Visual Orbital M3E (Ollin-tep for Restaurants) --- */
+/* --- Visual Orbital M3E (Ollin-Tep for Restaurants) --- */
 .orbit-section {
   padding: 4rem 1.5rem;
   text-align: center;
@@ -1343,7 +1343,7 @@
   transform: translateY(0);
 }
 
-/* --- Logo Marquee (Proyectos de Ollin-tep) --- */
+/* --- Logo Marquee (Proyectos de Ollin-Tep) --- */
 .marquee-container {
   overflow: hidden;
   position: relative;
@@ -2939,7 +2939,7 @@ body.theme-diagmind .m3-btn-filled:hover {
   color: #04101e;
 }
 
-/* --- 4. Ollin-tep for Restaurants: Tema Ámbar Gourmet & Warm Gold (POS & KDS Gastronómico) --- */
+/* --- 4. Ollin-Tep for Restaurants: Tema Ámbar Gourmet & Warm Gold (POS & KDS Gastronómico) --- */
 body.theme-restaurant {
   --md-sys-color-primary: #f59e0b;          /* Amber 500 */
   --md-sys-color-on-primary: #3b1803;
@@ -3727,7 +3727,7 @@ body.theme-restaurant .m3-btn-filled:hover {
 }
 
 .footer::after {
-  content: "Ollin-tep";
+  content: "Ollin-Tep";
   display: block;
   margin: 2.5rem auto -0.28em;
   max-width: 1200px;
