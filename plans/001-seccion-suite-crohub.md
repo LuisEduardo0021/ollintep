@@ -47,7 +47,7 @@ Puntos donde falta:
 
 Una sección nueva `#suite` entre `#servicios` y `#nosotros`, con un encabezado, un botón «Descargar CroHub» y una
 tarjeta por app. Datos EXACTOS (de `/home/ollin-tep/crohub/src/datos/apps.json` y del catálogo publicado el
-2026-11-04; los nombres se escriben tal cual, incluidos «CroGroove» y «Crogward»):
+2026-11-04; los nombres se escriben tal cual, incluidos «CroGroove» y «CroGuard» (antes se escribía «Crogward»)):
 
 | id (archivo de logo) | Nombre | Chip (categoría) | Texto | Acento |
 | --- | --- | --- | --- | --- |
@@ -59,7 +59,7 @@ tarjeta por app. Datos EXACTOS (de `/home/ollin-tep/crohub/src/datos/apps.json` 
 | croudio | Croudio | Audio | Graba, edita y limpia audio. | #FF5562 |
 | crobeat | CroBeat | Música | Crea ritmos y produce música. | #8A86FF |
 | cromix | CroGroove | Música y DJ | Mezcla música como DJ: 4 platos, efectos, stems, sampler y controladoras. | #22E1F0 |
-| croguard | Crogward | VPN | VPN, antivirus y herramientas de red para proteger tu equipo. | #4FC4FF |
+| croguard | CroGuard | VPN | VPN, antivirus y herramientas de red para proteger tu equipo. | #4FC4FF |
 
 No pongas versiones ni sistemas operativos en la web: cambian con cada publicación y quedarían desactualizados. La
 página de descarga ya los muestra.
