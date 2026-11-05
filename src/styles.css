@@ -2964,3 +2964,352 @@ body.theme-restaurant .m3-btn-filled:hover {
   color: #1c0e01;
 }
 
+
+/* ==========================================================================
+   MOVIMIENTO 2026
+   Pocas animaciones, bien coreografiadas: la entrada del hero (se ve una vez), revelados al hacer scroll, luz que
+   sigue al cursor y detalles de respuesta. Solo transform, opacity, clip-path y desenfoques pequeños; los hovers,
+   solo con ratón; con «reducir movimiento», nada se desplaza (bloque al final).
+   ========================================================================== */
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+}
+
+@keyframes intro-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.38em);
+    filter: blur(10px);
+  }
+}
+
+@keyframes intro-header {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+/* Cabecera: entra desde arriba al cargar */
+.intro .navbar {
+  animation: intro-header 0.7s var(--ease-out) both;
+}
+
+/* Título palabra a palabra (las palabras las crea el JS) */
+.hero h1.h1-intro {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #ffffff;
+  -webkit-text-fill-color: currentColor;
+}
+
+.h1-intro .w {
+  display: inline-block;
+  background: linear-gradient(180deg, #ffffff 30%, #c9d6ec 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+  animation: intro-word 0.9s var(--ease-out) both;
+  animation-delay: calc(120ms + var(--i) * 55ms);
+}
+
+.h1-intro .h1-sub .w {
+  background: none;
+  -webkit-text-fill-color: #7f8ca5;
+}
+
+/* El resto del hero llega en cascada detrás del título */
+.intro .hero .eyebrow {
+  animation: intro-rise 0.8s var(--ease-out) both;
+}
+
+.intro .hero .hero-content > p:not(.eyebrow),
+.intro .hero .hero-btns {
+  animation: intro-rise 0.9s var(--ease-out) both;
+  animation-delay: calc(260ms + var(--words, 8) * 55ms);
+}
+
+.intro .hero .hero-btns {
+  animation-delay: calc(360ms + var(--words, 8) * 55ms);
+}
+
+.intro .hero-paths .path-card {
+  animation: intro-rise 1s var(--ease-out) both;
+  animation-delay: 900ms;
+}
+
+.intro .hero-paths .path-card + .path-card {
+  animation-delay: 1000ms;
+}
+
+.intro .path-icons img {
+  animation: intro-rise 0.7s var(--ease-out) both;
+  animation-delay: calc(1150ms + var(--k, 0) * 45ms);
+}
+
+.path-icons img:nth-child(2) { --k: 1; }
+.path-icons img:nth-child(3) { --k: 2; }
+.path-icons img:nth-child(4) { --k: 3; }
+.path-icons img:nth-child(5) { --k: 4; }
+.path-icons img:nth-child(6) { --k: 5; }
+.path-icons img:nth-child(7) { --k: 6; }
+.path-icons img:nth-child(8) { --k: 7; }
+.path-icons img:nth-child(9) { --k: 8; }
+
+/* Aurora del hero: dos luces que giran muy despacio (solo transform) */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: -30%;
+  width: 1100px;
+  height: 1100px;
+  margin-left: -550px;
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side at 30% 40%, color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent), transparent),
+    radial-gradient(closest-side at 70% 60%, rgba(255, 122, 46, 0.1), transparent);
+  animation: aurora 48s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes aurora {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* El punto del antetítulo late */
+.eyebrow-dot {
+  position: relative;
+}
+
+.eyebrow-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  animation: ping 2.6s var(--ease-out) infinite;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Aparición al hacer scroll: un poco de escala y desenfoque en los títulos de sección */
+.reveal {
+  transform: translateY(28px) scale(0.985);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out), filter 0.8s var(--ease-out);
+}
+
+.block-head.reveal,
+.section-title.reveal {
+  filter: blur(6px);
+}
+
+.block-head.reveal.is-visible,
+.section-title.reveal.is-visible {
+  filter: none;
+}
+
+/* Capturas: se revelan desde el centro (clip-path) y se asientan */
+.work-card.reveal .work-shot img,
+.shot.reveal .work-shot img {
+  clip-path: inset(10% 10% 10% 10% round 14px);
+  transform: scale(1.1);
+  transition: clip-path 1.2s var(--ease-out), transform 1.4s var(--ease-out);
+  transition-delay: 150ms;
+}
+
+.work-card.reveal.is-visible .work-shot img,
+.shot.reveal.is-visible .work-shot img {
+  clip-path: inset(0 0 0 0 round 0);
+  transform: scale(1);
+}
+
+/* Captura grande de Centzontle: se aplana al hacer scroll (sin JS, ligada al scroll) */
+@supports (animation-timeline: view()) {
+  .product-shot {
+    transform-origin: 50% 0%;
+    animation: shot-flat linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+
+  @keyframes shot-flat {
+    from {
+      transform: perspective(1400px) rotateX(18deg) scale(0.9) translateY(40px);
+      opacity: 0.35;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+/* Borde de luz que sigue al cursor (el JS pone --gx/--gy y la clase) */
+.glow-card {
+  position: relative;
+}
+
+.glow-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(240px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.55), color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent) 40%, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* Indicador del menú */
+.nav-links.has-pill {
+  position: relative;
+}
+
+.nav-pill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2.15rem;
+  margin-top: -1.075rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--line);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.45s var(--ease-out), width 0.45s var(--ease-out), opacity 0.25s ease;
+}
+
+.nav-pill.is-on {
+  opacity: 1;
+}
+
+@media (min-width: 869px) {
+  .nav-links.has-pill a.active {
+    background: transparent;
+  }
+}
+
+.nav-links.has-pill a {
+  position: relative;
+  z-index: 1;
+}
+
+/* Botón principal: destello de luz al pasar el ratón */
+.m3-btn-filled {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.m3-btn-filled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(110, 162, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glow-card:hover::after {
+    opacity: 1;
+  }
+
+  .m3-btn-filled:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.75s var(--ease-out);
+  }
+
+  .app-tile img,
+  .giro-grid i,
+  .principle i,
+  .feature-col h3 i {
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .app-tile:hover img {
+    transform: translateY(-3px) rotate(-4deg);
+  }
+
+  .giro-grid li:hover i,
+  .principle:hover i,
+  .feature-col:hover h3 i {
+    transform: translateY(-2px) scale(1.08);
+  }
+}
+
+@media (max-width: 868px) {
+  .nav-pill {
+    display: none;
+  }
+}
+
+/* Con «reducir movimiento»: todo aparece en su sitio; se quedan los fundidos y la luz del cursor */
+@media (prefers-reduced-motion: reduce) {
+  .intro .navbar,
+  .h1-intro .w,
+  .intro .hero .eyebrow,
+  .intro .hero .hero-content > p:not(.eyebrow),
+  .intro .hero .hero-btns,
+  .intro .hero-paths .path-card,
+  .intro .path-icons img,
+  .hero::before,
+  .eyebrow-dot::after,
+  .product-shot {
+    animation: none;
+  }
+
+  .eyebrow-dot::after {
+    display: none;
+  }
+
+  .reveal,
+  .block-head.reveal,
+  .section-title.reveal {
+    transform: none;
+    filter: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-card.reveal .work-shot img,
+  .shot.reveal .work-shot img {
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+
+  .nav-pill {
+    transition: opacity 0.2s ease;
+  }
+
+  .m3-btn-filled::after {
+    display: none;
+  }
+}

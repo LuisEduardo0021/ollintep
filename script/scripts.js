@@ -1,3 +1,37 @@
+// --- Entrada del hero: el título se parte en palabras para que aparezcan una a una ---
+// Va fuera de DOMContentLoaded a propósito: el script está al final del <body>, el título ya existe, y partirlo antes
+// del primer pintado evita que se vea entero un instante y luego desaparezca para animarse
+(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0;
+    const partir = (nodo) => {
+        [...nodo.childNodes].forEach(hijo => {
+            if (hijo.nodeType === Node.TEXT_NODE) {
+                const frag = document.createDocumentFragment();
+                hijo.textContent.split(/(\s+)/).forEach(trozo => {
+                    if (!trozo) return;
+                    if (/^\s+$/.test(trozo)) { frag.appendChild(document.createTextNode(trozo)); return; }
+                    const w = document.createElement('span');
+                    w.className = 'w';
+                    w.style.setProperty('--i', i++);
+                    w.textContent = trozo;
+                    frag.appendChild(w);
+                });
+                hijo.replaceWith(frag);
+            } else if (hijo.nodeType === Node.ELEMENT_NODE) {
+                partir(hijo);
+            }
+        });
+    };
+    document.querySelectorAll('.hero h1').forEach(h1 => {
+        h1.setAttribute('aria-label', h1.textContent.trim().replace(/\s+/g, ' '));
+        partir(h1);
+        h1.classList.add('h1-intro');
+        h1.style.setProperty('--words', i);
+    });
+    document.documentElement.classList.add('intro');
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- Menú Móvil (Hamburguesa): el panel se desliza con una transición CSS de transform ---
@@ -28,6 +62,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Indicador que se desliza bajo el enlace activo del menú (solo escritorio) ---
+    const navUl = document.querySelector('.nav-links');
+    const pildora = navUl ? document.createElement('span') : null;
+    if (pildora) {
+        pildora.className = 'nav-pill';
+        pildora.setAttribute('aria-hidden', 'true');
+        navUl.prepend(pildora);
+        navUl.classList.add('has-pill');
+    }
+    function moverPildora() {
+        if (!pildora) return;
+        const activo = navUl.querySelector('a.active');
+        if (!activo || window.innerWidth <= 868) { pildora.classList.remove('is-on'); return; }
+        pildora.style.width = activo.offsetWidth + 'px';
+        pildora.style.transform = `translateX(${activo.offsetLeft}px)`;
+        pildora.classList.add('is-on');
+    }
+    window.addEventListener('resize', moverPildora, { passive: true });
+
     // --- Resaltado de la sección activa en el menú ---
     const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
     const anchorById = new Map(navAnchors.map(a => [a.getAttribute('href').slice(1), a]));
@@ -40,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const current = trackedSections.find(s => inBand.has(s));
             if (!current) return; // entre secciones: se queda la última activa
             navAnchors.forEach(a => a.classList.toggle('active', a === anchorById.get(current.id)));
+            moverPildora();
         }, { rootMargin: '-150px 0px -55% 0px' });
         trackedSections.forEach(s => sectionObserver.observe(s));
     }
@@ -148,6 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Interacciones con el mouse (solo en dispositivos con puntero fino) ---
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    // --- Borde de luz que sigue al cursor en tarjetas y paneles (solo con ratón) ---
+    if (canHover && !prefersReducedMotion) {
+        document.querySelectorAll('.path-card, .work-card, .app-tile, .principle, .feature-col, .giro-grid li, .cta-band').forEach(el => {
+            el.classList.add('glow-card');
+            el.addEventListener('pointermove', (e) => {
+                const r = el.getBoundingClientRect();
+                el.style.setProperty('--gx', `${e.clientX - r.left}px`);
+                el.style.setProperty('--gy', `${e.clientY - r.top}px`);
+            }, { passive: true });
+        });
+    }
 
     // --- Sistema orbital: descripción del elemento que está a la derecha ---
     const orbitRing = document.querySelector('#orbit-ring');
