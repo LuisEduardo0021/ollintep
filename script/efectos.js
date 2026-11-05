@@ -138,11 +138,21 @@
         foil.className = 'foil';
         foil.setAttribute('aria-hidden', 'true');
         plan.append(foil);
+        // Con inercia: pegado al cursor se siente artificial
+        let ox = 30, oy = 20, x = 30, y = 20, marco = 0;
+        const mover = () => {
+            x += (ox - x) * .14;
+            y += (oy - y) * .14;
+            foil.style.setProperty('--fx', `${x.toFixed(1)}%`);
+            foil.style.setProperty('--fy', `${y.toFixed(1)}%`);
+            marco = Math.abs(ox - x) + Math.abs(oy - y) > .1 ? requestAnimationFrame(mover) : 0;
+        };
         plan.addEventListener('pointermove', (e) => {
             const r = plan.getBoundingClientRect();
-            foil.style.setProperty('--fx', `${((e.clientX - r.left) / r.width * 100).toFixed(1)}%`);
-            foil.style.setProperty('--fy', `${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`);
-        });
+            ox = (e.clientX - r.left) / r.width * 100;
+            oy = (e.clientY - r.top) / r.height * 100;
+            if (!marco && mueve()) marco = requestAnimationFrame(mover);
+        }, { passive: true });
     });
 
     // --- LÍNEAS TOPOGRÁFICAS (Agro-Cria, balance hídrico): curvas de nivel calculadas con marching squares
@@ -310,9 +320,8 @@
             setTimeout(() => el.classList.remove('glitch-on'), 420);
         };
         el.addEventListener('pointerenter', rafaga);
-        const programar = () => setTimeout(() => { if (!document.hidden && el.getBoundingClientRect().bottom > 0) rafaga(); programar(); }, 4500 + Math.random() * 4500);
-        setTimeout(rafaga, 1400);
-        programar();
+        // Una vez al entrar y al pasar el cursor: repetido sobre un título que se está leyendo solo molesta
+        setTimeout(rafaga, raiz.classList.contains('intro-marca') ? 3200 : 1400);
     });
 
     // --- PIXEL ART (Centzontle y 404): un centzontle, el pájaro que da nombre al producto, que canta de vez en cuando
