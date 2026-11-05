@@ -1,6 +1,6 @@
 # 012 — Hovers que no se quedan pegados en el móvil, e inclinación de tarjetas suavizada
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: MEDIUM
 - **Category**: Accessibility / Physicality

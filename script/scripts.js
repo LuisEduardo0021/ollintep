@@ -233,19 +233,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (!prefersReducedMotion) {
-            // Inclinación 3D en las tarjetas destacadas
+            // Inclinación 3D en las tarjetas destacadas: sigue al ratón suavizada fotograma a fotograma (la transición
+            // CSS de transform iría siempre por detrás); al salir vuelve con la transición normal
             const tiltEls = document.querySelectorAll('.service-card, .tech-panel');
             tiltEls.forEach(el => {
+                let target = { rx: 0, ry: 0, lift: 0 }, now = { rx: 0, ry: 0, lift: 0 }, frame = 0;
+                const paint = () => {
+                    for (const k in now) now[k] += (target[k] - now[k]) * 0.2;
+                    el.style.transform = `perspective(800px) rotateX(${now.rx}deg) rotateY(${now.ry}deg) translateY(${now.lift}px)`;
+                    const settled = Object.keys(now).every(k => Math.abs(target[k] - now[k]) < 0.01);
+                    frame = settled ? 0 : requestAnimationFrame(paint);
+                };
+                el.addEventListener('mouseenter', () => {
+                    el.style.transitionProperty = 'background-color, box-shadow, scale';
+                });
                 el.addEventListener('mousemove', (e) => {
                     const rect = el.getBoundingClientRect();
                     const px = (e.clientX - rect.left) / rect.width;
                     const py = (e.clientY - rect.top) / rect.height;
-                    const rotateX = (0.5 - py) * 8;
-                    const rotateY = (px - 0.5) * 8;
-                    el.style.transform =
-                        `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+                    target = { rx: (0.5 - py) * 8, ry: (px - 0.5) * 8, lift: -6 };
+                    if (!frame) frame = requestAnimationFrame(paint);
                 });
                 el.addEventListener('mouseleave', () => {
+                    cancelAnimationFrame(frame);
+                    frame = 0;
+                    target = { rx: 0, ry: 0, lift: 0 };
+                    now = { rx: 0, ry: 0, lift: 0 };
+                    el.style.transitionProperty = '';
                     el.style.transform = '';
                 });
             });

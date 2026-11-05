@@ -1450,6 +1450,32 @@
   }
 }
 
+/* En pantallas táctiles el :hover se queda pegado tras tocar: sin movimiento */
+@media (hover: none) {
+  .logo:hover .logo-mark,
+  .btn-primary:hover,
+  .m3-btn-filled:hover,
+  .btn-secondary:hover,
+  .m3-btn-tonal:hover,
+  .service-card:hover,
+  .m3-card:hover,
+  .service-card:hover .card-icon,
+  .stat:hover,
+  .contact-info-centered li a:hover,
+  .social-links a:hover,
+  .back-to-top:hover,
+  .plan-card:hover,
+  .video-card:hover,
+  .video-card:hover .video-thumb img,
+  .product-back-btn:hover {
+    transform: none;
+  }
+
+  .orbit-item:hover {
+    transform: translate(var(--tx), var(--ty));
+  }
+}
+
 /* --- Respuesta al pulsar --- */
 .btn:active,
 .m3-btn:active,
