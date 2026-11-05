@@ -45,7 +45,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=5.3">
+    <link rel="stylesheet" href="../../css/styles.css?v=5.5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="theme-diagmind bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white">
@@ -81,13 +81,13 @@
         </nav>
     </header>
 
-    <section id="inicio" class="hero hero-home">
+    <section id="inicio" class="hero hero-home" data-video="placa">
         <div class="hero-overlay">
             <div class="network-globe"></div>
         </div>
         <div class="hero-content">
             <p class="eyebrow"><span class="eyebrow-dot"></span>Android Audit & Rust Telemetry</p>
-            <h1>Professional technical diagnostics for Android devices</h1>
+            <h1 data-glitch>Professional technical diagnostics for Android devices</h1>
             <p>Deep hardware and software audit over ADB without root: battery, display, sensors, CPU and storage, 100% local and AI-assisted.</p>
             <div class="hero-btns">
                 <a href="#caracteristicas" class="btn btn-primary">
@@ -233,6 +233,8 @@
             </div>
         </div>
     </section>
+
+    <div class="ascii-banda" data-ascii aria-hidden="true"></div>
 
     <section id="tecnologia" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
@@ -384,6 +386,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=5.3"></script>
+    <script src="../../script/scripts.js?v=5.5"></script>
+    <script src="../../script/efectos.js?v=5.5"></script>
 </body>
 </html>

@@ -51,7 +51,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=5.3">
+    <link rel="stylesheet" href="../css/styles.css?v=5.5">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -91,13 +91,13 @@
     </header>
 
     <!-- Sección Hero -->
-    <section id="inicio" class="hero hero-home">
+    <section id="inicio" class="hero hero-home" data-video="placa">
         <div class="hero-overlay">
             <div class="network-globe"></div>
         </div>
         <div class="hero-content">
             <p class="eyebrow"><span class="eyebrow-dot"></span>Auditoría Android & Telemetría Rust</p>
-            <h1>Diagnóstico técnico profesional para dispositivos Android</h1>
+            <h1 data-glitch>Diagnóstico técnico profesional para dispositivos Android</h1>
             <p>Auditoría profunda de hardware y software vía ADB sin root: batería, pantalla, sensores, CPU y almacenamiento, 100% local y asistido por IA.</p>
             <div class="hero-btns">
                 <a href="#caracteristicas" class="btn btn-primary">
@@ -248,6 +248,8 @@
     </section>
 
     <!-- Sección de Tecnología -->
+    <div class="ascii-banda" data-ascii aria-hidden="true"></div>
+
     <section id="tecnologia" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
             <div class="about-text">
@@ -404,6 +406,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=5.3"></script>
+    <script src="../script/scripts.js?v=5.5"></script>
+    <script src="../script/efectos.js?v=5.5"></script>
 </body>
 </html>

@@ -5818,3 +5818,99 @@ html {
 .vj-avance span { display: block; height: 100%; background: var(--md-sys-color-on-surface); transform: scaleX(0); transform-origin: left; }
 .viaje.activa .vj-saltar { display: block; position: absolute; left: clamp(1.5rem, 5vw, 5rem); bottom: 1.1rem; z-index: 4; padding: .35rem .5rem; color: var(--md-sys-color-on-surface-variant); font-size: .85rem; }
 .vj-saltar:hover, .vj-saltar:focus-visible { color: var(--md-sys-color-on-surface); }
+
+/* Fondos de video de ambiente: detrás del contenido, a sangre y como mucho una pantalla de alto.
+   La sección no lleva overflow: rompería los elementos sticky de dentro. */
+[data-video] { position: relative; isolation: isolate; --fv: .3; }
+.hero[data-video] { --fv: .42; }
+.fondo-video { position: absolute; top: 0; left: calc(50% - var(--ancho-util, 100vw) / 2); z-index: -1; width: var(--ancho-util, 100vw); height: min(100%, 100vh); overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1.4s ease; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 70%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 70%, transparent); }
+.hero .fondo-video { -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent); mask-image: linear-gradient(to bottom, #000 70%, transparent); }
+.fondo-video.listo { opacity: var(--fv); }
+.fondo-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Oscurece el centro: los textos grises del hero se leen sobre esta zona */
+.hero .fondo-video::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 58% 62% at 50% 45%, rgba(8, 13, 24, .86), rgba(8, 13, 24, .34) 72%, transparent); }
+.ligero .fondo-video { visibility: hidden; }
+@media (max-width: 960px) { .fondo-video { display: none; } }
+
+
+/* ==========================================================================
+   EFECTOS DE DISEÑO (script/efectos.js): cada uno en la página donde tiene sentido
+   ========================================================================== */
+/* Morph líquido: mancha detrás del logo de la portada */
+.morph-liquido { position: absolute; left: 50%; top: -3.25rem; z-index: -1; width: 15rem; height: 15rem; margin-left: -7.5rem; background: linear-gradient(135deg, #1a56db, #6ea2ff 45%, #ff7a2e); opacity: .34; filter: blur(14px); border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; animation: morph-liquido 16s ease-in-out infinite; pointer-events: none; }
+@keyframes morph-liquido {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; rotate: 0deg; scale: 1; }
+  33% { border-radius: 68% 32% 41% 59% / 58% 66% 34% 42%; rotate: 70deg; scale: 1.12; }
+  66% { border-radius: 36% 64% 52% 48% / 33% 52% 48% 67%; rotate: 150deg; scale: .94; }
+}
+.hero.fuera .morph-liquido { animation-play-state: paused; }
+
+/* Cristal: solo donde hay video detrás que justifique el desenfoque */
+.cta-band.cristal { background: linear-gradient(145deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02)), rgba(11, 17, 30, .46); -webkit-backdrop-filter: blur(16px) saturate(1.45); backdrop-filter: blur(16px) saturate(1.45); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), inset 0 0 0 1px rgba(255, 255, 255, .09), 0 24px 60px -30px rgba(0, 0, 0, .8); }
+.ligero .cristal { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(15, 22, 38, .92); }
+
+/* Metaballs: las nueve apps se funden en un solo lanzador */
+.metaballs { position: relative; height: 180px; margin: 1.5rem 0 1rem; }
+.metaballs-lienzo { display: block; width: 100%; height: 100%; }
+
+/* Tipografía cinética */
+.cin-palabra { display: inline-block; white-space: nowrap; }
+.cin-letra { display: inline-block; --d: 0; transform-origin: 50% 100%; transform: translateY(calc(var(--d) * -.2em)) scaleY(calc(1 + var(--d) * .24)); color: color-mix(in srgb, var(--md-sys-color-primary) calc(var(--d) * 100%), currentColor); transition: transform .28s cubic-bezier(.2, .8, .2, 1), color .28s; }
+.cin .cin-letra { -webkit-text-fill-color: currentColor; }
+.block-title.cin { background: none; color: var(--md-sys-color-on-surface); }
+.cin:not(.cin-entra) .cin-letra { opacity: 0; transform: translateY(.55em) rotate(7deg); }
+.cin.cin-entra .cin-letra { animation: cin-entra .62s cubic-bezier(.2, .9, .25, 1) backwards; animation-delay: calc(var(--i) * 17ms); }
+@keyframes cin-entra { from { opacity: 0; transform: translateY(.55em) rotate(7deg); } }
+
+/* Neón: letrero bajo la lluvia del fondo */
+.neon-texto { background: none; color: #eef5ff; -webkit-text-fill-color: #eef5ff; text-shadow: 0 0 6px rgba(110, 162, 255, .75), 0 0 20px rgba(110, 162, 255, .55), 0 0 46px rgba(79, 120, 255, .45); }
+.neon-texto.neon-on { animation: neon-enciende 1.3s steps(1) both; }
+@keyframes neon-enciende { 0%, 16%, 30%, 44% { opacity: .22; text-shadow: none; } 8%, 22%, 36%, 52%, 100% { opacity: 1; } }
+.cta-band:has(.neon-texto) { outline: 1px solid rgba(110, 162, 255, .62); outline-offset: -1px; }
+
+/* Foil holográfico sobre el plan destacado */
+.foil { position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; opacity: .13; mix-blend-mode: color-dodge; --fx: 30%; --fy: 20%; background: radial-gradient(circle at var(--fx) var(--fy), rgba(255, 255, 255, .5), transparent 42%), repeating-linear-gradient(115deg, #ff5fa2 0, #ffe45f 7%, #5fffb1 14%, #5fc8ff 21%, #b45fff 28%, #ff5fa2 35%); background-size: 100% 100%, 220% 220%; background-position: 0 0, var(--fx) var(--fy); transition: opacity .3s; }
+.plan-featured:hover .foil { opacity: .3; }
+
+/* Líneas topográficas */
+[data-topo] { isolation: isolate; }
+.topo-lienzo { position: absolute; top: 0; left: calc(50% - var(--ancho-util, 100vw) / 2); z-index: -1; width: var(--ancho-util, 100vw); pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent); }
+
+/* Enjambre de partículas */
+.enjambre-lienzo { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+
+/* Arte ASCII */
+.ascii-banda { position: relative; z-index: 5; height: 252px; overflow: hidden; opacity: .85; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); }
+.ascii-lienzo { display: block; width: 100%; }
+
+/* Glitch */
+.glitch { position: relative; }
+.glitch::before, .glitch::after { content: attr(data-texto); position: absolute; inset: 0; pointer-events: none; opacity: 0; background: none; -webkit-text-fill-color: currentColor; }
+.glitch-on::before { opacity: .9; color: #22e1f0; animation: glitch-a .42s steps(2) both; }
+.glitch-on::after { opacity: .9; color: #ff3d71; animation: glitch-b .42s steps(2) both; }
+@keyframes glitch-a { 0% { clip-path: inset(8% 0 72% 0); translate: -5px 0; } 25% { clip-path: inset(56% 0 20% 0); translate: 6px 0; } 50% { clip-path: inset(30% 0 48% 0); translate: -3px 0; } 75% { clip-path: inset(78% 0 4% 0); translate: 4px 0; } 100% { clip-path: inset(44% 0 44% 0); translate: 0 0; } }
+@keyframes glitch-b { 0% { clip-path: inset(62% 0 12% 0); translate: 5px 0; } 25% { clip-path: inset(14% 0 64% 0); translate: -6px 0; } 50% { clip-path: inset(70% 0 8% 0); translate: 3px 0; } 75% { clip-path: inset(24% 0 58% 0); translate: -4px 0; } 100% { clip-path: inset(50% 0 40% 0); translate: 0 0; } }
+
+/* Pixel art */
+.pajaro { position: absolute; right: 30%; top: -92px; z-index: 12; width: 120px; height: 100px; image-rendering: pixelated; pointer-events: none; }
+.pajaro-404 { position: static; display: block; margin: 0 auto .5rem; }
+
+/* Dithering */
+.dither-banda { height: 120px; margin-top: 3rem; background-repeat: repeat-x; background-size: 24px 120px; image-rendering: pixelated; opacity: .5; pointer-events: none; }
+
+/* Sin desbordes laterales en móvil: una rejilla no puede ensancharse por su contenido ni exigir más ancho que la pantalla */
+.about-grid > *, .about-stats > *, .videos-grid > * { min-width: 0; }
+.videos-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+@media (max-width: 480px) {
+  .about-stats { gap: .75rem; }
+  .about-stats .stat { padding-inline: .75rem; }
+  .about-stats .stat-number { font-size: clamp(1.45rem, 7.5vw, 2rem); overflow-wrap: anywhere; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph-liquido, .neon-texto.neon-on { animation: none; }
+}
+@media (max-width: 960px) {
+  .ascii-banda, .metaballs { display: none; }
+  .pajaro { width: 72px; height: 60px; top: -57px; }
+}

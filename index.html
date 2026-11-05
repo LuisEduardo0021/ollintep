@@ -64,7 +64,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=5.3">
+    <link rel="stylesheet" href="css/styles.css?v=5.5">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -102,9 +102,10 @@
 
     <main>
     <!-- Hero: la empresa y sus dos caminos -->
-    <section id="inicio" class="hero hero-home">
+    <section id="inicio" class="hero hero-home" data-video="ciudad">
         <div class="hero-overlay"><div class="network-globe"></div></div>
         <div class="hero-content">
+            <span class="morph-liquido" aria-hidden="true"></span>
             <div class="logo3d" aria-hidden="true"><div class="logo3d-mano"><div class="logo3d-giro"><img src="resources/ollintep.svg" alt="" width="88" height="84"></div></div></div>
             <p class="eyebrow"><span class="eyebrow-dot"></span>Ollin-Tep Software</p>
             <h1>Software hecho con oficio.<span class="h1-sub">Para tu escritorio y para tu negocio.</span></h1>
@@ -221,6 +222,7 @@
                 </div>
             </div>
         </header>
+        <div class="metaballs" data-metaballs aria-hidden="true"></div>
 
         <figure class="product-shot suite-shot">
             <img src="resources/screenshots/crohub-apps.webp" alt="El lanzador CroHub con las apps de la suite, su estado de instalación, su versión y su licencia" width="1196" height="720" loading="lazy">
@@ -268,7 +270,7 @@
     </section>
 
     <!-- Software a medida -->
-    <section id="a-medida" class="section-block" data-ambiente="azul">
+    <section id="a-medida" class="section-block" data-ambiente="azul" data-video="servidores">
         <header class="block-head">
             <div>
                 <p class="eyebrow eyebrow-blue">Software a medida</p>
@@ -324,7 +326,7 @@
         <div class="principles-wrap">
             <header class="principles-head">
                 <p class="eyebrow eyebrow-blue">Cómo trabajamos</p>
-                <h2 class="block-title">La calidad está en los detalles que no se ven.</h2>
+                <h2 class="block-title" data-cinetica>La calidad está en los detalles que no se ven.</h2>
                 <p class="block-lead">Diseñamos sistemas que resuelven problemas operativos reales. Combinamos arquitectura sólida, diseño centrado en las personas y seguridad desde el primer día, para que cada producto sea confiable, rápido y útil.</p>
                 <dl class="about-figures">
                     <div><dt class="stat-number">+8</dt><dd>Años de experiencia</dd></div>
@@ -343,10 +345,10 @@
     </section>
 
     <!-- Contacto -->
-    <section id="contacto" class="section-block" data-ambiente="azul">
-        <div class="cta-band">
+    <section id="contacto" class="section-block" data-ambiente="azul" data-video="lluvia">
+        <div class="cta-band cristal">
             <div>
-                <h2 class="block-title">¿Tienes un proyecto en mente?</h2>
+                <h2 class="block-title neon-texto">¿Tienes un proyecto en mente?</h2>
                 <p class="block-lead">Cuéntanos qué necesitas y te respondemos con una propuesta clara, sin compromiso.</p>
             </div>
             <div class="cta-actions">
@@ -399,6 +401,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=5.3"></script>
+    <script src="script/scripts.js?v=5.5"></script>
+    <script src="script/efectos.js?v=5.5"></script>
 </body>
 </html>

@@ -42,7 +42,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=5.3">
+    <link rel="stylesheet" href="../../css/styles.css?v=5.5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="theme-centzontle selection:bg-sky-400 selection:text-slate-950">
@@ -77,7 +77,7 @@
     </header>
 
     <main>
-    <section id="inicio" class="hero hero-home">
+    <section id="inicio" class="hero hero-home" data-video="mercado">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <p class="eyebrow"><span class="eyebrow-dot"></span>Point of sale for any business</p>
@@ -89,6 +89,7 @@
             </div>
         </div>
         <figure class="product-shot" style="view-transition-name: shot-centzontle">
+            <canvas class="pajaro" data-pajaro aria-hidden="true"></canvas>
             <img src="../../resources/screenshots/centzontle-resumen.webp" alt="Centzontle “Summary” dashboard with monthly sales, sales goal, actual profit and margin" width="1440" height="900">
             <span class="chip3d chip3d-1" aria-hidden="true"><i class="fas fa-store"></i>12 business types</span>
             <span class="chip3d chip3d-2" aria-hidden="true"><i class="fas fa-file-invoice"></i>CFDI 4.0 invoicing</span>
@@ -261,6 +262,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=5.3"></script>
+    <script src="../../script/scripts.js?v=5.5"></script>
+    <script src="../../script/efectos.js?v=5.5"></script>
 </body>
 </html>

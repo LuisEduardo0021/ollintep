@@ -58,7 +58,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=5.3">
+    <link rel="stylesheet" href="../css/styles.css?v=5.5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
@@ -93,9 +93,10 @@
     </header>
 
     <main>
-    <section id="inicio" class="hero hero-home">
+    <section id="inicio" class="hero hero-home" data-video="ciudad">
         <div class="hero-overlay"><div class="network-globe"></div></div>
         <div class="hero-content">
+            <span class="morph-liquido" aria-hidden="true"></span>
             <div class="logo3d" aria-hidden="true"><div class="logo3d-mano"><div class="logo3d-giro"><img src="../resources/ollintep.svg" alt="" width="88" height="84"></div></div></div>
             <p class="eyebrow"><span class="eyebrow-dot"></span>Ollin-Tep Software</p>
             <h1>Software built with craft.<span class="h1-sub">For your desktop and for your business.</span></h1>
@@ -208,6 +209,7 @@
                 </div>
             </div>
         </header>
+        <div class="metaballs" data-metaballs aria-hidden="true"></div>
 
         <figure class="product-shot suite-shot">
             <img src="../resources/screenshots/crohub-apps.webp" alt="The CroHub launcher with the suite's apps, their install status, version and license" width="1196" height="720" loading="lazy">
@@ -252,7 +254,7 @@
         <div class="cinta-pista"><div class="cinta-grupo"><span class="cinta-item"><img src="../resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="../resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="../resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="../resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="../resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="../resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="../resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="../resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="../resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div><div class="cinta-grupo"><span class="cinta-item"><img src="../resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="../resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="../resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="../resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="../resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="../resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="../resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="../resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="../resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div></div>
     </section>
 
-    <section id="a-medida" class="section-block" data-ambiente="azul">
+    <section id="a-medida" class="section-block" data-ambiente="azul" data-video="servidores">
         <header class="block-head">
             <div>
                 <p class="eyebrow eyebrow-blue">Custom software</p>
@@ -307,7 +309,7 @@
         <div class="principles-wrap">
             <header class="principles-head">
                 <p class="eyebrow eyebrow-blue">How we work</p>
-                <h2 class="block-title">Quality lives in the details you never see.</h2>
+                <h2 class="block-title" data-cinetica>Quality lives in the details you never see.</h2>
                 <p class="block-lead">We design systems that solve real operational problems. We combine solid architecture, people-centered design and security from day one, so every product is reliable, fast and useful.</p>
                 <dl class="about-figures">
                     <div><dt class="stat-number">+8</dt><dd>Years of experience</dd></div>
@@ -325,10 +327,10 @@
         </div>
     </section>
 
-    <section id="contacto" class="section-block" data-ambiente="azul">
-        <div class="cta-band">
+    <section id="contacto" class="section-block" data-ambiente="azul" data-video="lluvia">
+        <div class="cta-band cristal">
             <div>
-                <h2 class="block-title">Have a project in mind?</h2>
+                <h2 class="block-title neon-texto">Have a project in mind?</h2>
                 <p class="block-lead">Tell us what you need and we will reply with a clear proposal, no strings attached.</p>
             </div>
             <div class="cta-actions">
@@ -380,6 +382,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=5.3"></script>
+    <script src="../script/scripts.js?v=5.5"></script>
+    <script src="../script/efectos.js?v=5.5"></script>
 </body>
 </html>

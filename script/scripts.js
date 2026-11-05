@@ -690,6 +690,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { rootMargin: '100% 0px' }).observe(viaje);
     }
 
+    // --- Fondos de video de ambiente (data-video): solo en escritorio, se crean al acercarse y suenan solo a la vista.
+    // Con móvil, movimiento reducido o modo ligero no se descarga nada. Aparecen con un fundido cuando ya hay imagen.
+    const conVideo = [...document.querySelectorAll('[data-video]')];
+    if (conVideo.length) {
+        const anchoVideo = window.matchMedia('(min-width: 961px)');
+        const esLigero = () => document.documentElement.classList.contains('ligero');
+        const baseVideo = new URL('../resources/video/', document.querySelector('script[src*="scripts.js"]').src);
+        // 100vw incluye la barra de desplazamiento: la capa usa el ancho real para no desbordar
+        const medirAncho = () => document.documentElement.style.setProperty('--ancho-util', `${document.documentElement.clientWidth}px`);
+        medirAncho();
+        window.addEventListener('resize', medirAncho);
+        const crearVideo = (seccion) => {
+            const capa = document.createElement('div');
+            capa.className = 'fondo-video';
+            capa.setAttribute('aria-hidden', 'true');
+            const v = document.createElement('video');
+            v.muted = true;
+            v.loop = true;
+            v.playsInline = true;
+            v.preload = 'auto';
+            v.disablePictureInPicture = true;
+            v.src = new URL(`${seccion.dataset.video}.mp4`, baseVideo).href;
+            v.addEventListener('playing', () => capa.classList.add('listo'), { once: true });
+            v.addEventListener('timeupdate', () => { if (esLigero()) v.pause(); });
+            capa.append(v);
+            seccion.prepend(capa);
+            return v;
+        };
+        const observador = new IntersectionObserver((entradas) => entradas.forEach(({ target, isIntersecting }) => {
+            const video = target.querySelector(':scope > .fondo-video video');
+            if (isIntersecting && anchoVideo.matches && !prefersReducedMotion && !esLigero()) (video || crearVideo(target)).play().catch(() => {});
+            else video?.pause();
+        }), { rootMargin: '25% 0px' });
+        const observarTodo = () => conVideo.forEach(s => { observador.unobserve(s); observador.observe(s); });
+        // Tras la carga, para no competir con el contenido principal de la página
+        if (document.readyState === 'complete') observarTodo();
+        else window.addEventListener('load', observarTodo, { once: true });
+        anchoVideo.addEventListener('change', observarTodo);
+    }
+
     // --- Plataformas apiladas: la tarjeta cubierta por la siguiente se encoge y se oscurece ---
     const apiladas = [...document.querySelectorAll('.work-grid .work-card')];
     const pilaActiva = window.matchMedia('(min-width: 961px)');
