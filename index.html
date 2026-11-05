@@ -64,7 +64,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=5.2">
+    <link rel="stylesheet" href="css/styles.css?v=5.3">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -170,23 +170,23 @@
     <section class="viaje" id="recorrido" aria-label="Recorrido por lo que construimos" style="--n: 5">
         <div class="viaje-fijo">
             <div class="vj-pasos">
-                <article class="vj-paso" style="--c: #ff7a2e">
+                <article class="vj-paso" data-fondo="escritorio" style="--c: #ff7a2e">
                     <figure class="vj-plano"><img src="resources/screenshots/crohub-apps.webp" alt="El lanzador CroHub con las apps de la suite" width="1196" height="720" loading="lazy" decoding="async"></figure>
                     <div class="vj-texto"><p class="vj-nombre">CroHub</p><h2>Empieza en tu escritorio.</h2><p>Un lanzador descarga, instala, actualiza y activa las nueve apps de la suite.</p></div>
                 </article>
-                <article class="vj-paso" style="--c: #4f8bff">
+                <article class="vj-paso" data-fondo="mostrador" style="--c: #4f8bff">
                     <figure class="vj-plano"><img src="resources/screenshots/centzontle-caja.webp" alt="La caja de Centzontle" width="1440" height="900" loading="lazy" decoding="async"></figure>
                     <div class="vj-texto"><p class="vj-nombre">Centzontle</p><h2>Sigue en el mostrador.</h2><p>Caja, mesas, cocina e inventario en un punto de venta para muchos giros.</p></div>
                 </article>
-                <article class="vj-paso" style="--c: #818cf8">
+                <article class="vj-paso" data-fondo="oficina" style="--c: #818cf8">
                     <figure class="vj-plano"><img src="resources/actapro/actapro-dashboard-dark.jpg" alt="Panel de ActaPro" width="1280" height="800" loading="lazy" decoding="async"></figure>
                     <div class="vj-texto"><p class="vj-nombre">ActaPro</p><h2>Pasa por la oficina.</h2><p>Gestión de actas con el equipo conectado y lo pendiente a la vista.</p></div>
                 </article>
-                <article class="vj-paso" style="--c: #34d399">
+                <article class="vj-paso" data-fondo="campo" style="--c: #34d399">
                     <figure class="vj-plano"><img src="resources/screenshots/agrocria-telemetry.webp" alt="Telemetría de Agro-Cria" width="1440" height="900" loading="lazy" decoding="async"></figure>
                     <div class="vj-texto"><p class="vj-nombre">Agro-Cria</p><h2>Sal al campo.</h2><p>Agricultura de precisión con datos de tus sensores.</p></div>
                 </article>
-                <article class="vj-paso" style="--c: #22e1f0">
+                <article class="vj-paso" data-fondo="taller" style="--c: #22e1f0">
                     <figure class="vj-plano"><img src="resources/screenshots/diagmind-pcb.webp" alt="Diagnóstico de placa en Diagmind" width="1440" height="900" loading="lazy" decoding="async"></figure>
                     <div class="vj-texto"><p class="vj-nombre">Diagmind</p><h2>Termina en el taller.</h2><p>Diagnóstico de dispositivos, capa por capa.</p></div>
                 </article>
@@ -399,6 +399,6 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=5.2"></script>
+    <script src="script/scripts.js?v=5.3"></script>
 </body>
 </html>

@@ -590,20 +590,58 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Recorrido: el scroll mueve una cámara entre las capturas; se detiene en cada una para leer ---
     const viaje = document.querySelector('.viaje');
     if (viaje) {
-        const pasos = [...viaje.querySelectorAll('.vj-paso')].map(paso => ({ plano: paso.querySelector('.vj-plano'), texto: paso.querySelector('.vj-texto') }));
+        const pasos = [...viaje.querySelectorAll('.vj-paso')].map(paso => ({ plano: paso.querySelector('.vj-plano'), texto: paso.querySelector('.vj-texto'), nombre: paso.dataset.fondo, fondo: null }));
         const barra = viaje.querySelector('.vj-avance span');
         const ancho = window.matchMedia('(min-width: 961px)');
         const limitar = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
         const PROFUNDIDAD = 1100;
-        let avance = 0, objetivo = 0, marco = 0;
+        let avance = 0, objetivo = 0, marco = 0, enVista = false, sonando = null;
+
+        // Fondos de video (ambiente, no producto): se crean al acercarse a la sección y solo suena el de la escena actual.
+        // Con la lista de móvil, movimiento reducido o modo ligero no se crean ni se descargan.
+        const crearFondos = () => {
+            if (pasos[0].fondo) return;
+            const base = new URL('../resources/video/', document.querySelector('script[src*="scripts.js"]').src);
+            const capa = document.createElement('div');
+            capa.className = 'vj-fondos';
+            capa.setAttribute('aria-hidden', 'true');
+            pasos.forEach(paso => {
+                const v = document.createElement('video');
+                v.muted = true;
+                v.loop = true;
+                v.playsInline = true;
+                v.preload = 'none';
+                v.disablePictureInPicture = true;
+                v.poster = new URL(`${paso.nombre}.jpg`, base).href;
+                v.src = new URL(`${paso.nombre}.mp4`, base).href;
+                capa.append(v);
+                paso.fondo = v;
+            });
+            viaje.querySelector('.viaje-fijo').prepend(capa);
+        };
+        const elegirFondo = (camara) => {
+            const actual = pasos[Math.round(camara)]?.fondo;
+            const quiere = enVista && viaje.classList.contains('activa') && !document.documentElement.classList.contains('ligero') ? actual : null;
+            if (quiere === sonando) return;
+            sonando?.pause();
+            sonando = quiere;
+            if (sonando) {
+                sonando.preload = 'auto';
+                sonando.play().catch(() => {});
+            }
+        };
 
         const pintar = () => {
             const t = avance * (pasos.length - 1);
             const i = Math.floor(t);
             const f = limitar(((t - i) - 0.25) / 0.5);
             const camara = i + f * f * (3 - 2 * f);
-            pasos.forEach(({ plano, texto }, n) => {
+            pasos.forEach(({ plano, texto, fondo }, n) => {
                 const d = n - camara;
+                if (fondo) {
+                    fondo.style.opacity = limitar(1 - Math.abs(d) * 1.6);
+                    fondo.style.transform = `scale(${1.1 - limitar(d, -1, 1) * 0.08})`;
+                }
                 const lado = n % 2 ? -1 : 1;
                 plano.style.transform = `translate3d(${lado * 15}vw, 0, ${-d * PROFUNDIDAD - 120}px) rotateY(${-lado * (5 + d * 7)}deg)`;
                 plano.style.opacity = d < 0 ? limitar(1 + d * 2.5) : limitar(1 - d * 0.55);
@@ -611,6 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 texto.style.transform = `translate3d(0, calc(-50% + ${d * 90}px), 0)`;
             });
             barra.style.transform = `scaleX(${avance})`;
+            elegirFondo(camara);
         };
         const medir = () => {
             const r = viaje.getBoundingClientRect();
@@ -628,6 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activa === viaje.classList.contains('activa')) { if (activa) alMover(); return; }
             viaje.classList.toggle('activa', activa);
             if (activa) {
+                if (enVista) crearFondos();
                 medir();
                 avance = objetivo;
                 pintar();
@@ -636,11 +676,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.removeEventListener('scroll', alMover);
                 cancelAnimationFrame(marco);
                 marco = 0;
+                elegirFondo(0);
                 pasos.forEach(({ plano, texto }) => { plano.removeAttribute('style'); texto.removeAttribute('style'); });
             }
         };
         ajustar();
         window.addEventListener('resize', ajustar);
+        // El video se carga una pantalla antes de llegar y se detiene al salir de la sección
+        new IntersectionObserver(([e]) => {
+            enVista = e.isIntersecting;
+            if (enVista && viaje.classList.contains('activa')) { crearFondos(); pintar(); }
+            else elegirFondo(0);
+        }, { rootMargin: '100% 0px' }).observe(viaje);
     }
 
     // --- Plataformas apiladas: la tarjeta cubierta por la siguiente se encoge y se oscurece ---
