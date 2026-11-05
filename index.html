@@ -60,7 +60,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=3.5">
+    <link rel="stylesheet" href="css/styles.css?v=3.6">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -162,7 +162,7 @@
     </section>
 
     <!-- Suite CroHub -->
-    <section id="suite" class="section-block">
+    <section id="suite" class="section-block" data-ambiente="naranja">
         <header class="block-head block-head-orbit">
             <div>
                 <p class="eyebrow eyebrow-orange"><img src="resources/suite/crohub.svg" alt="" width="15" height="16">Suite CroHub</p>
@@ -204,8 +204,13 @@
         </ul>
     </section>
 
+    <!-- Cinta de las apps: su velocidad depende del scroll -->
+    <section class="cinta" aria-hidden="true">
+        <div class="cinta-pista"><div class="cinta-grupo"><span class="cinta-item"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div><div class="cinta-grupo"><span class="cinta-item"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div></div>
+    </section>
+
     <!-- Software a medida -->
-    <section id="a-medida" class="section-block">
+    <section id="a-medida" class="section-block" data-ambiente="azul">
         <header class="block-head">
             <div>
                 <p class="eyebrow eyebrow-blue">Software a medida</p>
@@ -257,7 +262,7 @@
     </section>
 
     <!-- Cómo trabajamos -->
-    <section id="principios" class="section-block">
+    <section id="principios" class="section-block" data-ambiente="violeta">
         <div class="principles-wrap">
             <header class="principles-head">
                 <p class="eyebrow eyebrow-blue">Cómo trabajamos</p>
@@ -280,7 +285,7 @@
     </section>
 
     <!-- Contacto -->
-    <section id="contacto" class="section-block">
+    <section id="contacto" class="section-block" data-ambiente="azul">
         <div class="cta-band">
             <div>
                 <h2 class="block-title">¿Tienes un proyecto en mente?</h2>
@@ -336,6 +341,6 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=3.5"></script>
+    <script src="script/scripts.js?v=3.6"></script>
 </body>
 </html>

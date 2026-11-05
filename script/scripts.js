@@ -207,13 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Usa la propiedad «rotate» (eje + ángulo) y no «transform», que ya usan la entrada del hero, el revelado al hacer
     // scroll y la captura que se aplana con el scroll: así se suman en vez de pisarse. La perspectiva la pone el padre.
     if (canHover && !prefersReducedMotion) {
-        const inclinar = (el, max) => {
+        const inclinar = (el, max, objetivo = el) => {
             let tx = 0, ty = 0, x = 0, y = 0, frame = 0;
             const pintar = () => {
                 x += (tx - x) * 0.12;
                 y += (ty - y) * 0.12;
                 const angulo = Math.hypot(x, y);
-                el.style.rotate = angulo < 0.01 ? '' : `${x.toFixed(4)} ${y.toFixed(4)} 0 ${angulo.toFixed(3)}deg`;
+                objetivo.style.rotate = angulo < 0.01 ? '' : `${x.toFixed(4)} ${y.toFixed(4)} 0 ${angulo.toFixed(3)}deg`;
                 const quieto = Math.abs(tx - x) < 0.01 && Math.abs(ty - y) < 0.01;
                 frame = quieto ? 0 : requestAnimationFrame(pintar);
             };
@@ -231,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
         document.querySelectorAll('.work-card, .shot').forEach(el => inclinar(el, 6));
         document.querySelectorAll('.product-shot').forEach(el => inclinar(el, 4));
+        document.querySelectorAll('.orbit3d').forEach(el => inclinar(el, 34, el.querySelector('.orbit3d-ring')));
     }
 
     // --- Borde de luz que sigue al cursor en tarjetas y paneles (solo con ratón) ---
@@ -570,5 +571,75 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = `<button type="button" class="cmdk-btn" aria-label="Buscar en el sitio" title="Buscar (${esMac ? '⌘' : 'Ctrl'} K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-btn-txt">Buscar</span></button>`;
         li.querySelector('button').addEventListener('click', () => { if (navUlBuscar.classList.contains('active')) mobileMenu?.click(); abrir(); });
         navUlBuscar.append(li);
+    }
+
+    // --- Luz ambiental: el fondo cambia de color según la sección (fundido de opacidad, sin repintar) ---
+    const seccionesAmbiente = document.querySelectorAll('[data-ambiente]');
+    const fondoAmbiente = document.querySelector('.liquid-bg');
+    if (seccionesAmbiente.length && fondoAmbiente) {
+        const capas = {};
+        ['naranja', 'azul', 'violeta'].forEach(c => {
+            const s = document.createElement('span');
+            s.className = 'ambiente ambiente-' + c;
+            fondoAmbiente.append(s);
+            capas[c] = s;
+        });
+        const ambienteObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) Object.entries(capas).forEach(([c, s]) => s.classList.toggle('is-on', c === e.target.dataset.ambiente));
+            });
+        }, { rootMargin: '-45% 0px -45% 0px' });
+        seccionesAmbiente.forEach(s => ambienteObserver.observe(s));
+        // al volver arriba (fuera de toda sección con color) se apaga
+        const inicioHero = document.querySelector('.hero');
+        if (inicioHero) new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) Object.values(capas).forEach(s => s.classList.remove('is-on'));
+        }, { rootMargin: '-45% 0px -45% 0px' }).observe(inicioHero);
+    }
+
+    // --- Cinta: avanza sola y acelera (o invierte) con la velocidad del scroll; solo corre mientras se ve ---
+    const cinta = document.querySelector('.cinta');
+    if (cinta && !prefersReducedMotion) {
+        const pista = cinta.querySelector('.cinta-pista');
+        let x = 0, v = 0, ultimoY = window.scrollY, marco = 0, anchoGrupo = 0;
+        const medir = () => { anchoGrupo = pista.firstElementChild.offsetWidth; };
+        const paso = () => {
+            const y = window.scrollY, dy = y - ultimoY;
+            ultimoY = y;
+            v += (dy * 0.35 - v) * 0.1;                        // velocidad suavizada del scroll
+            const avance = 0.7 + v;                            // 0.7 px por fotograma en reposo; subir la invierte
+            x = (x - avance) % anchoGrupo;
+            if (x > 0) x -= anchoGrupo;
+            const sesgo = Math.max(-8, Math.min(8, v * 0.45));
+            pista.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0) skewX(${(-sesgo).toFixed(2)}deg)`;
+            marco = requestAnimationFrame(paso);
+        };
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting && !marco) { medir(); ultimoY = window.scrollY; marco = requestAnimationFrame(paso); }
+            else if (!e.isIntersecting && marco) { cancelAnimationFrame(marco); marco = 0; }
+        }).observe(cinta);
+        window.addEventListener('resize', medir, { passive: true });
+    }
+
+    // --- Luz que sigue al cursor por toda la página (solo con ratón; se para cuando llega) ---
+    if (canHover && !prefersReducedMotion) {
+        const luz = document.createElement('div');
+        luz.className = 'cursor-luz';
+        luz.setAttribute('aria-hidden', 'true');
+        document.body.append(luz);
+        let tx = 0, ty = 0, lx = 0, ly = 0, marco = 0, primera = true;
+        const seguir = () => {
+            lx += (tx - lx) * 0.1;
+            ly += (ty - ly) * 0.1;
+            luz.style.transform = `translate3d(${lx.toFixed(1)}px, ${ly.toFixed(1)}px, 0)`;
+            marco = Math.abs(tx - lx) + Math.abs(ty - ly) < 0.3 ? 0 : requestAnimationFrame(seguir);
+        };
+        window.addEventListener('pointermove', (e) => {
+            tx = e.clientX; ty = e.clientY;
+            if (primera) { primera = false; lx = tx; ly = ty; luz.classList.add('is-on'); }
+            if (!marco) marco = requestAnimationFrame(seguir);
+        }, { passive: true });
+        document.documentElement.addEventListener('pointerleave', () => luz.classList.remove('is-on'));
+        document.documentElement.addEventListener('pointerenter', () => luz.classList.add('is-on'));
     }
 });
