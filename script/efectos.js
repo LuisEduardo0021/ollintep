@@ -62,25 +62,46 @@
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
         const uB = gl.getUniformLocation(prog, 'b'), uM = gl.getUniformLocation(prog, 'm');
         caja.append(c);
-        const medir = () => { c.width = caja.clientWidth; c.height = caja.clientHeight; gl.viewport(0, 0, c.width, c.height); };
+        // A media resolución: son formas suaves, no se nota, y cuesta la cuarta parte
+        const medir = () => { c.width = Math.ceil(caja.clientWidth / 2); c.height = Math.ceil(caja.clientHeight / 2); gl.viewport(0, 0, c.width, c.height); };
         medir();
         addEventListener('resize', medir);
         const pos = new Float32Array(27);
-        bucle(caja, 40, (t) => {
+        let cursorX = -1, cursorY = -1, cx = 0, cy = 0;
+        const zona = caja.closest('section') || caja;
+        zona.addEventListener('pointermove', (ev) => {
+            const r = caja.getBoundingClientRect();
+            if (cursorX < 0) { cx = (ev.clientX - r.left) / 2; cy = (r.bottom - ev.clientY) / 2; }
+            cursorX = (ev.clientX - r.left) / 2;
+            cursorY = (r.bottom - ev.clientY) / 2;   // WebGL cuenta desde abajo y el lienzo va a media resolución
+        }, { passive: true });
+        zona.addEventListener('pointerleave', () => { cursorX = cursorY = -1; });
+        bucle(caja, 50, (t) => {
             const r = caja.getBoundingClientRect();
             const p = limitar((innerHeight * .92 - r.top) / (innerHeight * .55));
             const e = p * p * (3 - 2 * p);
             const w = c.width, h = c.height;
+            // El cursor las atrae con inercia
+            cx += (cursorX - cx) * .07;
+            cy += (cursorY - cy) * .07;
             for (let i = 0; i < 9; i++) {
-                const ox = w * (.08 + i * .105), oy = h / 2 + Math.sin(t * .9 + i * 1.7) * h * .16;
-                pos[i * 3] = ox + (w / 2 - ox) * e + Math.cos(t * .7 + i) * 7 * (1 - e * .6);
-                pos[i * 3 + 1] = oy + (h / 2 - oy) * e;
-                pos[i * 3 + 2] = (h * .19) * (1 - e * .22) + Math.sin(t + i * 2) * 1.5;
+                // Separadas: cada gota vaga por su cuenta y a ratos toca a sus vecinas
+                const ox = w * (.08 + i * .105) + Math.sin(t * .8 + i * 2.1) * w * .045 + Math.cos(t * .37 + i) * w * .02;
+                const oy = h / 2 + Math.sin(t * 1.25 + i * 1.7) * h * .2;
+                // Fundidas: siguen orbitando dentro de la masa, que se deforma y a veces suelta una gota
+                const ang = t * (.55 + i * .06) * (i % 2 ? 1 : -1) + i * .7;
+                const salida = Math.pow(Math.max(0, Math.sin(t * .45 + i * 1.1)), 8);
+                const radio = h * (.13 + Math.sin(t * .8 + i) * .05 + salida * .1);
+                const mx = w / 2 + Math.cos(ang) * radio * 2.1, my = h / 2 + Math.sin(ang) * radio * .85;
+                const ax = (cx - (ox + (mx - ox) * e)) * .22, ay = (cy - (oy + (my - oy) * e)) * .22;
+                pos[i * 3] = ox + (mx - ox) * e + (cursorX < 0 ? 0 : ax);
+                pos[i * 3 + 1] = limitar(oy + (my - oy) * e + (cursorX < 0 ? 0 : ay), h * .3, h * .7);
+                pos[i * 3 + 2] = (h * .125) * (1 - e * .3) + Math.sin(t * 1.6 + i * 2) * h * .014;
             }
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.uniform3fv(uB, pos);
-            gl.uniform1f(uM, limitar((e - .72) / .28));
+            gl.uniform1f(uM, limitar((e - .72) / .28) * .62);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
         });
     });
@@ -261,10 +282,19 @@
             let mx = -999, my = -999;
             caja.addEventListener('pointermove', (e) => { const r = caja.getBoundingClientRect(); mx = (e.clientX - r.left) / AN; my = (e.clientY - r.top) / AL; });
             caja.addEventListener('pointerleave', () => { mx = my = -999; });
+            // Al entrar en pantalla, la imagen se descifra: caracteres al azar que van cayendo en su sitio
+            const orden = new Float32Array(col * fil).map(() => Math.random());
+            let inicio = null;
             const dibujar = (t) => {
                 ctx.clearRect(0, 0, c.width, c.height);
                 const barrido = ((t * .16) % 1.3) * col;
+                if (inicio === null && t >= 0) inicio = t;
+                const hecho = inicio === null ? 1 : limitar((t - inicio) / 1.5);
                 for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
+                    if (orden[j * col + i] > hecho) {
+                        ctx.drawImage(atlas, (1 + Math.floor(Math.random() * (RAMPA.length - 1))) * AN, 0, AN, AL, i * AN, j * AL, AN, AL);
+                        continue;
+                    }
                     let v = lum[j * col + i];
                     v += Math.max(0, 1 - Math.abs(i - barrido) / 9) * .7;
                     v += Math.max(0, 1 - Math.hypot(i - mx, (j - my) * 1.8) / 11) * .6;
@@ -305,6 +335,165 @@
         }, caja.dataset.ascii.endsWith('.svg') ? 1 : .42);
         img.onerror = () => caja.remove();
         img.src = new URL(`../resources/${caja.dataset.ascii}`, base).href;
+    });
+
+    // --- ASCII ANIMADO: una escena por página, calculada celda a celda. data-ascii-anim = nombre · data-color = color.
+    // En móvil o con movimiento reducido queda un fotograma fijo; en modo ligero no se crea.
+    const azarDe = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+    const ESCENAS = {
+        // Portada, servicio técnico: un gabinete de PC abierto en mantenimiento, con ventiladores, memorias y un barrido de diagnóstico
+        gabinete: (v, col, fil, t) => {
+            const ASPECTO = 1.75;   // las celdas son más altas que anchas
+            const alto = fil - 1, ancho = Math.min(col - 1, Math.round(alto * ASPECTO * .95));
+            const x0 = Math.floor((col - ancho) / 2), y0 = 0;
+            const X = (u) => x0 + Math.round(u * ancho), Y = (w) => y0 + Math.round(w * alto);
+            const pon = (i, j, n) => { if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
+            const marco = (a, b, c, d, n) => {
+                for (let i = X(a); i <= X(c); i++) { pon(i, Y(b), n); pon(i, Y(d), n); }
+                for (let j = Y(b); j <= Y(d); j++) { pon(X(a), j, n); pon(X(c), j, n); }
+            };
+            const relleno = (a, b, c, d, n) => { for (let j = Y(b); j <= Y(d); j++) for (let i = X(a); i <= X(c); i++) pon(i, j, n); };
+            // Aspas que giran: se calcula el ángulo de cada celda respecto al centro
+            const ventilador = (u, w, r, vel, aspas) => {
+                const cx = X(u), cy = Y(w);
+                for (let j = cy - r - 1; j <= cy + r + 1; j++) for (let i = cx - Math.ceil((r + 1) * ASPECTO); i <= cx + Math.ceil((r + 1) * ASPECTO); i++) {
+                    const dx = (i - cx) / ASPECTO, dy = j - cy, d = Math.hypot(dx, dy);
+                    if (d > r + .7) continue;
+                    if (d > r - .4) pon(i, j, .85);
+                    else if (d < r * .24) pon(i, j, 1);
+                    else {
+                        const a = Math.atan2(dy, dx) - t * vel + d * .28;
+                        const f = Math.cos(a * aspas);
+                        pon(i, j, f > .25 ? .78 : .1);
+                    }
+                }
+            };
+            marco(0, 0, 1, 1, .95);                         // gabinete
+                        ventilador(.2, .25, Math.max(3, Math.round(alto * .18)), 6, 3);   // ventilador trasero
+            // Memorias RAM, con actividad que parpadea
+            for (let k = 0; k < 4; k++) {
+                const a = .43 + k * .055;
+                for (let j = Y(.1); j <= Y(.42); j++) {
+                    const activo = azarDe(k * 11 + j * 3 + Math.floor(t * 7)) > .45;
+                    pon(X(a), j, activo ? 1 : .35);
+                }
+            }
+            // Unidades de disco, con su luz
+            for (let k = 0; k < 3; k++) {
+                const b = .1 + k * .12;
+                marco(.72, b, .93, b + .08, .6);
+                pon(X(.9), Y(b + .04), azarDe(k + Math.floor(t * 4)) > .5 ? 1 : .2);
+            }
+            // Tarjeta gráfica, con dos ventiladores
+            marco(.08, .52, .78, .74, .7);
+            ventilador(.25, .63, Math.max(2, Math.round(alto * .085)), -8, 3);
+            ventilador(.6, .63, Math.max(2, Math.round(alto * .085)), -8, 3);
+            // Fuente de poder, con su rejilla
+            marco(.08, .8, .4, .94, .65);
+            for (let i = X(.1); i < X(.38); i += 2) pon(i, Y(.87), .4);
+            // Tornillos que se aprietan: el destornillador entra y sale del de abajo a la derecha
+            const entra = (Math.sin(t * 1.4) + 1) / 2;
+            const punta = X(.64) + Math.round(entra * ancho * .12);
+            for (let i = punta; i < x0 + ancho + 6; i++) pon(i, Y(.87), i < punta + 3 ? 1 : i < X(.86) + Math.round(entra * ancho * .12) ? .55 : .85);
+            pon(X(.62), Y(.87), .9);
+            // Barrido de diagnóstico de arriba abajo
+            const barrido = (t * .22) % 2.2;
+            if (barrido <= 1) { const j = Y(barrido); for (let i = X(0) + 1; i < X(1); i++) v[j * col + i] = Math.max(v[j * col + i], .4); }
+        },
+        // Agro-Cria: el agua de riego, con superficie y reflejos
+        olas: (v, col, fil, t) => {
+            for (let i = 0; i < col; i++) {
+                const h = fil * .48 + Math.sin(i * .11 + t * 1.3) * fil * .17 + Math.sin(i * .037 - t * .7) * fil * .14;
+                for (let j = 0; j < fil; j++) {
+                    const d = j - h;
+                    if (Math.abs(d) < 1.1) v[j * col + i] = 1;
+                    else if (d > 0) v[j * col + i] = limitar(.5 - d / fil + Math.sin(i * .3 + j * .9 - t * 2) * .22, .08, .7);
+                }
+            }
+        },
+        // Diagmind: osciloscopio con tres señales y un pulso que recorre la pantalla
+        osciloscopio: (v, col, fil, t) => {
+            const cabeza = (t * 26) % col;
+            for (let i = 0; i < col; i++) {
+                const atras = (cabeza - i + col) % col;
+                const brillo = limitar(1 - atras / (col * .75), .12, 1);
+                const f = (i + t * 6) % 42;
+                const pulso = f < 2 ? -f * 1.8 : f < 5 ? (f - 3.5) * 3 : f < 7 ? (7 - f) * -1.2 : 0;
+                const y1 = fil * .3 + pulso;
+                const y2 = fil * .62 + Math.sin(i * .16 + t * 2) * fil * .1;
+                const y3 = fil * .84 + Math.sin(i * .5 - t * 3) * Math.sin(i * .04 + t) * fil * .09;
+                for (const y of [y1, y2, y3]) {
+                    const j = Math.round(y);
+                    if (j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], brillo);
+                }
+                if (i % 14 === 0) for (let j = 0; j < fil; j += 2) v[j * col + i] = Math.max(v[j * col + i], .14);
+            }
+        },
+        // ActaPro: un acta que se escribe sola, línea a línea, y vuelve a empezar
+        acta: (v, col, fil, t) => {
+            const COLUMNAS = Math.max(1, Math.floor(col / 62));
+            const anchoCol = Math.floor(col / COLUMNAS);
+            const avance = (t * 44) % (anchoCol * .78 * fil * COLUMNAS * .75 + 90);
+            let escrito = 0;
+            for (let c = 0; c < COLUMNAS; c++) for (let j = 1; j < fil; j += 2) {
+                const largo = Math.floor(anchoCol * (.35 + azarDe(c * 31 + j) * .5));
+                for (let i = 0; i < largo; i++) {
+                    if (escrito++ > avance) { if (escrito - avance < 3) v[j * col + c * anchoCol + 3 + i] = 1; continue; }
+                    const palabra = azarDe(c * 7 + j * 3 + Math.floor(i / 6)) > .82 && i % 6 === 5;
+                    if (!palabra) v[j * col + c * anchoCol + 3 + i] = .32 + azarDe(c + j * 91 + i * 13) * .4;
+                }
+            }
+        },
+        // Centzontle: el canto del pájaro, como un ecualizador que respira por frases
+        canto: (v, col, fil, t) => {
+            const frase = Math.pow(Math.max(0, Math.sin(t * .9)), .5) * .5 + .5;
+            for (let i = 0; i < col; i += 3) {
+                const n = i / col;
+                const alto = frase * fil * .5 * (.35 + .65 * Math.abs(Math.sin(n * 19 + t * 3.1) * Math.sin(n * 7 - t * 1.7))) * Math.sin(n * Math.PI);
+                for (let j = 0; j < fil; j++) {
+                    const d = Math.abs(j - fil / 2);
+                    if (d <= alto) { const g = d > alto - 1 ? 1 : .55 - d / fil; v[j * col + i] = g; v[j * col + i + 1] = g; }
+                }
+            }
+        },
+        // Página 404: caracteres que caen, como un sistema que se ha perdido
+        lluvia: (v, col, fil, t) => {
+            for (let i = 0; i < col; i += 2) {
+                const vel = 5 + azarDe(i) * 12, largo = 5 + azarDe(i + 9) * 16;
+                const cabeza = (t * vel + azarDe(i + 3) * 200) % (fil + largo);
+                for (let j = 0; j < fil; j++) {
+                    const d = cabeza - j;
+                    if (d >= 0 && d < largo) v[j * col + i] = d < 1 ? 1 : .55 * (1 - d / largo);
+                }
+            }
+        },
+    };
+    document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
+        const escena = ESCENAS[caja.dataset.asciiAnim];
+        if (!escena || ligero()) return caja.remove();
+        const c = lienzo('ascii-lienzo');
+        caja.append(c);
+        const ctx = c.getContext('2d');
+        const fina = caja.dataset.celda === 'fina';
+        const AN = fina ? 5 : escritorio ? 8 : 6, AL = fina ? 9 : escritorio ? 14 : 10;
+        const col = Math.ceil(caja.clientWidth / AN), fil = Math.ceil(caja.clientHeight / AL);
+        if (!col || !fil) return;
+        c.width = col * AN; c.height = fil * AL;
+        const atlas = crearAtlas(caja.dataset.color || '#6ea2ff', AN, AL);
+        const v = new Float32Array(col * fil);
+        const dibujar = (t) => {
+            v.fill(0);
+            escena(v, col, fil, t);
+            ctx.clearRect(0, 0, c.width, c.height);
+            for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
+                const n = v[j * col + i];
+                if (n <= .02) continue;
+                const g = Math.min(RAMPA.length - 1, 1 + Math.floor(n * (RAMPA.length - 1)));
+                ctx.drawImage(atlas, g * AN, 0, AN, AL, i * AN, j * AL, AN, AL);
+            }
+        };
+        dibujar(4);
+        if (escritorio) bucle(caja, 20, dibujar);
     });
 
     // --- GLITCH (Diagmind y 404): ráfagas breves en el título; encaja con «diagnóstico» y con una página rota

@@ -950,7 +950,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Títulos de sección: las palabras suben desde una máscara (las dispara la clase is-visible de la aparición) ---
     if (!prefersReducedMotion) {
-        document.querySelectorAll('.block-title, .section-title').forEach(h => {
+        // El título neón queda fuera: la máscara de cada palabra le recortaría el brillo
+        document.querySelectorAll('.block-title:not(.neon-texto), .section-title').forEach(h => {
             const palabras = h.textContent.trim().split(/\s+/);
             h.setAttribute('aria-label', h.textContent.trim().replace(/\s+/g, ' '));
             h.textContent = '';

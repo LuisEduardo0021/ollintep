@@ -5884,7 +5884,7 @@ html {
 .ligero .cristal { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(15, 22, 38, .92); }
 
 /* Metaballs: las nueve apps se funden en un solo lanzador */
-.metaballs { position: relative; height: 180px; margin: 1.5rem 0 1rem; }
+.metaballs { position: relative; height: 280px; margin: -1rem 0 -1.5rem; pointer-events: none; }
 .metaballs-lienzo { display: block; width: 100%; height: 100%; }
 
 /* Tipografía cinética */
@@ -5897,10 +5897,10 @@ html {
 @keyframes cin-entra { from { opacity: 0; transform: translateY(.55em) rotate(7deg); } }
 
 /* Neón: letrero bajo la lluvia del fondo */
-.neon-texto { background: none; color: #eef5ff; -webkit-text-fill-color: #eef5ff; text-shadow: 0 0 6px rgba(110, 162, 255, .75), 0 0 20px rgba(110, 162, 255, .55), 0 0 46px rgba(79, 120, 255, .45); }
+.neon-texto { background: none; color: #fbfdff; -webkit-text-fill-color: #fbfdff; text-shadow: 0 0 1px #fff, 0 0 2px #d6e4ff, 0 0 5px #8db6ff, 0 0 11px rgba(79, 134, 255, .85), 0 0 24px rgba(79, 120, 255, .4); }
 .neon-texto.neon-on { animation: neon-enciende 1.3s steps(1) both; }
 @keyframes neon-enciende { 0%, 16%, 30%, 44% { opacity: .22; text-shadow: none; } 8%, 22%, 36%, 52%, 100% { opacity: 1; } }
-.cta-band:has(.neon-texto) { outline: 1px solid rgba(110, 162, 255, .62); outline-offset: -1px; }
+.cta-band:has(.neon-texto) { outline: 1.5px solid #a9c6ff; outline-offset: -1px; box-shadow: 0 0 3px #8db6ff, 0 0 12px rgba(79, 134, 255, .7), 0 0 30px -4px rgba(79, 120, 255, .45), inset 0 0 10px -2px rgba(110, 162, 255, .45); }
 
 /* Foil holográfico sobre el plan destacado */
 .foil { position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; opacity: .13; mix-blend-mode: color-dodge; --fx: 30%; --fy: 20%; background: radial-gradient(circle at var(--fx) var(--fy), rgba(255, 255, 255, .5), transparent 42%), repeating-linear-gradient(115deg, #ff5fa2 0, #ffe45f 7%, #5fffb1 14%, #5fc8ff 21%, #b45fff 28%, #ff5fa2 35%); background-size: 100% 100%, 220% 220%; background-position: 0 0, var(--fx) var(--fy); transition: opacity .3s; }
@@ -5916,6 +5916,11 @@ html {
 /* Arte ASCII */
 .ascii-banda { position: relative; z-index: 5; height: 252px; overflow: hidden; opacity: .85; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); }
 .ascii-lienzo { display: block; width: 100%; }
+.ascii-banda-baja { height: 154px; }
+.block-head-pieza { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 2rem; align-items: center; }
+.ascii-pieza { position: relative; height: 308px; overflow: hidden; }
+.ascii-fondo { position: fixed; inset: 0; z-index: 0; overflow: hidden; opacity: .2; pointer-events: none; }
+.ascii-fondo + .hero { z-index: 1; }
 
 /* Glitch */
 .glitch { position: relative; }
@@ -5960,6 +5965,10 @@ html {
 /* Sin desbordes laterales en móvil: una rejilla no puede ensancharse por su contenido ni exigir más ancho que la pantalla */
 .about-grid > *, .about-stats > *, .videos-grid > * { min-width: 0; }
 .videos-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+/* En una sola columna los planes entran rectos: el abanico los sacaba de la pantalla antes de aparecer */
+@media (max-width: 960px) {
+  .plan-card:first-child, .plan-card:last-child { --lado: 0; }
+}
 @media (max-width: 480px) {
   .about-stats { gap: .75rem; }
   .about-stats .stat { padding-inline: .75rem; }
@@ -5971,6 +5980,9 @@ html {
 }
 @media (max-width: 960px) {
   .metaballs { display: none; }
+  .block-head-pieza { grid-template-columns: minmax(0, 1fr); }
+  .ascii-pieza { height: 170px; }
+  .ascii-banda-baja { height: 110px; }
   .ascii-banda { height: 170px; }
   .pixel-percha { width: 64px; height: 64px; top: -64px; }
   .pixel-flota { right: 1rem; }
