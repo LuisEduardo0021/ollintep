@@ -616,12 +616,28 @@
             columna(['..S...S.........', '..SS.SS.........', '...SSS..........', '...VVV..........', '..VVVVV.........', '.VkVVV..........', 'VVVVVV..........', '...VVVVVVVVVVVw.', '...VVVVVVVVVVVww', '...VVVVVVVVVVVw.', '...lllllllllll..', '...V..V...V..V..', '...V..V...V..V..', '...K..K...K..K..']),
             columna(['................', '..S...S.........', '..SS.SS.........', '...SSS..........', '...VVV..........', '..VVVVV.........', '.VkVVV..........', 'VVVVVV.VVVVVVVw.', '...VVVVVVVVVVVww', '...VVVVVVVVVVVw.', '...lllllllllll..', '...V..V...V..V..', '...V..V...V..V..', '...K..K...K..K..']),
         ],
+        coati: [
+            columna(['..............S.', '..............K.', '..............S.', '..............K.', '.............S..', '....VVV......K..', '...VVVVVVVVVVS..', 'wwVkVVVVVVVVVV..', 'kwwVVVVVVVVVVV..', '...VVVVVVVVVVV..', '...VV..VV.VV.VV.', '...VV..VV.VV.VV.', '...KK..KK.KK.KK.']),
+            columna(['.............S..', '.............K..', '.............S..', '.............K..', '.............S..', '....VVV......K..', '...VVVVVVVVVVS..', 'wwVkVVVVVVVVVV..', 'kwwVVVVVVVVVVV..', '...VVVVVVVVVVV..', '....VV.VV...VV.V', '....VV.VV..VV..V', '....KK.KK..KK..K']),
+        ],
+        iguana: [
+            columna([VACIO, VACIO, VACIO, VACIO, VACIO, '..ddd.g.g.g.g...', '.dddddddddddd...', 'dkdddddddddddd..', 'ddddddddddddddd.', '.MMdMMMMMMdd.ddd', '...d.....d.....d', '..dd....dd......']),
+            columna([VACIO, VACIO, VACIO, VACIO, VACIO, '..ddd.g.g.g.g...', '.dddddddddddd...', 'dkdddddddddddd..', 'ddddddddddddddd.', '.MMdMMMMMMdd.ddd', '.....d.....d...d', '....dd....dd....']),
+        ],
+        pescador: [
+            columna([VACIO, '.....NNNN.......', '....NNNNNN......', '...NNkNNNN......', 'KKKKNNNNNNN.....', '...wwwwNNNNN....', '...wwwwNLNNNN...', '...rrrrNNLNNNN..', '...rrrrNNNNNNNN.', '....rrrNNNNN..NN', '.....rr.........', '.....K..K.......', 'VVVVVVVVVVVVVVVV']),
+            columna([VACIO, '......NNNN......', '.....NNNNNN.....', '....NNkNNNN.....', 'KKKKKNNNNNNN....', '....wwwwNNNNN...', '....wwwwNLNNNN..', '....rrrrNNLNNNN.', '....rrrrNNNNNNNN', '.....rrrNNNNN.NN', '......rr........', '......K..K......', 'VVVVVVVVVVVVVVVV']),
+        ],
         // Región: plantas
         mangle: [
             columna(['.....UNNU.......', '...UNNNNNNU.....', '..UNNLNNLNNNU...', '.UNNNNNNNNNNNU..', '..UNNNLNNNLNU...', '....UNNNNNU.....', '.......VV.......', '.......VV.......', '......VVVV......', '.....V.VV.V.....', '....V..VV..V....', '...V...VV...V...', 'BBBVBBBVVBBBVBBB', 'BQBVBQBVVBQBVBQB']),
         ],
         agave: [
             columna(['.......T........', '.......T........', '...T...T...T....', '...TT..T..TT....', '....TT.T.TT.....', 'U....TTUTT....U.', 'UU...TTUTT...UU.', '.UU..TTUTT..UU..', '..UUUTTUTTUUU...', '...UUTTUTTUU....', '....UTTUTTU.....', '.....UTUTU......', '...VVVVVVVVV....', '..VVVVVVVVVVV...']),
+        ],
+        pata: [
+            columna(['...T..T.T..T....', '..TUT.TUT.TUT...', '.TU.TUTTTUT.UT..', 'TU..UTTTTTU..UT.', 'U..TU.TTT.UT..U.', '..TU...V...UT...', '..U....V....U...', '.......V........', '.......V........', '......VVV.......', '.....VVVVV......', '....VSVVVVV.....', '....VVVSVVV.....', '...VVVVVVVSV....', '...VVSVVVVVV....', '...KKKKKKKKK....']),
+            columna(['.....T..T.T..T..', '...TUT.TUT.TUT..', '..TU.TUTTTUT.UT.', '.TU..UTTTTTU..UT', '.U..TU.TTT.UT..U', '...TU..V....UT..', '...U...V.....U..', '.......V........', '.......V........', '......VVV.......', '.....VVVVV......', '....VSVVVVV.....', '....VVVSVVV.....', '...VVVVVVVSV....', '...VVSVVVVVV....', '...KKKKKKKKK....']),
         ],
         nopal: [
             columna(['.....P....P.....', '....PPP..PPP....', '....NNN..NNN....', '...NNLNNNNLNN...', '...NLNNNNNNLN...', '...NNNLNNLNNN...', '....NNNNNNNN....', '.....NNNNNN.....', '.....NLNNLN.....', '.....NNNNNN.....', '.....NNLNNN.....', '......NNNN......', '...VVVVVVVVVV...', '..VVVVVVVVVVVV..']),
@@ -674,6 +690,202 @@
         };
         setTimeout(paso, 500 + Math.random() * 1800);
     });
+
+    // --- ANIMALES QUE PASEAN (portada): caminan por los espacios entre secciones; al hacer clic se abre su ficha y se desbloquea
+    // en la colección de #nayarit. Con movimiento reducido o modo ligero no caminan y las fichas quedan abiertas desde el inicio.
+    // La información está en el HTML: sin JavaScript se lee completa.
+    const coleccion = document.querySelector('[data-fauna]');
+    if (coleccion) {
+        const ingles = raiz.lang === 'en';
+        const fichas = [...coleccion.querySelectorAll('.ficha')];
+        const juegoActivo = mueve();
+        const leer = () => { try { return JSON.parse(localStorage.getItem('ollintep-fauna')) || []; } catch (e) { return []; } };
+        const hallados = new Set(leer());
+        const cuenta = coleccion.querySelector('[data-fauna-n]');
+        const listo = coleccion.querySelector('.buscar-listo');
+        const pintarColeccion = () => {
+            fichas.forEach(f => {
+                const abierta = !juegoActivo || hallados.has(f.dataset.especie);
+                f.classList.toggle('bloqueada', !abierta);
+                f.querySelector('.ficha-info').hidden = !abierta;
+                f.querySelector('.ficha-oculta').hidden = abierta;
+            });
+            const n = juegoActivo ? hallados.size : fichas.length;
+            cuenta.textContent = n;
+            listo.hidden = n < fichas.length;
+        };
+        pintarColeccion();
+
+        // El premio del easter egg: al encontrar todo, todos cruzan la pantalla una vez
+        const desfile = () => {
+            if (reducido) return;
+            const capa = document.createElement('div');
+            capa.className = 'desfile';
+            capa.setAttribute('aria-hidden', 'true');
+            document.body.append(capa);
+            const ancho = raiz.clientWidth;
+            fichas.forEach((f, i) => {
+                const c = lienzo('');
+                c.width = c.height = 16;
+                capa.append(c);
+                const cuadros = SPRITES[f.dataset.especie];
+                const ctx = c.getContext('2d');
+                pintarSprite(ctx, cuadros[0]);
+                let n = 0;
+                const aleteo = setInterval(() => { ctx.clearRect(0, 0, 16, 16); pintarSprite(ctx, cuadros[++n % cuadros.length]); }, 190);
+                setTimeout(() => clearInterval(aleteo), 20000);
+                c.animate([{ translate: `${ancho + 20}px 0` }, { translate: '-70px 0' }], { duration: 9000, delay: i * 520, easing: 'linear', fill: 'both' });
+            });
+            setTimeout(() => capa.remove(), 20000);
+        };
+
+        const dialogo = document.createElement('dialog');
+        dialogo.className = 'ficha-dialogo';
+        document.body.append(dialogo);
+        dialogo.addEventListener('click', (e) => { if (e.target === dialogo) dialogo.close(); });
+        const abrirFicha = (especie) => {
+            const ficha = fichas.find(f => f.dataset.especie === especie);
+            if (!ficha) return;
+            const nuevo = juegoActivo && !hallados.has(especie);
+            if (nuevo) {
+                hallados.add(especie);
+                try { localStorage.setItem('ollintep-fauna', JSON.stringify([...hallados])); } catch (e) { /* sin almacenamiento dura lo que dure la página */ }
+                pintarColeccion();
+                document.querySelectorAll(`.bicho[data-especie="${especie}"]`).forEach(b => b.classList.remove('nuevo'));
+            }
+            dialogo.textContent = '';
+            const sello = document.createElement('p');
+            sello.className = 'ficha-sello';
+            const completo = nuevo && hallados.size === fichas.length;
+            sello.textContent = completo ? (ingles ? 'You found them all!' : '¡Los encontraste a todos!') : nuevo ? (ingles ? `Found: ${hallados.size} of ${fichas.length}` : `Encontrado: ${hallados.size} de ${fichas.length}`) : (ingles ? 'In your collection' : 'En tu colección');
+            if (completo) dialogo.addEventListener('close', desfile, { once: true });
+            const lienzoGrande = document.createElement('canvas');
+            lienzoGrande.className = 'pixel ficha-sprite';
+            lienzoGrande.width = lienzoGrande.height = 16;
+            lienzoGrande.setAttribute('aria-hidden', 'true');
+            pintarSprite(lienzoGrande.getContext('2d'), SPRITES[especie][0]);
+            const info = ficha.querySelector('.ficha-info').cloneNode(true);
+            info.hidden = false;
+            const cerrar = document.createElement('button');
+            cerrar.type = 'button';
+            cerrar.className = 'm3-btn m3-btn-tonal ficha-cerrar';
+            cerrar.textContent = ingles ? 'Close' : 'Cerrar';
+            cerrar.addEventListener('click', () => dialogo.close());
+            dialogo.append(sello, lienzoGrande, info, cerrar);
+            dialogo.showModal();
+        };
+        coleccion.classList.add('con-dialogo');
+        fichas.forEach(f => {
+            f.tabIndex = 0;
+            f.addEventListener('click', () => { if (!f.classList.contains('bloqueada')) abrirFicha(f.dataset.especie); });
+            f.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && !f.classList.contains('bloqueada')) { e.preventDefault(); abrirFicha(f.dataset.especie); } });
+        });
+
+        if (juegoActivo) {
+            // Los animales caminan; las plantas y el arte se quedan plantados en su sitio
+            const PLANTADOS = new Set(['mangle', 'agave', 'nopal', 'pata', 'hikuri', 'tsikuri', 'jicara']);
+            const PASEANTES = [
+                ['jaguar', '#suite'], ['agave', '#suite'], ['tortuga', '#suite'],
+                ['iguana', '#a-medida'], ['nopal', '#a-medida'], ['pescador', '#a-medida'],
+                ['coati', '#servicio-tecnico'], ['tsikuri', '#servicio-tecnico'], ['cocodrilo', '#servicio-tecnico'],
+                ['venado', '#principios'], ['hikuri', '#principios'], ['bobo', '#principios'],
+                ['ballena', '#contacto'], ['mangle', '#contacto'], ['jicara', '#contacto'],
+                ['iguana', '#nayarit'], ['pata', '#nayarit'],
+            ];
+            const franjas = new Map();
+            PASEANTES.forEach(([especie, ancla]) => {
+                const seccion = document.querySelector(ancla);
+                const ficha = fichas.find(f => f.dataset.especie === especie);
+                if (!seccion || !ficha) return;
+                let franja = franjas.get(ancla);
+                if (!franja) {
+                    franja = document.createElement('div');
+                    franja.className = 'paseo';
+                    seccion.before(franja);
+                    franjas.set(ancla, franja);
+                }
+                const plantado = PLANTADOS.has(especie);
+                const nombre = ficha.querySelector('.ficha-nombre').textContent.trim();
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'bicho';
+                b.dataset.especie = especie;
+                b.classList.toggle('nuevo', !hallados.has(especie));
+                b.classList.toggle('plantado', plantado);
+                b.setAttribute('aria-label', ingles ? `${nombre}: open its card` : `${nombre}: abrir su ficha`);
+                const c = lienzo('pixel');
+                c.width = c.height = 16;
+                b.append(c);
+                franja.append(b);
+                const ctx = c.getContext('2d');
+                const cuadros = SPRITES[especie];
+                const pinta = (n) => { ctx.clearRect(0, 0, 16, 16); pintarSprite(ctx, cuadros[n % cuadros.length]); };
+                pinta(0);
+                // Los plantados se quedan en una orilla; los que caminan salen de un costado, cruzan, se van y vuelven mucho después
+                const ANCHO_BICHO = 44;
+                const orilla = () => {
+                    const margen = Math.random() * Math.max(8, franja.clientWidth * .07);
+                    return Math.random() > .5 ? margen : franja.clientWidth - ANCHO_BICHO - margen;
+                };
+                let x = plantado ? orilla() : -60, dir = 1, anim = null, visible = false, retenido = false, n = 0, andando = false, espera = 0;
+                b.style.translate = `${x}px 0`;
+                const programar = (ms) => { clearTimeout(espera); espera = setTimeout(() => { espera = 0; caminar(); }, ms); };
+                const caminar = () => {
+                    if (plantado) return;
+                    if (!visible || retenido || dialogo.open || !mueve()) { andando = false; return; }
+                    const fin = franja.clientWidth + 16;
+                    const fuera = x < -40 || x > fin - 20;
+                    if (fuera) {
+                        // Entra por un costado al azar
+                        dir = Math.random() > .5 ? 1 : -1;
+                        x = dir > 0 ? -60 : fin;
+                    }
+                    const tramo = 140 + Math.random() * 320;
+                    const destino = dir > 0 ? Math.min(x + tramo, fin) : Math.max(x - tramo, -60);
+                    c.style.scale = dir > 0 ? '-1 1' : '1 1';
+                    andando = true;
+                    anim = b.animate([{ translate: `${x}px 0` }, { translate: `${destino}px 0` }], { duration: Math.abs(destino - x) / .03, easing: 'linear', fill: 'forwards' });
+                    anim.onfinish = () => {
+                        x = destino;
+                        b.style.translate = `${x}px 0`;
+                        anim.cancel();
+                        anim = null;
+                        andando = false;
+                        pinta(0);
+                        const salio = x <= -60 || x >= fin;
+                        if (salio) return programar(18000 + Math.random() * 42000);   // tarda en volver
+                        if (Math.random() < .2) dir = -dir;
+                        programar(500 + Math.random() * 2500);
+                    };
+                };
+                setInterval(() => { if ((andando || plantado) && visible && !retenido) pinta(++n); }, plantado ? 1100 : 190);
+                const detener = () => {
+                    retenido = true;
+                    if (anim) { anim.pause(); }
+                };
+                const seguir = () => {
+                    retenido = false;
+                    if (anim && visible) anim.play();
+                    else if (!anim && !espera) programar(600);
+                };
+                b.addEventListener('pointerenter', detener);
+                b.addEventListener('pointerleave', seguir);
+                b.addEventListener('focus', () => {
+                    detener();
+                    // Con teclado también se puede encontrar: si está fuera de la pantalla, se asoma
+                    if (!plantado && !anim && (x < 0 || x > franja.clientWidth - ANCHO_BICHO)) { x = 12; b.style.translate = `${x}px 0`; }
+                });
+                b.addEventListener('blur', seguir);
+                b.addEventListener('click', () => abrirFicha(especie));
+                new IntersectionObserver(([e]) => {
+                    visible = e.isIntersecting;
+                    if (!visible) { if (anim) anim.pause(); return; }
+                    if (anim) anim.play();
+                    else if (!plantado && !espera) programar(2000 + Math.random() * 20000);   // cada uno a su ritmo
+                }, { rootMargin: '0px', threshold: 0 }).observe(franja.querySelector('span') || franja.appendChild(document.createElement('span')));
+            });
+        }
+    }
 
     // --- CHAQUIRA: banda de cuentas de colores, inspirada en los diseños geométricos wixárika. Es una imagen fija.
     document.querySelectorAll('[data-chaquira]').forEach(banda => {

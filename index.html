@@ -73,7 +73,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=6.1">
+    <link rel="stylesheet" href="css/styles.css?v=6.5">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -380,34 +380,6 @@
         </div>
     </section>
 
-    <!-- La región -->
-    <section id="nayarit" class="section-block" data-ambiente="naranja">
-        <div class="chaquira" data-chaquira aria-hidden="true"></div>
-        <header class="block-head">
-            <div>
-                <p class="eyebrow eyebrow-orange">Tepic, Nayarit</p>
-                <h2 class="block-title">Esto también somos.</h2>
-                <p class="block-lead">Venimos de una tierra de sierra, manglar y mar, hogar también del pueblo wixárika. Este es nuestro homenaje, en pixel art.</p>
-            </div>
-        </header>
-        <div class="region-grid">
-            <figure class="region-item"><canvas class="pixel" data-pixel="jaguar" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Jaguar</strong><span>Sierra de Vallejo</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="cocodrilo" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Cocodrilo americano</strong><span>San Blas</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="tortuga" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Tortuga golfina</strong><span>Costa de Nayarit</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="bobo" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Bobo de patas azules</strong><span>Isla Isabel</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="ballena" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Ballena jorobada</strong><span>Bahía de Banderas</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="venado" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Venado cola blanca</strong><span>Guía en la cultura wixárika</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="mangle" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Mangle</strong><span>Marismas Nacionales</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="agave" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Agave</strong><span>Planta nativa de México</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="nopal" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Nopal</strong><span>Planta nativa de México</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="hikuri" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Hikuri (peyote)</strong><span>Sagrado para el pueblo wixárika</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="tsikuri" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Ojo de dios (tsikuri)</strong><span>Arte wixárika</span></figcaption></figure>
-            <figure class="region-item"><canvas class="pixel" data-pixel="jicara" width="16" height="16" aria-hidden="true"></canvas><figcaption><strong>Jícara con chaquira</strong><span>Arte wixárika</span></figcaption></figure>
-        </div>
-        <p class="region-nota">Ilustraciones nuestras, inspiradas con respeto en la cultura wixárika. No son obras de artistas wixaritari.</p>
-        <div class="chaquira" data-chaquira aria-hidden="true"></div>
-    </section>
-
     <!-- Contacto -->
     <section id="contacto" class="section-block" data-ambiente="azul" data-video="lluvia">
         <div class="cta-band cristal">
@@ -421,6 +393,188 @@
                 <a href="tel:+523111275020" class="m3-btn m3-btn-tonal"><i class="fas fa-phone" aria-hidden="true"></i> +52 311 127 5020</a>
             </div>
         </div>
+    </section>
+
+    <!-- La región -->
+    <section id="nayarit" class="section-block" data-ambiente="naranja">
+        <div class="chaquira" data-chaquira aria-hidden="true"></div>
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-orange">Tepic, Nayarit</p>
+                <h2 class="block-title">Esto también somos.</h2>
+                <p class="block-lead">Venimos de una tierra de sierra, manglar y mar, hogar también del pueblo wixárika. Este es nuestro homenaje, en pixel art.</p>
+            </div>
+        </header>
+        <div class="buscar" data-fauna>
+            <h3 class="buscar-titulo">Algo anda suelto por aquí.</h3>
+            <p class="buscar-texto">Hay 16 escondidos en esta página. ¿Los encuentras?</p>
+            <p class="buscar-cuenta"><span data-fauna-n>16</span> de 16 encontrados</p>
+            <p class="buscar-listo" hidden>¡Los encontraste a todos!</p>
+            <div class="buscar-grid">
+                <article class="ficha" data-especie="jaguar">
+                    <canvas class="pixel" data-pixel="jaguar" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Jaguar</h3>
+                        <p class="ficha-lugar">Sierra de Vallejo</p>
+                        <p class="ficha-cientifico"><em>Panthera onca</em></p>
+                        <p class="ficha-texto">Es el gran depredador de Nayarit: vive desde la Sierra de Vallejo, en el sur, hasta las Marismas Nacionales, en el norte.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="cocodrilo">
+                    <canvas class="pixel" data-pixel="cocodrilo" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Cocodrilo americano</h3>
+                        <p class="ficha-lugar">San Blas</p>
+                        <p class="ficha-cientifico"><em>Crocodylus acutus</em></p>
+                        <p class="ficha-texto">Habita en los humedales de San Blas. Hay un cocodrilario, Kiekari, donde se puede conocer de cerca.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="tortuga">
+                    <canvas class="pixel" data-pixel="tortuga" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Tortuga golfina</h3>
+                        <p class="ficha-lugar">Costa de Nayarit</p>
+                        <p class="ficha-cientifico"><em>Lepidochelys olivacea</em></p>
+                        <p class="ficha-texto">Está en peligro de extinción según la norma mexicana. Se observa en la costa de Nayarit, y las Islas Marietas son importantes para ella, aunque no desova ahí.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="bobo">
+                    <canvas class="pixel" data-pixel="bobo" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Bobo de patas azules</h3>
+                        <p class="ficha-lugar">Isla Isabel</p>
+                        <p class="ficha-cientifico"><em>Sula nebouxii</em></p>
+                        <p class="ficha-texto">Muchos creen que solo se ve en las Galápagos, pero también vive en Nayarit: en Isla Isabel y en San Blas.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="ballena">
+                    <canvas class="pixel" data-pixel="ballena" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Ballena jorobada</h3>
+                        <p class="ficha-lugar">Bahía de Banderas</p>
+                        <p class="ficha-cientifico"><em>Megaptera novaeangliae</em></p>
+                        <p class="ficha-texto">Las Islas Marietas, en Bahía de Banderas, son clave para su reproducción. También se avista desde San Blas.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="pescador">
+                    <canvas class="pixel" data-pixel="pescador" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Martín pescador verde</h3>
+                        <p class="ficha-lugar">Riviera Nayarit</p>
+                        <p class="ficha-cientifico"><em>Chloroceryle americana</em></p>
+                        <p class="ficha-texto">Un ave pequeña que se puede observar todo el año en la Riviera Nayarit.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="coati">
+                    <canvas class="pixel" data-pixel="coati" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Coatí</h3>
+                        <p class="ficha-lugar">También le dicen tejón</p>
+                        <p class="ficha-cientifico"><em>Nasua narica</em></p>
+                        <p class="ficha-texto">Es omnívoro: come frutas, insectos y lagartijas, y escarba el suelo con el hocico para buscar alimento. Suele andar en grupo.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="iguana">
+                    <canvas class="pixel" data-pixel="iguana" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Iguana negra</h3>
+                        <p class="ficha-lugar">Endémica de México</p>
+                        <p class="ficha-cientifico"><em>Ctenosaura pectinata</em></p>
+                        <p class="ficha-texto">Vive en la costa del Pacífico, también en Nayarit, en selvas bajas. Está amenazada por la caza y la pérdida de su hábitat.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="venado">
+                    <canvas class="pixel" data-pixel="venado" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Venado cola blanca</h3>
+                        <p class="ficha-lugar">Guía en la cultura wixárika</p>
+                        <p class="ficha-cientifico"><em>Odocoileus virginianus</em></p>
+                        <p class="ficha-texto">Vive en casi todo México y en Nayarit se ha registrado con cámaras trampa. Para el pueblo wixárika es una figura central, un guía y maestro.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="mangle">
+                    <canvas class="pixel" data-pixel="mangle" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Mangle</h3>
+                        <p class="ficha-lugar">Marismas Nacionales</p>
+                        <p class="ficha-cientifico"><em>Manglar</em></p>
+                        <p class="ficha-texto">Forma los manglares de las Marismas Nacionales, la reserva de la biosfera del norte de Nayarit.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="agave">
+                    <canvas class="pixel" data-pixel="agave" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Agave</h3>
+                        <p class="ficha-lugar">Planta nativa de México</p>
+                        <p class="ficha-cientifico"><em>Agave</em></p>
+                        <p class="ficha-texto">Planta de hojas gruesas y puntiagudas, nativa de México, donde crece una gran variedad de especies.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="nopal">
+                    <canvas class="pixel" data-pixel="nopal" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Nopal</h3>
+                        <p class="ficha-lugar">Planta nativa de México</p>
+                        <p class="ficha-cientifico"><em>Opuntia</em></p>
+                        <p class="ficha-texto">Cactus nativo de México, presente en el escudo nacional y en la cocina de todo el país.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="pata">
+                    <canvas class="pixel" data-pixel="pata" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Pata de elefante</h3>
+                        <p class="ficha-lugar">Planta nativa de México</p>
+                        <p class="ficha-cientifico"><em>Beaucarnea recurvata</em></p>
+                        <p class="ficha-texto">Planta mexicana de bosques tropicales, con el tronco muy ancho en la base. Está catalogada como amenazada en México y no se puede extraer sin permiso.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="hikuri">
+                    <canvas class="pixel" data-pixel="hikuri" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Hikuri (peyote)</h3>
+                        <p class="ficha-lugar">Sagrado para el pueblo wixárika</p>
+                        <p class="ficha-cientifico"><em>Lophophora williamsii</em></p>
+                        <p class="ficha-texto">Cactus sagrado para el pueblo wixárika, central en sus peregrinaciones a Wirikuta y en sus ceremonias. Aquí lo mostramos por su valor cultural.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="tsikuri">
+                    <canvas class="pixel" data-pixel="tsikuri" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Ojo de dios (tsikuri)</h3>
+                        <p class="ficha-lugar">Arte wixárika</p>
+                        <p class="ficha-cientifico"><em>Arte wixárika</em></p>
+                        <p class="ficha-texto">Tejido en rombos de colores asociado a los puntos cardinales y a la protección. Se entrega a los recién nacidos y cada año se le añade un rombo de otro color.</p>
+                    </div>
+                </article>
+                <article class="ficha" data-especie="jicara">
+                    <canvas class="pixel" data-pixel="jicara" width="16" height="16" aria-hidden="true"></canvas>
+                    <p class="ficha-oculta" hidden>¿Quién será?</p>
+                    <div class="ficha-info">
+                        <h3 class="ficha-nombre">Jícara con chaquira</h3>
+                        <p class="ficha-lugar">Arte wixárika</p>
+                        <p class="ficha-cientifico"><em>Arte wixárika</em></p>
+                        <p class="ficha-texto">Las jícaras decoradas con chaquira forman parte del arte wixárika y se usan para recolectar el hikuri.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <p class="region-nota">Ilustraciones nuestras, inspiradas con respeto en la cultura wixárika. No son obras de artistas wixaritari.</p>
+        <div class="chaquira" data-chaquira aria-hidden="true"></div>
     </section>
     </main>
 
@@ -467,7 +621,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=6.1"></script>
-    <script src="script/efectos.js?v=6.1"></script>
+    <script src="script/scripts.js?v=6.5"></script>
+    <script src="script/efectos.js?v=6.5"></script>
 </body>
 </html>

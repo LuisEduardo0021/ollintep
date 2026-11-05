@@ -5936,13 +5936,44 @@ html {
 .pixel { image-rendering: pixelated; pointer-events: none; }
 .chaquira { height: 39px; background-repeat: repeat-x; background-size: 108px 39px; image-rendering: pixelated; border-radius: 4px; }
 #nayarit .block-head { margin-top: 2.5rem; }
-.region-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr)); gap: 1.75rem 1rem; margin: 2.5rem 0 2rem; }
-@media (min-width: 1000px) { .region-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-@media (min-width: 620px) and (max-width: 999px) { .region-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.region-item { margin: 0; text-align: center; }
-.region-item canvas { display: block; width: 96px; height: 96px; margin: 0 auto .75rem; }
-.region-item strong { display: block; color: var(--md-sys-color-on-surface); font-size: .95rem; font-weight: 600; }
-.region-item span { display: block; margin-top: .2rem; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; line-height: 1.35; }
+.buscar { margin: 0 0 2.5rem; padding: 2rem 0 0; border-top: 1px solid var(--line); }
+.buscar-titulo { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: 1.5rem; color: var(--md-sys-color-on-surface); }
+.buscar-texto, .buscar-cuenta, .buscar-listo { margin: .4rem 0 0; color: var(--md-sys-color-on-surface-variant); font-size: .95rem; }
+.buscar-cuenta { color: #ffb37e; font-weight: 600; }
+.buscar-listo { color: var(--md-sys-color-on-surface); font-weight: 600; }
+.buscar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin-top: 1.5rem; }
+@media (min-width: 620px) { .buscar-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .buscar-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; } }
+.con-dialogo .ficha-texto, .con-dialogo .ficha-cientifico { display: none; }
+.ficha-lugar { margin: .2rem 0 0; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; line-height: 1.35; }
+.ficha:focus-visible { outline: 2px solid #ffb37e; outline-offset: 2px; }
+.ficha-dialogo .ficha-texto, .ficha-dialogo .ficha-cientifico { display: block; }
+.ficha-dialogo .ficha-lugar { margin-bottom: .35rem; }
+.ficha { padding: 1rem .75rem; border-radius: 16px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line); text-align: center; }
+.ficha:not(.bloqueada) { cursor: pointer; }
+.ficha canvas { display: block; width: 80px; height: 80px; margin: 0 auto .6rem; transition: filter .3s ease, opacity .3s ease; }
+.ficha.bloqueada canvas { filter: brightness(0) invert(.28); opacity: .75; }
+.ficha-oculta { margin: 0; color: var(--md-sys-color-on-surface-variant); }
+.ficha-nombre { margin: 0; color: var(--md-sys-color-on-surface); font-size: 1.05rem; font-weight: 600; }
+.ficha-cientifico { margin: .15rem 0 .5rem; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; }
+.ficha-texto { margin: 0; color: var(--md-sys-color-on-surface-variant); font-size: .88rem; line-height: 1.5; }
+.ficha-dialogo { position: fixed; inset: 0; margin: auto; height: fit-content; max-height: 92vh; overflow: auto; width: min(92vw, 400px); padding: 1.75rem; border: 0; border-radius: 22px; background: var(--md-sys-color-surface-container-high, #18202f); color: var(--md-sys-color-on-surface); text-align: center; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .9), inset 0 0 0 1px var(--line-strong); }
+.ficha-dialogo[open] { animation: ficha-abre .22s var(--ease-out); }
+.ficha-dialogo::backdrop { background: rgba(5, 8, 15, .62); }
+@keyframes ficha-abre { from { opacity: 0; transform: scale(.96); } }
+.ficha-sello { margin: 0 0 .75rem; color: #ffb37e; font-size: .85rem; font-weight: 600; }
+.ficha-sprite { display: block; width: 128px; height: 128px; margin: 0 auto 1rem; }
+.ficha-cerrar { margin-top: 1.25rem; }
+.paseo { position: relative; z-index: 20; width: 100%; height: 0; overflow-x: clip; overflow-y: visible; }
+.paseo > span { position: absolute; top: 0; left: 0; width: 1px; height: 80px; pointer-events: none; }
+.bicho { position: absolute; top: 30px; left: 0; width: 44px; height: 44px; padding: 4px; opacity: .62; transition: opacity .2s ease; border: 0; border-radius: 12px; background: none; cursor: pointer; }
+.bicho canvas { display: block; width: 36px; height: 36px; transition: translate .18s var(--ease-out); }
+.bicho.plantado { opacity: .4; }
+.bicho:focus-visible { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .bicho:hover { opacity: 1; } .bicho:hover canvas { translate: 0 -3px; } }
+.desfile { position: fixed; left: 0; right: 0; bottom: 18px; z-index: 90; height: 64px; pointer-events: none; overflow: hidden; }
+.desfile canvas { position: absolute; left: 0; top: 8px; width: 48px; height: 48px; image-rendering: pixelated; }
+.bicho:focus-visible { outline: 2px solid #ffb37e; outline-offset: 2px; }
 .region-nota { margin: 0 0 2rem; color: var(--md-sys-color-on-surface-variant); font-size: .82rem; }
 .pixel-percha { position: absolute; right: 19%; top: -96px; z-index: 12; width: 96px; height: 96px; }
 .pixel-linea { display: block; width: 72px; height: 72px; margin-bottom: 1rem; }
