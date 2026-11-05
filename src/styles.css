@@ -5937,6 +5937,8 @@ html {
 .chaquira { height: 39px; background-repeat: repeat-x; background-size: 108px 39px; image-rendering: pixelated; border-radius: 4px; }
 #nayarit .block-head { margin-top: 2.5rem; }
 .region-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr)); gap: 1.75rem 1rem; margin: 2.5rem 0 2rem; }
+@media (min-width: 1000px) { .region-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (min-width: 620px) and (max-width: 999px) { .region-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .region-item { margin: 0; text-align: center; }
 .region-item canvas { display: block; width: 96px; height: 96px; margin: 0 auto .75rem; }
 .region-item strong { display: block; color: var(--md-sys-color-on-surface); font-size: .95rem; font-weight: 600; }
