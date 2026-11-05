@@ -1,6 +1,6 @@
 # 006 — Quitar los botones de redes sociales que no llevan a ningún sitio
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: MEDIUM
 - **Category**: Contenido
