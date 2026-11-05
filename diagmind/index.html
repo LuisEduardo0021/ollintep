@@ -51,7 +51,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=4.9">
+    <link rel="stylesheet" href="../css/styles.css?v=5.0">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -180,6 +180,33 @@
                 <div class="card-glow"></div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- El teléfono por capas -->
+    <section class="section-block" id="capas">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Inspección por capas</p>
+                <h2 class="block-title">Abre el teléfono sin desarmarlo.</h2>
+                <p class="block-lead">Diagmind revisa cada parte por USB. Elige una capa para ver qué lee.</p>
+            </div>
+        </header>
+        <div class="capas" id="capas-demo">
+            <div class="capas-escena" aria-hidden="true">
+                <div class="capas-tel">
+                    <div class="capa capa-usb" data-capa="usb" style="--n: 0"><span class="capa-puerto"></span><span class="capa-cable"></span></div>
+                    <div class="capa capa-placa" data-capa="placa" style="--n: 1"><span class="chip chip-soc">SoC</span><span class="chip chip-ufs">UFS</span><span class="chip chip-pmic">PMIC</span></div>
+                    <div class="capa capa-bateria" data-capa="bateria" style="--n: 2"><i class="fas fa-bolt"></i></div>
+                    <div class="capa capa-pantalla" data-capa="pantalla" style="--n: 3"><span class="capa-rgb"></span></div>
+                </div>
+            </div>
+            <ol class="capas-pasos">
+                <li><button type="button" data-capa="pantalla" aria-pressed="true"><i class="fas fa-mobile-screen" aria-hidden="true"></i><span><strong>Pantalla y sensores táctiles</strong><small>Digitalizador, zonas muertas, colores y sensores.</small></span></button></li>
+                <li><button type="button" data-capa="bateria" aria-pressed="false"><i class="fas fa-battery-three-quarters" aria-hidden="true"></i><span><strong>Salud y ciclos de batería</strong><small>Ciclos de carga, salud, temperatura y voltaje.</small></span></button></li>
+                <li><button type="button" data-capa="placa" aria-pressed="false"><i class="fas fa-microchip" aria-hidden="true"></i><span><strong>CPU, memoria y almacenamiento</strong><small>SoC, núcleos, RAM y salud de la memoria interna.</small></span></button></li>
+                <li><button type="button" data-capa="usb" aria-pressed="false"><i class="fas fa-plug" aria-hidden="true"></i><span><strong>Conexión ADB sin root</strong><small>Detecta el teléfono al conectarlo por USB, sin anular la garantía.</small></span></button></li>
+            </ol>
         </div>
     </section>
 
@@ -377,6 +404,6 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=4.9"></script>
+    <script src="../script/scripts.js?v=5.0"></script>
 </body>
 </html>

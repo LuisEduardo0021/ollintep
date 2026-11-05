@@ -51,7 +51,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=4.9">
+    <link rel="stylesheet" href="../css/styles.css?v=5.0">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -181,6 +181,49 @@
                 <div class="card-glow"></div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- Simulador de balance hídrico -->
+    <section class="section-block" id="balance">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Balance hídrico FAO-56</p>
+                <h2 class="block-title">Riega cuando el suelo lo pide.</h2>
+                <p class="block-lead">Cada día el cultivo consume agua. Cuando el suelo baja del umbral, conviene regar. Prueba el cálculo con esta simulación; los valores son de ejemplo.</p>
+            </div>
+        </header>
+        <div class="hidrico" id="hidrico">
+            <div class="hid-escena" aria-hidden="true">
+                <div class="hid-bloque">
+                    <div class="hid-cara hid-frente"><span class="hid-agua"></span><span class="hid-umbral"></span><span class="hid-sensor" style="top: 20%">15 cm</span><span class="hid-sensor" style="top: 60%">45 cm</span></div>
+                    <div class="hid-cara hid-lado"><span class="hid-agua"></span><span class="hid-umbral"></span></div>
+                    <div class="hid-cara hid-tapa"></div>
+                </div>
+            </div>
+            <div class="hid-panel">
+                <div class="hid-cifras">
+                    <div><span>Día</span><strong data-v="dia">1</strong></div>
+                    <div><span>Agua disponible</span><strong data-v="agua">85 %</strong></div>
+                    <div><span>Lámina neta requerida</span><strong data-v="lamina">18 mm</strong></div>
+                </div>
+                <p class="hid-estado" role="status" data-v="estado"></p>
+                <svg class="hid-grafica" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true">
+                    <line x1="0" x2="300" y1="40" y2="40"></line>
+                    <polygon points=""></polygon>
+                    <polyline points=""></polyline>
+                </svg>
+                <label class="hid-et0">
+                    <span>Evapotranspiración de referencia (ET0)</span>
+                    <input type="range" min="2" max="8" step="0.5" value="5">
+                    <output data-v="etc"></output>
+                </label>
+                <div class="hid-botones">
+                    <button type="button" class="m3-btn m3-btn-filled" data-a="regar"><i class="fas fa-droplet text-xs" aria-hidden="true"></i><span data-v="regar">Regar</span></button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="lluvia"><i class="fas fa-cloud-rain text-xs" aria-hidden="true"></i><span>Lluvia de 15 mm</span></button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="pausa"><i class="fas fa-pause text-xs" aria-hidden="true"></i><span data-v="pausa">Pausar</span></button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -384,6 +427,6 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=4.9"></script>
+    <script src="../script/scripts.js?v=5.0"></script>
 </body>
 </html>

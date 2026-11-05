@@ -1219,4 +1219,117 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         pintarPalabras(VOC[0][1]);
     }
+
+    // --- AgroCría: balance hídrico FAO-56 (Dr = Dr anterior − lluvia − riego + ETc). Valores de ejemplo ---
+    const hidrico = document.querySelector('#hidrico');
+    if (hidrico) {
+        const TAW = 120, RAW = 60, KC = 0.85;
+        let dr = 18, dia = 1, et0 = 5, corriendo = !prefersReducedMotion, enPantalla = false;
+        const hist = [];
+        const bloque = hidrico.querySelector('.hid-bloque');
+        const aguas = hidrico.querySelectorAll('.hid-agua');
+        const v = n => hidrico.querySelector(`[data-v="${n}"]`);
+        const poly = hidrico.querySelector('polyline'), area = hidrico.querySelector('polygon');
+        // nueve plantas sobre la tapa; cada una mira a la cámara (rotateY compensa el giro del bloque)
+        [-0.3, 0, 0.3].forEach(z => [-0.3, 0, 0.3].forEach(x => {
+            const pl = document.createElement('span');
+            pl.className = 'hid-planta';
+            pl.style.transform = `translate3d(calc(var(--l) * ${x}), calc(var(--h) / -2), calc(var(--l) * ${z})) rotateY(35deg)`;
+            pl.innerHTML = '<svg viewBox="0 0 24 40" width="24" height="40"><path d="M12 40V16M12 26C6 25 3 21 3 15c6 0 9 4 9 11ZM12 20c0-7 3-11 9-12 0 7-3 11-9 12Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+            bloque.append(pl);
+        }));
+        const pintar = () => {
+            const f = (TAW - dr) / TAW;
+            aguas.forEach(a => { a.style.transform = `scaleY(${f.toFixed(3)})`; });
+            bloque.style.setProperty('--m', Math.max(0, (dr - RAW) / (TAW - RAW)).toFixed(2));
+            v('dia').textContent = dia;
+            v('agua').textContent = Math.round(f * 100) + ' %';
+            v('lamina').textContent = Math.round(dr) + ' mm';
+            v('regar').textContent = dr >= 1 ? T(`Regar ${Math.round(dr)} mm`, `Irrigate ${Math.round(dr)} mm`) : T('Suelo a capacidad', 'Soil at capacity');
+            hidrico.querySelector('[data-a="regar"]').setAttribute('aria-disabled', String(dr < 1));
+            const estado = dr >= TAW ? T('Punto de marchitez: el cultivo ya no puede tomar agua.', 'Wilting point: the crop can no longer take up water.')
+                : dr > RAW ? T('Bajo el umbral: toca regar para evitar el estrés hídrico.', 'Below the threshold: irrigate to avoid water stress.')
+                : T('Sin estrés: el cultivo toma el agua que necesita.', 'No stress: the crop gets the water it needs.');
+            if (v('estado').textContent !== estado) v('estado').textContent = estado;
+            v('estado').dataset.nivel = dr >= TAW ? '2' : dr > RAW ? '1' : '0';
+            v('etc').textContent = `ETc = ${et0.toFixed(1)} × ${KC} = ${(et0 * KC).toFixed(1)} mm/${T('día', 'day')}`;
+            hist.push(f);
+            if (hist.length > 40) hist.shift();
+            const puntos = hist.map((h, k) => `${(k / 39 * 300).toFixed(1)},${(80 - h * 80).toFixed(1)}`).join(' ');
+            poly.setAttribute('points', puntos);
+            area.setAttribute('points', hist.length > 1 ? `0,80 ${puntos} ${((hist.length - 1) / 39 * 300).toFixed(1)},80` : '');
+        };
+        // gotas que caen sobre la tapa; solo decoración, por eso se omiten con movimiento reducido
+        const gotas = (n, alto) => {
+            if (prefersReducedMotion) return;
+            const l = bloque.offsetWidth, h = bloque.offsetHeight;
+            for (let k = 0; k < n; k++) {
+                const g = document.createElement('span');
+                g.className = 'hid-gota';
+                const x = (Math.random() - 0.5) * l * 0.85, z = (Math.random() - 0.5) * l * 0.85;
+                bloque.append(g);
+                g.animate([
+                    { transform: `translate3d(${x}px, ${-h / 2 - alto}px, ${z}px) rotateY(35deg)`, opacity: 0 },
+                    { opacity: 1, offset: 0.2 },
+                    { transform: `translate3d(${x}px, ${-h / 2}px, ${z}px) rotateY(35deg)`, opacity: 0.9 },
+                ], { duration: 420 + Math.random() * 180, delay: Math.random() * 450, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'backwards' }).onfinish = () => g.remove();
+            }
+        };
+        hidrico.querySelector('[data-a="regar"]').addEventListener('click', () => { if (dr < 1) return; gotas(22, 70); dr = 0; pintar(); });
+        hidrico.querySelector('[data-a="lluvia"]').addEventListener('click', () => { gotas(36, 150); dr = Math.max(0, dr - 15); pintar(); });
+        const bPausa = hidrico.querySelector('[data-a="pausa"]');
+        const ponerPausa = () => {
+            v('pausa').textContent = corriendo ? T('Pausar', 'Pause') : T('Reproducir', 'Play');
+            bPausa.querySelector('i').className = `fas ${corriendo ? 'fa-pause' : 'fa-play'} text-xs`;
+        };
+        bPausa.addEventListener('click', () => { corriendo = !corriendo; ponerPausa(); });
+        hidrico.querySelector('input').addEventListener('input', e => { et0 = Number(e.target.value); hist.pop(); pintar(); });
+        new IntersectionObserver(([e]) => { enPantalla = e.isIntersecting; }, { threshold: 0.25 }).observe(hidrico);
+        setInterval(() => {
+            if (!corriendo || !enPantalla || document.hidden || dr >= TAW) return;
+            dr = Math.min(TAW, dr + et0 * KC);
+            dia++;
+            pintar();
+        }, 650);
+        if (canHover && !prefersReducedMotion) {
+            const escena = hidrico.querySelector('.hid-escena');
+            escena.addEventListener('pointermove', e => {
+                const r = escena.getBoundingClientRect();
+                bloque.style.setProperty('--gy', ((e.clientX - r.left) / r.width - 0.5) * 14 + 'deg');
+                bloque.style.setProperty('--gx', ((e.clientY - r.top) / r.height - 0.5) * -8 + 'deg');
+            });
+            escena.addEventListener('pointerleave', () => { bloque.style.removeProperty('--gy'); bloque.style.removeProperty('--gx'); });
+        }
+        ponerPausa();
+        pintar();
+    }
+
+    // --- Diagmind: el teléfono se abre por capas al bajar la página; cada botón resalta su capa ---
+    const capasDemo = document.querySelector('#capas-demo');
+    if (capasDemo) {
+        const tel = capasDemo.querySelector('.capas-tel');
+        const botones = capasDemo.querySelectorAll('.capas-pasos button');
+        const elegir = id => {
+            botones.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.capa === id)));
+            tel.querySelectorAll('.capa').forEach(c => c.classList.toggle('activa', c.dataset.capa === id));
+        };
+        botones.forEach(b => b.addEventListener('click', () => elegir(b.dataset.capa)));
+        elegir('pantalla');
+        if (prefersReducedMotion) {
+            tel.style.setProperty('--abre', 1);
+        } else {
+            let pendiente = false;
+            const medir = () => {
+                pendiente = false;
+                const r = capasDemo.getBoundingClientRect();
+                const p = Math.min(1, Math.max(0, (innerHeight * 0.9 - r.top) / (innerHeight * 0.6)));
+                tel.style.setProperty('--abre', (1 - (1 - p) ** 3).toFixed(3));
+            };
+            const alMover = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(medir); } };
+            new IntersectionObserver(([e]) => {
+                window[e.isIntersecting ? 'addEventListener' : 'removeEventListener']('scroll', alMover, { passive: true });
+                if (e.isIntersecting) medir();
+            }).observe(capasDemo);
+        }
+    }
 });
