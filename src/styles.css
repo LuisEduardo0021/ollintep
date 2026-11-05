@@ -2530,6 +2530,28 @@ button:focus-visible {
   }
 }
 
+/* Iconos a color de la suite (los mismos que en CroHub, ya traen sus esquinas redondeadas) */
+.app-tile img {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  background: none;
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--app) 70%, transparent);
+  border-radius: 0;
+}
+
+.path-icons img.icon-app[src*="-icono"] {
+  width: 42px;
+  border-radius: 0;
+  background: none;
+}
+
+/* Captura del lanzador CroHub en la sección de la suite */
+.suite-shot {
+  max-width: none;
+  margin: 0 0 1.25rem;
+}
+
 /* Hovers solo con ratón (en táctil se quedan pegados) */
 @media (hover: hover) and (pointer: fine) {
   .link-arrow:hover i,
