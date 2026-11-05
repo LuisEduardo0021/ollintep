@@ -4283,9 +4283,8 @@ body.theme-restaurant .m3-btn-filled:hover {
 }
 
 /* --- Carrusel 3D de capturas --- */
-.shot-grid.carrusel {
-  display: block;
-  height: 300vh;
+.carrusel {
+  display: block !important;
   perspective: none;
 }
 
@@ -4300,26 +4299,28 @@ body.theme-restaurant .m3-btn-filled:hover {
   padding-top: 4.5rem;
   perspective: 1500px;
   --W: min(62vw, 92vh, 820px);
-  --R: calc(var(--W) * 0.2887);   /* apotema del prisma de 3 caras */
+  --R: calc(var(--W) * var(--k, 0.2887));   /* --k: apotema según el número de caras (lo pone el JS) */
 }
 
 .carrusel-rotor {
   position: relative;
   width: var(--W);
-  height: calc(var(--W) * 0.625 + 5.5rem);
+  height: calc(var(--W) * 0.625 + 5.5rem);   /* el JS lo ajusta a la cara más alta */
   transform-style: preserve-3d;
   transform: translateZ(calc(var(--R) * -1));
 }
 
-.carrusel-rotor .shot {
+.carrusel-rotor > * {
   position: absolute;
   inset: 0;
   margin: 0;
   opacity: 1;
   scale: none;
   backface-visibility: hidden;
-  background: linear-gradient(180deg, #111a2c, #0c1321);
+  background: linear-gradient(180deg, #111a2c, #0c1321) !important;
   box-shadow: inset 0 0 0 1px var(--line-strong), 0 40px 70px -40px #000;
+  border-radius: 22px;
+  overflow: hidden;
   animation: none;
   transition: none;
 }
@@ -4385,6 +4386,69 @@ body.theme-restaurant .m3-btn-filled:hover {
 @media (prefers-reduced-motion: reduce) {
   .logo3d-giro,
   .fact {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   VIAJE 2026: transición entre páginas, estrellas y hero que se hunde
+   ========================================================================== */
+
+/* --- La captura vuela entre la portada y la página de producto --- */
+::view-transition-group(shot-centzontle),
+::view-transition-group(shot-actapro),
+::view-transition-group(shot-agrocria),
+::view-transition-group(shot-diagmind) {
+  animation-duration: 0.65s;
+  animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 60;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+/* Durante la transición, detrás de las capturas de pantalla queda el lienzo del navegador (blanco): el fundido se aclaraba */
+::view-transition {
+  background: #080d18;
+}
+
+html {
+  color-scheme: dark;
+}
+
+/* --- Campo de estrellas --- */
+.estrellas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* --- Tarjetas que también se inclinan --- */
+.principles {
+  perspective: 1400px;
+}
+
+/* --- El hero se hunde en perspectiva al bajar --- */
+@supports (animation-timeline: view()) {
+  .hero-paths {
+    transform-origin: 50% 100%;
+    animation: hero-hunde linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+  }
+
+  @keyframes hero-hunde {
+    to {
+      transform: perspective(1300px) rotateX(24deg) scale(0.9) translateY(30px);
+      opacity: 0.1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-paths {
     animation: none;
   }
 }

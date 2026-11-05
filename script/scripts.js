@@ -1,3 +1,27 @@
+// --- Transición entre páginas: la captura de la plataforma vuela hasta la captura grande de su página, y al revés ---
+// Fuera de DOMContentLoaded porque pagereveal llega antes del primer pintado. El nombre solo se pone si la captura se ve:
+// si estuviera fuera de pantalla, entraría volando desde lejos.
+(() => {
+    const seVe = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+    window.addEventListener('pagereveal', (e) => {
+        if (!e.viewTransition || !window.navigation?.activation?.from?.url) return;
+        const m = window.navigation.activation.from.url.match(/\/(centzontle|actapro|agrocria|diagmind)\//);
+        const card = m && document.querySelector(`[data-vt="shot-${m[1]}"] .work-shot`);
+        if (card && seVe(card)) {
+            card.style.viewTransitionName = 'shot-' + m[1];
+            e.viewTransition.finished.finally(() => { card.style.viewTransitionName = ''; });
+        }
+    });
+    window.addEventListener('pageswap', () => {
+        const hero = document.querySelector('.product-shot');
+        if (hero && !seVe(hero)) hero.style.viewTransitionName = 'none';
+    });
+    document.addEventListener('click', (e) => {
+        const a = e.target.closest?.('[data-vt]');
+        if (a) a.querySelector('.work-shot').style.viewTransitionName = a.dataset.vt;
+    });
+})();
+
 // --- Entrada del hero: el título se parte en palabras para que aparezcan una a una ---
 // Va fuera de DOMContentLoaded a propósito: el script está al final del <body>, el título ya existe, y partirlo antes
 // del primer pintado evita que se vea entero un instante y luego desaparezca para animarse
@@ -237,8 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
         document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
-        document.querySelectorAll('.work-card, .video-card').forEach(el => inclinar(el, 6));
-        document.querySelectorAll('.shot').forEach(el => { if (!window.matchMedia('(min-width: 961px)').matches) inclinar(el, 6); });
+        document.querySelectorAll('.work-card').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.app-tile, .principle').forEach(el => inclinar(el, 8));
+        if (!window.matchMedia('(min-width: 961px)').matches) document.querySelectorAll('.shot, .video-card').forEach(el => inclinar(el, 6));
         document.querySelectorAll('.hero-home').forEach(el => {
             const texto = el.querySelector('.hero-content');
             if (texto) inclinar(el, 5, texto);
@@ -720,11 +745,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Carrusel 3D de capturas (escritorio): la sección se queda fija y un prisma gira con el scroll, con pausa en cada cara ---
-    const rejillaCapturas = document.querySelector('.shot-grid');
+    const rejillaCapturas = document.querySelector('.shot-grid, #capturas > .videos-grid, #capturas > .grid');
     if (rejillaCapturas && !prefersReducedMotion) {
-        const caras = [...rejillaCapturas.querySelectorAll('.shot')];
+        const caras = [...rejillaCapturas.children];
         const media = window.matchMedia('(min-width: 961px)');
         const paso = 360 / caras.length;
+        const apotema = 0.5 / Math.tan(Math.PI / caras.length);   // 3 caras: un prisma; 2 caras: una lámina que se voltea
+        const medirAlto = () => {
+            if (!rotor) return;
+            caras.forEach(c => { c.style.bottom = 'auto'; });   // con inset: 0 medirían el alto del rotor, no el suyo
+            rotor.style.height = Math.max(...caras.map(c => c.offsetHeight)) + 'px';
+            caras.forEach(c => { c.style.bottom = ''; });
+        };
         let escena = null, rotor = null, puntos = [], actual = 0, objetivo = 0, marco = 0;
         const suave = f => f * f * (3 - 2 * f);
         const leerScroll = () => {
@@ -744,8 +776,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const montar = () => {
             rejillaCapturas.classList.add('carrusel');
+            rejillaCapturas.style.height = caras.length * 100 + 'vh';
             escena = document.createElement('div');
             escena.className = 'carrusel-escena';
+            escena.style.setProperty('--k', apotema.toFixed(4));
             rotor = document.createElement('div');
             rotor.className = 'carrusel-rotor';
             caras.forEach((c, k) => {
@@ -760,17 +794,72 @@ document.addEventListener('DOMContentLoaded', () => {
             puntos = caras.map(() => lista.appendChild(document.createElement('span')));
             escena.append(rotor, lista);
             rejillaCapturas.append(escena);
+            medirAlto();
             window.addEventListener('scroll', leerScroll, { passive: true });
+            window.addEventListener('resize', medirAlto, { passive: true });
+            caras.forEach(c => c.querySelector('img')?.addEventListener('load', medirAlto));
             leerScroll();
         };
         const desmontar = () => {
             window.removeEventListener('scroll', leerScroll);
+            window.removeEventListener('resize', medirAlto);
+            rejillaCapturas.style.height = '';
             cancelAnimationFrame(marco); marco = 0;
             caras.forEach(c => { c.style.transform = ''; rejillaCapturas.append(c); });
-            escena?.remove(); escena = null; puntos = [];
+            escena?.remove(); escena = null; rotor = null; puntos = [];
             rejillaCapturas.classList.remove('carrusel');
         };
         if (media.matches) montar();
         media.addEventListener('change', e => (e.matches ? montar() : desmontar()));
+    }
+
+    // --- Campo de estrellas en el hero: profundidad real; responde al ratón y al scroll; se para si no se ve ---
+    const heroEstrellas = document.querySelector('.hero-home');
+    if (heroEstrellas && !prefersReducedMotion) {
+        const lienzo = document.createElement('canvas');
+        lienzo.className = 'estrellas';
+        lienzo.setAttribute('aria-hidden', 'true');
+        heroEstrellas.prepend(lienzo);
+        const ctx = lienzo.getContext('2d');
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-primary').trim() || '#6ea2ff';
+        let W = 0, H = 0, estrellas = [], marco = 0, mx = 0, my = 0, ox = 0, oy = 0, ultimoY = window.scrollY, impulso = 0;
+        const nueva = (z) => ({ x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2, z: z ?? 0.15 + Math.random() * 0.85, clara: Math.random() < 0.7 });
+        const ajustar = () => {
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            W = heroEstrellas.offsetWidth; H = heroEstrellas.offsetHeight;
+            lienzo.width = W * dpr; lienzo.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            const n = Math.min(150, Math.round(W * H / 11000));
+            estrellas = Array.from({ length: n }, () => nueva());
+        };
+        const dibujar = () => {
+            const y = window.scrollY;
+            impulso += (Math.abs(y - ultimoY) * 0.00012 - impulso) * 0.1;
+            ultimoY = y;
+            ox += (mx - ox) * 0.05; oy += (my - oy) * 0.05;
+            ctx.clearRect(0, 0, W, H);
+            const avance = 0.0007 + impulso;
+            for (const s of estrellas) {
+                s.z -= avance;
+                if (s.z <= 0.05) Object.assign(s, nueva(1));
+                const k = 0.32 / s.z;
+                const px = W / 2 + (s.x * W / 2) * k + ox * (1 / s.z) * 8;
+                const py = H * 0.42 + (s.y * H / 2) * k + oy * (1 / s.z) * 8;
+                if (px < -4 || px > W + 4 || py < -4 || py > H + 4) { if (s.z < 0.5) Object.assign(s, nueva(1)); continue; }
+                ctx.globalAlpha = Math.min(0.85, (1 - s.z) * 1.05);
+                ctx.fillStyle = s.clara ? '#dfe8ff' : color;
+                ctx.beginPath();
+                ctx.arc(px, py, Math.min(2.1, 0.45 / s.z * 0.55), 0, 6.283);
+                ctx.fill();
+            }
+            marco = requestAnimationFrame(dibujar);
+        };
+        ajustar();
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting && !marco) { ultimoY = window.scrollY; marco = requestAnimationFrame(dibujar); }
+            else if (!e.isIntersecting && marco) { cancelAnimationFrame(marco); marco = 0; }
+        }).observe(heroEstrellas);
+        window.addEventListener('resize', ajustar, { passive: true });
+        if (canHover) window.addEventListener('pointermove', (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5; }, { passive: true });
     }
 });
