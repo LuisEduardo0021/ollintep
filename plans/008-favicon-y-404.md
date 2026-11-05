@@ -1,6 +1,6 @@
 # 008 — `favicon.ico` y página 404 propia
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: LOW
 - **Category**: Contenido

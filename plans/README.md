@@ -12,7 +12,7 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 | 005 | [Respuesta al pulsar (`:active`)](005-respuesta-al-pulsar.md) | MEDIUM | DONE |
 | 006 | [Quitar los botones de redes sin destino](006-redes-sociales.md) | MEDIUM | DONE |
 | 007 | [Font Awesome 6.0.0 → 6.7.2](007-font-awesome.md) | LOW | DONE |
-| 008 | [`favicon.ico` y página 404 propia](008-favicon-y-404.md) | LOW | TODO |
+| 008 | [`favicon.ico` y página 404 propia](008-favicon-y-404.md) | LOW | DONE |
 | 009 | [Enlaces a los textos legales](009-enlaces-legales.md) | MEDIUM | BLOCKED (no hay textos publicados) |
 | 010 | [Resaltado del menú con `IntersectionObserver`](010-resaltado-menu-intersection.md) | MEDIUM | TODO |
 | 011 | [Menú móvil: una sola animación con `transform`](011-menu-movil-transform.md) | MEDIUM | TODO |
