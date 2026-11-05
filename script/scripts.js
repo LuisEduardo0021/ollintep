@@ -117,6 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.header');
     const scrollProgress = document.querySelector('#scroll-progress');
 
+    // Anillo de progreso alrededor del botón «volver arriba»
+    let anilloProgreso = null;
+    if (backToTop) {
+        backToTop.insertAdjacentHTML('beforeend', '<svg class="btt-anillo" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24.5" pathLength="1"></circle></svg>');
+        anilloProgreso = backToTop.querySelector('.btt-anillo circle');
+    }
+
     function updateScrollChrome() {
         const scrollTop = window.scrollY;
         if (header) header.classList.toggle('is-scrolled', scrollTop > 10);
@@ -124,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const p = docHeight > 0 ? Math.min(1, scrollTop / docHeight) : 0;
             scrollProgress.style.transform = `scaleX(${p})`;
+            if (anilloProgreso) anilloProgreso.style.strokeDashoffset = (1 - p).toFixed(4);
         }
     }
     window.addEventListener('scroll', updateScrollChrome, { passive: true });
@@ -229,7 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
         document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
-        document.querySelectorAll('.work-card, .shot').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.work-card, .shot, .video-card').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.plan-card').forEach(el => inclinar(el, 5));
         document.querySelectorAll('.product-shot').forEach(el => inclinar(el, 4));
         document.querySelectorAll('.orbit3d').forEach(el => inclinar(el, 34, el.querySelector('.orbit3d-ring')));
     }
@@ -641,5 +650,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
         document.documentElement.addEventListener('pointerleave', () => luz.classList.remove('is-on'));
         document.documentElement.addEventListener('pointerenter', () => luz.classList.add('is-on'));
+    }
+
+    // --- Títulos de sección: las palabras suben desde una máscara (las dispara la clase is-visible de la aparición) ---
+    if (!prefersReducedMotion) {
+        document.querySelectorAll('.block-title, .section-title').forEach(h => {
+            const palabras = h.textContent.trim().split(/\s+/);
+            h.setAttribute('aria-label', h.textContent.trim().replace(/\s+/g, ' '));
+            h.textContent = '';
+            palabras.forEach((p, i) => {
+                const caja = document.createElement('span');
+                caja.className = 'tw';
+                caja.setAttribute('aria-hidden', 'true');
+                const dentro = document.createElement('span');
+                dentro.className = 'twi';
+                dentro.style.setProperty('--i', i);
+                dentro.textContent = p;
+                caja.append(dentro);
+                h.append(caja, ' ');
+            });
+        });
+    }
+
+    // --- Borde de luz giratorio en lo destacado (plan recomendado y banda de contacto) ---
+    if (!prefersReducedMotion) {
+        document.querySelectorAll('.plan-featured, .cta-band').forEach(el => {
+            el.insertAdjacentHTML('afterbegin', '<span class="ring-luz" aria-hidden="true"><span></span></span>');
+        });
+    }
+
+    // --- Centzontle: la palabra rueda entre los giros; se para si no se ve o la pestaña está oculta ---
+    const palabraGiro = document.querySelector('.giro-palabra');
+    if (palabraGiro && !prefersReducedMotion) {
+        const GIROS = ['restaurante', 'farmacia', 'boutique', 'minisúper', 'cafetería', 'ferretería', 'barbería', 'taller', 'papelería', 'carnicería', 'bar'];
+        let n = 0, visible = false;
+        new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(palabraGiro);
+        setInterval(() => {
+            if (!visible || document.hidden) return;
+            n = (n + 1) % GIROS.length;
+            palabraGiro.classList.add('sale');
+            setTimeout(() => {
+                palabraGiro.textContent = GIROS[n];
+                palabraGiro.classList.remove('sale');
+                palabraGiro.classList.add('entra');
+                requestAnimationFrame(() => requestAnimationFrame(() => palabraGiro.classList.remove('entra')));
+            }, 220);
+        }, 2000);
     }
 });

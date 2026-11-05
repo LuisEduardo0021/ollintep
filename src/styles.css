@@ -4089,3 +4089,142 @@ body.theme-restaurant .m3-btn-filled:hover {
     padding-right: 2rem;
   }
 }
+
+/* ==========================================================================
+   TÍTULOS Y DETALLES 2026
+   ========================================================================== */
+
+/* --- Títulos de sección: palabras que suben desde una máscara --- */
+.block-head.reveal,
+.section-title.reveal {
+  filter: none;
+}
+
+.tw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.twi {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 0.9s var(--ease-out);
+  transition-delay: calc(80ms + var(--i, 0) * 45ms);
+}
+
+.is-visible .twi,
+.section-title.is-visible .twi {
+  transform: none;
+}
+
+/* --- Borde de luz giratorio --- */
+.cta-band {
+  position: relative;
+}
+
+.ring-luz {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1.5px;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+.ring-luz > span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(160%, 700px);
+  aspect-ratio: 1;
+  background: conic-gradient(from 0deg, transparent 0 62%, color-mix(in srgb, var(--md-sys-color-primary) 90%, #ffffff) 82%, #ffffff 88%, transparent 96%);
+  transform: translate(-50%, -50%);
+  animation: ring-gira 7s linear infinite;
+}
+
+@keyframes ring-gira {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* --- Anillo de progreso del botón «volver arriba» --- */
+.btt-anillo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.btt-anillo circle {
+  fill: none;
+  stroke: var(--md-sys-color-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/* --- Centzontle: la palabra rueda entre los giros --- */
+.giro-roll {
+  margin: -1rem 0 2rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.giro-palabra {
+  display: inline-block;
+  color: #9cc0ff;
+  transition: transform 0.28s var(--ease-out), opacity 0.2s ease, filter 0.2s ease;
+}
+
+.giro-palabra.sale {
+  transform: translateY(-40%);
+  opacity: 0;
+  filter: blur(4px);
+}
+
+.giro-palabra.entra {
+  transform: translateY(40%);
+  opacity: 0;
+  filter: blur(4px);
+  transition: none;
+}
+
+/* --- Productos: las capturas se revelan igual que en la portada --- */
+.video-card.reveal .video-thumb img {
+  clip-path: inset(10% 10% 10% 10% round 14px);
+  transform: scale(1.1);
+  transition: clip-path 1.2s var(--ease-out), transform 1.4s var(--ease-out);
+  transition-delay: 150ms;
+}
+
+.video-card.reveal.is-visible .video-thumb img {
+  clip-path: inset(0 0 0 0 round 0);
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-card.reveal .video-thumb img {
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+
+  .ring-luz > span {
+    animation: none;
+  }
+}
+
