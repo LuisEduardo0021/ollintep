@@ -4903,3 +4903,34 @@ html {
   }
 }
 
+/* ==========================================================================
+   PAUSA Y DETALLES: animaciones fuera de pantalla en pausa, logo en 3D, iconos que saltan
+   ========================================================================== */
+.orbit3d.fuera .orbit3d-item,
+.ring-luz.fuera > span,
+.chip3d.fuera,
+.hero.fuera::before,
+.hero.fuera .hero-overlay::before,
+.hero.fuera .logo3d-giro,
+.hero.fuera .eyebrow-dot::after {
+  animation-play-state: paused;
+}
+
+.icono-salta {
+  position: fixed;
+  z-index: 70;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navbar .logo-mark {
+    transition: transform 0.8s var(--ease-out);
+  }
+
+  .logo:hover .logo-mark {
+    transform: perspective(240px) rotateY(360deg);
+  }
+}
+

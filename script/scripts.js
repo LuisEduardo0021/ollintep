@@ -206,7 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => entry.isIntersecting ? inBand.add(entry.target) : inBand.delete(entry.target));
             const current = trackedSections.find(s => inBand.has(s));
-            if (!current) return; // entre secciones: se queda la última activa
+            if (!current) {
+                // entre secciones se queda la última activa; por encima de la primera (el hero) no hay ninguna
+                if (trackedSections[0].getBoundingClientRect().top > window.innerHeight * 0.45) {
+                    navAnchors.forEach(a => a.classList.remove('active'));
+                    puntosRiel.forEach(p => p.classList.remove('is-on'));
+                    moverPildora();
+                }
+                return;
+            }
             navAnchors.forEach(a => a.classList.toggle('active', a === anchorById.get(current.id)));
             puntosRiel.forEach((p, id) => p.classList.toggle('is-on', id === current.id));
             moverPildora();
@@ -1113,5 +1121,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }, { passive: true });
         }
+    }
+
+    if (!prefersReducedMotion) {
+        // --- Lo que gira sin fin se pausa cuando no se ve: la GPU descansa y la batería también ---
+        const obsPausa = new IntersectionObserver((entradas) => {
+            entradas.forEach(e => e.target.classList.toggle('fuera', !e.isIntersecting));
+        }, { rootMargin: '120px' });
+        document.querySelectorAll('.orbit3d, .ring-luz, .chip3d, .hero').forEach(el => obsPausa.observe(el));
+    }
+
+    // --- Al señalar el botón de descarga, los iconos de la suite saltan de él (una sola vez por página) ---
+    if (canHover && !prefersReducedMotion) {
+        const APPS_ICONOS = ['crovite-pdf', 'croma-studio', 'cronmy', 'crovect-studio', 'cromofi', 'croudio', 'crobeat', 'cromix', 'croguard'];
+        let yaSalieron = false;
+        document.querySelectorAll('a.m3-btn[href*="activation.ollin-tep.com/descargar"]').forEach(boton => {
+            if (boton.closest('.nav-cta')) return;
+            boton.addEventListener('pointerenter', () => {
+                if (yaSalieron || document.documentElement.classList.contains('ligero')) return;
+                yaSalieron = true;
+                const r = boton.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+                APPS_ICONOS.forEach((id, k) => {
+                    const img = new Image(40, 40);
+                    img.src = base + `resources/suite/${id}-icono.svg`;
+                    img.alt = '';
+                    img.className = 'icono-salta';
+                    img.style.left = (cx - 20) + 'px';
+                    img.style.top = (cy - 20) + 'px';
+                    document.body.append(img);
+                    const a = -Math.PI * (0.12 + 0.76 * k / (APPS_ICONOS.length - 1)), d = 150 + (k % 3) * 45;
+                    const x = Math.cos(a) * d, y = Math.sin(a) * d;
+                    img.animate([
+                        { transform: 'translate3d(0, 0, 0) scale(0.4) rotateY(0deg)', opacity: 0 },
+                        { transform: `translate3d(${x * 0.8}px, ${y * 0.8}px, 0) scale(1) rotateY(180deg)`, opacity: 1, offset: 0.45 },
+                        { transform: `translate3d(${x}px, ${y + 34}px, 0) scale(0.75) rotateY(360deg)`, opacity: 0 },
+                    ], { duration: 1050, delay: k * 28, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'backwards' }).onfinish = () => img.remove();
+                });
+            });
+        });
     }
 });
