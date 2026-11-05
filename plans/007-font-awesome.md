@@ -1,6 +1,6 @@
 # 007 — Actualizar Font Awesome de 6.0.0 a 6.7.2
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: LOW
 - **Category**: Contenido / dependencias
