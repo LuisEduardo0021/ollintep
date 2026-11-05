@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build:css": "tailwindcss -i ./src/styles.css -o ./css/styles.css --minify",
-    "dev:css": "tailwindcss -i ./src/styles.css -o ./css/styles.css --watch"
+    "dev:css": "tailwindcss -i ./src/styles.css -o ./css/styles.css --watch",
+    "build:en": "python3 scripts/generar-en.py"
   },
   "repository": {
     "type": "git",

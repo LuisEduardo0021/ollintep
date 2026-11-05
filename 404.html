@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css?v=4.2">
+    <link rel="stylesheet" href="/css/styles.css?v=4.3">
 </head>
 <body>
     <div class="liquid-bg" aria-hidden="true">
@@ -28,5 +28,21 @@
             </div>
         </div>
     </section>
+    <script>
+        // GitHub Pages sirve esta misma página para todos: se traduce aquí según la preferencia guardada o la del navegador
+        try {
+            var g = localStorage.getItem('ollintep-idioma');
+            var l = g || (navigator.languages || [navigator.language]).map(function (x) { return (x || '').slice(0, 2); }).filter(function (x) { return x === 'es' || x === 'en'; })[0] || 'en';
+            if (l === 'en') {
+                document.documentElement.lang = 'en';
+                document.title = 'Page not found · Ollin-Tep Software';
+                document.querySelector('h1').textContent = 'This page does not exist';
+                document.querySelector('.hero-content p').textContent = 'The link may be mistyped, or the page may have moved.';
+                var b = document.querySelectorAll('.hero-btns a');
+                b[0].href = '/en/'; b[0].firstElementChild.textContent = 'Go home';
+                b[1].firstElementChild.textContent = 'Download CroHub';
+            }
+        } catch (e) {}
+    </script>
 </body>
 </html>

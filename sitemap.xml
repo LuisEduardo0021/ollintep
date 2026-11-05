@@ -30,4 +30,34 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://ollin-tep.com/en/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ollin-tep.com/en/actapro/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ollin-tep.com/en/centzontle/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ollin-tep.com/en/agrocria/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ollin-tep.com/en/diagmind/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

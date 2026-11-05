@@ -2,7 +2,9 @@
 // Se decide por el hardware al cargar y, después, midiendo los fotogramas reales una vez pasada la entrada del hero
 (() => {
     const raiz = document.documentElement;
-    if (navigator.hardwareConcurrency <= 2 || navigator.deviceMemory <= 2) raiz.classList.add('ligero');
+    const red = navigator.connection;
+    if (navigator.hardwareConcurrency <= 2 || navigator.deviceMemory <= 2 || red?.saveData || /2g/.test(red?.effectiveType || '')) raiz.classList.add('ligero');
+    navigator.getBattery?.().then(b => { if (!b.charging && b.level < 0.2) raiz.classList.add('ligero'); }).catch(() => {});
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || raiz.classList.contains('ligero')) return;
     setTimeout(() => {
         if (document.hidden) return;
@@ -78,6 +80,57 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Idioma de la página: los textos que crea este archivo salen en el idioma del documento ---
+    const EN = document.documentElement.lang === 'en';
+    const T = (es, en) => (EN ? en : es);
+
+    // --- Dispositivo: sistema del visitante; los botones de descarga le hablan a su sistema ---
+    const ua = navigator.userAgent;
+    const sistema = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios'
+        : /Android/.test(ua) ? 'android' : /Windows/.test(ua) ? 'windows' : /Macintosh|Mac OS X/.test(ua) ? 'mac'
+        : /CrOS/.test(ua) ? 'otro' : /Linux|X11/.test(ua) ? 'linux' : 'otro';
+    const esMovil = sistema === 'ios' || sistema === 'android';
+    document.documentElement.dataset.so = sistema;
+    document.documentElement.classList.toggle('dev-movil', esMovil);
+    const SISTEMAS = {
+        windows: ['Windows', 'fa-windows', T('También para macOS y Linux', 'Also for macOS and Linux')],
+        mac: ['Mac', 'fa-apple', T('También para Windows y Linux', 'Also for Windows and Linux')],
+        linux: [T('Linux (.deb)', 'Linux (.deb)'), 'fa-linux', T('También para Windows y macOS', 'Also for Windows and macOS')],
+    };
+    document.querySelectorAll('a.m3-btn[href*="activation.ollin-tep.com/descargar"]').forEach(a => {
+        const enCabecera = !!a.closest('.nav-cta');
+        const ponerNota = (texto) => {
+            if (enCabecera) return;
+            const p = document.createElement('p');
+            p.className = 'so-nota';
+            p.textContent = texto;
+            (a.closest('.path-actions') || a).after(p);
+        };
+        if (esMovil) {
+            // CroHub es para computadora: desde el móvil lo útil es mandarse el enlace
+            const pintar = (texto, icono) => { a.innerHTML = `${texto} <i class="fas ${icono} text-xs" aria-hidden="true"></i>`; };
+            pintar(T('Enviar a mi computadora', 'Send to my computer'), 'fa-paper-plane');
+            ponerNota(T('CroHub es para computadora: Windows, macOS y Linux.', 'CroHub is for computers: Windows, macOS and Linux.'));
+            a.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const url = a.href;
+                try {
+                    if (navigator.share) { await navigator.share({ title: 'CroHub', url }); return; }
+                    await navigator.clipboard.writeText(url);
+                    pintar(T('Enlace copiado', 'Link copied'), 'fa-check');
+                } catch (err) {
+                    if (err?.name !== 'AbortError') window.location.href = url;
+                }
+            });
+        } else if (SISTEMAS[sistema]) {
+            const [nombre, icono, otros] = SISTEMAS[sistema];
+            a.innerHTML = enCabecera
+                ? `<i class="fab ${icono}" aria-hidden="true"></i> ${a.textContent.trim()}`
+                : `${T('Descargar para', 'Download for')} ${nombre} <i class="fab ${icono}" aria-hidden="true"></i>`;
+            ponerNota(otros);
+        }
+    });
+
     
     // --- Menú Móvil (Hamburguesa): el panel se desliza con una transición CSS de transform ---
     const mobileMenu = document.querySelector('#mobile-menu');
@@ -136,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (trackedSections.length > 1) {
         const riel = document.createElement('nav');
         riel.className = 'riel';
-        riel.setAttribute('aria-label', 'Secciones de la página');
+        riel.setAttribute('aria-label', T('Secciones de la página', 'Page sections'));
         trackedSections.forEach(s => {
             const a = document.createElement('a');
             a.href = '#' + s.id;
@@ -573,25 +626,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const scriptTag = document.querySelector('script[src*="scripts.js"]');
     const base = scriptTag ? scriptTag.getAttribute('src').replace(/script\/scripts\.js.*$/, '') : '';
     const DESCARGA = 'https://activation.ollin-tep.com/descargar';
+    const raizIdioma = base + (EN ? 'en/' : '');
     const ENTRADAS = [
-        ['Descargar CroHub', 'Lanzador de la suite', DESCARGA, 'fa-download'],
-        ['Suite CroHub', 'Las nueve apps', base + 'index.html#suite', 'fa-cubes'],
-        ['Crovite PDF', 'Documentos PDF', base + 'index.html#suite', 'fa-file-pdf'],
-        ['Croma Studio', 'Fotos y montajes', base + 'index.html#suite', 'fa-image'],
-        ['Cronmy', 'Fotos y color', base + 'index.html#suite', 'fa-palette'],
-        ['Crovect Studio', 'Diseño vectorial', base + 'index.html#suite', 'fa-bezier-curve'],
-        ['Cromofi', 'Video', base + 'index.html#suite', 'fa-film'],
-        ['Croudio', 'Audio', base + 'index.html#suite', 'fa-microphone'],
-        ['CroBeat', 'Música', base + 'index.html#suite', 'fa-drum'],
-        ['CroGroove', 'Música y DJ', base + 'index.html#suite', 'fa-compact-disc'],
-        ['CroGuard', 'VPN y seguridad', base + 'index.html#suite', 'fa-shield-halved'],
-        ['Centzontle', 'Punto de venta multigiro', base + 'centzontle/index.html', 'fa-cash-register'],
-        ['ActaPro', 'Actas y trámites', base + 'actapro/index.html', 'fa-file-signature'],
-        ['Agro-Cria Pro', 'Agricultura y ganadería', base + 'agrocria/index.html', 'fa-seedling'],
-        ['Diagmind', 'Diagnóstico Android', base + 'diagmind/index.html', 'fa-mobile-screen-button'],
-        ['Software a medida', 'Plataformas y consultoría', base + 'index.html#a-medida', 'fa-laptop-code'],
-        ['Cómo trabajamos', 'Principios y cifras', base + 'index.html#principios', 'fa-pen-ruler'],
-        ['Contacto', 'Correo y teléfono', base + 'index.html#contacto', 'fa-envelope'],
+        [T('Descargar CroHub', 'Download CroHub'), T('Lanzador de la suite', 'The suite launcher'), DESCARGA, 'fa-download'],
+        [T('Suite CroHub', 'CroHub suite'), T('Las nueve apps', 'The nine apps'), raizIdioma + 'index.html#suite', 'fa-cubes'],
+        ['Crovite PDF', T('Documentos PDF', 'PDF documents'), raizIdioma + 'index.html#suite', 'fa-file-pdf'],
+        ['Croma Studio', T('Fotos y montajes', 'Photos and montages'), raizIdioma + 'index.html#suite', 'fa-image'],
+        ['Cronmy', T('Fotos y color', 'Photos and color'), raizIdioma + 'index.html#suite', 'fa-palette'],
+        ['Crovect Studio', T('Diseño vectorial', 'Vector design'), raizIdioma + 'index.html#suite', 'fa-bezier-curve'],
+        ['Cromofi', 'Video', raizIdioma + 'index.html#suite', 'fa-film'],
+        ['Croudio', 'Audio', raizIdioma + 'index.html#suite', 'fa-microphone'],
+        ['CroBeat', T('Música', 'Music'), raizIdioma + 'index.html#suite', 'fa-drum'],
+        ['CroGroove', T('Música y DJ', 'Music and DJ'), raizIdioma + 'index.html#suite', 'fa-compact-disc'],
+        ['CroGuard', T('VPN y seguridad', 'VPN and security'), raizIdioma + 'index.html#suite', 'fa-shield-halved'],
+        ['Centzontle', T('Punto de venta multigiro', 'Point of sale for any business'), raizIdioma + 'centzontle/index.html', 'fa-cash-register'],
+        ['ActaPro', T('Actas y trámites', 'Minutes and procedures'), raizIdioma + 'actapro/index.html', 'fa-file-signature'],
+        ['Agro-Cria Pro', T('Agricultura y ganadería', 'Farming and livestock'), raizIdioma + 'agrocria/index.html', 'fa-seedling'],
+        ['Diagmind', T('Diagnóstico Android', 'Android diagnostics'), raizIdioma + 'diagmind/index.html', 'fa-mobile-screen-button'],
+        [T('Software a medida', 'Custom software'), T('Plataformas y consultoría', 'Platforms and consulting'), raizIdioma + 'index.html#a-medida', 'fa-laptop-code'],
+        [T('Cómo trabajamos', 'How we work'), T('Principios y cifras', 'Principles and numbers'), raizIdioma + 'index.html#principios', 'fa-pen-ruler'],
+        [T('Contacto', 'Contact'), T('Correo y teléfono', 'Email and phone'), raizIdioma + 'index.html#contacto', 'fa-envelope'],
     ];
     const navUlBuscar = document.querySelector('.nav-links');
     if (navUlBuscar) {
@@ -599,13 +653,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const esMac = /Mac|iPhone|iPad/.test(navigator.platform);
         const dlg = document.createElement('dialog');
         dlg.className = 'cmdk';
-        dlg.setAttribute('aria-label', 'Buscar en el sitio');
+        dlg.setAttribute('aria-label', T('Buscar en el sitio', 'Search the site'));
         dlg.innerHTML = `<div class="cmdk-box">
             <div class="cmdk-input"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-                <input type="text" placeholder="Busca una app, una plataforma o una sección" aria-label="Buscar" role="combobox" aria-expanded="true" aria-controls="cmdk-lista" autocomplete="off" spellcheck="false">
+                <input type="text" placeholder="${T('Busca una app, una plataforma o una sección', 'Search for an app, a platform or a section')}" aria-label="${T('Buscar', 'Search')}" role="combobox" aria-expanded="true" aria-controls="cmdk-lista" autocomplete="off" spellcheck="false">
                 <kbd>Esc</kbd></div>
             <ul class="cmdk-lista" id="cmdk-lista" role="listbox"></ul>
-            <p class="cmdk-vacio" hidden>Sin resultados.</p>
+            <p class="cmdk-vacio" hidden>${T('Sin resultados.', 'No results.')}</p>
         </div>`;
         document.body.append(dlg);
         const input = dlg.querySelector('input'), lista = dlg.querySelector('ul'), vacio = dlg.querySelector('.cmdk-vacio');
@@ -649,9 +703,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const li = document.createElement('li');
         li.className = 'nav-buscar';
-        li.innerHTML = `<button type="button" class="cmdk-btn" aria-label="Buscar en el sitio" title="Buscar (${esMac ? '⌘' : 'Ctrl'} K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-btn-txt">Buscar</span></button>`;
+        li.innerHTML = `<button type="button" class="cmdk-btn" aria-label="${T('Buscar en el sitio', 'Search the site')}" title="${T('Buscar', 'Search')} (${esMac ? '⌘' : 'Ctrl'} K)"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><span class="cmdk-btn-txt">${T('Buscar', 'Search')}</span></button>`;
         li.querySelector('button').addEventListener('click', () => { if (navUlBuscar.classList.contains('active')) mobileMenu?.click(); abrir(); });
         navUlBuscar.append(li);
+
+        // Selector de idioma: guarda la elección para que la detección automática no vuelva a decidir
+        const liIdioma = document.createElement('li');
+        liIdioma.className = 'nav-idioma';
+        const enlaceIdioma = document.createElement('a');
+        const ruta = window.location.pathname;
+        enlaceIdioma.href = (EN ? ruta.replace(/^\/en(\/|$)/, '/') : '/en' + ruta) + window.location.hash;
+        enlaceIdioma.hreflang = EN ? 'es' : 'en';
+        enlaceIdioma.lang = EN ? 'es' : 'en';
+        enlaceIdioma.textContent = EN ? 'ES' : 'EN';
+        enlaceIdioma.setAttribute('aria-label', EN ? 'Ver en español' : 'View in English');
+        enlaceIdioma.addEventListener('click', () => { try { localStorage.setItem('ollintep-idioma', EN ? 'es' : 'en'); } catch (e) {} });
+        liIdioma.append(enlaceIdioma);
+        li.before(liIdioma);
     }
 
     // --- Luz ambiental: el fondo cambia de color según la sección (fundido de opacidad, sin repintar) ---
@@ -754,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Centzontle: la palabra rueda entre los giros; se para si no se ve o la pestaña está oculta ---
     const palabraGiro = document.querySelector('.giro-palabra');
     if (palabraGiro && !prefersReducedMotion) {
-        const GIROS = ['restaurante', 'farmacia', 'boutique', 'minisúper', 'cafetería', 'ferretería', 'barbería', 'taller', 'papelería', 'carnicería', 'bar'];
+        const GIROS = T(['restaurante', 'farmacia', 'boutique', 'minisúper', 'cafetería', 'ferretería', 'barbería', 'taller', 'papelería', 'carnicería', 'bar'], ['restaurant', 'pharmacy', 'boutique', 'grocery store', 'café', 'hardware store', 'barbershop', 'repair shop', 'stationery store', 'butcher shop', 'bar']);
         let n = 0, visible = false;
         new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(palabraGiro);
         setInterval(() => {

@@ -45,3 +45,14 @@ Sitio web corporativo y catálogo interactivo de **Ollin-Tep Software**, desarro
 # Compilar estilos CSS:
 npm run build:css
 ```
+
+## Idiomas
+
+Las páginas en inglés (`en/`) se generan; no se editan a mano. Tras cambiar un texto en español:
+
+```bash
+# añade la traducción a scripts/en.json y regenera (avisa si falta alguna)
+npm run build:en
+npm run build:css
+```
+

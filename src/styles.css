@@ -4623,3 +4623,24 @@ html {
   }
 }
 
+/* ==========================================================================
+   IDIOMA Y DISPOSITIVO
+   ========================================================================== */
+.nav-idioma a {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* La nota de otros sistemas ocupa toda la fila, bajo los botones */
+.so-nota,
+.hero .so-nota {
+  max-width: none;
+  margin: 0.75rem 0 0;
+  font-size: 0.84rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.dev-movil .cmdk kbd {
+  display: none;
+}
+
