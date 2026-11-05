@@ -53,30 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Resaltado de Sección Activa en Scroll ---
-    const sections = document.querySelectorAll('section');
-    const navLi = document.querySelectorAll('.nav-links a');
+    // --- Resaltado de la sección activa en el menú ---
+    const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+    const anchorById = new Map(navAnchors.map(a => [a.getAttribute('href').slice(1), a]));
+    const trackedSections = [...document.querySelectorAll('section[id]')].filter(s => anchorById.has(s.id));
 
-    window.addEventListener('scroll', () => {
-        let current = '';
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            
-            // Detectar qué sección está visible en pantalla
-            if (pageYOffset >= (sectionTop - 150)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLi.forEach(a => {
-            a.classList.remove('active');
-            if (a.getAttribute('href').includes(current)) {
-                a.classList.add('active');
-            }
-        });
-    });
+    if (trackedSections.length) {
+        const inBand = new Set();
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => entry.isIntersecting ? inBand.add(entry.target) : inBand.delete(entry.target));
+            const current = trackedSections.find(s => inBand.has(s));
+            if (!current) return; // entre secciones: se queda la última activa
+            navAnchors.forEach(a => a.classList.toggle('active', a === anchorById.get(current.id)));
+        }, { rootMargin: '-150px 0px -55% 0px' });
+        trackedSections.forEach(s => sectionObserver.observe(s));
+    }
 
     // --- Año actual en el footer ---
     const currentYear = document.querySelector('#current-year');

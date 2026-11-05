@@ -14,7 +14,7 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 | 007 | [Font Awesome 6.0.0 → 6.7.2](007-font-awesome.md) | LOW | DONE |
 | 008 | [`favicon.ico` y página 404 propia](008-favicon-y-404.md) | LOW | DONE |
 | 009 | [Enlaces a los textos legales](009-enlaces-legales.md) | MEDIUM | BLOCKED (no hay textos publicados) |
-| 010 | [Resaltado del menú con `IntersectionObserver`](010-resaltado-menu-intersection.md) | MEDIUM | TODO |
+| 010 | [Resaltado del menú con `IntersectionObserver`](010-resaltado-menu-intersection.md) | MEDIUM | DONE |
 | 011 | [Menú móvil: una sola animación con `transform`](011-menu-movil-transform.md) | MEDIUM | TODO |
 | 012 | [Hovers sin movimiento en táctil e inclinación suavizada](012-hover-tactil-e-inclinacion.md) | MEDIUM | TODO |
 | 013 | [Fondo líquido sin `blur(100px)` y con seguimiento suave](013-fondo-liquido.md) | LOW | TODO |

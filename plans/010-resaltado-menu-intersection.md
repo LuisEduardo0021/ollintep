@@ -1,6 +1,6 @@
 # 010 — Resaltado del menú con `IntersectionObserver` en vez de leer posiciones en cada scroll
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: MEDIUM
 - **Category**: Performance
