@@ -10,6 +10,14 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 | 003 | [Sustituir `transition: all` por las propiedades exactas](003-quitar-transition-all.md) | HIGH | DONE |
 | 004 | [Respetar «reducir movimiento» en todo el sitio](004-reducir-movimiento-completo.md) | MEDIUM | DONE |
 | 005 | [Respuesta al pulsar (`:active`)](005-respuesta-al-pulsar.md) | MEDIUM | DONE |
+| 006 | [Quitar los botones de redes sin destino](006-redes-sociales.md) | MEDIUM | TODO |
+| 007 | [Font Awesome 6.0.0 → 6.7.2](007-font-awesome.md) | LOW | TODO |
+| 008 | [`favicon.ico` y página 404 propia](008-favicon-y-404.md) | LOW | TODO |
+| 009 | [Enlaces a los textos legales](009-enlaces-legales.md) | MEDIUM | BLOCKED (no hay textos publicados) |
+| 010 | [Resaltado del menú con `IntersectionObserver`](010-resaltado-menu-intersection.md) | MEDIUM | TODO |
+| 011 | [Menú móvil: una sola animación con `transform`](011-menu-movil-transform.md) | MEDIUM | TODO |
+| 012 | [Hovers sin movimiento en táctil e inclinación suavizada](012-hover-tactil-e-inclinacion.md) | MEDIUM | TODO |
+| 013 | [Fondo líquido sin `blur(100px)` y con seguimiento suave](013-fondo-liquido.md) | LOW | TODO |
 
 ## Orden recomendado
 
@@ -22,11 +30,17 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 
 Tras cada plan: `npm run build:css` (el CSS servido es `css/styles.css`, compilado desde `src/styles.css`).
 
-## Fuera de estos planes (hallazgos de la auditoría sin plan todavía)
+## Segunda tanda (006-013), orden recomendado
 
-- Contenido: redes Twitter/Facebook en `#`; Font Awesome 6.0.0; `favicon.ico` 404 y sin página 404; sin enlaces a la
-  parte legal (`https://activation.ollin-tep.com/legal`); cifras de «Nosotros» por revisar.
-- Movimiento: el resaltado del menú lee `offsetTop` en cada scroll (`script/scripts.js:60-79`); la cabecera anima
-  `padding` y el menú móvil anima `right` además de su View Transition; la inclinación de tarjetas va con retraso por la
-  transición de `transform` y su hover no está limitado a ratón; `blur(100px)` en las manchas del fondo; el fondo
-  sigue al ratón sin suavizado.
+1. **007** antes del **006** solo si el 006 va a usar perfiles reales (`fa-x-twitter` necesita 6.4.2 o más); si el 006
+   solo borra los botones, da igual el orden.
+2. **010**, **011**, **012** y **013** tocan `script/scripts.js` en zonas distintas; hazlos de uno en uno y en ese orden
+   para que los números de línea de cada plan sigan valiendo (cada uno cita líneas de 9346e08: búscalas por su
+   comentario si se movieron).
+3. **008** en cualquier momento (archivos nuevos).
+4. **009** está bloqueado hasta que `https://activation.ollin-tep.com/legal` tenga textos publicados.
+
+## Fuera de los planes
+
+- Cifras de la sección «Nosotros» (+8 años, +40 proyectos, +15 clientes, 98 % de satisfacción): las tiene que confirmar
+  el dueño; no hay plan porque no se pueden verificar desde el código.
