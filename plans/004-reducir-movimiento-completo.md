@@ -1,6 +1,6 @@
 # 004 — Respetar «reducir movimiento» en todo el sitio, no solo en las View Transitions
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 680ed60
 - **Severity**: MEDIUM
 - **Category**: Accessibility

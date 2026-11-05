@@ -1451,6 +1451,42 @@
   ::view-transition-new(*) {
     animation: none !important;
   }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Movimiento decorativo infinito: quieto */
+  .liquid-bg .blob,
+  .animate-pulse,
+  .orbit-core,
+  .orbit-ring,
+  .orbit-item {
+    animation: none;
+  }
+
+  .platform-pulse {
+    animation: none;
+    opacity: 0;
+  }
+
+  /* Cinta de logos: deja de desplazarse y se muestra centrada, sin la copia duplicada */
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
+
+  /* Aparición al hacer scroll: solo fundido, sin subir */
+  .reveal {
+    transform: none;
+    transition: opacity 0.3s ease;
+  }
 }
 
 /* ==========================================================================

@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backToTop.classList.toggle('visible', window.scrollY > 500);
     });
     backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     });
 
     // --- Header dinámico + barra de progreso de scroll ---
