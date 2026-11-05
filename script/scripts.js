@@ -1122,6 +1122,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         navUl.addEventListener('pointerleave', moverPildora);
+        // Al llegar a un botón (descargar, volver, buscar) el indicador suelta el enlace anterior y no se queda atenuado a su lado
+        navUl.querySelectorAll('.m3-btn, .product-back-btn, .cmdk-btn').forEach(b => b.addEventListener('pointerenter', moverPildora));
     }
 
     if (canHover && !prefersReducedMotion) {

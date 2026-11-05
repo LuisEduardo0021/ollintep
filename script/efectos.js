@@ -1004,6 +1004,109 @@
         }
     }
 
+    // --- AGUA EN LA SELECCIÓN DEL MENÚ: dentro del recuadro que marca el enlace bajo el cursor sube agua, que se agita al moverse.
+    // Solo con ratón y en escritorio; se detiene por completo cuando el recuadro queda en calma.
+    const montarAgua = () => {
+        const pildora = document.querySelector('.nav-pill');
+        const menu = document.querySelector('.nav-links');
+        if (!pildora || !menu || !escritorio || !matchMedia('(hover: hover) and (pointer: fine)').matches || !mueve()) return;
+        const c = lienzo('nav-agua');
+        pildora.append(c);
+        const ctx = c.getContext('2d');
+        const W = c.width = 160, H = c.height = 48, N = 40;
+        const alto = new Float32Array(N + 1), vel = new Float32Array(N + 1);
+        // Cada producto define su color más abajo que la raíz: se lee desde el propio recuadro
+        const color = getComputedStyle(pildora).getPropertyValue('--md-sys-color-primary').trim() || '#6ea2ff';
+        const burbujas = Array.from({ length: 4 }, (_, i) => ({ x: .15 + i * .22, y: Math.random(), v: .25 + Math.random() * .3 }));
+        let nivel = 0, objetivo = 0, marco = 0, t = 0, ultimoX = null, ultimaPos = null, estiron = 0;
+        const dibujar = () => {
+            t += .016;
+            nivel += (objetivo - nivel) * .09;
+            // Al saltar de un enlace a otro el recuadro se mueve y el agua se balancea
+            const pos = pildora.getBoundingClientRect().left;
+            // La forma también es líquida: se estira en la dirección del salto y recupera la gota al frenar
+            const rapidez = ultimaPos === null ? 0 : Math.abs(pos - ultimaPos);
+            estiron += (Math.min(rapidez, 40) - estiron) * .22;
+            pildora.style.scale = estiron > .2 ? `${(1 + estiron * .009).toFixed(3)} ${(1 - estiron * .007).toFixed(3)}` : '';
+            if (ultimaPos !== null && Math.abs(pos - ultimaPos) > .5) {
+                const empuje = Math.max(-3, Math.min(3, (pos - ultimaPos) * .06));
+                for (let i = 0; i <= N; i++) vel[i] += empuje * (i / N - .5) * .3;
+            }
+            ultimaPos = pos;
+            for (let i = 1; i < N; i++) vel[i] += (alto[i - 1] + alto[i + 1] - 2 * alto[i]) * .2 - alto[i] * .06;
+            let movimiento = 0;
+            for (let i = 0; i <= N; i++) { vel[i] *= .94; alto[i] = Math.max(-H * .22, Math.min(H * .22, alto[i] + vel[i])); movimiento += Math.abs(vel[i]); }
+            ctx.clearRect(0, 0, W, H);
+            if (nivel > .004) {
+                const base = H * (1 - nivel) + 1;   // al llenarse llega hasta arriba y la gota queda completa
+                const superficie = (i) => base + alto[i] + Math.sin(i * .5 + t * 4) * 1.5 * nivel + Math.sin(i * .2 - t * 2.3) * 1.8 * nivel;
+                ctx.beginPath();
+                ctx.moveTo(0, H);
+                for (let i = 0; i <= N; i++) ctx.lineTo(i * W / N, superficie(i));
+                ctx.lineTo(W, H);
+                ctx.closePath();
+                // Del color de cada página, más oscuro hacia el fondo
+                ctx.globalAlpha = .72 * Math.min(1, nivel * 1.6);
+                ctx.fillStyle = color;
+                ctx.fill();
+                const sombra = ctx.createLinearGradient(0, 0, 0, H);
+                sombra.addColorStop(0, 'rgba(10, 18, 36, 0)');
+                sombra.addColorStop(1, 'rgba(10, 18, 36, .45)');
+                ctx.fillStyle = sombra;
+                ctx.fill();
+                ctx.beginPath();
+                for (let i = 0; i <= N; i++) i ? ctx.lineTo(i * W / N, superficie(i)) : ctx.moveTo(0, superficie(0));
+                ctx.globalAlpha = .9 * nivel;
+                ctx.strokeStyle = '#dbe7ff';
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+                [.45, .75].forEach((f, k) => {
+                    ctx.beginPath();
+                    for (let i = 0; i <= N; i++) {
+                        const y = base + (H - base) * f + alto[i] * .6 + Math.sin(i * .32 + t * (2.4 - k) + k * 2) * 2.2;
+                        i ? ctx.lineTo(i * W / N, y) : ctx.moveTo(0, y);
+                    }
+                    ctx.globalAlpha = .16 * nivel;
+                    ctx.stroke();
+                });
+                ctx.fillStyle = '#dbe7ff';
+                burbujas.forEach(b => {
+                    b.y -= b.v * .016;
+                    if (b.y < 0) { b.y = 1; b.x = .1 + Math.random() * .8; }
+                    ctx.globalAlpha = .55 * nivel * b.y;
+                    ctx.beginPath();
+                    ctx.ellipse(b.x * W, base + (H - base) * b.y, 1.6, 1.3, 0, 0, 6.283);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+            }
+            const calma = objetivo === 0 && nivel < .004 && movimiento < .02;
+            if (calma) { nivel = 0; ultimaPos = null; estiron = 0; pildora.style.scale = ''; pildora.classList.remove('liquida'); ctx.clearRect(0, 0, W, H); }
+            marco = calma ? 0 : requestAnimationFrame(dibujar);
+        };
+        menu.querySelectorAll('a:not(.m3-btn):not(.product-back-btn)').forEach(a => {
+            a.addEventListener('pointerenter', () => {
+                if (ligero()) return;
+                objetivo = 1;
+                pildora.classList.add('liquida');
+                if (!marco) marco = requestAnimationFrame(dibujar);
+            });
+            a.addEventListener('pointermove', (e) => {
+                const r = a.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width;
+                const fuerza = ultimoX === null ? 0 : Math.min(Math.abs(x - ultimoX) * 60, 7);
+                const i = Math.max(2, Math.min(N - 2, Math.round(x * N)));
+                for (let k = -2; k <= 2; k++) vel[i + k] -= fuerza * .22 * (1 - Math.abs(k) / 3);
+                ultimoX = x;
+            }, { passive: true });
+            a.addEventListener('pointerleave', () => { objetivo = 0; ultimoX = null; });
+        });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montarAgua, { once: true });
+    else montarAgua();
+
     // --- INTRO DE LA MARCA: una vez por sesión, al llegar desde fuera. El <head> pone html.intro-marca antes de pintar.
     // Caracteres que forman el logo, el logo pasa de pixelado a nítido, se escribe «Ollin-Tep» y se disuelve con Bayer.
     if (raiz.classList.contains('intro-marca')) {
