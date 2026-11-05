@@ -474,6 +474,11 @@
   z-index: 10;
 }
 
+/* Como mucho 3 columnas (la suite tiene 9 apps: 3 × 3); en pantallas estrechas baja a 2 y a 1 */
+.services-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(max(280px, calc((100% - 3rem) / 3)), 1fr));
+}
+
 .service-card,
 .m3-card {
   position: relative;
