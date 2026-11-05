@@ -60,7 +60,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=3.3">
+    <link rel="stylesheet" href="css/styles.css?v=3.4">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -157,13 +157,28 @@
 
     <!-- Suite CroHub -->
     <section id="suite" class="section-block">
-        <header class="block-head">
+        <header class="block-head block-head-orbit">
             <div>
                 <p class="eyebrow eyebrow-orange"><img src="resources/suite/crohub.svg" alt="" width="15" height="16">Suite CroHub</p>
                 <h2 class="block-title">Nueve apps. Un solo lanzador.</h2>
                 <p class="block-lead">CroHub descarga, instala, actualiza y activa cada app. Compra solo las que necesitas o el paquete completo.</p>
+                <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled block-cta">Descargar CroHub <i class="fas fa-download text-xs" aria-hidden="true"></i></a>
             </div>
-            <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled">Descargar CroHub <i class="fas fa-download text-xs" aria-hidden="true"></i></a>
+            <div class="orbit3d" aria-hidden="true">
+                <div class="orbit3d-ring">
+                    <span class="orbit3d-track"></span>
+                    <span class="orbit3d-core"><img src="resources/suite/crohub.svg" alt="" width="52" height="56"></span>
+                    <span class="orbit3d-item" style="--n: 0"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 1"><img src="resources/suite/croma-studio-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 2"><img src="resources/suite/cronmy-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 3"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 4"><img src="resources/suite/cromofi-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 5"><img src="resources/suite/croudio-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 6"><img src="resources/suite/crobeat-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 7"><img src="resources/suite/cromix-icono.svg" alt="" width="58" height="58"></span>
+                    <span class="orbit3d-item" style="--n: 8"><img src="resources/suite/croguard-icono.svg" alt="" width="58" height="58"></span>
+                </div>
+            </div>
         </header>
 
         <figure class="product-shot suite-shot">
@@ -315,6 +330,6 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=3.3"></script>
+    <script src="script/scripts.js?v=3.4"></script>
 </body>
 </html>

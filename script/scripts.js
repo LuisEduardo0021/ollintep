@@ -203,6 +203,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Interacciones con el mouse (solo en dispositivos con puntero fino) ---
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+    // --- Inclinación 3D con el ratón, elástica (interpolada por fotograma) ---
+    // Usa la propiedad «rotate» (eje + ángulo) y no «transform», que ya usan la entrada del hero, el revelado al hacer
+    // scroll y la captura que se aplana con el scroll: así se suman en vez de pisarse. La perspectiva la pone el padre.
+    if (canHover && !prefersReducedMotion) {
+        const inclinar = (el, max) => {
+            let tx = 0, ty = 0, x = 0, y = 0, frame = 0;
+            const pintar = () => {
+                x += (tx - x) * 0.12;
+                y += (ty - y) * 0.12;
+                const angulo = Math.hypot(x, y);
+                el.style.rotate = angulo < 0.01 ? '' : `${x.toFixed(4)} ${y.toFixed(4)} 0 ${angulo.toFixed(3)}deg`;
+                const quieto = Math.abs(tx - x) < 0.01 && Math.abs(ty - y) < 0.01;
+                frame = quieto ? 0 : requestAnimationFrame(pintar);
+            };
+            el.addEventListener('pointermove', (e) => {
+                const r = el.getBoundingClientRect();
+                tx = (0.5 - (e.clientY - r.top) / r.height) * max;   // giro sobre X: arriba/abajo
+                ty = ((e.clientX - r.left) / r.width - 0.5) * max;   // giro sobre Y: izquierda/derecha
+                if (!frame) frame = requestAnimationFrame(pintar);
+            }, { passive: true });
+            el.addEventListener('pointerleave', () => {
+                tx = 0; ty = 0;
+                if (!frame) frame = requestAnimationFrame(pintar);
+            });
+        };
+        document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
+        document.querySelectorAll('.work-card, .shot').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.product-shot').forEach(el => inclinar(el, 4));
+    }
+
     // --- Borde de luz que sigue al cursor en tarjetas y paneles (solo con ratón) ---
     if (canHover && !prefersReducedMotion) {
         document.querySelectorAll('.path-card, .work-card, .app-tile, .principle, .feature-col, .giro-grid li, .cta-band').forEach(el => {

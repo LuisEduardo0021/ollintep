@@ -3019,7 +3019,7 @@ body.theme-restaurant .m3-btn-filled:hover {
 
 /* Cabecera: entra desde arriba al cargar */
 .intro .navbar {
-  animation: intro-header 0.7s var(--ease-out) both;
+  animation: intro-header 0.7s var(--ease-out) backwards;   /* backwards: al terminar no deja transform (el panel del menú móvil es fixed dentro) */
 }
 
 /* Título palabra a palabra (las palabras las crea el JS) */
@@ -3210,8 +3210,10 @@ body.theme-restaurant .m3-btn-filled:hover {
 }
 
 /* Indicador del menú */
-.nav-links.has-pill {
-  position: relative;
+@media (min-width: 869px) {
+  .nav-links.has-pill {
+    position: relative;
+  }
 }
 
 .nav-pill {
@@ -3333,5 +3335,263 @@ body.theme-restaurant .m3-btn-filled:hover {
 
   .m3-btn-filled::after {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   3D 2026
+   Profundidad real con transformaciones 3D de CSS (las compone la GPU, sin repintar): órbita de la suite, suelo de
+   rejilla en perspectiva, tarjetas que se inclinan con el ratón (JS, propiedad «rotate») con capas a distinta
+   profundidad, y capturas que se levantan al hacer scroll. Con «reducir movimiento», todo quieto (bloque al final).
+   ========================================================================== */
+
+/* --- Perspectiva para las tarjetas que se inclinan --- */
+.hero-paths {
+  perspective: 1400px;
+}
+
+.work-grid,
+.shot-grid,
+.app-grid {
+  perspective: 1600px;
+}
+
+.hero-home {
+  perspective: 2000px;
+}
+
+/* Las tarjetas del hero tienen capas a distinta profundidad: al inclinarse, los iconos «flotan» delante */
+.path-card {
+  overflow: visible;
+  isolation: auto;
+  transform-style: preserve-3d;
+}
+
+.path-card::before {
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.path-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.path-card .path-kicker {
+  transform: translateZ(14px);
+}
+
+.path-card .path-title {
+  transform: translateZ(30px);
+}
+
+.path-card .path-text {
+  transform: translateZ(16px);
+}
+
+.path-card .path-icons {
+  transform: translateZ(48px);
+}
+
+.path-card .path-actions {
+  transform: translateZ(22px);
+}
+
+/* --- Órbita 3D de la suite alrededor de CroHub --- */
+.block-head-orbit {
+  align-items: center;
+}
+
+.block-cta {
+  margin-top: 1.75rem;
+}
+
+.orbit3d {
+  --R: 175px;
+  position: relative;
+  flex-shrink: 0;
+  width: 440px;
+  height: 300px;
+  perspective: 1100px;
+}
+
+.orbit3d-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  transform: rotateX(-16deg);
+}
+
+.orbit3d-track {
+  position: absolute;
+  left: calc(var(--R) * -1);
+  top: calc(var(--R) * -1);
+  width: calc(var(--R) * 2);
+  height: calc(var(--R) * 2);
+  border-radius: 50%;
+  border: 1px dashed rgba(148, 163, 184, 0.28);
+  transform: rotateX(90deg);
+}
+
+.orbit3d-core {
+  position: absolute;
+  left: -46px;
+  top: -46px;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 24px;
+  background: linear-gradient(160deg, #16213a, #0b1220);
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 0 50px -6px rgba(255, 122, 46, 0.45), 0 20px 40px -20px #000;
+}
+
+.orbit3d-core img {
+  width: 46px;
+  height: auto;
+}
+
+.orbit3d-item {
+  position: absolute;
+  left: -29px;
+  top: -29px;
+  width: 58px;
+  height: 58px;
+  animation: orbit3d 27s linear infinite;
+  animation-delay: calc(var(--n) * -3s);   /* 9 apps × 3 s = una vuelta: repartidas a 40° */
+}
+
+.orbit3d-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+}
+
+@keyframes orbit3d {
+  0% {
+    transform: rotateY(0deg) translateZ(var(--R)) rotateY(0deg) rotateX(16deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(180deg) translateZ(var(--R)) rotateY(-180deg) rotateX(16deg);
+    opacity: 0.3;
+  }
+  100% {
+    transform: rotateY(360deg) translateZ(var(--R)) rotateY(-360deg) rotateX(16deg);
+    opacity: 1;
+  }
+}
+
+/* --- Suelo de rejilla en perspectiva bajo el hero (avanza despacio; solo transform) --- */
+.hero-home .hero-overlay {
+  perspective: 520px;
+  perspective-origin: 50% 35%;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent 30%, #000 65%, #000 85%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent 30%, #000 65%, #000 85%, transparent);
+}
+
+.hero-home .hero-overlay::before {
+  content: "";
+  position: absolute;
+  left: -60%;
+  right: -60%;
+  bottom: -30%;
+  height: 120%;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  transform-origin: 50% 100%;
+  transform: rotateX(72deg) translateY(0);
+  animation: grid-avanza 3.2s linear infinite;
+}
+
+@keyframes grid-avanza {
+  to {
+    transform: rotateX(72deg) translateY(72px);
+  }
+}
+
+/* --- Al hacer scroll: capturas y apps se levantan en 3D --- */
+@supports (animation-timeline: view()) {
+  .work-shot {
+    transform-origin: 50% 100%;
+    animation: se-levanta linear both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 35%;
+  }
+
+  @keyframes se-levanta {
+    from {
+      transform: perspective(900px) rotateX(18deg) translateY(16px);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  .app-tile {
+    transform-origin: 50% 100%;
+    animation: tile-3d linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+
+  @keyframes tile-3d {
+    from {
+      opacity: 0;
+      transform: rotateX(-28deg) translateY(28px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* --- Adaptable --- */
+@media (max-width: 960px) {
+  .block-head-orbit {
+    align-items: flex-start;
+  }
+
+  .orbit3d {
+    align-self: center;
+    width: 100%;
+    max-width: 440px;
+  }
+}
+
+@media (max-width: 600px) {
+  .orbit3d {
+    --R: 125px;
+    height: 240px;
+  }
+
+  .orbit3d-item {
+    left: -23px;
+    top: -23px;
+    width: 46px;
+    height: 46px;
+  }
+}
+
+/* --- Con «reducir movimiento»: la órbita y el suelo, quietos; sin levantamientos --- */
+@media (prefers-reduced-motion: reduce) {
+  .orbit3d-item {
+    animation: none;
+    transform: rotateY(calc(var(--n) * 40deg)) translateZ(var(--R)) rotateY(calc(var(--n) * -40deg)) rotateX(16deg);
+  }
+
+  .hero-home .hero-overlay::before {
+    animation: none;
+  }
+
+  .work-shot,
+  .app-tile {
+    animation: none;
   }
 }
