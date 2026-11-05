@@ -237,7 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
         document.querySelectorAll('.path-card').forEach(el => inclinar(el, 9));
-        document.querySelectorAll('.work-card, .shot, .video-card').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.work-card, .video-card').forEach(el => inclinar(el, 6));
+        document.querySelectorAll('.shot').forEach(el => { if (!window.matchMedia('(min-width: 961px)').matches) inclinar(el, 6); });
+        document.querySelectorAll('.hero-home').forEach(el => {
+            const texto = el.querySelector('.hero-content');
+            if (texto) inclinar(el, 5, texto);
+            const logo = el.querySelector('.logo3d-mano');
+            if (logo) inclinar(el, 46, logo);
+        });
         document.querySelectorAll('.plan-card').forEach(el => inclinar(el, 5));
         document.querySelectorAll('.product-shot').forEach(el => inclinar(el, 4));
         document.querySelectorAll('.orbit3d').forEach(el => inclinar(el, 34, el.querySelector('.orbit3d-ring')));
@@ -696,5 +703,74 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestAnimationFrame(() => requestAnimationFrame(() => palabraGiro.classList.remove('entra')));
             }, 220);
         }, 2000);
+    }
+
+    // --- Logo en volumen: copias del logo a distinta profundidad (solo si no se pide reducir movimiento) ---
+    const giroLogo = document.querySelector('.logo3d-giro');
+    if (giroLogo && !prefersReducedMotion) {
+        const original = giroLogo.querySelector('img');
+        original.classList.add('logo3d-frente');
+        for (let k = 1; k <= 12; k++) {
+            const capa = original.cloneNode();
+            capa.classList.remove('logo3d-frente');
+            capa.classList.add('logo3d-capa');
+            capa.style.transform = `translateZ(${-k * 1.6}px)`;
+            giroLogo.append(capa);
+        }
+    }
+
+    // --- Carrusel 3D de capturas (escritorio): la sección se queda fija y un prisma gira con el scroll, con pausa en cada cara ---
+    const rejillaCapturas = document.querySelector('.shot-grid');
+    if (rejillaCapturas && !prefersReducedMotion) {
+        const caras = [...rejillaCapturas.querySelectorAll('.shot')];
+        const media = window.matchMedia('(min-width: 961px)');
+        const paso = 360 / caras.length;
+        let escena = null, rotor = null, puntos = [], actual = 0, objetivo = 0, marco = 0;
+        const suave = f => f * f * (3 - 2 * f);
+        const leerScroll = () => {
+            const r = rejillaCapturas.getBoundingClientRect();
+            const p = Math.min(1, Math.max(0, -r.top / (r.height - window.innerHeight)));
+            const t = p * (caras.length - 1);
+            const i = Math.min(caras.length - 2, Math.floor(t));
+            objetivo = -(i + suave(Math.min(1, Math.max(0, (t - i - 0.15) / 0.7)))) * paso;
+            const cara = Math.round(-objetivo / paso);
+            puntos.forEach((d, k) => d.classList.toggle('is-on', k === cara));
+            if (!marco) marco = requestAnimationFrame(girar);
+        };
+        const girar = () => {
+            actual += (objetivo - actual) * 0.12;
+            rotor.style.transform = `translateZ(calc(var(--R) * -1)) rotateY(${actual.toFixed(3)}deg)`;
+            marco = Math.abs(objetivo - actual) < 0.02 ? 0 : requestAnimationFrame(girar);
+        };
+        const montar = () => {
+            rejillaCapturas.classList.add('carrusel');
+            escena = document.createElement('div');
+            escena.className = 'carrusel-escena';
+            rotor = document.createElement('div');
+            rotor.className = 'carrusel-rotor';
+            caras.forEach((c, k) => {
+                c.classList.add('is-visible');
+                c.style.transitionDelay = '';
+                c.style.transform = `rotateY(${k * paso}deg) translateZ(var(--R))`;
+                rotor.append(c);
+            });
+            const lista = document.createElement('div');
+            lista.className = 'carrusel-puntos';
+            lista.setAttribute('aria-hidden', 'true');
+            puntos = caras.map(() => lista.appendChild(document.createElement('span')));
+            escena.append(rotor, lista);
+            rejillaCapturas.append(escena);
+            window.addEventListener('scroll', leerScroll, { passive: true });
+            leerScroll();
+        };
+        const desmontar = () => {
+            window.removeEventListener('scroll', leerScroll);
+            cancelAnimationFrame(marco); marco = 0;
+            caras.forEach(c => { c.style.transform = ''; rejillaCapturas.append(c); });
+            escena?.remove(); escena = null; puntos = [];
+            rejillaCapturas.classList.remove('carrusel');
+        };
+        if (media.matches) montar();
+        media.addEventListener('change', e => (e.matches ? montar() : desmontar()));
     }
 });

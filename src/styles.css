@@ -3747,6 +3747,7 @@ body.theme-restaurant .m3-btn-filled:hover {
 
 @supports (animation-timeline: view()) {
   .footer::after {
+    transform-origin: 50% 100%;
     animation: marca-sube linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 100%;
@@ -3754,7 +3755,7 @@ body.theme-restaurant .m3-btn-filled:hover {
 
   @keyframes marca-sube {
     from {
-      transform: translateY(35%);
+      transform: perspective(700px) rotateX(68deg) translateY(25%);
       opacity: 0;
     }
     to {
@@ -4224,6 +4225,166 @@ body.theme-restaurant .m3-btn-filled:hover {
   }
 
   .ring-luz > span {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   MÁS 3D 2026: logo en volumen, carrusel de capturas, cifras que se voltean
+   ========================================================================== */
+
+/* --- Logo en volumen --- */
+.logo3d {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  perspective: 620px;
+}
+
+.logo3d-mano {
+  transform-style: preserve-3d;
+}
+
+.logo3d-giro {
+  position: relative;
+  width: 88px;
+  height: 84px;
+  transform-style: preserve-3d;
+  animation: logo-balanceo 9s ease-in-out infinite alternate;
+}
+
+.logo3d-giro img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.logo3d-frente {
+  filter: drop-shadow(0 0 18px rgba(79, 139, 255, 0.45));
+}
+
+.logo3d-capa {
+  filter: brightness(0.55);
+}
+
+@keyframes logo-balanceo {
+  from {
+    transform: rotateY(-30deg) rotateX(10deg);
+  }
+  to {
+    transform: rotateY(30deg) rotateX(-6deg);
+  }
+}
+
+/* Con el texto del hero inclinándose, sus hijos conservan la profundidad */
+.hero-home .hero-content {
+  transform-style: preserve-3d;
+}
+
+/* --- Carrusel 3D de capturas --- */
+.shot-grid.carrusel {
+  display: block;
+  height: 300vh;
+  perspective: none;
+}
+
+.carrusel-escena {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding-top: 4.5rem;
+  perspective: 1500px;
+  --W: min(62vw, 92vh, 820px);
+  --R: calc(var(--W) * 0.2887);   /* apotema del prisma de 3 caras */
+}
+
+.carrusel-rotor {
+  position: relative;
+  width: var(--W);
+  height: calc(var(--W) * 0.625 + 5.5rem);
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--R) * -1));
+}
+
+.carrusel-rotor .shot {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 1;
+  scale: none;
+  backface-visibility: hidden;
+  background: linear-gradient(180deg, #111a2c, #0c1321);
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 40px 70px -40px #000;
+  animation: none;
+  transition: none;
+}
+
+.carrusel-rotor .shot .work-shot {
+  animation: none;
+}
+
+.carrusel-puntos {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.carrusel-puntos span {
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-strong);
+  transition: background-color 0.3s ease;
+}
+
+.carrusel-puntos span.is-on {
+  background: var(--md-sys-color-primary);
+}
+
+/* --- Las cifras se voltean al entrar --- */
+.facts-grid {
+  perspective: 900px;
+}
+
+@supports (animation-timeline: view()) {
+  .fact {
+    transform-origin: 50% 100%;
+    animation: fact-voltea linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+
+  @keyframes fact-voltea {
+    from {
+      opacity: 0;
+      transform: rotateX(-75deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .logo3d {
+    margin-bottom: 1.1rem;
+  }
+
+  .logo3d-giro {
+    width: 66px;
+    height: 63px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo3d-giro,
+  .fact {
     animation: none;
   }
 }
