@@ -5979,7 +5979,9 @@ html {
 .pixel-linea { display: block; width: 72px; height: 72px; margin-bottom: 1rem; }
 .pixel-flota { position: absolute; right: 2.5rem; top: -2.75rem; z-index: 3; width: 64px; height: 64px; }
 .dither-marco { position: relative; overflow: hidden; }
-.ave-vuelo { position: absolute; left: 0; top: 54px; width: 64px; height: 48px; image-rendering: pixelated; translate: -90px 0; pointer-events: none; }
+.ave-vuelo { position: absolute; left: 0; top: 54px; width: 64px; height: 56px; padding: 4px 0; border: 0; background: none; cursor: pointer; translate: -90px 0; }
+.ave-vuelo canvas { display: block; width: 64px; height: 48px; image-rendering: pixelated; pointer-events: none; }
+.ave-vuelo:focus-visible { outline: 2px solid #ffb37e; outline-offset: 2px; translate: 16px 0; }
 .intro-lienzo { position: fixed; inset: 0; z-index: 100001; width: 100vw; height: 100vh; pointer-events: none; }
 
 /* Dithering */

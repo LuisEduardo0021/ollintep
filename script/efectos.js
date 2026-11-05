@@ -628,6 +628,17 @@
             columna([VACIO, '.....NNNN.......', '....NNNNNN......', '...NNkNNNN......', 'KKKKNNNNNNN.....', '...wwwwNNNNN....', '...wwwwNLNNNN...', '...rrrrNNLNNNN..', '...rrrrNNNNNNNN.', '....rrrNNNNN..NN', '.....rr.........', '.....K..K.......', 'VVVVVVVVVVVVVVVV']),
             columna([VACIO, '......NNNN......', '.....NNNNNN.....', '....NNkNNNN.....', 'KKKKKNNNNNNN....', '....wwwwNNNNN...', '....wwwwNLNNNN..', '....rrrrNNLNNNN.', '....rrrrNNNNNNNN', '.....rrrNNNNN.NN', '......rr........', '......K..K......', 'VVVVVVVVVVVVVVVV']),
         ],
+        centzontle: [
+            columna(['................', '................', '.....ggg........', '....ggggg.......', '..kkgkgggg......', '....ggggggg.....', '....lgggddddd...', '....llgdwwdddd..', '....llldddwwdddd', '.....lllddddd.dd', '.....lllldd...dd', '......k..k......', '.....pppppppppp.']),
+        ],
+        fragata: [
+            columna([VACIO, '........ZZ......', '.......ZZZZ.....', '......ZZZZZ.....', '..ZZ.ZZZZZZ.....', 'MZZkZZZZZZZZZ..Z', '..rrZZZZZZZZZZZ.', '..rrrZZZZZZ..ZZ.', '...rr..........Z']),
+            columna([VACIO, VACIO, VACIO, VACIO, '..ZZ...........Z', 'MZZkZZZZZZZZZ.Z.', '..rrZZZZZZZZZZZ.', '..rrrZZZZZZ..ZZ.', '...rrZZZZ......Z', '.....ZZZZ.......', '......ZZZ.......', '.......ZZ.......']),
+        ],
+        delfin: [
+            columna([VACIO, VACIO, VACIO, '.......MM.......', '.....MMMMMM.....', '..MMMMMMMMMMM...', 'MMMkMMMMMMMMMM.M', '.wwwMMMMMMMMMMMM', '...wwwwMMMMM..MM', '......MM........', VACIO, 'B.BQ.BB.QB.BQ.BB', 'QBBBQBBQBBBQBBBQ']),
+            columna([VACIO, '.......MM.......', '.....MMMMMM.....', '..MMMMMMMMMMM...', 'MMMkMMMMMMMMMM.M', '.wwwMMMMMMMMMMMM', '...wwwwMMMMM..MM', '......MM........', VACIO, VACIO, VACIO, 'BB.BQ.BB.QB.BQ.B', 'BQBBBQBBQBBBQBBB']),
+        ],
         // Región: plantas
         mangle: [
             columna(['.....UNNU.......', '...UNNNNNNU.....', '..UNNLNNLNNNU...', '.UNNNNNNNNNNNU..', '..UNNNLNNNLNU...', '....UNNNNNU.....', '.......VV.......', '.......VV.......', '......VVVV......', '.....V.VV.V.....', '....V..VV..V....', '...V...VV...V...', 'BBBVBBBVVBBBVBBB', 'BQBVBQBVVBQBVBQB']),
@@ -638,6 +649,10 @@
         pata: [
             columna(['...T..T.T..T....', '..TUT.TUT.TUT...', '.TU.TUTTTUT.UT..', 'TU..UTTTTTU..UT.', 'U..TU.TTT.UT..U.', '..TU...V...UT...', '..U....V....U...', '.......V........', '.......V........', '......VVV.......', '.....VVVVV......', '....VSVVVVV.....', '....VVVSVVV.....', '...VVVVVVVSV....', '...VVSVVVVVV....', '...KKKKKKKKK....']),
             columna(['.....T..T.T..T..', '...TUT.TUT.TUT..', '..TU.TUTTTUT.UT.', '.TU..UTTTTTU..UT', '.U..TU.TTT.UT..U', '...TU..V....UT..', '...U...V.....U..', '.......V........', '.......V........', '......VVV.......', '.....VVVVV......', '....VSVVVVV.....', '....VVVSVVV.....', '...VVVVVVVSV....', '...VVSVVVVVV....', '...KKKKKKKKK....']),
+        ],
+        capomo: [
+            columna(['....UNNNNNU.....', '..UNNNNLNNNNU...', '.UNNLNNNNNLNNU..', 'UNNNNNyNNNNNNNU.', 'UNNyNNNNNLNNyNU.', '.UNNNNLNNNNNNU..', '..UUNNNNNNNUU...', '....UUVVVUU.....', '......VVV.......', '......VVV.......', '......VVV.......', '.....VVVVV......', '...KKKKKKKKK....']),
+            columna(['...UNNNNNU......', '.UNNNNLNNNNU....', 'UNNLNNNNNLNNU...', 'UNNNNNNyNNNNNNU.', '.UNNyNNNNNLNNyNU', '..UNNNNLNNNNNNU.', '...UUNNNNNNNUU..', '....UUVVVUU.....', '......VVV.......', '......VVV.......', '......VVV.......', '.....VVVVV......', '...KKKKKKKKK....']),
         ],
         nopal: [
             columna(['.....P....P.....', '....PPP..PPP....', '....NNN..NNN....', '...NNLNNNNLNN...', '...NLNNNNNNLN...', '...NNNLNNLNNN...', '....NNNNNNNN....', '.....NNNNNN.....', '.....NLNNLN.....', '.....NNNNNN.....', '.....NNLNNN.....', '......NNNN......', '...VVVVVVVVVV...', '..VVVVVVVVVVVV..']),
@@ -694,6 +709,7 @@
     // --- ANIMALES QUE PASEAN (portada): caminan por los espacios entre secciones; al hacer clic se abre su ficha y se desbloquea
     // en la colección de #nayarit. Con movimiento reducido o modo ligero no caminan y las fichas quedan abiertas desde el inicio.
     // La información está en el HTML: sin JavaScript se lee completa.
+    let abrirFichaAve = null;
     const coleccion = document.querySelector('[data-fauna]');
     if (coleccion) {
         const ingles = raiz.lang === 'en';
@@ -743,6 +759,7 @@
         dialogo.className = 'ficha-dialogo';
         document.body.append(dialogo);
         dialogo.addEventListener('click', (e) => { if (e.target === dialogo) dialogo.close(); });
+        dialogo.addEventListener('close', () => document.querySelector('.ave-vuelo')?.getAnimations().forEach(x => x.play()));
         const abrirFicha = (especie) => {
             const ficha = fichas.find(f => f.dataset.especie === especie);
             if (!ficha) return;
@@ -774,6 +791,7 @@
             dialogo.append(sello, lienzoGrande, info, cerrar);
             dialogo.showModal();
         };
+        abrirFichaAve = () => abrirFicha('centzontle');
         coleccion.classList.add('con-dialogo');
         fichas.forEach(f => {
             f.tabIndex = 0;
@@ -783,14 +801,15 @@
 
         if (juegoActivo) {
             // Los animales caminan; las plantas y el arte se quedan plantados en su sitio
-            const PLANTADOS = new Set(['mangle', 'agave', 'nopal', 'pata', 'hikuri', 'tsikuri', 'jicara']);
+            const PLANTADOS = new Set(['mangle', 'agave', 'nopal', 'pata', 'capomo', 'hikuri', 'tsikuri', 'jicara']);
             const PASEANTES = [
                 ['jaguar', '#suite'], ['agave', '#suite'], ['tortuga', '#suite'],
                 ['iguana', '#a-medida'], ['nopal', '#a-medida'], ['pescador', '#a-medida'],
                 ['coati', '#servicio-tecnico'], ['tsikuri', '#servicio-tecnico'], ['cocodrilo', '#servicio-tecnico'],
                 ['venado', '#principios'], ['hikuri', '#principios'], ['bobo', '#principios'],
                 ['ballena', '#contacto'], ['mangle', '#contacto'], ['jicara', '#contacto'],
-                ['iguana', '#nayarit'], ['pata', '#nayarit'],
+                ['iguana', '#nayarit'], ['pata', '#nayarit'], ['capomo', '#nayarit'],
+                ['fragata', '#suite'], ['delfin', '#contacto'],
             ];
             const franjas = new Map();
             PASEANTES.forEach(([especie, ancla]) => {
@@ -924,27 +943,63 @@
         banda.style.backgroundImage = `url(${c.toDataURL()})`;
         const marco = document.createElement('div');
         marco.className = 'dither-marco';
-        marco.setAttribute('aria-hidden', 'true');
         marco.append(banda);
         pie.before(marco);
         if (!reducido) {
-            const ave = lienzo('ave-vuelo');
-            ave.width = 16; ave.height = 12;
+            // El centzontle que cruza también es parte del easter egg: se le puede dar clic y se detiene al pasarle el cursor
+            const ave = document.createElement('button');
+            ave.type = 'button';
+            ave.className = 'ave-vuelo';
+            const inglesAve = raiz.lang === 'en';
+            ave.setAttribute('aria-label', inglesAve ? 'Mockingbird: open its card' : 'Centzontle: abrir su ficha');
+            const lienzoAve = lienzo('');
+            lienzoAve.width = 16; lienzoAve.height = 12;
+            ave.append(lienzoAve);
             marco.append(ave);
-            const av = ave.getContext('2d');
+            const av = lienzoAve.getContext('2d');
             const ALAS = [
                 ['................', '.......dd.......', '.......ddd......', '..kgggdddddd.ddd', 'kkkgkggggggddddd', '...lllllldd...dd', '....lllll.......'],
                 ['................', '................', '................', '..kggggggggd.ddd', 'kkkgkggggggddddd', '...lllddddd...dd', '.....ddd........', '.....dd.........'],
             ];
-            let visible = false;
+            let visible = false, vuelo = null;
             new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(marco);
             let aleteo = 0;
             setInterval(() => { if (visible) { aleteo = 1 - aleteo; av.clearRect(0, 0, 16, 12); pintarSprite(av, ALAS[aleteo], 0, 2); } }, 170);
             const volar = () => {
-                if (!visible || ligero() || document.hidden) return;
-                ave.animate([{ translate: `${raiz.clientWidth}px 0` }, { translate: `-90px -18px` }], { duration: 7000, easing: 'linear' });
+                if (!visible || vuelo || ligero() || document.hidden) return;
+                vuelo = ave.animate([{ translate: `${raiz.clientWidth}px 0` }, { translate: '-90px -18px' }], { duration: 11000, easing: 'linear' });
+                vuelo.onfinish = vuelo.oncancel = () => { vuelo = null; };
             };
-            setInterval(volar, 12000);
+            ave.addEventListener('pointerenter', () => vuelo?.pause());
+            ave.addEventListener('pointerleave', () => { if (vuelo && !document.querySelector('dialog[open]')) vuelo.play(); });
+            ave.addEventListener('focus', () => vuelo?.pause());
+            ave.addEventListener('blur', () => vuelo?.play());
+            ave.addEventListener('click', () => {
+                if (abrirFichaAve) return abrirFichaAve();
+                // En las otras páginas no está la colección: se anota el hallazgo y se abre aquí mismo
+                try {
+                    const h = new Set(JSON.parse(localStorage.getItem('ollintep-fauna')) || []);
+                    h.add('centzontle');
+                    localStorage.setItem('ollintep-fauna', JSON.stringify([...h]));
+                } catch (e) { /* sin almacenamiento no se recuerda, y no pasa nada */ }
+                const d = document.createElement('dialog');
+                d.className = 'ficha-dialogo';
+                const lienzoGrande = lienzo('pixel ficha-sprite');
+                lienzoGrande.width = lienzoGrande.height = 16;
+                pintarSprite(lienzoGrande.getContext('2d'), SPRITES.centzontle[0]);
+                const crear = (etiqueta, clase, texto) => { const n = document.createElement(etiqueta); n.className = clase; n.textContent = texto; return n; };
+                const cerrar = crear('button', 'm3-btn m3-btn-tonal ficha-cerrar', inglesAve ? 'Close' : 'Cerrar');
+                cerrar.type = 'button';
+                cerrar.addEventListener('click', () => d.close());
+                d.append(crear('p', 'ficha-sello', inglesAve ? 'Added to your collection' : 'Añadido a tu colección'), lienzoGrande,
+                    crear('h3', 'ficha-nombre', inglesAve ? 'Mockingbird (centzontle)' : 'Centzontle'),
+                    crear('p', 'ficha-texto', inglesAve ? 'Its name comes from Nahuatl and means “four hundred voices”, because it imitates the songs of other birds. It gives our Centzontle point of sale its name.' : 'Su nombre viene del náhuatl y significa «cuatrocientas voces», porque imita el canto de otras aves. Da nombre a nuestro punto de venta Centzontle.'), cerrar);
+                d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
+                d.addEventListener('close', () => { d.remove(); vuelo?.play(); });
+                document.body.append(d);
+                d.showModal();
+            });
+            setInterval(volar, 15000);
             setTimeout(volar, 2500);
         }
     }
