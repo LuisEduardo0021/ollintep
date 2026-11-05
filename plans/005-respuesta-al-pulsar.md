@@ -1,6 +1,6 @@
 # 005 — Respuesta al pulsar (`:active`) en botones y tarjetas enlace
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 680ed60
 - **Severity**: MEDIUM
 - **Category**: Physicality & origin

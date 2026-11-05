@@ -384,7 +384,7 @@
   letter-spacing: 0.01em;
   text-decoration: none;
   border: none;
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), scale 0.2s cubic-bezier(0.2, 0, 0, 1);
   position: relative;
   cursor: pointer;
 }
@@ -483,7 +483,7 @@
   padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
-  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), background-color 0.28s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s cubic-bezier(0.2, 0, 0, 1);
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), background-color 0.28s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s cubic-bezier(0.2, 0, 0, 1), scale 0.28s cubic-bezier(0.2, 0, 0, 1);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -692,7 +692,7 @@
   border-radius: var(--md-sys-shape-corner-full);
   background: var(--md-sys-color-surface-container-high);
   border: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, scale 0.2s ease;
 }
 
 .contact-info-centered li a:hover {
@@ -719,7 +719,7 @@
   color: var(--md-sys-color-on-surface-variant);
   font-size: 1.1rem;
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, scale 0.2s ease;
 }
 
 .social-links a:hover {
@@ -798,7 +798,7 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px);
-  transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), visibility 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s cubic-bezier(0.2, 0, 0, 1), color 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0, 1);
+  transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), visibility 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s cubic-bezier(0.2, 0, 0, 1), color 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0, 1), scale 0.25s cubic-bezier(0.2, 0, 0, 1);
   z-index: 90;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
@@ -1444,6 +1444,22 @@
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
+/* --- Respuesta al pulsar --- */
+.btn:active,
+.m3-btn:active,
+.back-to-top:active,
+.social-links a:active,
+.contact-info-centered li a:active,
+.product-back-btn:active {
+  scale: 0.97;
+  transition-duration: 0.16s;
+}
+
+.service-card-link:active {
+  scale: 0.98;
+  transition-duration: 0.16s;
+}
+
 /* Accesibilidad: Respetar preferencias de reducción de movimiento */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
@@ -1496,7 +1512,7 @@
   background: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-primary);
   font-weight: 600;
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1), scale 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .product-back-btn:hover {
