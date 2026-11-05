@@ -1,6 +1,6 @@
 # 013 — Fondo líquido: sin `blur(100px)` y siguiendo al ratón con suavizado
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 9346e08
 - **Severity**: LOW
 - **Category**: Performance / Cohesion

@@ -264,14 +264,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // El fondo líquido reacciona sutilmente al movimiento del cursor
+            // El fondo líquido sigue al cursor con retraso suave (interpolado por fotograma; directo se nota mecánico)
             const liquidBg = document.querySelector('.liquid-bg');
             if (liquidBg) {
-                window.addEventListener('mousemove', (e) => {
-                    const x = (e.clientX / window.innerWidth - 0.5) * 40;
-                    const y = (e.clientY / window.innerHeight - 0.5) * 40;
+                let tx = 0, ty = 0, x = 0, y = 0, frame = 0;
+                const follow = () => {
+                    x += (tx - x) * 0.08;
+                    y += (ty - y) * 0.08;
                     liquidBg.style.transform = `translate(${x}px, ${y}px)`;
-                });
+                    frame = Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1 ? 0 : requestAnimationFrame(follow);
+                };
+                window.addEventListener('mousemove', (e) => {
+                    tx = (e.clientX / window.innerWidth - 0.5) * 40;
+                    ty = (e.clientY / window.innerHeight - 0.5) * 40;
+                    if (!frame) frame = requestAnimationFrame(follow);
+                }, { passive: true });
             }
         }
     }

@@ -17,7 +17,7 @@ autónomo: lo puede ejecutar cualquier agente sin el contexto de la auditoría.
 | 010 | [Resaltado del menú con `IntersectionObserver`](010-resaltado-menu-intersection.md) | MEDIUM | DONE |
 | 011 | [Menú móvil: una sola animación con `transform`](011-menu-movil-transform.md) | MEDIUM | DONE |
 | 012 | [Hovers sin movimiento en táctil e inclinación suavizada](012-hover-tactil-e-inclinacion.md) | MEDIUM | DONE |
-| 013 | [Fondo líquido sin `blur(100px)` y con seguimiento suave](013-fondo-liquido.md) | LOW | TODO |
+| 013 | [Fondo líquido sin `blur(100px)` y con seguimiento suave](013-fondo-liquido.md) | LOW | DONE |
 
 ## Orden recomendado
 

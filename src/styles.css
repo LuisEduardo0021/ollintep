@@ -98,35 +98,34 @@
 .liquid-bg .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
   opacity: 0.65;
   will-change: transform;
 }
 
 .liquid-bg .blob-1 {
-  width: 550px;
-  height: 550px;
+  width: 700px;
+  height: 700px;
   top: -100px;
   left: 20%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0.06) 35%, transparent 70%);
   animation: m3-pulse 16s ease-in-out infinite alternate;
 }
 
 .liquid-bg .blob-2 {
-  width: 600px;
-  height: 600px;
+  width: 760px;
+  height: 760px;
   top: 45%;
   right: -5%;
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.12) 0%, rgba(129, 140, 248, 0.05) 35%, transparent 70%);
   animation: m3-pulse 20s ease-in-out infinite alternate-reverse;
 }
 
 .liquid-bg .blob-3 {
-  width: 480px;
-  height: 480px;
+  width: 620px;
+  height: 620px;
   bottom: 5%;
   left: 10%;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, rgba(52, 211, 153, 0.04) 35%, transparent 70%);
   animation: m3-pulse 18s ease-in-out infinite alternate;
 }
 
