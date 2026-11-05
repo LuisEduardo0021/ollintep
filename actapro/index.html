@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <script>/*idioma*/(function(){try{var k='ollintep-idioma',s=localStorage,q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')s.setItem(k,q);var g=s.getItem(k);if(g==='es'||/bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse/i.test(navigator.userAgent))return;var l=g||(navigator.languages||[navigator.language]).map(function(x){return(x||'').slice(0,2)}).filter(function(x){return x==='es'||x==='en'})[0]||'en';if(l==='en')location.replace('/en'+location.pathname+location.search+location.hash)}catch(e){}})();</script>
+    <style>html.intro-marca{background:#0b111e}html.intro-marca::before{content:"";position:fixed;inset:0;z-index:100000;background:#0b111e}html.intro-marca *{animation-play-state:paused!important}</style>
+    <script>/*intro*/(function(){try{var r=document.documentElement;if(sessionStorage.getItem('ollintep-intro')||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches||document.referrer.indexOf(location.origin)===0)return;r.classList.add('intro-marca');setTimeout(function(){r.classList.remove('intro-marca')},6500)}catch(e){}})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ActaPro - Gestión de Actas y Trámites Administrativos</title>
     <meta name="description" content="ActaPro, desarrollado por Ollin-Tep Software, es la plataforma para capturar actas, dar seguimiento a pendientes y auditar trámites administrativos desde un solo panel.">
@@ -85,7 +87,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=5.5">
+    <link rel="stylesheet" href="../css/styles.css?v=5.6">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
@@ -158,6 +160,7 @@
             </div>
         </div>
         <figure class="product-shot" style="view-transition-name: shot-actapro">
+            <canvas class="pixel pixel-percha" data-pixel="sello" aria-hidden="true"></canvas>
             <img src="../resources/actapro/actapro-dashboard-dark.jpg" alt="Panel de ActaPro en tema oscuro con el equipo conectado y las actas pendientes" width="1280" height="800">
             <span class="chip3d chip3d-1" aria-hidden="true"><i class="fas fa-lock"></i>Historial inmutable</span>
             <span class="chip3d chip3d-2" aria-hidden="true"><i class="fas fa-check-to-slot"></i>Votaciones</span>
@@ -212,6 +215,8 @@
     </section>
 
     <!-- Sección de Capturas Reales -->
+    <div class="ascii-banda" data-ascii="actapro/actapro-dashboard-dark.jpg" data-color="#818cf8" aria-hidden="true"></div>
+
     <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
             <h2 class="section-title">Plataforma en acción</h2>
@@ -432,7 +437,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=5.5"></script>
-    <script src="../script/efectos.js?v=5.5"></script>
+    <script src="../script/scripts.js?v=5.6"></script>
+    <script src="../script/efectos.js?v=5.6"></script>
 </body>
 </html>

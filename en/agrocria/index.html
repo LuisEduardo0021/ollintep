@@ -2,6 +2,8 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <style>html.intro-marca{background:#0b111e}html.intro-marca::before{content:"";position:fixed;inset:0;z-index:100000;background:#0b111e}html.intro-marca *{animation-play-state:paused!important}</style>
+    <script>/*intro*/(function(){try{var r=document.documentElement;if(sessionStorage.getItem('ollintep-intro')||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches||document.referrer.indexOf(location.origin)===0)return;r.classList.add('intro-marca');setTimeout(function(){r.classList.remove('intro-marca')},6500)}catch(e){}})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agro-Cria Pro - Complete Farming and Botanical System | Ollin-Tep Software</title>
     <meta name="description" content="Agro-Cria Pro, developed by Ollin-Tep Software, is the complete management platform for large-scale crops, livestock, greenhouses, CROPWAT water balance and IoT telemetry.">
@@ -45,7 +47,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=5.5">
+    <link rel="stylesheet" href="../../css/styles.css?v=5.6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="theme-agrocria bg-slate-950 text-slate-100 antialiased selection:bg-emerald-600 selection:text-white">
@@ -102,6 +104,7 @@
             </div>
         </div>
         <figure class="product-shot" style="view-transition-name: shot-agrocria">
+            <canvas class="pixel pixel-percha" data-pixel="brote" aria-hidden="true"></canvas>
             <img src="../../resources/screenshots/agrocria-dashboard.webp" alt="Agro-Cria Pro dashboard with soil moisture, NDVI map and water balance" width="1440" height="900">
             <span class="chip3d chip3d-1" aria-hidden="true"><i class="fas fa-droplet"></i>FAO-56 balance</span>
             <span class="chip3d chip3d-2" aria-hidden="true"><i class="fas fa-satellite-dish"></i>IoT 915 MHz</span>
@@ -214,6 +217,8 @@
             </div>
         </div>
     </section>
+
+    <div class="ascii-banda" data-ascii="screenshots/agrocria-telemetry.webp" data-color="#34d399" aria-hidden="true"></div>
 
     <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -407,7 +412,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=5.5"></script>
-    <script src="../../script/efectos.js?v=5.5"></script>
+    <script src="../../script/scripts.js?v=5.6"></script>
+    <script src="../../script/efectos.js?v=5.6"></script>
 </body>
 </html>

@@ -213,37 +213,41 @@
         });
     });
 
-    // --- ARTE ASCII (Diagmind): la placa real de la captura de diagnóstico, en caracteres, con un barrido de escaneo
-    document.querySelectorAll('[data-ascii]').forEach(caja => {
-        if (!escritorio || ligero()) return caja.remove();
-        const img = new Image();
-        img.onload = () => {
+    // --- ARTE ASCII: una imagen real del sitio (captura o logo) o un texto, en caracteres, con barrido de escaneo.
+    // data-ascii = ruta dentro de resources/ · data-texto = texto a dibujar · data-color = color de los caracteres
+    // En móvil o con movimiento reducido queda como una imagen fija; en modo ligero no se crea.
+    const RAMPA = ' .:-=+*#%@';
+    const crearAtlas = (color, AN, AL) => {
+        const atlas = document.createElement('canvas');
+        atlas.width = AN * RAMPA.length; atlas.height = AL;
+        const ac = atlas.getContext('2d');
+        ac.font = `${AL - 1}px ui-monospace, Menlo, Consolas, monospace`;
+        ac.textBaseline = 'top';
+        ac.fillStyle = color;
+        [...RAMPA].forEach((ch, i) => ac.fillText(ch, i * AN, 0));
+        return atlas;
+    };
+    document.querySelectorAll('[data-ascii], [data-texto]').forEach(caja => {
+        if (ligero()) return caja.remove();
+        const montar = (pintarFuente, curva) => {
             const c = lienzo('ascii-lienzo');
             caja.append(c);
             const ctx = c.getContext('2d');
-            const AN = 8, AL = 14, RAMPA = ' .:-=+*#%@';
+            const AN = escritorio ? 8 : 6, AL = escritorio ? 14 : 10;
             const col = Math.ceil(caja.clientWidth / AN), fil = Math.ceil(caja.clientHeight / AL);
             c.width = col * AN; c.height = fil * AL;
-            // Muestreo tipo «cover», con el contraste estirado porque la captura es muy oscura
             const m = document.createElement('canvas');
             m.width = col; m.height = fil;
             const mc = m.getContext('2d', { willReadFrequently: true });
-            const esc = Math.max(col * (AN / AL) / img.width, fil / img.height);
-            const vw = col / (esc / (AN / AL) * 1), vh = fil / esc;
-            mc.drawImage(img, (img.width - vw) / 2, (img.height - vh) / 2, vw, vh, 0, 0, col, fil);
+            mc.fillStyle = '#000';
+            mc.fillRect(0, 0, col, fil);
+            pintarFuente(mc, col, fil, AN / AL);
             const datos = mc.getImageData(0, 0, col, fil).data;
             const lum = new Float32Array(col * fil);
             let min = 1, max = 0;
             lum.forEach((_, i) => { const v = (datos[i * 4] * .3 + datos[i * 4 + 1] * .59 + datos[i * 4 + 2] * .11) / 255; lum[i] = v; min = Math.min(min, v); max = Math.max(max, v); });
-            lum.forEach((v, i) => { lum[i] = Math.pow((v - min) / Math.max(max - min, .01), .42); });
-            // Atlas de glifos para no llamar a fillText miles de veces por fotograma
-            const atlas = document.createElement('canvas');
-            atlas.width = AN * RAMPA.length; atlas.height = AL;
-            const ac = atlas.getContext('2d');
-            ac.font = '13px ui-monospace, Menlo, Consolas, monospace';
-            ac.textBaseline = 'top';
-            ac.fillStyle = '#22e1f0';
-            [...RAMPA].forEach((ch, i) => ac.fillText(ch, i * AN, 0));
+            lum.forEach((v, i) => { lum[i] = Math.pow((v - min) / Math.max(max - min, .01), curva); });
+            const atlas = crearAtlas(caja.dataset.color || '#22e1f0', AN, AL);
             let mx = -999, my = -999;
             caja.addEventListener('pointermove', (e) => { const r = caja.getBoundingClientRect(); mx = (e.clientX - r.left) / AN; my = (e.clientY - r.top) / AL; });
             caja.addEventListener('pointerleave', () => { mx = my = -999; });
@@ -258,10 +262,39 @@
                     if (g > 0) ctx.drawImage(atlas, g * AN, 0, AN, AL, i * AN, j * AL, AN, AL);
                 }
             };
-            dibujar(0);
-            bucle(caja, 14, dibujar);
+            dibujar(-10);
+            if (escritorio) bucle(caja, 14, dibujar);
         };
-        img.src = new URL('../resources/screenshots/diagmind-pcb.webp', base).href;
+        if (caja.dataset.texto) {
+            const fuentes = document.fonts?.ready || Promise.resolve();
+            return fuentes.then(() => montar((mc, col, fil, k) => {
+                // Se dibuja ancho y luego se comprime porque las celdas no son cuadradas
+                mc.save();
+                mc.scale(k, 1);
+                mc.fillStyle = '#fff';
+                mc.font = `800 ${Math.round(fil * .95)}px "Bricolage Grotesque", sans-serif`;
+                mc.textAlign = 'center';
+                mc.textBaseline = 'middle';
+                mc.fillText(caja.dataset.texto, col / 2 / k, fil / 2);
+                mc.restore();
+            }, 1));
+        }
+        const img = new Image();
+        img.onload = () => montar((mc, col, fil, k) => {
+            if (caja.dataset.ascii.endsWith('.svg')) {
+                // Logo: entero y centrado
+                const e = (fil * .92) / img.height;
+                const h = img.height * e, w = img.width * e / k;
+                mc.drawImage(img, (col - w) / 2, (fil - h) / 2, w, h);
+            } else {
+                // Captura: recorte tipo «cover»
+                const e = Math.max(col / (img.width / k), fil / img.height);
+                const vw = col / (e / k), vh = fil / e;
+                mc.drawImage(img, (img.width - vw) / 2, (img.height - vh) / 2, vw, vh, 0, 0, col, fil);
+            }
+        }, caja.dataset.ascii.endsWith('.svg') ? 1 : .42);
+        img.onerror = () => caja.remove();
+        img.src = new URL(`../resources/${caja.dataset.ascii}`, base).href;
     });
 
     // --- GLITCH (Diagmind y 404): ráfagas breves en el título; encaja con «diagnóstico» y con una página rota
@@ -323,10 +356,72 @@
         setInterval(cantar, 6500);
     });
 
+    // --- PIXEL ART: un sprite por página, cada uno ligado a lo que hace el producto. Solo se anima a la vista.
+    const COLORES_PIXEL = { g: '#94a3b8', d: '#475569', w: '#f1f5f9', l: '#e2e8f0', k: '#0f172a', p: '#8a5a33', a: '#ff7a2e', b: '#6ea2ff', r: '#ef4444', v: '#34d399', o: '#059669', c: '#22e1f0', n: '#1e293b', y: '#fde047' };
+    const pintarSprite = (ctx, figura, dx = 0, dy = 0) => figura.forEach((f, y) => [...f].forEach((ch, x) => {
+        if (COLORES_PIXEL[ch]) { ctx.fillStyle = COLORES_PIXEL[ch]; ctx.fillRect(x + dx, y + dy, 1, 1); }
+    }));
+    const YUNQUE = ['................', '...dddddddddd...', 'gdddddddddddd...', '....dddddddd....', '.....dddddd.....', '....dddddddd....', '...dddddddddd...'];
+    const MANGO = ['.......pp.......', '.......pp.......', '.......pp.......', '....gggggggg....', '....gddddddg....', '....gggggggg....'];
+    const VACIO = '................';
+    const columna = (filas) => [...filas, ...Array(Math.max(0, 16 - filas.length)).fill(VACIO)].slice(0, 16);
+    const telefono = (scan) => columna(['....gggggggg....', ...Array.from({ length: 12 }, (_, i) => `....g${i === scan ? 'cccccc' : i % 3 === 0 ? 'nddddn' : 'nnnnnn'}g....`), '....gggggggg....', '......gggg......']);
+    const SPRITES = {
+        // Portada, «hecho con oficio»: martillo y yunque
+        martillo: [
+            columna([...MANGO, VACIO, VACIO, ...YUNQUE]),
+            columna([VACIO, VACIO, ...MANGO, ...YUNQUE]),
+            columna([VACIO, '..y..........y..', ...MANGO.slice(0, 5), '.y...gggggg...y.', ...YUNQUE]),
+        ],
+        // Portada, contacto: un sobre con un mensaje que sale
+        sobre: [
+            columna([VACIO, VACIO, VACIO, 'wwwwwwwwwwwwwwww', 'wgwwwwwwwwwwwwgw', 'wwggwwwwwwwwggww', 'wwwwggwwwwggwwww', 'wwwwwwggggwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww']),
+            columna([VACIO, '...bbbbbbbbbb...', '...bwwwwwwwwb...', 'wwwbwbbbbbbwbwww', 'wgwbwwwwwwwwbwgw', 'wwgbwbbbbwwwbgww', 'wwwwggwwwwggwwww', 'wwwwwwggggwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww']),
+        ],
+        // ActaPro: el sello que da validez al acta
+        sello: [
+            columna(['.....dddddd.....', '.....dddddd.....', '.......dd.......', '....rrrrrrrr....', VACIO, '..wwwwwwwwwwww..', '..wggggggggggw..', '..wwwwwwwwwwww..', '..wggggggwwwww..', '..wwwwwwwwwwww..', '..wggggwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..']),
+            columna([VACIO, VACIO, VACIO, '.....dddddd.....', '.....dddddd.....', '..wwwwwddwwwww..', '..wgggrrrrrrgw..', '..wwwwwwwwwwww..', '..wggggggwwwww..', '..wwwwwwwwwwww..', '..wggggwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..']),
+            columna(['.....dddddd.....', '.....dddddd.....', '.......dd.......', '....rrrrrrrr....', VACIO, '..wwwwwwwwwwww..', '..wggggggggggw..', '..wwwwwwwwwwww..', '..wggggggwwwww..', '..wwwwwwwwwwww..', '..wggggwwrrrrw..', '..wwwwwwwrwwrw..', '..wwwwwwwrrrrw..', '..wwwwwwwwwwww..', '..wwwwwwwwwwww..']),
+        ],
+        // Agro-Cria: un brote que crece cuando el suelo tiene agua
+        brote: [
+            columna([...Array(12).fill(VACIO), '.......v........', 'pppppppvpppppppp', 'pppppppppppppppp', 'pppbpppppppbpppp']),
+            columna([...Array(9).fill(VACIO), '.......v........', '.......v.vv.....', '.......vvv......', '.......v........', 'pppppppvpppppppp', 'pppppppppppppppp', 'pppbpppppppbpppp']),
+            columna([...Array(6).fill(VACIO), '.......v........', '....vv.v........', '.....vvv........', '.......v.vv.....', '.......vvv......', '.......v........', '.......v........', 'pppppppvpppppppp', 'pppppppppppppppp', 'pppbpppppppbpppp']),
+            columna([...Array(3).fill(VACIO), '......vvv.......', '.....vvovv......', '......vvv.......', '.......v........', '....vv.v........', '.....vvv........', '.......v.vv.....', '.......vvv......', '.......v........', 'pppppppvpppppppp', 'pppppppppppppppp', 'pppbpppppppbpppp'].slice(0, 13)),
+        ],
+        // Diagmind: un teléfono en diagnóstico, con la línea de escaneo
+        telefono: [0, 2, 4, 6, 8, 10, 8, 6, 4, 2].map(telefono),
+    };
+    document.querySelectorAll('[data-pixel]').forEach(c => {
+        const cuadros = SPRITES[c.dataset.pixel];
+        if (!cuadros) return;
+        const ctx = c.getContext('2d');
+        c.width = 16; c.height = 16;
+        pintarSprite(ctx, cuadros[0]);
+        if (reducido) return;
+        let visible = false;
+        new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(c);
+        let n = 0;
+        const paso = () => {
+            let espera = 260;
+            if (visible && !ligero() && !document.hidden) {
+                n = (n + 1) % cuadros.length;
+                ctx.clearRect(0, 0, 16, 16);
+                pintarSprite(ctx, cuadros[n]);
+                if (n === cuadros.length - 1) espera = 1800;
+            }
+            setTimeout(paso, espera);
+        };
+        setTimeout(paso, 900);
+    });
+
     // --- DITHERING (todas las páginas): banda de transición antes del pie, con matriz de Bayer 4×4. Es una imagen fija.
+    // Por ella cruza de vez en cuando un centzontle en pixel art.
+    const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
     const pie = document.querySelector('.footer');
     if (pie) {
-        const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
         const c = document.createElement('canvas');
         c.width = 8; c.height = 40;
         const ctx = c.getContext('2d');
@@ -339,6 +434,163 @@
         banda.className = 'dither-banda';
         banda.setAttribute('aria-hidden', 'true');
         banda.style.backgroundImage = `url(${c.toDataURL()})`;
-        pie.before(banda);
+        const marco = document.createElement('div');
+        marco.className = 'dither-marco';
+        marco.setAttribute('aria-hidden', 'true');
+        marco.append(banda);
+        pie.before(marco);
+        if (!reducido) {
+            const ave = lienzo('ave-vuelo');
+            ave.width = 16; ave.height = 12;
+            marco.append(ave);
+            const av = ave.getContext('2d');
+            const ALAS = [
+                ['................', '.......dd.......', '.......ddd......', '..kgggdddddd.ddd', 'kkkgkggggggddddd', '...lllllldd...dd', '....lllll.......'],
+                ['................', '................', '................', '..kggggggggd.ddd', 'kkkgkggggggddddd', '...lllddddd...dd', '.....ddd........', '.....dd.........'],
+            ];
+            let visible = false;
+            new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(marco);
+            let aleteo = 0;
+            setInterval(() => { if (visible) { aleteo = 1 - aleteo; av.clearRect(0, 0, 16, 12); pintarSprite(av, ALAS[aleteo], 0, 2); } }, 170);
+            const volar = () => {
+                if (!visible || ligero() || document.hidden) return;
+                ave.animate([{ translate: `${raiz.clientWidth}px 0` }, { translate: `-90px -18px` }], { duration: 7000, easing: 'linear' });
+            };
+            setInterval(volar, 12000);
+            setTimeout(volar, 2500);
+        }
     }
+
+    // --- INTRO DE LA MARCA: una vez por sesión, al llegar desde fuera. El <head> pone html.intro-marca antes de pintar.
+    // Caracteres que forman el logo, el logo pasa de pixelado a nítido, se escribe «Ollin-Tep» y se disuelve con Bayer.
+    if (raiz.classList.contains('intro-marca')) {
+        const cerrarSinIntro = () => raiz.classList.remove('intro-marca');
+        try { sessionStorage.setItem('ollintep-intro', '1'); } catch (e) { /* sin almacenamiento se repite: no rompe nada */ }
+        if (ligero() || document.hidden) cerrarSinIntro();
+        else {
+            const c = lienzo('intro-lienzo');
+            document.body.append(c);
+            const w = c.width = innerWidth, h = c.height = innerHeight;
+            const ctx = c.getContext('2d');
+            const FONDO = '#0b111e', AN = 9, AL = 16;
+            const col = Math.ceil(w / AN), fil = Math.ceil(h / AL);
+            const atlas = crearAtlas('#6ea2ff', AN, AL);
+            const atlasClaro = crearAtlas('#dbe7ff', AN, AL);
+            const ladoLogo = Math.min(h * .34, w * .44);
+            const logoX = (w - ladoLogo * 1.049) / 2, logoY = h * .44 - ladoLogo / 2;
+            const azar = new Float32Array(col * fil).map(() => Math.random());
+            const glifoAzar = new Uint8Array(col * fil).map(() => 1 + Math.floor(Math.random() * (RAMPA.length - 1)));
+            const mascara = new Uint8Array(col * fil);
+            const logo = new Image();
+            let logoListo = false;
+            logo.onload = () => {
+                const m = document.createElement('canvas');
+                m.width = col; m.height = fil;
+                const mc = m.getContext('2d', { willReadFrequently: true });
+                mc.drawImage(logo, logoX / AN, logoY / AL, ladoLogo * 1.049 / AN, ladoLogo / AL);
+                const d = mc.getImageData(0, 0, col, fil).data;
+                mascara.forEach((_, i) => { mascara[i] = d[i * 4 + 3] > 90 ? 1 : 0; });
+                logoListo = true;
+            };
+            logo.src = new URL('../resources/ollintep.svg', base).href;
+
+            // Marca en fuente de píxeles 5×7; se conservan guion y T mayúscula: «Ollin-Tep»
+            const LETRAS = {
+                O: ['01110', '10001', '10001', '10001', '10001', '10001', '01110'], l: ['01100', '00100', '00100', '00100', '00100', '00100', '01110'],
+                i: ['00100', '00000', '01100', '00100', '00100', '00100', '01110'], n: ['00000', '00000', '10110', '11001', '10001', '10001', '10001'],
+                '-': ['00000', '00000', '00000', '11111', '00000', '00000', '00000'], T: ['11111', '00100', '00100', '00100', '00100', '00100', '00100'],
+                e: ['00000', '00000', '01110', '10001', '11111', '10000', '01110'], p: ['00000', '00000', '11110', '10001', '10001', '11110', '10000', '10000'],
+            };
+            const MARCA = 'Ollin-Tep';
+            const px = Math.max(3, Math.round(Math.min(w / 62, 8)));
+            const anchoMarca = MARCA.length * 6 * px - px;
+            const marcaX = Math.round((w - anchoMarca) / 2), marcaY = Math.round(logoY + ladoLogo + px * 5);
+            const pintarMarca = (cuantas) => {
+                ctx.fillStyle = '#eef5ff';
+                [...MARCA].slice(0, cuantas).forEach((ch, i) => LETRAS[ch].forEach((f, y) => [...f].forEach((b, x) => {
+                    if (b === '1') ctx.fillRect(marcaX + (i * 6 + x) * px, marcaY + y * px, px, px);
+                })));
+            };
+            const pixelado = document.createElement('canvas');
+            const pintarLogoPixelado = (tam) => {
+                const anc = Math.max(2, Math.round(ladoLogo * 1.049 / tam)), alt = Math.max(2, Math.round(ladoLogo / tam));
+                pixelado.width = anc; pixelado.height = alt;
+                pixelado.getContext('2d').drawImage(logo, 0, 0, anc, alt);
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(pixelado, logoX, logoY, ladoLogo * 1.049, ladoLogo);
+                ctx.imageSmoothingEnabled = true;
+            };
+            const T_ASCII = 850, T_PIXEL = 1300, T_MARCA = 1900, T_FIN = 2450;
+            // El reloj avanza por fotogramas pintados: si la carga bloquea la página, la intro no se salta partes
+            let tiempo = 0, previo = 0;
+            let saltar = false, disuelve = 0, terminado = false;
+            const tile = document.createElement('canvas');
+            tile.width = tile.height = 4;
+            const ESCALA = 7;
+            const terminar = () => {
+                if (terminado) return;
+                terminado = true;
+                raiz.classList.remove('intro-marca');
+                c.remove();
+                ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => removeEventListener(ev, pedirSalto));
+            };
+            const pedirSalto = () => { saltar = true; };
+            ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, pedirSalto, { passive: true }));
+            const cuadro = (ahora) => {
+                if (terminado) return;
+                tiempo += previo ? Math.min(ahora - previo, 40) : 0;
+                previo = ahora;
+                if (saltar && tiempo <= T_MARCA) tiempo = T_MARCA + 1;
+                const t = tiempo;
+                if (t <= T_MARCA) {
+                    ctx.fillStyle = FONDO;
+                    ctx.fillRect(0, 0, w, h);
+                }
+                if (t < T_PIXEL) {
+                    // Caracteres al azar que se van apagando; los que caen en el logo se quedan y se aclaran
+                    const avance = limitar(t / T_ASCII);
+                    for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
+                        const k = j * col + i;
+                        const dentro = logoListo && mascara[k];
+                        if (!dentro && azar[k] < avance * 1.15) continue;
+                        const encendida = dentro && azar[k] < avance * 1.3;
+                        const g = encendida ? RAMPA.length - 1 - (k % 2) : (glifoAzar[k] + Math.floor(t / 90)) % (RAMPA.length - 1) + 1;
+                        ctx.globalAlpha = encendida ? limitar(1 - (t - T_ASCII) / (T_PIXEL - T_ASCII)) : .32 * (1 - avance);
+                        ctx.drawImage(encendida ? atlasClaro : atlas, g * AN, 0, AN, AL, i * AN, j * AL, AN, AL);
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                if (logoListo && t >= T_ASCII && t <= T_MARCA) {
+                    const f = limitar((t - T_ASCII) / (T_PIXEL - T_ASCII));
+                    const pasos = [32, 24, 16, 12, 8, 6, 4, 2];
+                    if (f < 1) pintarLogoPixelado(pasos[Math.min(pasos.length - 1, Math.floor(f * pasos.length))]);
+                    else ctx.drawImage(logo, logoX, logoY, ladoLogo * 1.049, ladoLogo);
+                }
+                if (t >= T_PIXEL && t <= T_MARCA) pintarMarca(Math.ceil(limitar((t - T_PIXEL) / (T_MARCA - T_PIXEL - 120)) * MARCA.length));
+                if (t > T_MARCA) {
+                    // Disolución: cada nivel de Bayer borra más celdas y deja ver la página
+                    raiz.classList.remove('intro-marca');
+                    if (!disuelve) { disuelve = t; if (logoListo) ctx.drawImage(logo, logoX, logoY, ladoLogo * 1.049, ladoLogo); pintarMarca(MARCA.length); }
+                    const nivel = Math.ceil(limitar((t - disuelve) / (saltar ? 240 : T_FIN - T_MARCA)) * 16);
+                    const tc = tile.getContext('2d');
+                    tc.clearRect(0, 0, 4, 4);
+                    tc.fillStyle = '#000';
+                    BAYER.forEach((b, k) => { if (b < nivel) tc.fillRect(k % 4, Math.floor(k / 4), 1, 1); });
+                    const patron = ctx.createPattern(tile, 'repeat');
+                    patron.setTransform(new DOMMatrix().scale(ESCALA));
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.fillStyle = patron;
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.globalCompositeOperation = 'source-over';
+                    if (nivel >= 16) return terminar();
+                }
+                requestAnimationFrame(cuadro);
+            };
+            requestAnimationFrame(cuadro);
+            setTimeout(terminar, 6000);
+        }
+    }
+
+    // Para quien abra la consola
+    console.log('%c\n   ▄▄▄▄   ██\n  ▐█▓▓█▌  ██\n  ▐█▓▓█▌  ██▄▄▄\n   ▀▀▀▀   ▀▀▀▀▀  Ollin-Tep Software · ollin-tep.com\n', 'color:#6ea2ff;font-family:monospace');
 })();

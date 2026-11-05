@@ -5892,8 +5892,15 @@ html {
 @keyframes glitch-b { 0% { clip-path: inset(62% 0 12% 0); translate: 5px 0; } 25% { clip-path: inset(14% 0 64% 0); translate: -6px 0; } 50% { clip-path: inset(70% 0 8% 0); translate: 3px 0; } 75% { clip-path: inset(24% 0 58% 0); translate: -4px 0; } 100% { clip-path: inset(50% 0 40% 0); translate: 0 0; } }
 
 /* Pixel art */
-.pajaro { position: absolute; right: 30%; top: -92px; z-index: 12; width: 120px; height: 100px; image-rendering: pixelated; pointer-events: none; }
+.pajaro { position: absolute; right: 19%; top: -92px; z-index: 12; width: 120px; height: 100px; image-rendering: pixelated; pointer-events: none; }
 .pajaro-404 { position: static; display: block; margin: 0 auto .5rem; }
+.pixel { image-rendering: pixelated; pointer-events: none; }
+.pixel-percha { position: absolute; right: 19%; top: -96px; z-index: 12; width: 96px; height: 96px; }
+.pixel-linea { display: block; width: 72px; height: 72px; margin-bottom: 1rem; }
+.pixel-flota { position: absolute; right: 2.5rem; top: -2.75rem; z-index: 3; width: 64px; height: 64px; }
+.dither-marco { position: relative; overflow: hidden; }
+.ave-vuelo { position: absolute; left: 0; top: 54px; width: 64px; height: 48px; image-rendering: pixelated; translate: -90px 0; pointer-events: none; }
+.intro-lienzo { position: fixed; inset: 0; z-index: 100001; width: 100vw; height: 100vh; pointer-events: none; }
 
 /* Dithering */
 .dither-banda { height: 120px; margin-top: 3rem; background-repeat: repeat-x; background-size: 24px 120px; image-rendering: pixelated; opacity: .5; pointer-events: none; }
@@ -5911,6 +5918,9 @@ html {
   .morph-liquido, .neon-texto.neon-on { animation: none; }
 }
 @media (max-width: 960px) {
-  .ascii-banda, .metaballs { display: none; }
+  .metaballs { display: none; }
+  .ascii-banda { height: 170px; }
+  .pixel-percha { width: 64px; height: 64px; top: -64px; }
+  .pixel-flota { right: 1rem; }
   .pajaro { width: 72px; height: 60px; top: -57px; }
 }

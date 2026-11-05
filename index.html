@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <script>/*idioma*/(function(){try{var k='ollintep-idioma',s=localStorage,q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')s.setItem(k,q);var g=s.getItem(k);if(g==='es'||/bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse/i.test(navigator.userAgent))return;var l=g||(navigator.languages||[navigator.language]).map(function(x){return(x||'').slice(0,2)}).filter(function(x){return x==='es'||x==='en'})[0]||'en';if(l==='en')location.replace('/en'+location.pathname+location.search+location.hash)}catch(e){}})();</script>
+    <style>html.intro-marca{background:#0b111e}html.intro-marca::before{content:"";position:fixed;inset:0;z-index:100000;background:#0b111e}html.intro-marca *{animation-play-state:paused!important}</style>
+    <script>/*intro*/(function(){try{var r=document.documentElement;if(sessionStorage.getItem('ollintep-intro')||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches||document.referrer.indexOf(location.origin)===0)return;r.classList.add('intro-marca');setTimeout(function(){r.classList.remove('intro-marca')},6500)}catch(e){}})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ollin-Tep Software · Suite CroHub y software a medida</title>
     <meta name="description" content="Ollin-Tep Software crea la suite CroHub —apps de escritorio para documentos, fotos, video, audio y música— y desarrolla plataformas a medida para comercios, instituciones, el campo y talleres técnicos.">
@@ -64,7 +66,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=5.5">
+    <link rel="stylesheet" href="css/styles.css?v=5.6">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -265,6 +267,8 @@
     </section>
 
     <!-- Cinta de las apps: su velocidad depende del scroll -->
+    <div class="ascii-banda" data-ascii="screenshots/crohub-apps.webp" data-color="#ff7a2e" aria-hidden="true"></div>
+
     <section class="cinta" aria-hidden="true">
         <div class="cinta-pista"><div class="cinta-grupo"><span class="cinta-item"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div><div class="cinta-grupo"><span class="cinta-item"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="52" height="52" loading="lazy">Crovite PDF</span><span class="cinta-item"><img src="resources/suite/croma-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Croma Studio</span><span class="cinta-item"><img src="resources/suite/cronmy-icono.svg" alt="" width="52" height="52" loading="lazy">Cronmy</span><span class="cinta-item"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="52" height="52" loading="lazy">Crovect Studio</span><span class="cinta-item"><img src="resources/suite/cromofi-icono.svg" alt="" width="52" height="52" loading="lazy">Cromofi</span><span class="cinta-item"><img src="resources/suite/croudio-icono.svg" alt="" width="52" height="52" loading="lazy">Croudio</span><span class="cinta-item"><img src="resources/suite/crobeat-icono.svg" alt="" width="52" height="52" loading="lazy">CroBeat</span><span class="cinta-item"><img src="resources/suite/cromix-icono.svg" alt="" width="52" height="52" loading="lazy">CroGroove</span><span class="cinta-item"><img src="resources/suite/croguard-icono.svg" alt="" width="52" height="52" loading="lazy">CroGuard</span></div></div>
     </section>
@@ -321,10 +325,13 @@
         </ul>
     </section>
 
+    <div class="ascii-banda" data-ascii="ollintep.svg" data-color="#6ea2ff" aria-hidden="true"></div>
+
     <!-- Cómo trabajamos -->
     <section id="principios" class="section-block" data-ambiente="violeta">
         <div class="principles-wrap">
             <header class="principles-head">
+                <canvas class="pixel pixel-linea" data-pixel="martillo" aria-hidden="true"></canvas>
                 <p class="eyebrow eyebrow-blue">Cómo trabajamos</p>
                 <h2 class="block-title" data-cinetica>La calidad está en los detalles que no se ven.</h2>
                 <p class="block-lead">Diseñamos sistemas que resuelven problemas operativos reales. Combinamos arquitectura sólida, diseño centrado en las personas y seguridad desde el primer día, para que cada producto sea confiable, rápido y útil.</p>
@@ -347,6 +354,7 @@
     <!-- Contacto -->
     <section id="contacto" class="section-block" data-ambiente="azul" data-video="lluvia">
         <div class="cta-band cristal">
+            <canvas class="pixel pixel-flota" data-pixel="sobre" aria-hidden="true"></canvas>
             <div>
                 <h2 class="block-title neon-texto">¿Tienes un proyecto en mente?</h2>
                 <p class="block-lead">Cuéntanos qué necesitas y te respondemos con una propuesta clara, sin compromiso.</p>
@@ -401,7 +409,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=5.5"></script>
-    <script src="script/efectos.js?v=5.5"></script>
+    <script src="script/scripts.js?v=5.6"></script>
+    <script src="script/efectos.js?v=5.6"></script>
 </body>
 </html>
