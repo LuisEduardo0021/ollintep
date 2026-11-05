@@ -42,6 +42,8 @@ def ld_a_en(trozo, pagina):
 def generar(pagina):
     t = open(os.path.join(RAIZ, pagina), encoding='utf-8').read()
     t = re.sub(r'\s*<script>/\*idioma\*/.*?</script>', '', t, count=1, flags=re.S)   # en inglés no se redirige
+    # la descarga y la activación tienen versión en inglés
+    t = t.replace('https://activation.ollin-tep.com/descargar"', 'https://activation.ollin-tep.com/descargar?lang=en"').replace('https://activation.ollin-tep.com/"', 'https://activation.ollin-tep.com/?lang=en"')
     t = t.replace('<html lang="es"', '<html lang="en"').replace('es_MX', 'en_US').replace('-og-v3.jpg', '-og-en.jpg')
     # direcciones: las alternas se dejan como están; las demás del sitio pasan a /en/
     alternas = re.findall(r'\s*<link rel="alternate"[^>]*>', t)

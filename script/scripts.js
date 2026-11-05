@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Buscador (Ctrl/⌘ K): se abre al instante, sin animación, porque es una acción de teclado ---
     const scriptTag = document.querySelector('script[src*="scripts.js"]');
     const base = scriptTag ? scriptTag.getAttribute('src').replace(/script\/scripts\.js.*$/, '') : '';
-    const DESCARGA = 'https://activation.ollin-tep.com/descargar';
+    const DESCARGA = 'https://activation.ollin-tep.com/descargar' + T('', '?lang=en');
     const raizIdioma = base + (EN ? 'en/' : '');
     const ENTRADAS = [
         [T('Descargar CroHub', 'Download CroHub'), T('Lanzador de la suite', 'The suite launcher'), DESCARGA, 'fa-download'],
