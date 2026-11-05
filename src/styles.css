@@ -4472,7 +4472,9 @@ html {
 
 /* --- Brillo holográfico: iridiscencia que sigue al cursor (--gx/--gy) --- */
 .app-tile.glow-card::before,
-.work-card.glow-card::before {
+.work-card.glow-card::before,
+.product-shot.glow-card::before,
+.shot.glow-card::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -4489,7 +4491,9 @@ html {
 
 @media (hover: hover) and (pointer: fine) {
   .app-tile.glow-card:hover::before,
-  .work-card.glow-card:hover::before {
+  .work-card.glow-card:hover::before,
+  .product-shot.glow-card:hover::before,
+  .shot.glow-card:hover::before {
     opacity: 1;
   }
 }
@@ -4642,5 +4646,80 @@ html {
 
 .dev-movil .cmdk kbd {
   display: none;
+}
+
+/* ==========================================================================
+   INTERACCIÓN 2026: lupa, onda de clic, indicador con el ratón y ola de iconos
+   ========================================================================== */
+
+/* --- Lupa sobre las capturas --- */
+.lupa {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 0;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-color: #060910;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55), 0 0 0 7px rgba(255, 255, 255, 0.05), 0 26px 50px -14px rgba(0, 0, 0, 0.9), inset 0 0 26px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  scale: 0.75;
+  pointer-events: none;
+  transition: opacity 0.16s ease, scale 0.22s var(--ease-out);
+}
+
+.lupa.is-on {
+  opacity: 1;
+  scale: 1;
+}
+
+/* --- Onda de clic --- */
+.m3-btn,
+.btn {
+  overflow: hidden;
+}
+
+.onda {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(110, 162, 255, 0.8), rgba(110, 162, 255, 0.25) 70%, transparent);
+  pointer-events: none;
+}
+
+/* --- El hover del menú lo pinta el indicador --- */
+@media (min-width: 869px) {
+  .nav-links.has-pill a:not(.m3-btn):not(.product-back-btn):hover {
+    background: transparent;
+  }
+}
+
+/* --- Ola en los iconos del hero (translate: se suma a la entrada y a la profundidad) --- */
+.path-icons img {
+  transition: translate 0.45s var(--ease-out);
+  transition-delay: calc(var(--k, 0) * 28ms);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .path-card:hover .path-icons img {
+    translate: 0 -7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path-icons img {
+    transition: none;
+    translate: none !important;
+  }
+}
+
+/* En las capturas, el reflejo es más tenue: no debe velar lo que se quiere leer */
+@media (hover: hover) and (pointer: fine) {
+  .product-shot.glow-card:hover::before,
+  .shot.glow-card:hover::before {
+    opacity: 0.35;
+  }
 }
 

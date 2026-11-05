@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Borde de luz que sigue al cursor en tarjetas y paneles (solo con ratón) ---
     if (canHover && !prefersReducedMotion) {
-        document.querySelectorAll('.path-card, .work-card, .app-tile, .principle, .feature-col, .giro-grid li, .cta-band').forEach(el => {
+        document.querySelectorAll('.path-card, .work-card, .app-tile, .principle, .feature-col, .giro-grid li, .cta-band, .product-shot, .shot').forEach(el => {
             el.classList.add('glow-card');
             el.addEventListener('pointermove', (e) => {
                 const r = el.getBoundingClientRect();
@@ -970,5 +970,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }).observe(heroEstrellas);
         window.addEventListener('resize', ajustar, { passive: true });
         if (canHover) window.addEventListener('pointermove', (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5; }, { passive: true });
+    }
+
+    // --- El indicador del menú sigue al ratón y vuelve a la sección activa al salir ---
+    if (canHover && pildora) {
+        navUl.querySelectorAll('a:not(.m3-btn):not(.product-back-btn)').forEach(a => {
+            a.addEventListener('pointerenter', () => {
+                if (window.innerWidth <= 868) return;
+                pildora.style.width = a.offsetWidth + 'px';
+                pildora.style.transform = `translateX(${a.offsetLeft}px)`;
+                pildora.classList.add('is-on');
+            });
+        });
+        navUl.addEventListener('pointerleave', moverPildora);
+    }
+
+    if (canHover && !prefersReducedMotion) {
+        // --- Lupa: una lente amplía la captura bajo el cursor, respetando cómo está recortada la imagen ---
+        const AUMENTO = 2.2, RADIO = 105;
+        document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img').forEach(img => {
+            const caja = img.parentElement;
+            const lente = document.createElement('span');
+            lente.className = 'lupa';
+            lente.setAttribute('aria-hidden', 'true');
+            caja.append(lente);
+            if (getComputedStyle(caja).position === 'static') caja.style.position = 'relative';
+            caja.addEventListener('pointerenter', () => { lente.style.backgroundImage = `url("${img.currentSrc || img.src}")`; lente.classList.add('is-on'); });
+            caja.addEventListener('pointerleave', () => lente.classList.remove('is-on'));
+            caja.addEventListener('pointermove', (e) => {
+                const r = img.getBoundingClientRect(), c = caja.getBoundingClientRect();
+                const nw = img.naturalWidth || r.width, nh = img.naturalHeight || r.height;
+                const cubre = getComputedStyle(img).objectFit === 'cover' ? Math.max(r.width / nw, r.height / nh) : Math.min(r.width / nw, r.height / nh);
+                const ancho = nw * cubre, alto = nh * cubre;
+                const [px, py] = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
+                const x = e.clientX - r.left - (r.width - ancho) * (isNaN(px) ? 0.5 : px);
+                const y = e.clientY - r.top - (r.height - alto) * (isNaN(py) ? 0.5 : py);
+                lente.style.translate = `${(e.clientX - c.left - RADIO).toFixed(1)}px ${(e.clientY - c.top - RADIO).toFixed(1)}px`;
+                lente.style.backgroundSize = `${(ancho * AUMENTO).toFixed(1)}px ${(alto * AUMENTO).toFixed(1)}px`;
+                lente.style.backgroundPosition = `${(RADIO - x * AUMENTO).toFixed(1)}px ${(RADIO - y * AUMENTO).toFixed(1)}px`;
+            }, { passive: true });
+        });
+
+        // --- La órbita acelera con el ratón encima; cambiar la velocidad no hace saltar la animación ---
+        document.querySelectorAll('.orbit3d').forEach(o => {
+            const velocidad = v => o.getAnimations({ subtree: true }).forEach(a => a.updatePlaybackRate(v));
+            o.addEventListener('pointerenter', () => velocidad(3));
+            o.addEventListener('pointerleave', () => velocidad(1));
+        });
+    }
+
+    // --- Onda desde el punto de clic en los botones ---
+    if (!prefersReducedMotion) {
+        document.addEventListener('pointerdown', (e) => {
+            const b = e.target.closest?.('.m3-btn, .btn');
+            if (!b) return;
+            const r = b.getBoundingClientRect();
+            const d = Math.hypot(r.width, r.height) * 2;
+            const onda = document.createElement('span');
+            onda.className = 'onda';
+            onda.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+            b.append(onda);
+            onda.animate([{ transform: 'scale(0)', opacity: 0.35 }, { transform: 'scale(1)', opacity: 0 }], { duration: 550, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).onfinish = () => onda.remove();
+        }, { passive: true });
     }
 });
