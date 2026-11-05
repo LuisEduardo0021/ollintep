@@ -1074,4 +1074,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { threshold: 0.6 });
         document.querySelectorAll('.plan-price-amount').forEach(el => obsPrecio.observe(el));
     }
+
+    // --- La cabecera se aparta al bajar y vuelve al subir (nunca con el menú móvil abierto ni arriba del todo) ---
+    if (header && !prefersReducedMotion) {
+        let ultimo = window.scrollY, pendiente = false;
+        window.addEventListener('scroll', () => {
+            if (pendiente) return;
+            pendiente = true;
+            requestAnimationFrame(() => {
+                pendiente = false;
+                const y = window.scrollY, d = y - ultimo;
+                if (Math.abs(d) < 6) return;
+                ultimo = y;
+                header.classList.toggle('apartada', d > 0 && y > 500 && !document.querySelector('.nav-links.active'));
+            });
+        }, { passive: true });
+        header.addEventListener('focusin', () => header.classList.remove('apartada'));
+    }
+
+    if (canHover && !prefersReducedMotion) {
+        // --- La retícula de puntos se enciende alrededor del cursor ---
+        const fondo = document.querySelector('.liquid-bg');
+        if (fondo) {
+            const puntos = document.createElement('span');
+            puntos.className = 'puntos-luz';
+            fondo.append(puntos);
+            let pendiente = false, cx = 0, cy = 0;
+            window.addEventListener('pointermove', (e) => {
+                cx = e.clientX; cy = e.clientY;
+                if (pendiente) return;
+                pendiente = true;
+                requestAnimationFrame(() => {
+                    pendiente = false;
+                    const r = puntos.getBoundingClientRect();
+                    puntos.style.setProperty('--px', (cx - r.left) + 'px');
+                    puntos.style.setProperty('--py', (cy - r.top) + 'px');
+                    puntos.style.opacity = 1;
+                });
+            }, { passive: true });
+        }
+    }
 });

@@ -1,5 +1,5 @@
 {
-  "_igual": ["&copy;", "0 root", "&lt; 3s", "ActaPro", "Acta", "Agro-Cria", "Agro-Cria Pro", "Audio", "BusinessApplication", "Centzontle", "CroBeat", "CroGroove", "CroGuard", "CroHub", "Croma Studio", "Cromofi", "Cronmy", "Croudio", "Crovect Studio", "Crovite PDF", "DesktopApplication", "Diag", "Diagmind", "MX", "Offline", "Ollin-Tep", "Ollin-Tep Software", "Pro", "Premium", "React 19", "Rust + Tauri 2.0", "SQLite", "SoC &middot; UFS 4.0 &middot; PMIC", "Software", "UtilitiesApplication", "VPN", "Video", "Windows 10 & 11", "administrador@ollin-tep.com", "by Ollin-Tep", "mind", "NDVI 0.84 &middot; ET0 4.82 mm/d", "Linux (DEB, RPM, AppImage)", "Base"],
+  "_igual": ["IoT 915 MHz", "Rust + Tauri", "&copy;", "0 root", "&lt; 3s", "ActaPro", "Acta", "Agro-Cria", "Agro-Cria Pro", "Audio", "BusinessApplication", "Centzontle", "CroBeat", "CroGroove", "CroGuard", "CroHub", "Croma Studio", "Cromofi", "Cronmy", "Croudio", "Crovect Studio", "Crovite PDF", "DesktopApplication", "Diag", "Diagmind", "MX", "Offline", "Ollin-Tep", "Ollin-Tep Software", "Pro", "Premium", "React 19", "Rust + Tauri 2.0", "SQLite", "SoC &middot; UFS 4.0 &middot; PMIC", "Software", "UtilitiesApplication", "VPN", "Video", "Windows 10 & 11", "administrador@ollin-tep.com", "by Ollin-Tep", "mind", "NDVI 0.84 &middot; ET0 4.82 mm/d", "Linux (DEB, RPM, AppImage)", "Base"],
   "+ $25,000 aprovisionamiento · usuarios ilimitados": "+ $25,000 provisioning · unlimited users",
   "+ $8,500 de implementación (pago único) · hasta 10 usuarios": "+ $8,500 implementation (one-time) · up to 10 users",
   ". Esta arquitectura garantiza tiempos de respuesta instantáneos y un consumo mínimo de memoria RAM en la computadora anfitriona.": ". This architecture delivers instant response times and minimal RAM use on the host computer.",
@@ -432,6 +432,13 @@
   "sistemas: Windows, macOS y Linux": "systems: Windows, macOS and Linux",
   "¿Tienes un proyecto en mente?": "Have a project in mind?",
   "Órdenes por estación, tiempos y platillos listos para servir.": "Orders by station, times and dishes ready to serve.",
+  "12 giros": "12 business types",
+  "Red local": "Local network",
+  "Historial inmutable": "Immutable history",
+  "Votaciones": "Voting",
+  "Balance FAO-56": "FAO-56 balance",
+  "Hato ganadero": "Livestock herd",
+  "Sin root": "No root",
   "y": "and",
   "o": "or"
 }
