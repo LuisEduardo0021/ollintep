@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ollintep Software - Soluciones Tecnológicas de Vanguardia</title>
-    <meta name="description" content="Ollintep Software desarrolla software a medida, brinda consultoría IT y acompaña procesos de transformación digital para empresas que buscan innovar.">
+    <title>Ollintep Software · Suite CroHub y software a medida</title>
+    <meta name="description" content="Ollintep Software crea la suite CroHub —apps de escritorio para documentos, fotos, video, audio y música— y desarrolla plataformas a medida para restaurantes, instituciones, el campo y talleres técnicos.">
     <link rel="canonical" href="https://ollin-tep.com/">
+    <meta name="theme-color" content="#080d18">
 
     <!-- Open Graph / redes sociales -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Ollintep Software">
     <meta property="og:locale" content="es_MX">
     <meta property="og:url" content="https://ollin-tep.com/">
-    <meta property="og:title" content="Ollintep Software - Soluciones Tecnológicas de Vanguardia">
-    <meta property="og:description" content="Ollintep Software desarrolla software a medida, brinda consultoría IT y acompaña procesos de transformación digital para empresas que buscan innovar.">
+    <meta property="og:title" content="Ollintep Software · Suite CroHub y software a medida">
+    <meta property="og:description" content="La suite CroHub de apps de escritorio y plataformas a medida para restaurantes, instituciones, el campo y talleres técnicos.">
     <meta property="og:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ollintep Software - Soluciones Tecnológicas de Vanguardia">
-    <meta name="twitter:description" content="Ollintep Software desarrolla software a medida, brinda consultoría IT y acompaña procesos de transformación digital para empresas que buscan innovar.">
+    <meta name="twitter:title" content="Ollintep Software · Suite CroHub y software a medida">
+    <meta name="twitter:description" content="La suite CroHub de apps de escritorio y plataformas a medida para restaurantes, instituciones, el campo y talleres técnicos.">
     <meta name="twitter:image" content="https://ollin-tep.com/resources/og/ollintep-og.jpg">
 
     <!-- Datos estructurados (schema.org) -->
@@ -52,43 +53,40 @@
         ]
     }
     </script>
-
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="resources/ollintep.svg">
-    <!-- Tipografías -->
+    <!-- Tipografías: las mismas que CroHub (Bricolage Grotesque para títulos, Figtree para texto) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Hojas de estilo Tailwind + Material 3E -->
-    <link rel="stylesheet" href="css/styles.css?v=2.3">
-    <!-- Iconos (FontAwesome) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
+    <!-- Estilos (Tailwind compilado + sistema propio) -->
+    <link rel="stylesheet" href="css/styles.css?v=3.0">
+    <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-<body class="selection:bg-sky-400 selection:text-slate-950">
+<body class="home selection:bg-sky-400 selection:text-slate-950">
 
-    <!-- Fondo ambiental líquido M3 -->
     <div class="liquid-bg" aria-hidden="true">
         <span class="blob blob-1"></span>
         <span class="blob blob-2"></span>
         <span class="blob blob-3"></span>
     </div>
 
-    <!-- Navegación Principal: Top App Bar Flotante M3E -->
+    <!-- Navegación -->
     <header class="header">
         <div class="scroll-progress" id="scroll-progress"></div>
         <nav class="navbar">
-            <a href="#inicio" class="logo group">
-                <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark group-hover:scale-105 transition-transform">
+            <a href="#inicio" class="logo">
+                <img src="resources/ollintep.svg" alt="" class="logo-mark" width="34" height="32">
                 <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">Software</span></span>
             </a>
-            <ul class="nav-links">
-                <li><a href="#inicio" class="active">INICIO</a></li>
-                <li><a href="#servicios">SERVICIOS</a></li>
-                <li><a href="#suite">SUITE CROHUB</a></li>
-                <li><a href="#nosotros">NOSOTROS</a></li>
-                <li><a href="#contacto">CONTACTO</a></li>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#suite">Suite CroHub</a></li>
+                <li><a href="#a-medida">A medida</a></li>
+                <li><a href="#principios">Cómo trabajamos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li class="nav-cta"><a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled btn-sm">Descargar CroHub</a></li>
             </ul>
-            <!-- Hamburguesa para móvil -->
             <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -97,411 +95,216 @@
         </nav>
     </header>
 
-    <!-- Sección Hero (Principal) M3E -->
-    <section id="inicio" class="hero">
-        <div class="hero-overlay">
-            <div class="network-globe"></div>
-        </div>
+    <main>
+    <!-- Hero: la empresa y sus dos caminos -->
+    <section id="inicio" class="hero hero-home">
+        <div class="hero-overlay"><div class="network-globe"></div></div>
         <div class="hero-content">
-            <!-- M3 Expressive Assist Chip -->
-            <div class="m3-chip m3-chip-primary mb-6 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-                <span>Ecosistema de Software e Innovación</span>
-            </div>
-            <h1>SOLUCIONES TECNOLÓGICAS DE VANGUARDIA PARA TU EMPRESA</h1>
-            <p>Ingeniería de software de alta fidelidad, plataformas nativas y transformación digital con arquitectura escalable.</p>
-            <div class="hero-btns">
-                <a href="#servicios" class="m3-btn m3-btn-filled shadow-md">
-                    <span>Explorar Servicios</span>
-                    <i class="fas fa-arrow-down text-xs"></i>
-                </a>
-                <a href="#contacto" class="m3-btn m3-btn-tonal">
-                    <span>Consulta Gratuita</span>
-                    <i class="fas fa-comments text-xs"></i>
-                </a>
-            </div>
+            <p class="eyebrow"><span class="eyebrow-dot"></span>Ollintep Software</p>
+            <h1>Software hecho con oficio.<span class="h1-sub">Para tu escritorio y para tu negocio.</span></h1>
+            <p class="hero-lead">Creamos CroHub, una suite de nueve apps de escritorio, y desarrollamos plataformas a medida para restaurantes, instituciones, el campo y talleres técnicos.</p>
+        </div>
+
+        <div class="hero-paths">
+            <article class="path-card path-suite">
+                <p class="path-kicker">Para tu equipo</p>
+                <h2 class="path-title">Suite CroHub</h2>
+                <p class="path-text">Nueve apps para PDF, fotos, video, audio, música y seguridad. Se instalan, actualizan y activan desde un solo lanzador.</p>
+                <div class="path-icons" aria-hidden="true">
+                    <img src="resources/suite/crovite-pdf.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/croma-studio.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/cronmy.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/crovect-studio.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/cromofi.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/croudio.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/crobeat.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/cromix.svg" alt="" width="26" height="28">
+                    <img src="resources/suite/croguard.svg" alt="" width="26" height="28">
+                </div>
+                <div class="path-actions">
+                    <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled">Descargar CroHub <i class="fas fa-download text-xs" aria-hidden="true"></i></a>
+                    <a href="#suite" class="link-arrow">Ver las apps <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
+
+            <article class="path-card path-custom">
+                <p class="path-kicker">Para tu negocio</p>
+                <h2 class="path-title">Software a medida</h2>
+                <p class="path-text">Puntos de venta, gestión de actas, agricultura de precisión y diagnóstico de dispositivos: plataformas que ya construimos y adaptamos a tu operación.</p>
+                <div class="path-icons" aria-hidden="true">
+                    <img src="resources/ollintep-restaurant.svg" alt="" width="28" height="28">
+                    <img src="resources/ollintep-actapro.svg" alt="" width="28" height="28">
+                    <img src="resources/ollintep-agrocria.svg" alt="" width="28" height="28">
+                    <img src="resources/ollintep-diagmind.svg" alt="" width="28" height="28">
+                </div>
+                <div class="path-actions">
+                    <a href="#contacto" class="m3-btn m3-btn-tonal">Hablemos de tu proyecto</a>
+                    <a href="#a-medida" class="link-arrow">Ver plataformas <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </article>
         </div>
     </section>
 
-    <!-- Sección Logo Marquee de Proyectos -->
-    <section class="relative z-10 py-12 overflow-hidden" aria-label="Ecosistema de proyectos Ollintep">
-        <div class="max-w-7xl mx-auto px-6 mb-6 text-center">
-            <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold font-mono">
-                Ecosistema de Plataformas &middot; Software Propietario
-            </p>
-        </div>
-        <div class="marquee-container">
-            <div class="marquee-track">
-                <!-- Grupo 1 -->
-                <a href="restaurant/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
-                    <img src="resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Restaurants</span>
-                        <span class="text-[11px] text-amber-400 font-mono">Offline-First POS</span>
-                    </div>
-                </a>
-
-                <a href="actapro/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
-                    <img src="resources/ollintep-actapro.svg" alt="ActaPro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">ActaPro</span>
-                        <span class="text-[11px] text-indigo-400 font-mono">Gobernanza & Actas</span>
-                    </div>
-                </a>
-
-                <a href="agrocria/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
-                    <img src="resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Agro-Cria Pro</span>
-                        <span class="text-[11px] text-emerald-400 font-mono">CROPWAT & IoT</span>
-                    </div>
-                </a>
-
-                <a href="diagmind/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group">
-                    <img src="resources/ollintep-diagmind.svg" alt="Diagmind" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Diagmind</span>
-                        <span class="text-[11px] text-sky-400 font-mono">ADB & Rust Probe</span>
-                    </div>
-                </a>
-
-                <!-- Grupo 2 (duplicado para scroll infinito continuo) -->
-                <a href="restaurant/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
-                    <img src="resources/ollintep-restaurant.svg" alt="Ollintep for Restaurants" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Restaurants</span>
-                        <span class="text-[11px] text-amber-400 font-mono">Offline-First POS</span>
-                    </div>
-                </a>
-
-                <a href="actapro/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
-                    <img src="resources/ollintep-actapro.svg" alt="ActaPro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">ActaPro</span>
-                        <span class="text-[11px] text-indigo-400 font-mono">Gobernanza & Actas</span>
-                    </div>
-                </a>
-
-                <a href="agrocria/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
-                    <img src="resources/ollintep-agrocria.svg" alt="Agro-Cria Pro" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Agro-Cria Pro</span>
-                        <span class="text-[11px] text-emerald-400 font-mono">CROPWAT & IoT</span>
-                    </div>
-                </a>
-
-                <a href="diagmind/index.html" class="flex items-center gap-3.5 px-6 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shrink-0 text-slate-200 hover:text-white shadow-sm hover:shadow-md group" aria-hidden="true" tabindex="-1">
-                    <img src="resources/ollintep-diagmind.svg" alt="Diagmind" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold font-heading leading-tight text-white">Diagmind</span>
-                        <span class="text-[11px] text-sky-400 font-mono">ADB & Rust Probe</span>
-                    </div>
-                </a>
-            </div>
-        </div>
+    <!-- Datos que se pueden comprobar -->
+    <section class="facts" aria-label="Ollintep en cifras">
+        <dl class="facts-grid">
+            <div class="fact"><dt>9</dt><dd>apps de escritorio en la suite CroHub</dd></div>
+            <div class="fact"><dt>3</dt><dd>sistemas: Windows, macOS y Linux</dd></div>
+            <div class="fact"><dt>4</dt><dd>plataformas a medida para sectores distintos</dd></div>
+            <div class="fact"><dt>IA local</dt><dd>en Crovite PDF y Croma Studio: tus archivos no salen de tu equipo</dd></div>
+        </dl>
     </section>
 
-    <!-- Sección de Servicios y Productos M3E -->
-    <section id="servicios" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-            <div class="m3-chip mb-3">
-                <i class="fas fa-cubes text-xs text-sky-400"></i>
-                <span>Catálogo de Soluciones</span>
+    <!-- Suite CroHub -->
+    <section id="suite" class="section-block">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-orange"><img src="resources/suite/crohub.svg" alt="" width="15" height="16">Suite CroHub</p>
+                <h2 class="block-title">Nueve apps. Un solo lanzador.</h2>
+                <p class="block-lead">CroHub descarga, instala, actualiza y activa cada app. Compra solo las que necesitas o el paquete completo.</p>
             </div>
-            <h2 class="section-title">SERVICIOS Y PLATAFORMAS</h2>
-            <p class="text-slate-400 text-base md:text-lg">Herramientas especializadas con arquitectura nativa, soporte offline-first y los más altos estándares técnicos.</p>
-        </div>
+            <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled">Descargar CroHub <i class="fas fa-download text-xs" aria-hidden="true"></i></a>
+        </header>
 
-        <div class="services-grid">
+        <ul class="app-grid">
+            <li class="app-tile" style="--app: #FF8A3D"><img src="resources/suite/crovite-pdf.svg" alt="" width="34" height="37"><div><h3>Crovite PDF</h3><p class="app-cat">Documentos PDF</p><p>Edita, firma, convierte y organiza tus documentos PDF.</p></div></li>
+            <li class="app-tile" style="--app: #FFCF3A"><img src="resources/suite/croma-studio.svg" alt="" width="34" height="37"><div><h3>Croma Studio</h3><p class="app-cat">Fotos y montajes</p><p>Capas, color, fondos quitados con IA, revelado con preajustes y collages para redes.</p></div></li>
+            <li class="app-tile" style="--app: #C2EC3E"><img src="resources/suite/cronmy.svg" alt="" width="34" height="37"><div><h3>Cronmy</h3><p class="app-cat">Fotos y color</p><p>Edición de fotos y corrección de color.</p></div></li>
+            <li class="app-tile" style="--app: #C77DFF"><img src="resources/suite/crovect-studio.svg" alt="" width="34" height="37"><div><h3>Crovect Studio</h3><p class="app-cat">Diseño vectorial</p><p>Diseño vectorial, prototipos de interfaz y animación Lottie.</p></div></li>
+            <li class="app-tile" style="--app: #2FD6C4"><img src="resources/suite/cromofi.svg" alt="" width="34" height="37"><div><h3>Cromofi</h3><p class="app-cat">Video</p><p>Edita video, corrige el color y pon subtítulos automáticos.</p></div></li>
+            <li class="app-tile" style="--app: #FF5562"><img src="resources/suite/croudio.svg" alt="" width="34" height="37"><div><h3>Croudio</h3><p class="app-cat">Audio</p><p>Graba, edita y limpia audio.</p></div></li>
+            <li class="app-tile" style="--app: #8A86FF"><img src="resources/suite/crobeat.svg" alt="" width="34" height="37"><div><h3>CroBeat</h3><p class="app-cat">Música</p><p>Crea ritmos y produce música.</p></div></li>
+            <li class="app-tile" style="--app: #22E1F0"><img src="resources/suite/cromix.svg" alt="" width="34" height="37"><div><h3>CroGroove</h3><p class="app-cat">Música y DJ</p><p>Mezcla como DJ: 4 platos, efectos, stems, sampler y controladoras.</p></div></li>
+            <li class="app-tile" style="--app: #4FC4FF"><img src="resources/suite/croguard.svg" alt="" width="34" height="37"><div><h3>Crogward</h3><p class="app-cat">VPN</p><p>VPN, antivirus y herramientas de red para proteger tu equipo.</p></div></li>
+        </ul>
+    </section>
 
-            <!-- Tarjeta 1: Software -->
-            <div class="service-card group">
-                <div class="card-icon">
-                    <i class="fas fa-laptop-code"></i>
-                </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Servicio IT</span>
-                </div>
-                <h3>DESARROLLO DE SOFTWARE</h3>
-                <p>Construimos aplicaciones web, móviles y sistemas de escritorio a medida, con arquitecturas limpias y seguras pensadas para escalar con tu negocio.</p>
-                <div class="card-glow"></div>
+    <!-- Software a medida -->
+    <section id="a-medida" class="section-block">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Software a medida</p>
+                <h2 class="block-title">Plataformas que construimos y adaptamos a tu operación.</h2>
+                <p class="block-lead">Partimos de sistemas probados en su sector y los ajustamos a cómo trabaja tu equipo.</p>
             </div>
+        </header>
 
-            <!-- Tarjeta 2: Consultoría -->
-            <div class="service-card active-card group">
-                <div class="card-icon">
-                    <i class="fas fa-brain"></i>
+        <div class="work-grid">
+            <a href="restaurant/index.html" class="work-card" style="--work: #f59e0b">
+                <div class="work-shot"><img src="resources/screenshots/restaurant-pos.png" alt="Punto de venta de Ollintep for Restaurants con la comanda activa y el total a cobrar" width="1440" height="900" loading="lazy"></div>
+                <div class="work-body">
+                    <div class="work-name"><img src="resources/ollintep-restaurant.svg" alt="" width="26" height="26"><h3>Ollintep for Restaurants</h3></div>
+                    <p>Punto de venta, comandero digital y pantalla de cocina en tiempo real. Opera sin internet y sincroniza solo al volver la conexión.</p>
+                    <span class="link-arrow">Conocer la plataforma <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip m3-chip-primary text-[11px] py-0.5 px-2.5">Estrategia</span>
-                </div>
-                <h3>CONSULTORÍA IT</h3>
-                <p>Analizamos infraestructura, procesos y deuda técnica para orientar la adopción de arquitecturas modernas y rentables sin improvisaciones.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <!-- Tarjeta 3: Transformación -->
-            <div class="service-card group">
-                <div class="card-icon">
-                    <i class="fas fa-rocket"></i>
-                </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Cloud & DevOps</span>
-                </div>
-                <h3>TRANSFORMACIÓN DIGITAL</h3>
-                <p>Automatización de flujos de trabajo, modernización operativa y migración a infraestructuras cloud de alta disponibilidad y tolerancia a fallos.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <!-- Tarjeta 4: Ollintep for Restaurants -->
-            <a href="restaurant/index.html" class="service-card service-card-link vt-card-restaurant group">
-                <div class="card-icon">
-                    <i class="fas fa-utensils"></i>
-                </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Offline-First POS</span>
-                </div>
-                <h3>OLLINTEP FOR RESTAURANTS</h3>
-                <p>Punto de venta integral, comandero digital y sistema de cocina en tiempo real. Opera sin internet y sincroniza automáticamente.</p>
-                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
-                <div class="card-glow"></div>
             </a>
-
-            <!-- Tarjeta 5: ActaPro -->
-            <a href="actapro/index.html" class="service-card service-card-link vt-card-actapro group">
-                <div class="card-icon">
-                    <i class="fas fa-file-signature"></i>
+            <a href="actapro/index.html" class="work-card" style="--work: #818cf8">
+                <div class="work-shot"><img src="resources/screenshots/actapro-dashboard.png" alt="Panel de ActaPro con el seguimiento de actas y trámites" width="1440" height="900" loading="lazy"></div>
+                <div class="work-body">
+                    <div class="work-name"><img src="resources/ollintep-actapro.svg" alt="" width="26" height="26"><h3>ActaPro</h3></div>
+                    <p>Asambleas, actas administrativas, votaciones y auditoría de trámites con historial inmutable.</p>
+                    <span class="link-arrow">Conocer la plataforma <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Gobernanza</span>
-                </div>
-                <h3>ACTAPRO</h3>
-                <p>Gestión digital de asambleas, actas administrativas, votaciones seguras y auditoría de trámites con historial inmutable.</p>
-                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
-                <div class="card-glow"></div>
             </a>
-
-            <!-- Tarjeta 6: Agro-Cria Pro -->
-            <a href="agrocria/index.html" class="service-card service-card-link vt-card-agrocria group">
-                <div class="card-icon">
-                    <i class="fas fa-seedling"></i>
+            <a href="agrocria/index.html" class="work-card" style="--work: #10b981">
+                <div class="work-shot"><img src="resources/screenshots/agrocria-dashboard.png" alt="Panel de Agro-Cria Pro con humedad del suelo, mapa NDVI y balance hídrico" width="1440" height="900" loading="lazy"></div>
+                <div class="work-body">
+                    <div class="work-name"><img src="resources/ollintep-agrocria.svg" alt="" width="26" height="26"><h3>Agro-Cria Pro</h3></div>
+                    <p>Balance hídrico FAO-56 (CROPWAT), trazabilidad ganadera, cultivos y telemetría de suelo por IoT.</p>
+                    <span class="link-arrow">Conocer la plataforma <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">FAO-56 CROPWAT</span>
-                </div>
-                <h3>AGRO-CRIA PRO</h3>
-                <p>Plataforma agropecuaria integral: balance hídrico evapotranspiración CROPWAT, trazabilidad ganadera, macro-cultivos y telemetría IoT.</p>
-                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
-                <div class="card-glow"></div>
             </a>
-
-            <!-- Tarjeta 7: Diagmind -->
-            <a href="diagmind/index.html" class="service-card service-card-link vt-card-diagmind group">
-                <div class="card-icon">
-                    <i class="fas fa-mobile-screen-button"></i>
+            <a href="diagmind/index.html" class="work-card" style="--work: #38bdf8">
+                <div class="work-shot"><img src="resources/screenshots/diagmind-report.png" alt="Informe de diagnóstico de un dispositivo Android en Diagmind" width="1440" height="900" loading="lazy"></div>
+                <div class="work-body">
+                    <div class="work-name"><img src="resources/ollintep-diagmind.svg" alt="" width="26" height="26"><h3>Diagmind</h3></div>
+                    <p>Diagnóstico profundo de dispositivos Android por ADB, sin root, con telemetría e IA local para técnicos.</p>
+                    <span class="link-arrow">Conocer la plataforma <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                 </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Rust & ADB</span>
-                </div>
-                <h3>DIAGMIND</h3>
-                <p>Auditoría y diagnóstico profundo de dispositivos Android vía ADB (sin root), companion probe de telemetría e IA local para técnicos.</p>
-                <span class="service-card-cta">Conocer plataforma <i class="fas fa-arrow-right"></i></span>
-                <div class="card-glow"></div>
             </a>
         </div>
+
+        <ul class="service-list">
+            <li><i class="fas fa-laptop-code" aria-hidden="true"></i><h3>Desarrollo de software</h3><p>Aplicaciones web, móviles y de escritorio a medida, con arquitecturas limpias y seguras pensadas para crecer con tu negocio.</p></li>
+            <li><i class="fas fa-compass-drafting" aria-hidden="true"></i><h3>Consultoría</h3><p>Revisamos infraestructura, procesos y deuda técnica para que adoptes la tecnología correcta sin improvisar.</p></li>
+            <li><i class="fas fa-arrows-rotate" aria-hidden="true"></i><h3>Transformación digital</h3><p>Automatización de flujos de trabajo y migración a infraestructuras confiables, por etapas y sin detener tu operación.</p></li>
+        </ul>
     </section>
 
-    <!-- Sección Suite CroHub -->
-    <section id="suite" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-            <div class="m3-chip mb-3">
-                <img src="resources/suite/crohub.svg" alt="" class="w-4 h-4">
-                <span>CroHub by Ollin-Tep</span>
-            </div>
-            <h2 class="section-title">SUITE CROHUB</h2>
-            <p class="text-slate-400 text-base md:text-lg">Nueve apps de escritorio para documentos, fotos, video, audio, música y seguridad. Se instalan, actualizan y activan desde CroHub.</p>
-            <div class="hero-btns justify-center mt-8">
-                <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-filled shadow-md">
-                    <span>Descargar CroHub</span>
-                    <i class="fas fa-download text-xs"></i>
-                </a>
-            </div>
-        </div>
-        <div class="services-grid services-grid-3">
-            <div class="service-card group" style="--service-card-glow: rgba(255, 138, 61, 0.18)">
-                <img src="resources/suite/crovite-pdf.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Documentos PDF</span>
-                </div>
-                <h3>CROVITE PDF</h3>
-                <p>Edita, firma, convierte y organiza tus documentos PDF.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(255, 207, 58, 0.18)">
-                <img src="resources/suite/croma-studio.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Fotos y montajes</span>
-                </div>
-                <h3>CROMA STUDIO</h3>
-                <p>Edita fotos por capas, ajusta el color, quita fondos con IA, revela tus fotos con preajustes y crea collages para redes.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(194, 236, 62, 0.18)">
-                <img src="resources/suite/cronmy.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Fotos y color</span>
-                </div>
-                <h3>CRONMY</h3>
-                <p>Edición de fotos y corrección de color.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(199, 125, 255, 0.18)">
-                <img src="resources/suite/crovect-studio.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Diseño vectorial</span>
-                </div>
-                <h3>CROVECT STUDIO</h3>
-                <p>Diseño vectorial, prototipos de interfaz y animación Lottie.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(47, 214, 196, 0.18)">
-                <img src="resources/suite/cromofi.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Video</span>
-                </div>
-                <h3>CROMOFI</h3>
-                <p>Edita video, corrige el color y pon subtítulos automáticos.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(255, 85, 98, 0.18)">
-                <img src="resources/suite/croudio.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Audio</span>
-                </div>
-                <h3>CROUDIO</h3>
-                <p>Graba, edita y limpia audio.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(138, 134, 255, 0.18)">
-                <img src="resources/suite/crobeat.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Música</span>
-                </div>
-                <h3>CROBEAT</h3>
-                <p>Crea ritmos y produce música.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(34, 225, 240, 0.18)">
-                <img src="resources/suite/cromix.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">Música y DJ</span>
-                </div>
-                <h3>CROGROOVE</h3>
-                <p>Mezcla música como DJ: 4 platos, efectos, stems, sampler y controladoras.</p>
-                <div class="card-glow"></div>
-            </div>
-
-            <div class="service-card group" style="--service-card-glow: rgba(79, 196, 255, 0.18)">
-                <img src="resources/suite/croguard.svg" alt="" class="suite-logo" width="48" height="52">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="m3-chip text-[11px] py-0.5 px-2.5">VPN</span>
-                </div>
-                <h3>CROGWARD</h3>
-                <p>VPN, antivirus y herramientas de red para proteger tu equipo.</p>
-                <div class="card-glow"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Nosotros M3E -->
-    <section id="nosotros" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
-        <div class="about-grid">
-            <div class="about-text">
-                <div class="m3-chip mb-4">
-                    <i class="fas fa-shield-halved text-xs text-sky-400"></i>
-                    <span>Nuestra Filosofía</span>
-                </div>
-                <h2 class="section-title section-title-left">INGENIERÍA RIGUROSA, IMPACTO REAL</h2>
-                <p>En <strong>Ollintep Software</strong> diseñamos sistemas que resuelven problemas operativos reales: desde herramientas de diagnóstico y puntos de venta offline-first hasta plataformas complejas de gestión agropecuaria y gobernanza.</p>
-                <p>Nuestro enfoque combina arquitectura de software nativa, diseño centrado en el usuario y seguridad por diseño para garantizar que cada producto sea confiable, rápido y verdaderamente útil.</p>
-            </div>
-            <div class="about-stats">
-                <div class="stat">
-                    <span class="stat-number">+8</span>
-                    <span class="stat-label">Años de experiencia</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">+40</span>
-                    <span class="stat-label">Proyectos entregados</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">+15</span>
-                    <span class="stat-label">Clientes activos</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">98%</span>
-                    <span class="stat-label">Satisfacción garantizada</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Contacto M3E -->
-    <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
-        <div class="text-center mb-12">
-            <div class="m3-chip mb-3">
-                <i class="fas fa-paper-plane text-xs text-sky-400"></i>
-                <span>Canales Directos</span>
-            </div>
-            <h2 class="section-title">HABLEMOS DE TU PROYECTO</h2>
-            <p class="text-slate-400 text-base md:text-lg">Estamos listos para impulsar tu visión con tecnología sólida y a medida.</p>
-        </div>
-        <div class="contact-info contact-info-centered">
-            <p>Contáctanos directamente o agenda una sesión de asesoría técnica:</p>
-            <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone text-sky-400"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-sky-400"></i> administrador@ollin-tep.com</a></li>
+    <!-- Cómo trabajamos -->
+    <section id="principios" class="section-block">
+        <div class="principles-wrap">
+            <header class="principles-head">
+                <p class="eyebrow eyebrow-blue">Cómo trabajamos</p>
+                <h2 class="block-title">La calidad está en los detalles que no se ven.</h2>
+                <p class="block-lead">Diseñamos sistemas que resuelven problemas operativos reales. Combinamos arquitectura sólida, diseño centrado en las personas y seguridad desde el primer día, para que cada producto sea confiable, rápido y útil.</p>
+            </header>
+            <ul class="principles">
+                <li class="principle"><i class="fas fa-plug-circle-xmark" aria-hidden="true"></i><h3>Trabajo que no se detiene</h3><p>Guardado local y sincronización automática: una caída de internet no para tu operación.</p></li>
+                <li class="principle"><i class="fas fa-shield-halved" aria-hidden="true"></i><h3>Privacidad por diseño</h3><p>La IA de Crovite PDF y Croma Studio corre en tu equipo. Tus documentos y fotos no se suben a ningún servidor.</p></li>
+                <li class="principle"><i class="fas fa-pen-ruler" aria-hidden="true"></i><h3>Diseño cuidado</h3><p>Cada pantalla se prueba con datos reales, en escritorio y en móvil, y con atención a la accesibilidad.</p></li>
+                <li class="principle"><i class="fas fa-handshake" aria-hidden="true"></i><h3>Trato directo</h3><p>Hablas con quien construye tu software. Sin intermediarios ni respuestas de plantilla.</p></li>
             </ul>
         </div>
     </section>
 
-    <!-- Footer M3E -->
+    <!-- Contacto -->
+    <section id="contacto" class="section-block">
+        <div class="cta-band">
+            <div>
+                <h2 class="block-title">¿Tienes un proyecto en mente?</h2>
+                <p class="block-lead">Cuéntanos qué necesitas y te respondemos con una propuesta clara, sin compromiso.</p>
+            </div>
+            <div class="cta-actions">
+                <a href="mailto:administrador@ollin-tep.com" class="m3-btn m3-btn-filled"><i class="fas fa-envelope" aria-hidden="true"></i> administrador@ollin-tep.com</a>
+                <a href="tel:+523111275020" class="m3-btn m3-btn-tonal"><i class="fas fa-phone" aria-hidden="true"></i> +52 311 127 5020</a>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Pie -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-top">
-                <div class="logo">
-                    <img src="resources/ollintep.svg" alt="Ollintep Software" class="logo-mark">
+        <div class="footer-content footer-grid">
+            <div class="footer-brand">
+                <a href="#inicio" class="logo">
+                    <img src="resources/ollintep.svg" alt="" class="logo-mark" width="34" height="32">
                     <span class="logo-word"><span class="logo-ollintep">Ollintep</span> <span class="logo-software">Software</span></span>
-                </div>
-                <ul class="footer-links">
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                    <li><a href="#suite">Suite CroHub</a></li>
+                </a>
+                <p>Software hecho con oficio: la suite CroHub y plataformas a medida.</p>
+            </div>
+            <nav class="footer-col" aria-label="Suite CroHub">
+                <h3>Suite CroHub</h3>
+                <ul>
+                    <li><a href="#suite">Las apps</a></li>
                     <li><a href="https://activation.ollin-tep.com/descargar">Descargar CroHub</a></li>
-                    <li><a href="restaurant/index.html">Restaurants</a></li>
+                    <li><a href="https://activation.ollin-tep.com/">Activar una licencia</a></li>
+                </ul>
+            </nav>
+            <nav class="footer-col" aria-label="Software a medida">
+                <h3>A medida</h3>
+                <ul>
+                    <li><a href="restaurant/index.html">Ollintep for Restaurants</a></li>
                     <li><a href="actapro/index.html">ActaPro</a></li>
                     <li><a href="agrocria/index.html">Agro-Cria Pro</a></li>
                     <li><a href="diagmind/index.html">Diagmind</a></li>
                 </ul>
+            </nav>
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><a href="mailto:administrador@ollin-tep.com">administrador@ollin-tep.com</a></li>
+                    <li><a href="tel:+523111275020">+52 311 127 5020</a></li>
+                </ul>
             </div>
-            <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
         </div>
+        <p class="footer-copy">&copy; <span id="current-year">2026</span> Ollintep Software. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Botón volver arriba M3E FAB -->
     <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
-        <i class="fas fa-arrow-up"></i>
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <!-- Scripts -->
-    <script src="script/scripts.js?v=2.3"></script>
+    <script src="script/scripts.js?v=3.0"></script>
 </body>
 </html>

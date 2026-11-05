@@ -77,7 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Animación de aparición al hacer scroll ---
     const revealTargets = document.querySelectorAll(
-        '.service-card, .stat, .tech-panel, .blog-card, .contact-info, .section-title, .plan-card, .video-card'
+        '.service-card, .stat, .tech-panel, .blog-card, .contact-info, .section-title, .plan-card, .video-card, ' +
+        '.path-card, .fact, .block-head, .app-tile, .work-card, .service-list li, .principles-head, .principle, .cta-band'
     );
     revealTargets.forEach(el => el.classList.add('reveal'));
 
