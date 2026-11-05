@@ -587,6 +587,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Recorrido: el scroll mueve una cámara entre las capturas; se detiene en cada una para leer ---
+    const viaje = document.querySelector('.viaje');
+    if (viaje) {
+        const pasos = [...viaje.querySelectorAll('.vj-paso')].map(paso => ({ plano: paso.querySelector('.vj-plano'), texto: paso.querySelector('.vj-texto') }));
+        const barra = viaje.querySelector('.vj-avance span');
+        const ancho = window.matchMedia('(min-width: 961px)');
+        const limitar = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+        const PROFUNDIDAD = 1100;
+        let avance = 0, objetivo = 0, marco = 0;
+
+        const pintar = () => {
+            const t = avance * (pasos.length - 1);
+            const i = Math.floor(t);
+            const f = limitar(((t - i) - 0.25) / 0.5);
+            const camara = i + f * f * (3 - 2 * f);
+            pasos.forEach(({ plano, texto }, n) => {
+                const d = n - camara;
+                const lado = n % 2 ? -1 : 1;
+                plano.style.transform = `translate3d(${lado * 15}vw, 0, ${-d * PROFUNDIDAD - 120}px) rotateY(${-lado * (5 + d * 7)}deg)`;
+                plano.style.opacity = d < 0 ? limitar(1 + d * 2.5) : limitar(1 - d * 0.55);
+                texto.style.opacity = limitar(1 - Math.abs(d) * 5);
+                texto.style.transform = `translate3d(0, calc(-50% + ${d * 90}px), 0)`;
+            });
+            barra.style.transform = `scaleX(${avance})`;
+        };
+        const medir = () => {
+            const r = viaje.getBoundingClientRect();
+            objetivo = limitar(-r.top / (r.height - window.innerHeight));
+        };
+        const animar = () => {
+            avance += (objetivo - avance) * 0.14;
+            if (Math.abs(objetivo - avance) < 0.0004) avance = objetivo;
+            pintar();
+            marco = avance === objetivo ? 0 : requestAnimationFrame(animar);
+        };
+        const alMover = () => { medir(); if (!marco) marco = requestAnimationFrame(animar); };
+        const ajustar = () => {
+            const activa = ancho.matches && !prefersReducedMotion && !document.documentElement.classList.contains('ligero');
+            if (activa === viaje.classList.contains('activa')) { if (activa) alMover(); return; }
+            viaje.classList.toggle('activa', activa);
+            if (activa) {
+                medir();
+                avance = objetivo;
+                pintar();
+                window.addEventListener('scroll', alMover, { passive: true });
+            } else {
+                window.removeEventListener('scroll', alMover);
+                cancelAnimationFrame(marco);
+                marco = 0;
+                pasos.forEach(({ plano, texto }) => { plano.removeAttribute('style'); texto.removeAttribute('style'); });
+            }
+        };
+        ajustar();
+        window.addEventListener('resize', ajustar);
+    }
+
     // --- Plataformas apiladas: la tarjeta cubierta por la siguiente se encoge y se oscurece ---
     const apiladas = [...document.querySelectorAll('.work-grid .work-card')];
     const pilaActiva = window.matchMedia('(min-width: 961px)');
