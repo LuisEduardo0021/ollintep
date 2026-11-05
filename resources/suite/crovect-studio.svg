@@ -1,0 +1,7 @@
+<svg width="237" height="259" viewBox="0 0 237 259" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path class="c" d="M237 237H129C22 233 22 133 22 130C22 127.2 22 28.5 129 22H237" stroke="white" stroke-width="44"/>
+  <path d="M151.145 138.366C144.977 134.936 144.977 126.064 151.145 122.634L223.55 82.3717C230.753 78.3664 239.104 85.3449 236.442 93.1446L224.684 127.593C224.04 129.478 224.04 131.522 224.684 133.407L236.442 167.855C239.104 175.655 230.753 182.634 223.55 178.628L151.145 138.366Z" fill="url(#crovect-gradient)"/>
+  <defs>
+    <linearGradient id="crovect-gradient" x1="196.5" y1="109" x2="244" y2="130.5" gradientUnits="userSpaceOnUse"><stop stop-color="#B953DB"/><stop offset="1" stop-color="#78009F"/></linearGradient>
+  </defs>
+</svg>

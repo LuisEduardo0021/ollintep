@@ -517,6 +517,14 @@
   transition: transform 0.25s ease, background 0.25s ease;
 }
 
+.suite-logo {
+  width: auto;
+  height: 52px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-bottom: 1.35rem;
+}
+
 .service-card:hover .card-icon {
   transform: scale(1.08);
   background: var(--service-icon-hover);

@@ -1,6 +1,6 @@
 # 001 — Añadir la sección «Suite CroHub» a la portada
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 680ed60
 - **Severity**: HIGH (contenido: la web no menciona los productos que se venden hoy)
 - **Category**: Contenido (fuera del catálogo de animación; el movimiento reutiliza el existente)
