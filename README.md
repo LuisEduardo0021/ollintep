@@ -1,6 +1,6 @@
-# Ollintep Software &bull; Soluciones Tecnológicas de Vanguardia
+# Ollin-tep Software &bull; Soluciones Tecnológicas de Vanguardia
 
-Sitio web corporativo y catálogo interactivo de **Ollintep Software**, desarrollado con diseño **Material 3 Expressive (M3E)**, **Tailwind CSS v4** y **View Transitions API**.
+Sitio web corporativo y catálogo interactivo de **Ollin-tep Software**, desarrollado con diseño **Material 3 Expressive (M3E)**, **Tailwind CSS v4** y **View Transitions API**.
 
 🌐 **Sitio Web Oficial:** [https://ollin-tep.com](https://ollin-tep.com)
 
@@ -26,7 +26,7 @@ Sitio web corporativo y catálogo interactivo de **Ollintep Software**, desarrol
 - **Identidad cromática:** Cyber Sky / Azul Eléctrico (`#38bdf8`)
 - **Acceso:** [Ver Landing Page](https://ollin-tep.com/diagmind/)
 
-### 4. 🍽️ Ollintep for Restaurants
+### 4. 🍽️ Ollin-tep for Restaurants
 > **Offline-First POS & Cocina en Tiempo Real**  
 > Terminal táctil de punto de venta, comandeo móvil y Kitchen Display System (KDS) sincronizado en red local P2P sin dependencia de internet.
 - **Identidad cromática:** Ámbar Gourmet / Warm Gold (`#f59e0b`)
