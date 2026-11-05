@@ -1033,4 +1033,45 @@ document.addEventListener('DOMContentLoaded', () => {
             onda.animate([{ transform: 'scale(0)', opacity: 0.35 }, { transform: 'scale(1)', opacity: 0 }], { duration: 550, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).onfinish = () => onda.remove();
         }, { passive: true });
     }
+
+    if (!prefersReducedMotion) {
+        // --- Antetítulos: las letras se descifran al entrar en pantalla (el ancho se fija para que nada baile) ---
+        const LETRAS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const descifrar = (el) => {
+            const nodo = [...el.childNodes].filter(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim()).pop();
+            if (!nodo) return;
+            const final = nodo.textContent;
+            el.style.minWidth = el.offsetWidth + 'px';
+            const t0 = performance.now(), dura = 650;
+            const paso = (ahora) => {
+                const p = Math.min(1, (ahora - t0) / dura), fijas = Math.floor(p * final.length);
+                nodo.textContent = [...final].map((c, i) => (i < fijas || c === ' ' ? c : LETRAS[Math.floor(Math.random() * LETRAS.length)])).join('');
+                if (p < 1) requestAnimationFrame(paso); else { nodo.textContent = final; el.style.minWidth = ''; }
+            };
+            requestAnimationFrame(paso);
+        };
+        const obsAnte = new IntersectionObserver((entradas) => {
+            entradas.forEach(e => { if (e.isIntersecting) { obsAnte.unobserve(e.target); descifrar(e.target); } });
+        }, { threshold: 0.6 });
+        document.querySelectorAll('.eyebrow').forEach(el => obsAnte.observe(el));
+
+        // --- Precios: el importe cuenta al aparecer; lectores de pantalla y buscadores siguen teniendo el valor real ---
+        const obsPrecio = new IntersectionObserver((entradas) => {
+            entradas.forEach(e => {
+                if (!e.isIntersecting) return;
+                obsPrecio.unobserve(e.target);
+                const el = e.target, m = el.textContent.match(/^(\D*)([\d,]+)(.*)$/);
+                if (!m) return;
+                const final = el.textContent, valor = +m[2].replace(/,/g, ''), t0 = performance.now();
+                el.setAttribute('aria-label', final);
+                const paso = (ahora) => {
+                    const p = Math.min(1, (ahora - t0) / 1100), k = 1 - Math.pow(1 - p, 3);
+                    el.textContent = p < 1 ? m[1] + Math.round(valor * k).toLocaleString('en-US') + m[3] : final;
+                    if (p < 1) requestAnimationFrame(paso);
+                };
+                requestAnimationFrame(paso);
+            });
+        }, { threshold: 0.6 });
+        document.querySelectorAll('.plan-price-amount').forEach(el => obsPrecio.observe(el));
+    }
 });
