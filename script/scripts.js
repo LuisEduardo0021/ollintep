@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backToTop.classList.toggle('visible', window.scrollY > 500);
     });
     backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     });
 
     // --- Header dinámico + barra de progreso de scroll ---
@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (header) header.classList.toggle('is-scrolled', scrollTop > 10);
         if (scrollProgress) {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-            scrollProgress.style.width = pct + '%';
+            const p = docHeight > 0 ? Math.min(1, scrollTop / docHeight) : 0;
+            scrollProgress.style.transform = `scaleX(${p})`;
         }
     }
     window.addEventListener('scroll', updateScrollChrome, { passive: true });
