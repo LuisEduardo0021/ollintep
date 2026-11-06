@@ -5817,6 +5817,230 @@ html {
   color: #ffffff;
 }
 
+/* La ventana de una app con capturas, al abrirla: barra, captura en 4:3 y puntos; cabe entera en la pantalla */
+.lz-ventana {
+  width: min(960px, calc(100vw - 1.5rem), calc((100dvh - 7.5rem) * 4 / 3));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--app, #6ea2ff) 45%, transparent);
+  border-radius: 16px;
+  color: #ffffff;
+  background: #0c111b;
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.95);
+}
+
+.lz-ventana[open] {
+  animation: lz-ventana-abre 0.32s var(--ease-out);
+}
+
+.lz-ventana::backdrop {
+  background: rgba(5, 8, 15, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+@keyframes lz-ventana-abre {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+}
+
+html:has(.lz-ventana[open]) {
+  overflow: hidden;
+}
+
+.lz-v-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 2.75rem;
+  padding: 0 0.5rem 0 1rem;
+  font-size: 0.82rem;
+  color: var(--md-sys-color-on-surface-variant);
+  border-bottom: 1px solid var(--line);
+}
+
+.lz-v-luces {
+  display: flex;
+  gap: 6px;
+  margin-right: 0.25rem;
+}
+
+.lz-v-luces i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.lz-v-luces i:nth-child(2) { background: #febc2e; }
+.lz-v-luces i:nth-child(3) { background: #28c840; }
+
+.lz-v-barra img {
+  flex: none;
+  border-radius: 5px;
+}
+
+.lz-v-barra strong {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.lz-v-titulo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lz-v-titulo::before {
+  content: "· ";
+}
+
+.lz-v-cuenta {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lz-v-cerrar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 99px;
+  color: #ffffff;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.lz-v-cerrar:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lz-v-pantalla {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #0a0f19;
+}
+
+.lz-v-pantalla img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.lz-v-pantalla img.ver {
+  opacity: 1;
+}
+
+.lz-v-flecha {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-top: -1.375rem;
+  border: 0;
+  border-radius: 99px;
+  color: #ffffff;
+  background: rgba(10, 15, 25, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.lz-v-flecha.ant { left: 0.75rem; }
+.lz-v-flecha.sig { right: 0.75rem; }
+
+.lz-v-flecha:hover {
+  background: rgba(10, 15, 25, 0.92);
+}
+
+.lz-v-pantalla:hover .lz-v-flecha,
+.lz-v-flecha:focus-visible {
+  opacity: 1;
+}
+
+.lz-v-pasos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.lz-v-pasos button {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.lz-v-pasos button::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.lz-v-pasos button:hover::before {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.lz-v-pasos button[aria-current="true"]::before {
+  width: 18px;
+  background: var(--app, #6ea2ff);
+}
+
+/* en pantallas táctiles no hay «ratón encima»: las flechas, siempre */
+@media (hover: none) {
+  .lz-v-flecha {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .lz-v-luces {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lz-ventana[open] {
+    animation: none;
+  }
+
+  .lz-v-pantalla img,
+  .lz-v-pasos button::before {
+    transition: none;
+  }
+}
+
 @media (max-width: 1020px) {
   .lz-apps {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -1497,12 +1497,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const capa = lanzador.querySelector('.lz-abriendo');
         const dos = n => String(n).padStart(2, '0');
         const ESTADOS = { disponible: T('Disponible', 'Available'), bajando: T('Descargando', 'Downloading'), instalando: T('Instalando', 'Installing'), lista: T('Instalada', 'Installed') };
+        // Capturas de cada app (resources/screenshots/<app>-<archivo>.webp): al abrirla sale su ventana con ellas; sin capturas, solo el icono
+        const CAPTURAS = {
+            'crovite-pdf': [
+                ['01-portada', T('Todo en una app', 'Every PDF task, one app')],
+                ['02-especial', T('Por qué Crovite', 'Why Crovite')],
+                ['03-editar', T('Editar', 'Edit')],
+                ['04-ia', T('IA privada', 'Private AI')],
+                ['05-firmar', T('Firmar', 'Sign')],
+                ['06-combinar', T('Combinar', 'Merge')],
+                ['07-proteger', T('Proteger', 'Protect')],
+                ['08-herramientas', T('Herramientas', 'Tools')],
+                ['09-temas', T('Temas', 'Themes')],
+                ['10-como-funciona', T('Cómo funciona', 'How it works')],
+            ],
+        };
         const apps = [...document.querySelectorAll('.app-grid .app-tile')].map(tile => {
             const li = document.createElement('li');
             li.className = 'lz-app';
             li.style.setProperty('--app', tile.style.getPropertyValue('--app'));
-            li.innerHTML = `<img src="${tile.querySelector('img').getAttribute('src')}" alt="" width="42" height="42"><div><h3></h3><span class="lz-estado"></span></div><button type="button" class="lz-btn"><span class="lz-relleno"></span><span class="lz-texto"></span></button>`;
-            const app = { li, nombre: tile.querySelector('h3').textContent, estado: 'disponible', icono: li.querySelector('img'), btn: li.querySelector('button'), relleno: li.querySelector('.lz-relleno'), texto: li.querySelector('.lz-texto'), marca: li.querySelector('.lz-estado') };
+            const src = tile.querySelector('img').getAttribute('src'), id = (src.match(/([a-z0-9-]+)-icono\.svg$/) || [])[1];
+            li.innerHTML = `<img src="${src}" alt="" width="42" height="42"><div><h3></h3><span class="lz-estado"></span></div><button type="button" class="lz-btn"><span class="lz-relleno"></span><span class="lz-texto"></span></button>`;
+            const app = { li, nombre: tile.querySelector('h3').textContent, estado: 'disponible', icono: li.querySelector('img'), btn: li.querySelector('button'), relleno: li.querySelector('.lz-relleno'), texto: li.querySelector('.lz-texto'), marca: li.querySelector('.lz-estado'),
+                // la carpeta de recursos, la del icono: resources/ en español, ../resources/ en en/
+                capturas: (CAPTURAS[id] || []).map(([archivo, titulo]) => ({ src: src.replace(/suite\/[^/]+$/, `screenshots/${id}-${archivo}.webp`), titulo })) };
             li.querySelector('h3').textContent = app.nombre;
             lista.append(li);
             return app;
@@ -1563,10 +1581,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 const desde = `translate(${de.left + de.width / 2 - a.left - a.width / 2}px, ${de.top + de.height / 2 - a.top - a.height / 2}px) scale(${de.width / a.width})`;
                 await clon.animate([{ transform: desde }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).finished;
             }
-            await new Promise(r => setTimeout(r, 750));
+            await new Promise(r => setTimeout(r, app.capturas.length ? 300 : 750));
+            if (app.capturas.length) abrirVentana(app);
             capa.classList.remove('visible');
             setTimeout(() => { clon.remove(); abriendo = false; pintarCuenta(); }, 200);
         };
+        // La ventana de la app abierta, con sus capturas: pasan solas (no con el ratón encima ni con movimiento reducido);
+        // ‹ ›, los puntos o ←/→ van a otra; Esc, ✕ o clic fuera la cierran
+        const ventana = document.createElement('dialog');
+        ventana.className = 'lz-ventana';
+        ventana.setAttribute('aria-labelledby', 'lz-v-nombre');
+        ventana.innerHTML = `<div class="lz-v-barra"><span class="lz-v-luces" aria-hidden="true"><i></i><i></i><i></i></span><img alt="" width="18" height="18"><strong id="lz-v-nombre"></strong><span class="lz-v-titulo"></span><span class="lz-v-cuenta"></span><button type="button" class="lz-v-cerrar" aria-label="${T('Cerrar', 'Close')}"><i class="fas fa-xmark" aria-hidden="true"></i></button></div>`
+            + `<div class="lz-v-pantalla"><button type="button" class="lz-v-flecha ant" aria-label="${T('Captura anterior', 'Previous screenshot')}"><i class="fas fa-chevron-left" aria-hidden="true"></i></button><button type="button" class="lz-v-flecha sig" aria-label="${T('Captura siguiente', 'Next screenshot')}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button></div>`
+            + '<div class="lz-v-pasos"></div>';
+        document.body.append(ventana);
+        const pantalla = ventana.querySelector('.lz-v-pantalla'), pasosV = ventana.querySelector('.lz-v-pasos');
+        let enVentana = null, iCaptura = 0, pasoT;
+        const irCaptura = i => {
+            const cs = enVentana.capturas;
+            iCaptura = (i + cs.length) % cs.length;
+            pantalla.querySelectorAll('img').forEach((f, j) => f.classList.toggle('ver', j === iCaptura));
+            pasosV.querySelectorAll('button').forEach((p, j) => p.setAttribute('aria-current', String(j === iCaptura)));
+            ventana.querySelector('.lz-v-titulo').textContent = cs[iCaptura].titulo;
+            ventana.querySelector('.lz-v-cuenta').textContent = `${dos(iCaptura + 1)} / ${dos(cs.length)}`;
+            clearTimeout(pasoT);
+            if (!prefersReducedMotion) pasoT = setTimeout(avanzar, 5000);
+        };
+        const avanzar = () => {
+            if (!ventana.open) return;
+            if (pantalla.matches(':hover')) pasoT = setTimeout(avanzar, 5000);
+            else irCaptura(iCaptura + 1);
+        };
+        const abrirVentana = app => {
+            enVentana = app;
+            ventana.style.setProperty('--app', app.li.style.getPropertyValue('--app'));
+            ventana.querySelector('.lz-v-barra img').src = app.icono.getAttribute('src');
+            ventana.querySelector('#lz-v-nombre').textContent = app.nombre;
+            pantalla.querySelectorAll('img').forEach(f => f.remove());
+            pantalla.prepend(...app.capturas.map((c, j) => {
+                const f = document.createElement('img');
+                f.src = c.src; f.alt = c.titulo; f.width = 1200; f.height = 900; f.decoding = 'async';
+                if (j === 0) f.fetchPriority = 'high';
+                return f;
+            }));
+            pasosV.replaceChildren(...app.capturas.map((c, j) => {
+                const p = document.createElement('button');
+                p.type = 'button'; p.title = c.titulo; p.setAttribute('aria-label', `${c.titulo} (${j + 1} ${T('de', 'of')} ${app.capturas.length})`);
+                p.addEventListener('click', () => irCaptura(j));
+                return p;
+            }));
+            ventana.showModal();
+            irCaptura(0);
+        };
+        ventana.querySelector('.lz-v-cerrar').addEventListener('click', () => ventana.close());
+        ventana.querySelector('.lz-v-flecha.ant').addEventListener('click', () => irCaptura(iCaptura - 1));
+        ventana.querySelector('.lz-v-flecha.sig').addEventListener('click', () => irCaptura(iCaptura + 1));
+        ventana.addEventListener('click', ev => { if (ev.target === ventana) ventana.close(); });   // en el fondo, fuera de la ventana
+        ventana.addEventListener('keydown', ev => {
+            const k = { ArrowLeft: -1, ArrowRight: 1 }[ev.key];
+            if (k) { ev.preventDefault(); irCaptura(iCaptura + k); }
+        });
+        ventana.addEventListener('close', () => { clearTimeout(pasoT); enVentana?.btn.focus({ preventScroll: true }); });
         apps.forEach(app => {
             ponerEstado(app, 'disponible');
             app.btn.addEventListener('click', () => (app.estado === 'lista' ? abrir(app) : instalar(app)));
