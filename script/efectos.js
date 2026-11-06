@@ -382,155 +382,6 @@
     // En móvil o con movimiento reducido queda un fotograma fijo; en modo ligero no se crea.
     const azarDe = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
     const ESCENAS = {
-        // Portada, servicio técnico: un gabinete de PC abierto en mantenimiento, con ventiladores, memorias y un barrido de diagnóstico
-        gabinete: (v, col, fil, t, foco) => {
-            const ASPECTO = 1.75;   // las celdas son más altas que anchas
-            const alto = fil - 1, ancho = Math.min(col - 1, Math.round(alto * ASPECTO * .95));
-            const x0 = Math.floor((col - ancho) / 2), y0 = 0;
-            const X = (u) => x0 + Math.round(u * ancho), Y = (w) => y0 + Math.round(w * alto);
-            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
-            const marco = (a, b, c, d, n) => {
-                for (let i = X(a); i <= X(c); i++) { pon(i, Y(b), n); pon(i, Y(d), n); }
-                for (let j = Y(b); j <= Y(d); j++) { pon(X(a), j, n); pon(X(c), j, n); }
-            };
-            const relleno = (a, b, c, d, n) => { for (let j = Y(b); j <= Y(d); j++) for (let i = X(a); i <= X(c); i++) pon(i, j, n); };
-            // Aspas que giran: se calcula el ángulo de cada celda respecto al centro
-            const ventilador = (u, w, r, vel, aspas) => {
-                const cx = X(u), cy = Y(w);
-                for (let j = cy - r - 1; j <= cy + r + 1; j++) for (let i = cx - Math.ceil((r + 1) * ASPECTO); i <= cx + Math.ceil((r + 1) * ASPECTO); i++) {
-                    const dx = (i - cx) / ASPECTO, dy = j - cy, d = Math.hypot(dx, dy);
-                    if (d > r + .7) continue;
-                    if (d > r - .4) pon(i, j, .85);
-                    else if (d < r * .24) pon(i, j, 1);
-                    else {
-                        const a = Math.atan2(dy, dx) - t * vel + d * .28;
-                        const f = Math.cos(a * aspas);
-                        pon(i, j, f > .25 ? .78 : .1);
-                    }
-                }
-            };
-            marco(0, 0, 1, 1, .95);                         // gabinete
-                        ventilador(.2, .25, Math.max(3, Math.round(alto * .18)), 6, 3);   // ventilador trasero
-            // Memorias RAM, con actividad que parpadea
-            for (let k = 0; k < 4; k++) {
-                const a = .43 + k * .055;
-                for (let j = Y(.1); j <= Y(.42); j++) {
-                    const activo = azarDe(k * 11 + j * 3 + Math.floor(t * 7)) > .45;
-                    pon(X(a), j, activo ? 1 : .35);
-                }
-            }
-            // Unidades de disco, con su luz
-            for (let k = 0; k < 3; k++) {
-                const b = .1 + k * .12;
-                marco(.72, b, .93, b + .08, .6);
-                pon(X(.9), Y(b + .04), azarDe(k + Math.floor(t * 4)) > .5 ? 1 : .2);
-            }
-            // Tarjeta gráfica, con dos ventiladores
-            marco(.08, .52, .78, .74, .7);
-            ventilador(.25, .63, Math.max(2, Math.round(alto * .085)), -8, 3);
-            ventilador(.6, .63, Math.max(2, Math.round(alto * .085)), -8, 3);
-            // Fuente de poder, con su rejilla
-            marco(.08, .8, .4, .94, .65);
-            for (let i = X(.1); i < X(.38); i += 2) pon(i, Y(.87), .4);
-            // Tornillos que se aprietan: el destornillador entra y sale del de abajo a la derecha
-            const entra = (Math.sin(t * 1.4) + 1) / 2;
-            const punta = X(.64) + Math.round(entra * ancho * .12);
-            for (let i = punta; i < x0 + ancho + 6; i++) pon(i, Y(.87), i < punta + 3 ? 1 : i < X(.86) + Math.round(entra * ancho * .12) ? .55 : .85);
-            pon(X(.62), Y(.87), .9);
-            // Barrido de diagnóstico de arriba abajo
-            const barrido = (t * .22) % 2.2;
-            if (barrido <= 1) { const j = Y(barrido); for (let i = X(0) + 1; i < X(1); i++) v[j * col + i] = Math.max(v[j * col + i], .4); }
-            // Foco: el servicio bajo el cursor se dibuja sobre el gabinete
-            const k = foco.k, dt = foco.dt;
-            const suave = (q) => 1 - Math.pow(1 - Math.min(1, Math.max(0, q)), 3);
-            if (foco.n === 'armado') {
-                // Una memoria entra en su ranura, encaja con un destello y vuelve a empezar
-                const q = (dt % 2.4) / 1.4, baja = suave(q);
-                const a = .43 + 4 * .055, top = -.45 + baja * .55;
-                for (let j = Y(top); j <= Y(top + .32); j++) { pon(X(a), j, k); pon(X(a) + 1, j, k); }
-                if (q >= 1 && q < 1.25) for (let j = Y(.08); j <= Y(.44); j++) { pon(X(a) - 1, j, .8 * k); pon(X(a) + 1, j, .8 * k); }
-                // y la gráfica se desliza a su lugar desde la izquierda
-                const g = suave(((dt + .6) % 2.4) / 1.4), dx = (1 - g) * -.5;
-                for (let i = X(.08 + dx); i <= X(.78 + dx); i++) { pon(i, Y(.52), .9 * k); pon(i, Y(.74), .9 * k); }
-            } else if (foco.n === 'servidores') {
-                // Racks a los lados del gabinete, con unidades y luces de actividad
-                [[1, x0 - 3], [x0 + ancho + 3, col - 2]].forEach(([a, b], lado) => {
-                    if (b - a < 4) return;
-                    for (let i = a; i <= b; i++) { pon(i, 0, .8 * k); pon(i, fil - 1, .8 * k); }
-                    for (let j = 0; j < fil; j++) { pon(a, j, .8 * k); pon(b, j, .8 * k); }
-                    for (let j = 2; j < fil - 2; j += 3) {
-                        for (let i = a + 2; i <= b - 2; i++) pon(i, j, .35 * k);
-                        pon(b - 2, j, azarDe(j * 7 + lado + Math.floor(t * 6)) > .45 ? k : .2 * k);
-                        pon(b - 4, j, azarDe(j * 3 + lado + Math.floor(t * 9)) > .6 ? k : .2 * k);
-                    }
-                });
-            } else if (foco.n === 'hardware') {
-                // Limpieza: el polvo sale volando de los ventiladores
-                [[.2, .25], [.25, .63], [.6, .63]].forEach(([u, w], f) => {
-                    for (let n = 0; n < 44; n++) {
-                        const vida = (t * .9 + azarDe(n * 13 + f) ) % 1, ang = azarDe(n * 7 + f * 3) * 6.283;
-                        const d = vida * 16;
-                        pon(X(u) + Math.cos(ang) * d * 1.75, Y(w) + Math.sin(ang) * d, (1.1 - vida) * k);
-                    }
-                });
-            } else if (['firmware', 'impresoras', 'graphene'].includes(foco.n)) {
-                // El gabinete se apaga y en su lugar aparece el equipo del servicio
-                for (let n = 0; n < v.length; n++) v[n] *= 1 - .82 * k;
-                const cx = Math.round(col / 2), cy = Math.round(fil / 2);
-                const rect = (a, b, c, d, n) => { for (let i = a; i <= c; i++) { pon(i, b, n); pon(i, d, n); } for (let j = b; j <= d; j++) { pon(a, j, n); pon(c, j, n); } };
-                if (foco.n === 'firmware') {
-                    // Un chip con sus patas y una barra de actualización que avanza
-                    const lado = Math.round(fil * .22);
-                    rect(cx - lado * 2, cy - lado - 4, cx + lado * 2, cy + lado - 4, k);
-                    for (let j = cy - lado - 2; j <= cy + lado - 6; j += 2) { pon(cx - lado * 2 - 1, j, .7 * k); pon(cx - lado * 2 - 2, j, .7 * k); pon(cx + lado * 2 + 1, j, .7 * k); pon(cx + lado * 2 + 2, j, .7 * k); }
-                    for (let i = cx - lado * 2 + 2; i <= cx + lado * 2 - 2; i += 3) { pon(i, cy - lado - 5, .7 * k); pon(i, cy + lado - 3, .7 * k); }
-                    const pulso = .4 + .5 * Math.abs(Math.sin(t * 3));
-                    for (let j = cy - 5; j <= cy - 3; j++) for (let i = cx - 4; i <= cx + 4; i++) pon(i, j, pulso * k);
-                    const by = cy + lado + 2, bw = Math.round(col * .32), avance = (dt * .35) % 1.15;
-                    rect(cx - bw, by, cx + bw, by + 2, .7 * k);
-                    for (let i = cx - bw + 1; i <= cx - bw + 1 + Math.min(1, avance) * (bw * 2 - 2); i++) pon(i, by + 1, avance > 1 ? (Math.floor(t * 8) % 2 ? k : .4 * k) : .9 * k);
-                } else if (foco.n === 'impresoras') {
-                    // Sublimación como en las HiTi: la foto sale en cuatro pasadas (amarillo, magenta, cian y laminado)
-                    const pw = Math.round(col * .3), py = Math.round(fil * .18);
-                    rect(cx - pw, py - 4, cx + pw, py, k);
-                    for (let i = cx - pw + 2; i < cx + pw - 6; i += 2) pon(i, py - 2, .35 * k);
-                    pon(cx + pw - 3, py - 2, Math.floor(t * 4) % 2 ? k : .3 * k);
-                    const hw = Math.round(pw * .8), alto = fil - py - 3, ciclo = 6, q = (dt % ciclo) / ciclo;
-                    const pasada = Math.min(3, Math.floor(q * 4)), r = (q * 4) % 1, ida = pasada % 2 === 0;
-                    const cabeza = py + 1 + Math.round((ida ? r : 1 - r) * alto);
-                    for (let j = py + 1; j <= py + 1 + alto; j++) {
-                        const hecho = pasada + (ida ? (j <= cabeza ? 1 : 0) : (j >= cabeza ? 1 : 0));
-                        const n = [.08, .22, .38, .55, .72][Math.min(4, hecho)];
-                        for (let i = cx - hw; i <= cx + hw; i++) {
-                            const borde = i === cx - hw || i === cx + hw || j === py + 1 + alto;
-                            const foto = Math.sin(i * .25 + j * .4) * .1 + Math.cos(Math.hypot(i - cx, (j - py - alto / 2) * 1.75) * .3) * .08;
-                            pon(i, j, (borde ? .6 : n + foto * Math.min(1, hecho)) * k);
-                        }
-                    }
-                    for (let i = cx - hw - 2; i <= cx + hw + 2; i++) pon(i, cabeza, k);
-                } else {
-                    // Un Pixel: la pantalla se llena con la retícula hexagonal del grafeno y aparece un candado
-                    const ph = fil - 3, pw = Math.round(ph * .5 * 1.75 / 2);
-                    rect(cx - pw, 1, cx + pw, ph + 1, k);
-                    for (let i = cx - 2; i <= cx + 2; i++) pon(i, 2, .6 * k);
-                    const llena = Math.min(1, (dt % 4.5) / 2.6);
-                    for (let j = 4; j <= ph - 1; j++) for (let i = cx - pw + 2; i <= cx + pw - 2; i++) {
-                        const fila = Math.floor((j - 4) / 2), desp = fila % 2 ? 3 : 0;
-                        const enHex = ((i + desp) % 6 === 0 || (j % 2 === 0 && (i + desp) % 6 < 4 && (i + desp) % 6 > 0));
-                        const orden = (j - 4) / (ph - 5);
-                        if (enHex && orden <= llena) pon(i, j, (.35 + .25 * Math.sin(t * 2 + i * .3)) * k);
-                    }
-                    if (llena >= 1) {
-                        // Candado en el centro
-                        const ly = Math.round(fil * .55);
-                        for (let j = ly; j <= ly + 4; j++) for (let i = cx - 4; i <= cx + 4; i++) pon(i, j, (j === ly || j === ly + 4 || i === cx - 4 || i === cx + 4) ? k : .15 * k);
-                        for (let a = Math.PI; a <= Math.PI * 2; a += .1) pon(cx + Math.cos(a) * 3, ly - 1 + Math.sin(a) * 3, k);
-                        pon(cx, ly + 2, k);
-                    }
-                }
-            }
-        },
-        // Agro-Cria: el agua de riego, con superficie y reflejos
         olas: (v, col, fil, t) => {
             for (let i = 0; i < col; i++) {
                 const h = fil * .48 + Math.sin(i * .11 + t * 1.3) * fil * .17 + Math.sin(i * .037 - t * .7) * fil * .14;
@@ -1280,6 +1131,378 @@
         caja.closest('section')?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
             li.addEventListener('pointerenter', () => { caja.dataset.foco = li.dataset.foco; if (estatico) dibujar(0); });
             li.addEventListener('pointerleave', () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; if (estatico) { reloj = INICIO[2] + DUR[2] * .8; dibujar(0); } });
+        });
+    });
+
+    // --- SERVICIO TÉCNICO: un equipo de principio a fin. Diagnóstico térmico, limpieza, armado, firmware y entrega.
+    // El servicio bajo el cursor salta a su etapa; sin movimiento queda fijo en el armado.
+    document.querySelectorAll('[data-tecnico-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.6, 4.8, 5.2, 4.6, 4.8], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { servidores: 0, hardware: 1, armado: 2, firmware: 3, impresoras: 4, graphene: 4 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const AZUL = '#6ea2ff', CIAN = '#22e1f0', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171';
+        const L = ING
+            ? { fallas: '2 FAULTS FOUND', ok: 'OK', temp: 'CPU TEMP', piezas: ['CPU', 'Cooler', 'Memory 2×16 GB', 'Graphics card', 'NVMe SSD 1 TB', 'PSU 750 W Gold', 'Cabling'], post: 'POST OK · BOOT 9 s', fw: 'UEFI · FIRMWARE UPDATE', noApagar: 'DO NOT POWER OFF', verif: 'VERIFIED · SHA-256 ✓', estres: 'STRESS 30 min ✓', listo: 'TESTED · READY FOR PICKUP ✓', antes: 'before', despues: 'after', limpio: 'DUST · PASTE · FANS', diag: '$ diag --full' }
+            : { fallas: '2 FALLAS ENCONTRADAS', ok: 'OK', temp: 'TEMP. CPU', piezas: ['Procesador', 'Disipador', 'Memoria 2×16 GB', 'Tarjeta de video', 'SSD NVMe 1 TB', 'Fuente 750 W Gold', 'Cableado'], post: 'POST OK · ARRANQUE 9 s', fw: 'UEFI · ACTUALIZACIÓN DE FIRMWARE', noApagar: 'NO APAGUES EL EQUIPO', verif: 'VERIFICADO · SHA-256 ✓', estres: 'ESTRÉS 30 min ✓', listo: 'PROBADO · LISTO PARA ENTREGA ✓', antes: 'antes', despues: 'después', limpio: 'POLVO · PASTA · VENTILADORES', diag: '$ diag --completo' };
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(148,163,184,.8)', alin = 'left', tam = 9) => {
+            ctx.fillStyle = col; ctx.font = `500 ${tam}px ui-monospace, Menlo, monospace`; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const caja2 = (x, y, w, h, r, relleno, borde, ancho = 1) => { redondo(x, y, w, h, r); if (relleno) { ctx.fillStyle = relleno; ctx.fill(); } if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = ancho; ctx.stroke(); } };
+        const ventilador = (x, y, r, giro, col = 'rgba(203,213,225,.75)', roto = false) => {
+            ctx.strokeStyle = roto ? ROJO : col; ctx.lineWidth = 1.1;
+            ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke();
+            ctx.fillStyle = roto ? 'rgba(248,113,113,.35)' : 'rgba(148,163,184,.35)';
+            for (let k = 0; k < 5; k++) {
+                const a = giro + k * Math.PI * 2 / 5;
+                ctx.beginPath(); ctx.moveTo(x, y);
+                ctx.quadraticCurveTo(x + Math.cos(a + .5) * r * .9, y + Math.sin(a + .5) * r * .9, x + Math.cos(a + .9) * r * .82, y + Math.sin(a + .9) * r * .82);
+                ctx.lineTo(x + Math.cos(a + .25) * r * .3, y + Math.sin(a + .25) * r * .3); ctx.fill();
+            }
+            punto(x, y, r * .22, roto ? ROJO : '#cbd5e1');
+        };
+        const paloma = (x, y, s, col = VERDE) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x - s * .3, y + s * .7); ctx.lineTo(x + s, y - s * .7); ctx.stroke(); };
+
+        // Geometría del gabinete abierto, en coordenadas relativas (u, v)
+        const torre = (x, y, w, h) => {
+            const A = (u, v) => [x + u * w, y + v * h];
+            return {
+                A, w, h,
+                placa: [A(.07, .05), w * .7, h * .62],
+                cpu: [A(.27, .14), w * .17],
+                ram: [[A(.58, .09), w * .035, h * .3], [A(.64, .09), w * .035, h * .3]],
+                gpu: [A(.1, .47), w * .64, h * .085],
+                ssd: [A(.13, .38), w * .15, h * .024],
+                psu: [A(.06, .79), w * .44, h * .14],
+                fans: [A(.9, .19), A(.9, .41), A(.9, .63)],
+                fr: Math.min(w * .075, h * .06),
+            };
+        };
+        const dibujaCaja = (g) => {
+            const [x, y] = g.A(0, 0);
+            caja2(x, y, g.w, g.h, 8, '#0b1220', 'rgba(148,163,184,.55)', 1.4);
+            ctx.strokeStyle = 'rgba(148,163,184,.18)'; ctx.lineWidth = 1;
+            const [bx, by] = g.A(.6, .77); ctx.strokeRect(bx, by, g.w * .32, g.h * .17);
+            for (let k = 1; k < 3; k++) { ctx.beginPath(); ctx.moveTo(bx, by + k * g.h * .057); ctx.lineTo(bx + g.w * .32, by + k * g.h * .057); ctx.stroke(); }
+        };
+        const dibujaPlaca = (g, k = 1) => {
+            const [[px, py], pw, ph] = g.placa;
+            ctx.save(); ctx.globalAlpha *= k;
+            caja2(px, py, pw, ph, 4, '#0f2233', 'rgba(110,162,255,.45)');
+            ctx.strokeStyle = 'rgba(110,162,255,.13)'; ctx.lineWidth = 1;
+            for (let i = 0; i < 9; i++) { const yy = py + ph * (.08 + i * .1); ctx.beginPath(); ctx.moveTo(px + pw * .05, yy); ctx.lineTo(px + pw * (.3 + azarDe(i) * .5), yy); ctx.stroke(); }
+            const [[cx, cy], cs] = g.cpu; ctx.strokeStyle = 'rgba(110,162,255,.5)'; ctx.strokeRect(cx - 3, cy - 3, cs + 6, cs + 6);
+            g.ram.forEach(([[rx, ry], rw, rh]) => { ctx.strokeStyle = 'rgba(110,162,255,.35)'; ctx.strokeRect(rx - 1, ry - 2, rw + 2, rh + 4); });
+            ctx.restore();
+        };
+        const dibujaCpu = (g, dx = 0, dy = 0) => { const [[cx, cy], cs] = g.cpu; caja2(cx + dx, cy + dy, cs, cs, 2, '#cbd5e1', null); caja2(cx + dx + cs * .2, cy + dy + cs * .2, cs * .6, cs * .6, 1, '#94a3b8', null); };
+        const dibujaDisipador = (g, dx = 0, dy = 0, giro = 0) => {
+            const [[cx, cy], cs] = g.cpu, m = cs * .22;
+            caja2(cx - m + dx, cy - m + dy, cs + m * 2, cs + m * 2, 3, '#1e293b', 'rgba(203,213,225,.6)');
+            ventilador(cx + cs / 2 + dx, cy + cs / 2 + dy, cs * .62, giro);
+        };
+        const dibujaRam = (g, i, dy = 0) => {
+            const [[rx, ry], rw, rh] = g.ram[i];
+            caja2(rx, ry + dy, rw, rh, 1, '#065f46', 'rgba(52,211,153,.8)');
+            for (let k = 0; k < 4; k++) { ctx.fillStyle = '#0b1220'; ctx.fillRect(rx + rw * .2, ry + dy + rh * (.08 + k * .23), rw * .6, rh * .15); }
+        };
+        const dibujaGpu = (g, dx = 0, giro = 0) => {
+            const [[gx, gy], gw, gh] = g.gpu;
+            caja2(gx + dx, gy, gw, gh, 3, '#1e293b', 'rgba(203,213,225,.65)');
+            ventilador(gx + dx + gw * .3, gy + gh / 2, gh * .4, giro); ventilador(gx + dx + gw * .7, gy + gh / 2, gh * .4, -giro);
+        };
+        const dibujaSsd = (g, dx = 0) => { const [[sx, sy], sw, sh] = g.ssd; caja2(sx + dx, sy, sw, sh, 1, '#0f172a', CIAN); };
+        const dibujaPsu = (g, dy = 0) => {
+            const [[qx, qy], qw, qh] = g.psu;
+            caja2(qx, qy + dy, qw, qh, 3, '#111827', 'rgba(203,213,225,.6)');
+            ctx.strokeStyle = 'rgba(148,163,184,.35)'; ctx.lineWidth = 1;
+            for (let k = 0; k < 6; k++) { const xx = qx + qw * (.45 + k * .08); ctx.beginPath(); ctx.moveTo(xx, qy + dy + qh * .2); ctx.lineTo(xx, qy + dy + qh * .8); ctx.stroke(); }
+            rotulo('750W', qx + qw * .08, qy + dy + qh / 2, 'rgba(203,213,225,.7)', 'left', 8);
+        };
+        const dibujaFans = (g, giro, roto = -1) => g.fans.forEach(([fx, fy], k) => ventilador(fx, fy, g.fr, k === roto ? .4 : giro + k, undefined, k === roto));
+        const equipoCompleto = (g, giro, roto = -1) => {
+            dibujaCaja(g); dibujaPlaca(g); dibujaCpu(g); dibujaSsd(g); dibujaRam(g, 0); dibujaRam(g, 1); dibujaPsu(g); dibujaGpu(g, 0, giro * 1.3);
+            dibujaDisipador(g, 0, 0, giro); dibujaFans(g, giro, roto);
+        };
+        // Dónde va el gabinete y dónde el panel lateral
+        const reparto = (zona) => {
+            const th = zona.h - 6, tw = Math.min(th * .66, zona.w * .44);
+            const g = torre(zona.x + 4, zona.y + 3, tw, th);
+            const px = zona.x + tw + 22;
+            return { g, px, pw: zona.x + zona.w - px };
+        };
+        // Partículas de polvo con el momento en que la boquilla de aire pasa sobre ellas
+        const POLVO = Array.from({ length: 110 }, (_, i) => ({ u: .08 + azarDe(i) * .8, v: .06 + azarDe(i + 400) * .86, r: .7 + azarDe(i + 900) * 1.3 }));
+        const RUTA_AIRE = [[.05, .08], [.92, .14], [.08, .3], [.92, .38], [.08, .52], [.92, .6], [.08, .75], [.92, .9]];
+        const enRutaRel = (q) => {
+            const n = RUTA_AIRE.length - 1, f = limitar(q) * n, i = Math.min(n - 1, Math.floor(f)), r = f - i;
+            return [RUTA_AIRE[i][0] + (RUTA_AIRE[i + 1][0] - RUTA_AIRE[i][0]) * r, RUTA_AIRE[i][1] + (RUTA_AIRE[i + 1][1] - RUTA_AIRE[i][1]) * r];
+        };
+        POLVO.forEach(m => {
+            let mejor = 1e9;
+            for (let s = 0; s <= 140; s++) { const [u, v] = enRutaRel(s / 140), d = Math.hypot(u - m.u, (v - m.v) * 1.4); if (d < mejor) { mejor = d; m.q = s / 140; } }
+        });
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .9;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+            const giro = t * 9;
+
+            if (e === 0) {
+                // 1. DIAGNÓSTICO: barrido térmico que revela el calor y una lista de pruebas
+                const { g, px, pw } = reparto(zona);
+                equipoCompleto(g, giro, 1);
+                const [gx, gy] = g.A(0, 0);
+                const barre = sale(entre(p, .06, .55)), sy = gy + g.h * barre;
+                const [[cx, cy], cs] = g.cpu, [[ux, uy], uw, uh] = g.gpu;
+                if (barre > 0) {
+                    ctx.save(); ctx.beginPath(); ctx.rect(gx, gy, g.w, sy - gy); ctx.clip();
+                    const calor = (x, y, r, a) => { const gr = ctx.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(248,113,113,${a})`); gr.addColorStop(.45, `rgba(251,191,36,${a * .55})`); gr.addColorStop(1, 'rgba(59,130,246,0)'); ctx.fillStyle = gr; ctx.fillRect(x - r, y - r, r * 2, r * 2); };
+                    ctx.fillStyle = 'rgba(30,64,175,.22)'; ctx.fillRect(gx, gy, g.w, g.h);
+                    calor(cx + cs / 2, cy + cs / 2, cs * 1.6, .75 + Math.sin(t * 5) * .08);
+                    calor(ux + uw * .5, uy + uh / 2, uw * .42, .5);
+                    ctx.restore();
+                }
+                if (barre < 1) { ctx.save(); ctx.strokeStyle = CIAN; ctx.lineWidth = 1.5; ctx.shadowColor = CIAN; ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(gx - 4, sy); ctx.lineTo(gx + g.w + 4, sy); ctx.stroke(); ctx.restore(); }
+                if (barre > .25) rotulo('92 °C', cx + cs / 2, cy - cs * .22 - 8, ROJO, 'center', 10);
+                if (barre > .62) rotulo('81 °C', ux + uw * .5, uy - 7, AMBAR, 'center');
+                const [f2x, f2y] = g.fans[1];
+                if (barre > .5) rotulo('0 RPM', f2x - g.fr - 3, f2y, ROJO, 'right');
+                const filas = [['CPU', '92 °C', ROJO, '▲'], ['FAN 2', '0 RPM', ROJO, '✕'], ['GPU', '81 °C', AMBAR, '!'], ['RAM 32 GB', 'MemTest', VERDE, L.ok], ['SSD SMART', '98 %', VERDE, L.ok], ['PSU 12 V', '12.08 V', VERDE, L.ok]];
+                const y0 = zona.y + 18, paso = Math.min(24, (zona.h - 60) / filas.length);
+                rotulo(L.diag, px, y0 - 6, 'rgba(148,163,184,.9)');
+                filas.forEach(([n, v, col, s], k) => {
+                    const q = entre(p, .14 + k * .085, .2 + k * .085);
+                    if (!q) return;
+                    const yy = y0 + 14 + k * paso;
+                    ctx.globalAlpha = alfa * q;
+                    rotulo(n, px, yy, 'rgba(226,232,240,.9)'); rotulo(v, px + pw * .5, yy, col, 'left');
+                    rotulo(s, px + pw - 4, yy, col, 'right');
+                    ctx.fillStyle = 'rgba(148,163,184,.12)'; ctx.fillRect(px, yy + paso / 2 - 1, pw - 4, 1);
+                });
+                ctx.globalAlpha = alfa;
+                const fin = entre(p, .74, .82);
+                if (fin) { ctx.globalAlpha = alfa * fin; caja2(px, zona.y + zona.h - 26, pw - 4, 20, 5, 'rgba(251,191,36,.12)', AMBAR); rotulo(L.fallas, px + (pw - 4) / 2, zona.y + zona.h - 16, AMBAR, 'center'); }
+            } else if (e === 1) {
+                // 2. LIMPIEZA: aire comprimido que se lleva el polvo, pasta térmica nueva y la temperatura que baja
+                const { g, px, pw } = reparto(zona);
+                const lev = entre(p, .52, .6) - entre(p, .74, .82), arriba = -g.h * .2 * sale(lev);
+                const fanVive = p > .45;
+                dibujaCaja(g); dibujaPlaca(g); dibujaCpu(g); dibujaSsd(g); dibujaRam(g, 0); dibujaRam(g, 1); dibujaPsu(g); dibujaGpu(g, 0, giro * 1.3);
+                // pasta térmica: se esparce mientras el disipador está levantado
+                const [[cx, cy], cs] = g.cpu, pasta = sale(entre(p, .6, .72));
+                if (pasta) { ctx.fillStyle = 'rgba(226,232,240,.9)'; ctx.beginPath(); ctx.arc(cx + cs / 2, cy + cs / 2, cs * (.08 + .32 * pasta), 0, 7); ctx.fill(); }
+                dibujaDisipador(g, 0, arriba, giro);
+                dibujaFans(g, giro, fanVive ? -1 : 1);
+                // polvo
+                const qa = entre(p, .04, .5), [gx, gy] = g.A(0, 0);
+                POLVO.forEach((m, i) => {
+                    const pas = qa - m.q;
+                    let x = gx + m.u * g.w, y = gy + m.v * g.h, a = .75;
+                    if (pas > 0) { const s = pas * 14; x += s * g.w * .35 * (azarDe(i + 7) - .3); y -= s * g.h * .25 * azarDe(i + 11); a = Math.max(0, .75 - s * 1.2); }
+                    if (a > 0) punto(x, y, m.r, `rgba(180,160,128,${a})`);
+                });
+                if (qa > 0 && qa < 1) {
+                    const [u, v] = enRutaRel(qa), nx = gx + u * g.w, ny = gy + v * g.h;
+                    ctx.strokeStyle = 'rgba(186,230,253,.5)'; ctx.lineWidth = 1;
+                    for (let k = 0; k < 4; k++) { const q = (t * 3 + k / 4) % 1; ctx.beginPath(); ctx.arc(nx, ny, 4 + q * 16, Math.PI * .25, Math.PI * .75); ctx.stroke(); }
+                    caja2(nx - 2.5, ny - 24, 5, 22, 2, '#e2e8f0', null); caja2(nx - 7, ny - 38, 14, 15, 3, ROJO, null);
+                }
+                if (fanVive) { const [fx, fy] = g.fans[1]; ctx.globalAlpha = alfa * entre(p, .45, .5); rotulo('1450 RPM', fx - g.fr - 3, fy, VERDE, 'right'); ctx.globalAlpha = alfa; }
+                // gráfica de temperatura
+                const gy0 = zona.y + 22, gh = zona.h * .55, x1 = px + pw - 6;
+                rotulo(L.temp, px, zona.y + 8, 'rgba(148,163,184,.9)');
+                ctx.strokeStyle = 'rgba(148,163,184,.15)'; ctx.lineWidth = 1;
+                for (let k = 0; k <= 4; k++) { const yy = gy0 + gh * k / 4; ctx.beginPath(); ctx.moveTo(px, yy); ctx.lineTo(x1, yy); ctx.stroke(); }
+                const temp = (q) => 92 - 38 * sale(entre(q, .3, .95)) + Math.sin(q * 40) * 1.2;
+                const aY = (v) => gy0 + gh * (1 - (v - 40) / 60);
+                const hasta = entre(p, .05, .9);
+                ctx.lineWidth = 1.8; ctx.beginPath();
+                for (let s = 0; s <= 60 * hasta; s++) { const q = s / 60, xx = px + (x1 - px) * q, yy = aY(temp(q)); s ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+                const grad = ctx.createLinearGradient(0, aY(95), 0, aY(50)); grad.addColorStop(0, ROJO); grad.addColorStop(.5, AMBAR); grad.addColorStop(1, VERDE);
+                ctx.strokeStyle = grad; ctx.stroke();
+                const ahora = Math.round(temp(hasta));
+                rotulo(`${ahora} °C`, px + (x1 - px) * hasta, aY(temp(hasta)) - 10, ahora > 75 ? ROJO : ahora > 62 ? AMBAR : VERDE, hasta > .7 ? 'right' : 'left', 11);
+                const yb = gy0 + gh + 18;
+                rotulo(`${L.antes} 92 °C`, px, yb, ROJO); rotulo(`${L.despues} 54 °C`, x1, yb, VERDE, 'right');
+                if (p > .82) { ctx.globalAlpha = alfa * entre(p, .82, .88); paloma(x1 - 4, yb + 22, 4); rotulo(L.limpio, x1 - 14, yb + 22, VERDE, 'right'); }
+            } else if (e === 2) {
+                // 3. ARMADO: cada pieza entra a su lugar, se tienden los cables y el equipo pasa el POST
+                const { g, px, pw } = reparto(zona);
+                dibujaCaja(g); dibujaPlaca(g, sale(entre(p, 0, .08)));
+                const k = (i) => sale(entre(p, .06 + i * .1, .16 + i * .1));
+                const fuera = (q, d) => (1 - q) * d;
+                const vivo = p > .86 ? 1 : 0;
+                const piezas = [
+                    () => { const q = k(0); if (q) { ctx.globalAlpha = alfa * q; dibujaCpu(g, 0, fuera(q, -40)); } },
+                    () => { const q = k(1); if (q) { ctx.globalAlpha = alfa * q; dibujaDisipador(g, 0, fuera(q, -60), giro * vivo); } },
+                    () => { const q = k(2); if (q) { ctx.globalAlpha = alfa * q; dibujaRam(g, 0, fuera(q, -50)); ctx.globalAlpha = alfa * sale(entre(p, .3, .4)); dibujaRam(g, 1, fuera(sale(entre(p, .3, .4)), -50)); } },
+                    () => { const q = k(3); if (q) { ctx.globalAlpha = alfa * q; dibujaGpu(g, fuera(q, g.w * .6), giro * 1.3 * vivo); } },
+                    () => { const q = k(4); if (q) { ctx.globalAlpha = alfa * q; dibujaSsd(g, fuera(q, -30)); } },
+                    () => { const q = k(5); if (q) { ctx.globalAlpha = alfa * q; dibujaPsu(g, fuera(q, 40)); } },
+                ];
+                // la SSD va debajo de la GPU
+                [0, 1, 2, 4, 3, 5].forEach(i => piezas[i]());
+                ctx.globalAlpha = alfa;
+                const cab = entre(p, .68, .84);
+                if (cab) {
+                    const [[qx, qy], qw] = g.psu, [[cx, cy], cs] = g.cpu, [[ux, uy], uw] = g.gpu, [[bx, by], bw, bh] = g.placa;
+                    const cables = [
+                        [[qx + qw * .2, qy], [qx + qw * .2, by + bh + 5], [bx + bw + 5, by + bh + 5], [bx + bw + 5, cy + cs * .5], [bx + bw - 3, cy + cs * .5]],
+                        [[qx + qw * .35, qy], [qx + qw * .35, uy + g.h * .12], [ux + uw * .85, uy + g.h * .12], [ux + uw * .85, uy + g.h * .085]],
+                        [[qx + qw * .08, qy], [qx + qw * .08, by + bh * .12], [cx - 6, by + bh * .12], [cx - 6, cy - cs * .25]],
+                    ];
+                    cables.forEach((pts, i) => {
+                        const q = entre(cab, i * .2, i * .2 + .6); if (!q) return;
+                        const largos = pts.slice(1).map((pt, j) => Math.hypot(pt[0] - pts[j][0], pt[1] - pts[j][1])), total = largos.reduce((a, b) => a + b, 0);
+                        let resta = total * q;
+                        ctx.strokeStyle = i === 1 ? AMBAR : 'rgba(226,232,240,.75)'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+                        for (let j = 1; j < pts.length && resta > 0; j++) { const f = Math.min(1, resta / largos[j - 1]); ctx.lineTo(pts[j - 1][0] + (pts[j][0] - pts[j - 1][0]) * f, pts[j - 1][1] + (pts[j][1] - pts[j - 1][1]) * f); resta -= largos[j - 1]; }
+                        ctx.stroke();
+                    });
+                }
+                dibujaFans(g, giro * vivo);
+                if (vivo) { const [gx, gy] = g.A(0, 0); ctx.strokeStyle = `rgba(110,162,255,${.35 + Math.sin(t * 4) * .2})`; ctx.lineWidth = 2; redondo(gx + 3, gy + 3, g.w - 6, g.h - 6, 6); ctx.stroke(); }
+                // lista de piezas
+                const y0 = zona.y + 12, paso = Math.min(22, (zona.h - 46) / L.piezas.length);
+                L.piezas.forEach((n, i) => {
+                    const listo = i < 6 ? k(i) >= 1 : cab >= 1, yy = y0 + i * paso;
+                    ctx.strokeStyle = listo ? VERDE : 'rgba(148,163,184,.45)'; ctx.lineWidth = 1.2; ctx.strokeRect(px, yy - 5, 10, 10);
+                    if (listo) paloma(px + 5, yy, 3.4);
+                    rotulo(n, px + 18, yy, listo ? 'rgba(226,232,240,.95)' : 'rgba(148,163,184,.6)');
+                });
+                const fin = entre(p, .84, .88);
+                if (fin) { ctx.globalAlpha = alfa * fin; caja2(px, zona.y + zona.h - 26, pw - 4, 20, 5, 'rgba(52,211,153,.12)', VERDE); rotulo(L.post, px + (pw - 4) / 2, zona.y + zona.h - 16, VERDE, 'center'); }
+            } else if (e === 3) {
+                // 4. FIRMWARE: chip con datos entrando por sus pines y tres actualizaciones en fila, verificadas al final
+                caja2(zona.x, zona.y, zona.w, zona.h, 10, '#0a1430', 'rgba(110,162,255,.4)');
+                ctx.save(); redondo(zona.x, zona.y, zona.w, zona.h, 10); ctx.clip(); ctx.fillStyle = 'rgba(110,162,255,.16)'; ctx.fillRect(zona.x, zona.y, zona.w, 20); ctx.restore();
+                rotulo(L.fw, zona.x + 10, zona.y + 10, 'rgba(226,240,255,.95)');
+                const cs = Math.min(zona.h * .34, zona.w * .18), cx = zona.x + zona.w * .17, cy = zona.y + 20 + (zona.h - 20) * .46;
+                for (let k = 0; k < 6; k++) {
+                    const off = (k - 2.5) * cs / 6.5;
+                    [[cx - cs * 1.05, cy + off, cx - cs / 2, cy + off], [cx + off, cy - cs * 1.05, cx + off, cy - cs / 2], [cx + cs * 1.05, cy + off, cx + cs / 2, cy + off], [cx + off, cy + cs * 1.05, cx + off, cy + cs / 2]].forEach(([a, b, c2, d], j) => {
+                        ctx.strokeStyle = 'rgba(110,162,255,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c2, d); ctx.stroke();
+                        if (p < .82) { const q = (t * 1.6 + k * .17 + j * .29) % 1; punto(a + (c2 - a) * q, b + (d - b) * q, 1.6, CIAN); }
+                    });
+                }
+                caja2(cx - cs / 2, cy - cs / 2, cs, cs, 4, '#111a2e', p >= .82 ? VERDE : AZUL, 1.4);
+                caja2(cx - cs * .3, cy - cs * .3, cs * .6, cs * .6, 2, null, 'rgba(110,162,255,.35)');
+                punto(cx - cs * .36, cy - cs * .36, 1.8, AZUL);
+                rotulo('UEFI', cx, cy - 5, 'rgba(226,240,255,.9)', 'center', 10);
+                rotulo('SPI 32M', cx, cy + 8, 'rgba(148,163,184,.8)', 'center', 8);
+                const items = [['BIOS / UEFI', '1.07', '2.14'], ['SSD NVMe', '3B2Q', '4B7Q'], ['BMC', '1.8.2', '2.3.0']];
+                const lx = zona.x + zona.w * .37, lw = zona.x + zona.w - 12 - lx, y0 = zona.y + 38, paso = Math.min(50, (zona.h - 86) / 3);
+                items.forEach(([n, a, b], i) => {
+                    const q = entre(p, .08 + i * .24, .3 + i * .24), yy = y0 + i * paso;
+                    rotulo(n, lx, yy, 'rgba(226,232,240,.95)');
+                    rotulo(`${a} → ${b}`, lx + lw, yy, q >= 1 ? VERDE : 'rgba(148,163,184,.85)', 'right');
+                    const segs = 20, bw = (lw - (segs - 1) * 2) / segs;
+                    for (let s = 0; s < segs; s++) { ctx.fillStyle = s / segs < q ? (q >= 1 ? VERDE : AZUL) : 'rgba(148,163,184,.14)'; ctx.fillRect(lx + s * (bw + 2), yy + 9, bw, 6); }
+                    if (q > 0 && q < 1) rotulo(`${Math.floor(q * 100)}%`, lx, yy + 24, CIAN, 'left', 8);
+                    else if (q >= 1) { paloma(lx + 4, yy + 24, 3.2); rotulo('OK', lx + 12, yy + 24, VERDE, 'left', 8); }
+                });
+                const hy = zona.y + zona.h - 30;
+                if (p < .82) {
+                    let linea = '';
+                    for (let k = 0; k < 10; k++) linea += Math.floor(azarDe(k + Math.floor(t * 12) * 13) * 256).toString(16).padStart(2, '0').toUpperCase() + ' ';
+                    rotulo(`0x${(Math.floor(t * 4096) % 0xffffff).toString(16).padStart(6, '0').toUpperCase()}  ${linea}`, lx, hy, 'rgba(110,162,255,.6)', 'left', 8);
+                    if (Math.sin(t * 6) > -.3) rotulo(`⚠ ${L.noApagar}`, lx, hy + 15, AMBAR, 'left', 8);
+                } else {
+                    ctx.globalAlpha = alfa * entre(p, .82, .88);
+                    caja2(lx, hy - 4, lw, 20, 5, 'rgba(52,211,153,.12)', VERDE); rotulo(L.verif, lx + lw / 2, hy + 6, VERDE, 'center');
+                }
+            } else {
+                // 5. ENTREGA: la PC en prueba de estrés, la impresora de fotos sacando una tira y el Pixel con GrapheneOS
+                const col = zona.w / 3, base = zona.y + zona.h * .8;
+                const aparece = (i) => sale(entre(p, .04 + i * .1, .2 + i * .1));
+                let q = aparece(0);
+                if (q) {
+                    ctx.globalAlpha = alfa * q;
+                    const mw = col * .88, mh = mw * .64, mx = zona.x + col * .06, my = base - mh - 16 + (1 - q) * 14;
+                    caja2(mx + mw * .44, my + mh, mw * .12, 12, 0, '#334155', null); caja2(mx + mw * .3, my + mh + 11, mw * .4, 4, 2, '#475569', null);
+                    caja2(mx, my, mw, mh, 5, '#0b1220', 'rgba(203,213,225,.6)', 1.3);
+                    rotulo('CPU 100%', mx + 7, my + 10, 'rgba(148,163,184,.9)', 'left', 8);
+                    rotulo('61 °C', mx + mw - 7, my + 10, VERDE, 'right', 8);
+                    ctx.strokeStyle = VERDE; ctx.lineWidth = 1.4; ctx.beginPath();
+                    const gx0 = mx + 6, gx1 = mx + mw - 6, gyy = my + mh * .66;
+                    for (let s = 0; s <= 40; s++) { const xx = gx0 + (gx1 - gx0) * s / 40, yy = gyy - mh * .3 * (.78 + .14 * Math.sin(s * .9 + t * 3)); s ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+                    ctx.stroke();
+                    if (p > .55) rotulo(L.estres, mx + mw / 2, my + mh - 9, VERDE, 'center', 8);
+                }
+                q = aparece(1);
+                if (q) {
+                    ctx.globalAlpha = alfa * q;
+                    const iw = col * .76, ih = iw * .42, ix = zona.x + col + (col - iw) / 2, iy = base - ih + (1 - q) * 14;
+                    const larga = Math.min(iw * 1.05, iy - zona.y - 6), sube = sale(entre(p, .3, .8)), th = larga * sube, tw = iw * .36, tx = ix + iw / 2 - tw / 2;
+                    if (th > 1) {
+                        ctx.save(); ctx.beginPath(); ctx.rect(tx - 2, iy - th, tw + 4, th + 2); ctx.clip();
+                        const top = iy - larga;  // la tira completa, desplazada hacia arriba conforme sale
+                        const off = larga - th;
+                        caja2(tx, top + off, tw, larga, 2, '#f8fafc', null);
+                        const marcos = ['#f472b6', '#60a5fa', '#fbbf24', '#34d399'], fh = (larga - 8) / 4;
+                        marcos.forEach((m, k) => { const fy = top + off + 4 + k * fh, g2 = ctx.createLinearGradient(0, fy, 0, fy + fh); g2.addColorStop(0, m); g2.addColorStop(1, '#1e293b'); ctx.fillStyle = g2; ctx.fillRect(tx + 3, fy, tw - 6, fh - 3); });
+                        ctx.restore();
+                    }
+                    caja2(ix, iy, iw, ih, 6, '#1f2937', 'rgba(203,213,225,.6)', 1.3);
+                    caja2(ix + iw * .28, iy - 1, iw * .44, 4, 2, '#0b1220', null);
+                    punto(ix + iw - 10, iy + ih - 9, 2.2, Math.sin(t * 5) > 0 ? VERDE : '#065f46');
+                    rotulo('PHOTO', ix + 8, iy + ih - 9, 'rgba(203,213,225,.7)', 'left', 8);
+                }
+                q = aparece(2);
+                if (q) {
+                    ctx.globalAlpha = alfa * q;
+                    const ph = Math.min(zona.h * .74, col * 1.3), pw2 = ph * .48, phx = zona.x + col * 2 + (col - pw2) / 2, phy = base - ph + (1 - q) * 14;
+                    caja2(phx, phy, pw2, ph, pw2 * .16, '#0b1220', 'rgba(203,213,225,.7)', 1.4);
+                    caja2(phx + pw2 * .1, phy + ph * .1, pw2 * .8, ph * .07, ph * .035, '#1e293b', null);
+                    punto(phx + pw2 * .28, phy + ph * .135, ph * .018, '#475569'); punto(phx + pw2 * .44, phy + ph * .135, ph * .018, '#475569');
+                    const ox = phx + pw2 / 2, oy = phy + ph * .5, rr = pw2 * .2, arranque = entre(p, .4, .75);
+                    ctx.strokeStyle = 'rgba(148,163,184,.25)'; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.arc(ox, oy, rr, 0, 7); ctx.stroke();
+                    const a0 = -Math.PI / 2 + (arranque < 1 ? t * 4 : 0);
+                    ctx.strokeStyle = arranque >= 1 ? VERDE : AZUL; ctx.beginPath(); ctx.arc(ox, oy, rr, a0, a0 + Math.PI * 2 * Math.max(.15, arranque)); ctx.stroke();
+                    if (arranque >= 1) { caja2(ox - rr * .4, oy - rr * .05, rr * .8, rr * .6, 2, VERDE, null); ctx.strokeStyle = VERDE; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(ox, oy - rr * .05, rr * .27, Math.PI, 0); ctx.stroke(); }
+                    rotulo('GrapheneOS', ox, oy + rr + 14, 'rgba(226,232,240,.9)', 'center', 8);
+                }
+                const fin = entre(p, .7, .78);
+                if (fin) { ctx.globalAlpha = alfa * fin; rotulo(L.listo, zona.x + zona.w / 2, zona.y + zona.h - 4, VERDE, 'center', 10); }
+            }
+            ctx.restore();
+        };
+        const estatico = !mueve();
+        if (estatico) { reloj = INICIO[2] + DUR[2] * .9; const fijo = () => { antes = null; dibujar(0); }; fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
+            li.addEventListener('pointerenter', () => { caja.dataset.foco = li.dataset.foco; if (estatico) dibujar(0); });
+            li.addEventListener('pointerleave', () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; if (estatico) { reloj = INICIO[2] + DUR[2] * .9; dibujar(0); } });
         });
     });
 

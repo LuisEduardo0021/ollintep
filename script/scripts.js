@@ -1266,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const obsPausa = new IntersectionObserver((entradas) => {
             entradas.forEach(e => e.target.classList.toggle('fuera', !e.isIntersecting));
         }, { rootMargin: '120px' });
-        document.querySelectorAll('.orbit3d, .ring-luz, .chip3d, .hero, #redes, #principios').forEach(el => obsPausa.observe(el));
+        document.querySelectorAll('.orbit3d, .ring-luz, .chip3d, .hero, #redes, #servicio-tecnico, #principios').forEach(el => obsPausa.observe(el));
     }
 
     // --- Al señalar el botón de descarga, los iconos de la suite saltan de él (una sola vez por página) ---

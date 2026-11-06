@@ -6963,3 +6963,25 @@ html:has(.lz-ventana[open]) {
 @keyframes icono-escudo { 0%, 60%, 100% { transform: none; filter: none; } 72% { transform: scale(1.15); filter: drop-shadow(0 0 8px #f87171); } 84% { transform: scale(.96); } }
 @keyframes icono-wifi { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 .ligero #redes .service-list li i { animation: none; }
+
+/* Servicio técnico: proceso de un equipo (diagnóstico → limpieza → armado → firmware → entrega) y microanimación de cada ícono */
+@media (max-width: 480px) {
+  .proceso-pasos { gap: .2rem; }
+  .proceso-pasos li { padding: .24rem .36rem; font-size: .56rem; letter-spacing: 0; }
+  .proceso-pasos li::before { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #servicio-tecnico .service-list li i { display: inline-block; transform-origin: 50% 60%; animation: 3s var(--ease-out) infinite both; }
+  #servicio-tecnico .service-list li:nth-child(1) i { animation-name: icono-encender; animation-duration: 2.6s; }
+  #servicio-tecnico .service-list li:nth-child(2) i { animation-name: icono-servidor; animation-duration: 2.4s; }
+  #servicio-tecnico .service-list li:nth-child(3) i { animation-name: icono-llave; }
+  #servicio-tecnico .service-list li:nth-child(4) i { animation-name: icono-cable; animation-duration: 2.2s; }
+  #servicio-tecnico .service-list li:nth-child(5) i { animation-name: icono-imprime; animation-duration: 2.8s; }
+  #servicio-tecnico .service-list li:nth-child(6) i { animation-name: icono-escudo; animation-duration: 2.6s; }
+  #servicio-tecnico .service-list li:hover i { animation-duration: .9s; }
+  #servicio-tecnico.fuera .service-list li i { animation-play-state: paused; }
+}
+@keyframes icono-encender { 0%, 100% { filter: none; } 45%, 55% { filter: drop-shadow(0 0 6px #6ea2ff) brightness(1.35); } }
+@keyframes icono-llave { 0%, 60%, 100% { transform: none; } 70% { transform: rotate(-18deg); } 80% { transform: rotate(12deg); } 90% { transform: rotate(-6deg); } }
+@keyframes icono-imprime { 0%, 100% { transform: translateY(0); } 20% { transform: translateY(1px) scaleY(.94); } 40% { transform: translateY(-2px); } 60% { transform: none; } }
+.ligero #servicio-tecnico .service-list li i { animation: none; }
