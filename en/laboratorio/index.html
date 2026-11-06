@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual lab | Ollin-Tep Software</title>
-    <meta name="description" content="Ollin-Tep's design lab: shaders, particles, kaleidoscopes and living type drawn in real time in your browser.">
+    <meta name="description" content="Ollin-Tep's design lab: shaders, particles, a black hole, kaleidoscopes and living type drawn in real time in your browser.">
     <link rel="canonical" href="https://ollin-tep.com/en/laboratorio/">
     <link rel="alternate" hreflang="es" href="https://ollin-tep.com/laboratorio/">
     <link rel="alternate" hreflang="en" href="https://ollin-tep.com/en/laboratorio/">
@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/laboratorio.css?v=7.7">
+    <link rel="stylesheet" href="../../css/laboratorio.css?v=7.8">
 </head>
 <body>
     <a class="saltar" href="#obsidiana">Skip to content</a>
@@ -42,6 +42,10 @@
         <a href="#caleidoscopio" aria-label="Kaleidoscope"></a>
         <a href="#moire" aria-label="Moiré"></a>
         <a href="#tinta" aria-label="Ink"></a>
+        <a href="#agujero" aria-label="Event horizon"></a>
+        <a href="#horizonte" aria-label="Synthwave"></a>
+        <a href="#cubos" aria-label="Cube wave"></a>
+        <a href="#campo" aria-label="Magnetic field"></a>
     </nav>
 
     <main>
@@ -129,6 +133,42 @@
             <p class="ficha"><b>07</b> Ink <i>SVG filters · turbulence · displacement</i></p>
         </section>
 
+        <section id="agujero" class="exp">
+            <canvas class="lienzo" data-shader="agujero" aria-hidden="true"></canvas>
+            <div class="exp-texto">
+                <h2>Where light bends.</h2>
+                <p>A black hole with its disk of glowing gas. Gravity bends the stars around it. Move the cursor to tilt it.</p>
+            </div>
+            <p class="ficha"><b>08</b> Event horizon <i>Gravitational lensing · accretion disk · Doppler effect</i></p>
+        </section>
+
+        <section id="horizonte" class="exp">
+            <canvas class="lienzo" data-shader="horizonte" aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-der exp-texto-arriba">
+                <h2>Into the sunset.</h2>
+                <p>An endless road with an eighties look. Your cursor turns the horizon.</p>
+            </div>
+            <p class="ficha"><b>09</b> Synthwave <i>Procedural perspective · fractal mountains · antialiased grid</i></p>
+        </section>
+
+        <section id="cubos" class="exp">
+            <canvas class="lienzo" data-shader="cubos" aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-arriba">
+                <h2>A city in waves.</h2>
+                <p>Hundreds of blocks rise and fall like a tide. They lift wherever your cursor goes; click to send a wave.</p>
+            </div>
+            <p class="ficha"><b>10</b> Cube wave <i>Raymarching · domain repetition · ambient occlusion</i></p>
+        </section>
+
+        <section id="campo" class="exp">
+            <canvas class="lienzo" data-campo aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-abajo">
+                <h2>Invisible forces.</h2>
+                <p>Every needle points according to three magnets. One of them is you. Click to flip your pole.</p>
+            </div>
+            <p class="ficha"><b>11</b> Magnetic field <i>Pole simulation · vectors · canvas</i></p>
+        </section>
+
         <section class="cierre">
             <h2>What if your brand moved like this?</h2>
             <p>We bring this same craft to websites, presentations, point-of-sale screens, campaigns and brand identities.</p>
@@ -140,6 +180,6 @@
         </section>
     </main>
 
-    <script src="../../script/laboratorio.js?v=7.7"></script>
+    <script src="../../script/laboratorio.js?v=7.8"></script>
 </body>
 </html>

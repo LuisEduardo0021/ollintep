@@ -169,10 +169,158 @@ void main(){
   c*=smoothstep(1.25,.25,r*.9);
   gl_FragColor=vec4(c,1.);
 }`,
+
+        // 08: agujero negro con lente gravitacional y disco de acreción
+        agujero: `
+float fbm3(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*ruido(p);p=p*2.1+3.1;a*=.5;}return v;}
+vec3 estrellas(vec2 p){
+  vec3 c=vec3(0.);
+  for(int k=0;k<2;k++){
+    float e=k==0?28.:55.;
+    vec2 g=p*e, id=floor(g), f=fract(g)-.5;
+    float h=hh(id+float(k)*17.);
+    if(h>.9){vec2 o=vec2(hh(id+3.1),hh(id+7.7))-.5;float d=length(f-o*.7);
+      c+=mix(vec3(.7,.8,1.),vec3(1.,.85,.7),hh(id+1.3))*exp(-d*d*(k==0?260.:520.))*(h-.9)*14.;}
+  }
+  return c;
+}
+vec4 disco(vec2 q,float rs){
+  float dr=length(q); if(dr<rs*1.45||dr>rs*5.)return vec4(0.);
+  float a=atan(q.y,q.x);
+  float x=(dr-rs*1.45)/(rs*3.55);
+  float v=fbm3(vec2(a*3.+T*.9/dr*rs*4.,dr*18.));
+  float bandas=.55+.45*sin(dr*70.-T*2.+v*5.);
+  float dens=smoothstep(0.,.08,x)*smoothstep(1.,.35,x)*(.35+.65*v)*bandas;
+  float dop=1.+.75*cos(a+1.4);
+  vec3 col=mix(vec3(1.,.95,.85),vec3(1.,.45,.12),smoothstep(0.,.5,x));
+  col=mix(col,vec3(.6,.12,.05),smoothstep(.5,1.,x));
+  return vec4(col*dens*dop*1.6,clamp(dens*1.4,0.,1.));
+}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  float rs=.12;
+  float r=length(uv);
+  float incl=mix(.16,.42,M.y);
+  mat2 giro=rot((M.x-.5)*.5);
+  vec2 dir=uv/max(r,1e-4);
+  vec2 lente=uv-dir*rs*rs*2.2/max(r,rs*.5);
+  vec3 c=estrellas(lente+vec2(T*.004,0.));
+  c+=vec3(.25,.12,.45)*fbm3(lente*2.5+5.)*.35+vec3(.05,.12,.3)*fbm3(lente*4.-T*.01)*.25;
+  vec2 qb=giro*lente; qb.y/=incl;
+  vec4 db=disco(qb,rs);
+  c=mix(c,db.rgb,db.a*smoothstep(-.02,.03,qb.y));
+  c*=smoothstep(rs*.98,rs*1.08,r);
+  c+=vec3(1.,.75,.5)*exp(-abs(r-rs*1.12)*90.)*.8;
+  vec2 qf=giro*uv; qf.y/=incl;
+  vec4 df=disco(qf,rs);
+  c=mix(c,df.rgb,df.a*smoothstep(.03,-.02,qf.y));
+  c+=vec3(1.,.6,.3)*P*.4*exp(-abs(r-(1.-P)*.9)*12.);
+  c=c/(1.+c*.5);
+  c*=1.-.3*dot(uv,uv);
+  gl_FragColor=vec4(pow(c,vec3(.9)),1.);
+}`,
+        // 09: horizonte synthwave: sol a franjas, montañas y cuadrícula infinita
+        horizonte: `
+float cresta(float x){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*abs(ruido(vec2(x,1.))*2.-1.);x=x*2.03+1.7;a*=.5;}return v;}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  float hz=-.05+(M.y-.5)*.12;
+  float giro=(M.x-.5)*.8;
+  vec3 c;
+  if(uv.y>hz){
+    float y=uv.y-hz;
+    c=mix(vec3(1.,.38,.35),vec3(.18,.05,.32),smoothstep(0.,.35,y));
+    c=mix(c,vec3(.03,.02,.1),smoothstep(.3,.6,y));
+    vec2 s=uv-vec2(giro*-.15,hz+.2);
+    float ds=length(s);
+    float franjas=s.y<0.?step(.5,fract(s.y*28.-T*.6)+smoothstep(-.02,-.26,s.y)*.0+ (s.y+.26)*1.9):1.;
+    float sol=smoothstep(.255,.25,ds)*franjas;
+    vec3 colSol=mix(vec3(1.,.15,.55),vec3(1.,.9,.3),smoothstep(-.25,.25,s.y));
+    c+=vec3(1.,.3,.5)*.25*exp(-ds*4.);
+    c=mix(c,colSol,sol);
+    float m1=cresta(uv.x*2.2+giro*.6+3.)*.16;
+    float m2=cresta(uv.x*4.+giro*1.2+11.)*.09;
+    float aa=1.5/R.y;
+    c=mix(c,vec3(.12,.03,.22),smoothstep(m1+aa,m1,y));
+    c=mix(c,vec3(.06,.02,.12),smoothstep(m2+aa,m2,y));
+    c+=vec3(1.,.3,.8)*smoothstep(aa*2.,0.,abs(y-m2))*.6;
+  } else {
+    float y=hz-uv.y;
+    float z=.22/y;
+    vec2 g=vec2((uv.x+giro*.4*(1.-y))*z,z+T*1.4);
+    vec2 w=fwidth(g);
+    vec2 l=abs(fract(g)-.5);
+    vec2 lin=smoothstep(.5-w*1.5,vec2(.5),l);
+    float rejilla=max(lin.x,lin.y);
+    float halo=max(exp(-(.5-l.x)/max(w.x,1e-4)*.25),exp(-(.5-l.y)/max(w.y,1e-4)*.25));
+    float niebla=exp(-z*.07);
+    c=vec3(.03,.01,.07)+vec3(.2,.02,.25)*(1.-niebla)*.5;
+    c+=vec3(1.,.2,.85)*(rejilla+halo*.25)*niebla;
+    float sx=(uv.x+giro*.15)*3.5;
+    c+=vec3(1.,.45,.4)*exp(-y*10.)*.4*exp(-sx*sx);
+  }
+  c+=vec3(1.,.5,.8)*P*.3*exp(-abs(uv.y-hz)*20.);
+  c*=1.-.25*dot(uv,uv);
+  gl_FragColor=vec4(pow(clamp(c,0.,1.),vec3(.95)),1.);
+}`,
+        // 10: ola de cubos (raymarching con repetición de dominio)
+        cubos: `
+const float S=.5;
+vec3 MP;
+float altura(vec2 id){
+  vec2 w=id*S;
+  float h=.35+.25*sin(w.x*1.3+T*1.2)*cos(w.y*1.1+T*.9);
+  float dm=length(w-MP.xz);
+  h+=.9*exp(-dm*dm*.6)+P*.8*sin(dm*3.-(1.-P)*12.)*exp(-dm*.5);
+  return max(h,.05);
+}
+float caja(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.)-.03;}
+float mapa(vec3 p){
+  vec2 id=floor(p.xz/S);
+  vec2 l=p.xz-(id+.5)*S;
+  float h=altura(id);
+  float d=caja(vec3(l.x,p.y-h*.5,l.y),vec3(S*.42-.03,h*.5,S*.42-.03));
+  return d;
+}
+vec3 normal(vec3 p){vec2 e=vec2(.002,0.);return normalize(vec3(mapa(p+e.xyy)-mapa(p-e.xyy),mapa(p+e.yxy)-mapa(p-e.yxy),mapa(p+e.yyx)-mapa(p-e.yyx)));}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec3 ro=vec3(6.,6.5,6.), ta=vec3(0.,0.,0.);
+  vec3 f=normalize(ta-ro), r=normalize(cross(f,vec3(0,1,0))), u=cross(r,f);
+  float z=1.9;
+  vec3 rd=normalize(f*z+uv.x*r+uv.y*u);
+  vec2 mu=(M-.5)*vec2(R.x/R.y,1.);
+  vec3 rm=normalize(f*z+mu.x*r+mu.y*u);
+  MP=ro+rm*(-ro.y/rm.y);
+  float t=0.,hit=0.;
+  for(int i=0;i<110;i++){
+    vec3 p=ro+rd*t;
+    float d=mapa(p);
+    if(d<.001){hit=1.;break;}
+    t+=min(d,S*.45); if(t>30.)break;
+  }
+  vec3 c=mix(vec3(.02,.02,.05),vec3(.07,.04,.13),uv.y+.5);
+  if(hit>.5){
+    vec3 p=ro+rd*t, n=normal(p);
+    vec2 id=floor(p.xz/S);
+    float h=altura(id);
+    vec3 base=mix(vec3(.25,.45,1.),vec3(.75,.4,1.),smoothstep(.2,.8,h));
+    base=mix(base,vec3(1.,.5,.2),smoothstep(.8,1.3,h));
+    vec3 L=normalize(vec3(-.4,.9,.3));
+    float dif=max(dot(n,L),0.);
+    float ao=clamp(.35+p.y/max(h,.1)*.65,0.,1.);
+    float tapa=step(.9,n.y);
+    c=base*(.18+.9*dif)*ao;
+    c+=tapa*base*.25+pow(max(dot(reflect(rd,n),L),0.),30.)*.6;
+    c=mix(c,vec3(.02,.02,.05),1.-exp(-max(t-7.,0.)*.12));
+  }
+  c=c/(1.+c*.4);
+  gl_FragColor=vec4(pow(c,vec3(.9)),1.);
+}`,
     };
 
     const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-    const BASE = { obsidiana: 1, tunel: 1, gel: .6, caleidoscopio: 1 };
+    const BASE = { obsidiana: 1, tunel: 1, gel: .6, caleidoscopio: 1, agujero: 1, horizonte: 1, cubos: .65 };
 
     function crearShader(canvas, nombre) {
         const gl = canvas.getContext('webgl', { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' });
@@ -308,6 +456,64 @@ void main(){
         };
     }
 
+    // ================= CAMPO MAGNÉTICO =================
+    function crearCampo(canvas) {
+        const ctx = canvas.getContext('2d');
+        let W = 0, H = 0, signo = 1;
+        const medir = () => {
+            const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+            if (w !== W || h !== H) { canvas.width = W = w; canvas.height = H = h; }
+        };
+        return {
+            medir,
+            invertir() { signo *= -1; },
+            dibujar(t, ptr) {
+                medir();
+                ctx.fillStyle = '#05070d';
+                ctx.fillRect(0, 0, W, H);
+                const paso = (tactil ? 26 : 30) * dpr, largo = paso * .42;
+                // tres polos: el cursor y dos que orbitan
+                const polos = [
+                    [ptr.sx * W, (1 - ptr.sy) * H, 1.4 * signo],
+                    [W / 2 + Math.cos(t * .4) * W * .28, H / 2 + Math.sin(t * .53) * H * .28, -1],
+                    [W / 2 + Math.cos(t * .31 + 2) * W * .3, H / 2 + Math.sin(t * .27 + 1) * H * .3, .8],
+                ];
+                ctx.lineCap = 'round';
+                ctx.lineWidth = 1.6 * dpr;
+                const cubetas = [[], [], [], [], []];
+                for (let y = paso / 2; y < H; y += paso) {
+                    for (let x = paso / 2; x < W; x += paso) {
+                        let fx = 0, fy = 0;
+                        for (const [px, py, q] of polos) {
+                            const dx = x - px, dy = y - py, d2 = dx * dx + dy * dy + 900 * dpr * dpr;
+                            const k = q / (d2 * Math.sqrt(d2));
+                            fx += dx * k; fy += dy * k;
+                        }
+                        const m = Math.hypot(fx, fy) || 1e-9;
+                        const fuerza = Math.min(1, Math.log10(m * 1e6 * dpr * dpr + 1) / 2.2);
+                        const l = largo * (.35 + .65 * fuerza);
+                        const ux = (fx / m) * l, uy = (fy / m) * l;
+                        cubetas[Math.min(4, Math.floor(fuerza * 5))].push(x - ux, y - uy, x + ux, y + uy);
+                    }
+                }
+                const COL = ['#2a3a6b', '#4f6fd8', '#8b7cff', '#c084fc', '#ffb07a'];
+                cubetas.forEach((c, i) => {
+                    ctx.strokeStyle = COL[i];
+                    ctx.beginPath();
+                    for (let k = 0; k < c.length; k += 4) { ctx.moveTo(c[k], c[k + 1]); ctx.lineTo(c[k + 2], c[k + 3]); }
+                    ctx.stroke();
+                });
+                polos.forEach(([px, py, q]) => {
+                    const g = ctx.createRadialGradient(px, py, 0, px, py, 26 * dpr);
+                    g.addColorStop(0, q > 0 ? 'rgba(255,176,122,.9)' : 'rgba(110,162,255,.9)');
+                    g.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = g;
+                    ctx.beginPath(); ctx.arc(px, py, 26 * dpr, 0, Math.PI * 2); ctx.fill();
+                });
+            },
+        };
+    }
+
     // ================= MOIRÉ Y TINTA =================
     function crearMoire(sec) {
         const capa = sec.querySelector('.moire');
@@ -347,6 +553,10 @@ void main(){
             });
         } else if (sec.querySelector('.moire')) motor = crearMoire(sec);
         else if (sec.querySelector('.tinta')) motor = crearTinta(sec);
+        else if (sec.querySelector('[data-campo]')) {
+            motor = crearCampo(sec.querySelector('[data-campo]'));
+            sec.addEventListener('pointerdown', () => motor.invertir());
+        }
         if (!motor) { sec.classList.add('sin-gl'); return; }
         escenas.push({ sec, ptr, motor, visible: false, t: 0, listo: false });
     });
