@@ -1498,19 +1498,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const capa = lanzador.querySelector('.lz-abriendo');
         const dos = n => String(n).padStart(2, '0');
         const ESTADOS = { disponible: T('Disponible', 'Available'), bajando: T('Descargando', 'Downloading'), instalando: T('Instalando', 'Installing'), lista: T('Instalada', 'Installed') };
-        // Capturas de cada app (resources/screenshots/<app>-<archivo>.webp): al abrirla sale su ventana con ellas; sin capturas, solo el icono
+        // Imágenes de cada app (resources/screenshots/suite/<app>-NN-<es|en>.webp, en el idioma de la página): al abrirla sale su
+        // ventana con ellas; sin imágenes, solo el icono. Aquí, el título de cada una en español y en inglés
         const CAPTURAS = {
             'crovite-pdf': [
-                ['01-portada', T('Todo en una app', 'Every PDF task, one app')],
-                ['02-especial', T('Por qué Crovite', 'Why Crovite')],
-                ['03-editar', T('Editar', 'Edit')],
-                ['04-ia', T('IA privada', 'Private AI')],
-                ['05-firmar', T('Firmar', 'Sign')],
-                ['06-combinar', T('Combinar', 'Merge')],
-                ['07-proteger', T('Proteger', 'Protect')],
-                ['08-herramientas', T('Herramientas', 'Tools')],
-                ['09-temas', T('Temas', 'Themes')],
-                ['10-como-funciona', T('Cómo funciona', 'How it works')],
+                ['Cada tarea con PDF. Una sola app.', 'Every PDF task. One app.'],
+                ['Edición real', 'True editing'],
+                ['Rellena y firma', 'Fill & sign'],
+                ['Herramientas', 'Tools'],
+                ['IA en tu equipo', 'On-device AI'],
+            ],
+            'cronmy': [
+                ['Revela tus fotos. Sin tocar el original.', 'Develop your photos. Keep the original.'],
+                ['Antes y después', 'Before & after'],
+                ['Ajustes locales', 'Local adjustments'],
+                ['Mejorar foto', 'Enhance'],
+                ['Exportación', 'Export'],
+            ],
+            'crovect-studio': [
+                ['Diseña. Anima. Prototipa.', 'Design. Animate. Prototype.'],
+                ['Prototipos', 'Prototyping'],
+                ['Modo presentar', 'Present mode'],
+                ['Exportar', 'Export'],
+                ['Herramientas', 'Tools'],
+            ],
+            'cromofi': [
+                ['Tu video, listo para redes.', 'Your video, ready for social.'],
+                ['Color', 'Color grading'],
+                ['Subtítulos con IA', 'AI subtitles'],
+                ['Sonido', 'Sound'],
+                ['Exportar', 'Export'],
+            ],
+            'croma-studio': [
+                ['Tus fotos. Tu estudio.', 'Your photos. Your studio.'],
+                ['Por capas', 'Layers'],
+                ['Fondos con IA', 'AI backgrounds'],
+                ['Ajustes', 'Adjustments'],
+                ['Collages', 'Collages'],
+            ],
+            'croguard': [
+                ['Tu equipo, protegido.', 'Your computer, protected.'],
+                ['VPN WireGuard', 'WireGuard VPN'],
+                ['Antivirus', 'Antivirus'],
+                ['Tu red', 'Your network'],
+                ['Rendimiento', 'Performance'],
+            ],
+            'cromix': [
+                ['Tu sonido. Tus reglas.', 'Your sound. Your rules.'],
+                ['4 platos', '4 decks'],
+                ['Modo Scratch', 'Scratch mode'],
+                ['AI Blend', 'AI Blend'],
+                ['Controladoras', 'Controllers'],
+            ],
+            'croudio': [
+                ['Graba. Edita. Suena profesional.', 'Record. Edit. Sound pro.'],
+                ['Mezcla', 'Mixing'],
+                ['Efectos en vivo', 'Live effects'],
+                ['Restauración', 'Restoration'],
+                ['Reparación espectral', 'Spectral repair'],
+            ],
+            'crobeat': [
+                ['Crea ritmos. Produce música.', 'Make beats. Produce music.'],
+                ['Melodías', 'Melodies'],
+                ['Mezcla y máster', 'Mix & master'],
+                ['Ideas', 'Ideas'],
+                ['Ecualizador', 'Parametric EQ'],
             ],
         };
         const apps = [...document.querySelectorAll('.app-grid .app-tile')].map(tile => {
@@ -1521,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
             li.innerHTML = `<img src="${src}" alt="" width="42" height="42"><div><h3></h3><span class="lz-estado"></span></div><button type="button" class="lz-btn"><span class="lz-relleno"></span><span class="lz-texto"></span></button>`;
             const app = { li, nombre: tile.querySelector('h3').textContent, estado: 'disponible', icono: li.querySelector('img'), btn: li.querySelector('button'), relleno: li.querySelector('.lz-relleno'), texto: li.querySelector('.lz-texto'), marca: li.querySelector('.lz-estado'),
                 // la carpeta de recursos, la del icono: resources/ en español, ../resources/ en en/
-                capturas: (CAPTURAS[id] || []).map(([archivo, titulo]) => ({ src: src.replace(/suite\/[^/]+$/, `screenshots/${id}-${archivo}.webp`), titulo })) };
+                capturas: (CAPTURAS[id] || []).map(([es, en], j) => ({ src: src.replace(/suite\/[^/]+$/, `screenshots/suite/${id}-${dos(j + 1)}-${EN ? 'en' : 'es'}.webp`), titulo: T(es, en) })) };
             li.querySelector('h3').textContent = app.nombre;
             lista.append(li);
             return app;
