@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual lab | Ollin-Tep Software</title>
-    <meta name="description" content="Ollin-Tep's design lab: shaders, particles, a black hole, kaleidoscopes and living type drawn in real time in your browser.">
+    <meta name="description" content="Ollin-Tep's design lab: shaders, particles, a black hole, an aurora and living type drawn in real time in your browser.">
     <link rel="canonical" href="https://ollin-tep.com/en/laboratorio/">
     <link rel="alternate" hreflang="es" href="https://ollin-tep.com/laboratorio/">
     <link rel="alternate" hreflang="en" href="https://ollin-tep.com/en/laboratorio/">
@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/laboratorio.css?v=7.9">
+    <link rel="stylesheet" href="../../css/laboratorio.css?v=8.0">
 </head>
 <body>
     <a class="saltar" href="#obsidiana">Skip to content</a>
@@ -39,11 +39,11 @@
         <a href="#tunel" aria-label="Tunnel"></a>
         <a href="#gel" aria-label="Gel"></a>
         <a href="#enjambre" aria-label="Swarm"></a>
-        <a href="#caleidoscopio" aria-label="Kaleidoscope"></a>
+        <a href="#aurora" aria-label="Aurora borealis"></a>
         <a href="#moire" aria-label="Moiré"></a>
         <a href="#tinta" aria-label="Ink"></a>
         <a href="#agujero" aria-label="Event horizon"></a>
-        <a href="#horizonte" aria-label="Synthwave"></a>
+        <a href="#globo" aria-label="Global network"></a>
         <a href="#cubos" aria-label="Cube wave"></a>
         <a href="#campo" aria-label="Magnetic field"></a>
     </nav>
@@ -87,13 +87,13 @@
             <p class="ficha"><b>04</b> Swarm <i>Flow field · spring physics · canvas</i></p>
         </section>
 
-        <section id="caleidoscopio" class="exp">
-            <canvas class="lienzo" data-shader="caleidoscopio" aria-hidden="true"></canvas>
-            <div class="exp-texto">
-                <h2>Infinite symmetry.</h2>
-                <p>Move the cursor side to side to change the number of mirrors, and up and down to zoom.</p>
+        <section id="aurora" class="exp">
+            <canvas class="lienzo" data-shader="aurora" aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-arriba">
+                <h2>Northern lights.</h2>
+                <p>An aurora that ripples over the mountains and reflects on the lake. Move the cursor to look around.</p>
             </div>
-            <p class="ficha"><b>05</b> Kaleidoscope <i>Angular folding · tiling · cosine palette</i></p>
+            <p class="ficha"><b>05</b> Aurora borealis <i>Volumetric layers · triangle noise · reflection</i></p>
         </section>
 
         <section id="moire" class="exp exp-moire">
@@ -142,13 +142,13 @@
             <p class="ficha"><b>08</b> Event horizon <i>Gravitational lensing · accretion disk · Doppler effect</i></p>
         </section>
 
-        <section id="horizonte" class="exp">
-            <canvas class="lienzo" data-shader="horizonte" aria-hidden="true"></canvas>
-            <div class="exp-texto exp-texto-der exp-texto-arriba">
-                <h2>Into the sunset.</h2>
-                <p>An endless road with an eighties look. Your cursor turns the horizon.</p>
+        <section id="globo" class="exp">
+            <canvas class="lienzo" data-globo aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-abajo">
+                <h2>From Tepic, to the world.</h2>
+                <p>Thousands of dots form a planet, and every arc is a connection leaving Tepic. Move the cursor to spin it.</p>
             </div>
-            <p class="ficha"><b>09</b> Synthwave <i>Procedural perspective · fractal mountains · antialiased grid</i></p>
+            <p class="ficha"><b>09</b> Global network <i>Fibonacci sphere · geodesic arcs · 3D projection</i></p>
         </section>
 
         <section id="cubos" class="exp">
@@ -180,6 +180,6 @@
         </section>
     </main>
 
-    <script src="../../script/laboratorio.js?v=7.9"></script>
+    <script src="../../script/laboratorio.js?v=8.0"></script>
 </body>
 </html>

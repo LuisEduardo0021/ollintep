@@ -5,7 +5,7 @@
     <script>/*idioma*/(function(){try{var k='ollintep-idioma',s=localStorage,q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')s.setItem(k,q);var g=s.getItem(k);if(g==='es'||/bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse/i.test(navigator.userAgent))return;var l=g||(navigator.languages||[navigator.language]).map(function(x){return(x||'').slice(0,2)}).filter(function(x){return x==='es'||x==='en'})[0]||'en';if(l==='en')location.replace('/en'+location.pathname+location.search+location.hash)}catch(e){}})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorio visual | Ollin-Tep Software</title>
-    <meta name="description" content="Laboratorio de diseño de Ollin-Tep: shaders, partículas, un agujero negro, caleidoscopios y tipografía viva dibujados en tiempo real en tu navegador.">
+    <meta name="description" content="Laboratorio de diseño de Ollin-Tep: shaders, partículas, un agujero negro, una aurora boreal y tipografía viva dibujados en tiempo real en tu navegador.">
     <link rel="canonical" href="https://ollin-tep.com/laboratorio/">
     <link rel="alternate" hreflang="es" href="https://ollin-tep.com/laboratorio/">
     <link rel="alternate" hreflang="en" href="https://ollin-tep.com/en/laboratorio/">
@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/laboratorio.css?v=7.9">
+    <link rel="stylesheet" href="../css/laboratorio.css?v=8.0">
 </head>
 <body>
     <a class="saltar" href="#obsidiana">Saltar al contenido</a>
@@ -40,11 +40,11 @@
         <a href="#tunel" aria-label="Túnel"></a>
         <a href="#gel" aria-label="Gel"></a>
         <a href="#enjambre" aria-label="Enjambre"></a>
-        <a href="#caleidoscopio" aria-label="Caleidoscopio"></a>
+        <a href="#aurora" aria-label="Aurora boreal"></a>
         <a href="#moire" aria-label="Moiré"></a>
         <a href="#tinta" aria-label="Tinta"></a>
         <a href="#agujero" aria-label="Horizonte de sucesos"></a>
-        <a href="#horizonte" aria-label="Synthwave"></a>
+        <a href="#globo" aria-label="Red global"></a>
         <a href="#cubos" aria-label="Ola de cubos"></a>
         <a href="#campo" aria-label="Campo magnético"></a>
     </nav>
@@ -88,13 +88,13 @@
             <p class="ficha"><b>04</b> Enjambre <i>Campo de flujo · física de resortes · canvas</i></p>
         </section>
 
-        <section id="caleidoscopio" class="exp">
-            <canvas class="lienzo" data-shader="caleidoscopio" aria-hidden="true"></canvas>
-            <div class="exp-texto">
-                <h2>Simetría infinita.</h2>
-                <p>Mueve el cursor de lado a lado para cambiar el número de espejos y de arriba abajo para acercarte.</p>
+        <section id="aurora" class="exp">
+            <canvas class="lienzo" data-shader="aurora" aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-arriba">
+                <h2>Luz del norte.</h2>
+                <p>Una aurora boreal que ondula sobre las montañas y se refleja en el lago. Mueve el cursor para mirar alrededor.</p>
             </div>
-            <p class="ficha"><b>05</b> Caleidoscopio <i>Plegado angular · teselado · paleta coseno</i></p>
+            <p class="ficha"><b>05</b> Aurora boreal <i>Capas volumétricas · ruido triangular · reflejo</i></p>
         </section>
 
         <section id="moire" class="exp exp-moire">
@@ -143,13 +143,13 @@
             <p class="ficha"><b>08</b> Horizonte de sucesos <i>Lente gravitacional · disco de acreción · efecto Doppler</i></p>
         </section>
 
-        <section id="horizonte" class="exp">
-            <canvas class="lienzo" data-shader="horizonte" aria-hidden="true"></canvas>
-            <div class="exp-texto exp-texto-der exp-texto-arriba">
-                <h2>Rumbo al atardecer.</h2>
-                <p>Una carretera infinita con estética de los ochenta. Con el cursor giras el horizonte.</p>
+        <section id="globo" class="exp">
+            <canvas class="lienzo" data-globo aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-abajo">
+                <h2>Desde Tepic, para el mundo.</h2>
+                <p>Miles de puntos forman un planeta y cada arco es una conexión que sale de Tepic. Mueve el cursor para girarlo.</p>
             </div>
-            <p class="ficha"><b>09</b> Synthwave <i>Perspectiva procedural · montañas fractales · cuadrícula antialias</i></p>
+            <p class="ficha"><b>09</b> Red global <i>Esfera de Fibonacci · arcos geodésicos · proyección 3D</i></p>
         </section>
 
         <section id="cubos" class="exp">
@@ -181,6 +181,6 @@
         </section>
     </main>
 
-    <script src="../script/laboratorio.js?v=7.9"></script>
+    <script src="../script/laboratorio.js?v=8.0"></script>
 </body>
 </html>

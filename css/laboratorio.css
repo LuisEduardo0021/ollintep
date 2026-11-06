@@ -195,13 +195,13 @@ a { color: inherit; text-decoration: none; }
   .moire span, .raton::after { animation: none; }
 }
 /* velo para leer el texto sobre los experimentos más intensos */
-#tunel::after, #caleidoscopio::after, #enjambre::after {
+#tunel::after, #enjambre::after, #globo::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: linear-gradient(90deg, rgba(5, 7, 13, .78), rgba(5, 7, 13, .35) 40%, transparent 65%);
 }
 #enjambre::after { background: linear-gradient(0deg, rgba(5, 7, 13, .8), transparent 40%); }
 @media (max-width: 700px) {
-  #tunel::after, #caleidoscopio::after { background: linear-gradient(0deg, rgba(5, 7, 13, .85), rgba(5, 7, 13, .3) 50%, transparent 75%); }
+  #tunel::after { background: linear-gradient(0deg, rgba(5, 7, 13, .85), rgba(5, 7, 13, .3) 50%, transparent 75%); }
 }
 .idioma, .barra-cta, .marca { white-space: nowrap; }
 @media (max-width: 700px) {
@@ -222,4 +222,13 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 700px) {
   .exp-texto-arriba { align-self: end; margin-top: 0; }
   #agujero::after, #cubos::after { background: linear-gradient(0deg, rgba(5, 7, 13, .85), transparent 55%); }
+}
+#globo { background: radial-gradient(ellipse at 60% 50%, #0b1328, #05070d 70%); }
+#globo::after { background: linear-gradient(90deg, rgba(5, 7, 13, .75), transparent 45%); }
+#aurora::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(5, 7, 13, .55), transparent 50%);
+}
+@media (max-width: 700px) {
+  #globo::after, #aurora::after { background: linear-gradient(0deg, rgba(5, 7, 13, .85), transparent 55%); }
 }

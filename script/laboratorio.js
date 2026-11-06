@@ -143,33 +143,81 @@ void main(){
   c*=1.-.35*dot(uv,uv);
   gl_FragColor=vec4(pow(c,vec3(.8)),1.);
 }`,
-        // 05: caleidoscopio con fractal de plegado (Kali); el cursor cambia espejos y acercamiento
-        caleidoscopio: `
-vec3 pal(float t){return .5+.5*cos(6.28318*(t+vec3(.05,.35,.6)));}
+
+        // 05: aurora boreal sobre montañas, reflejada en un lago (capas de ruido triangular)
+        aurora: `
+const mat2 m2=mat2(.95534,.29552,-.29552,.95534);
+float tri(float x){return clamp(abs(fract(x)-.5),.01,.49);}
+vec2 tri2(vec2 p){return vec2(tri(p.x)+tri(p.y),tri(p.y+tri(p.x)));}
+float triRuido(vec2 p,float v){
+  float z=1.8,z2=2.5,rz=0.;
+  p*=rot(p.x*.06);
+  vec2 bp=p;
+  for(int i=0;i<5;i++){
+    vec2 dg=tri2(bp*1.85)*.75;
+    dg*=rot(T*v);
+    p-=dg/z2; bp*=1.3; z2*=.45; z*=.42;
+    p*=1.21+(rz-1.)*.02;
+    rz+=tri(p.x+tri(p.y))*z;
+    p*=-m2;
+  }
+  return clamp(1./pow(rz*29.,1.3),0.,.55);
+}
+vec4 aurora(vec3 ro,vec3 rd){
+  vec4 col=vec4(0.),media=vec4(0.);
+  for(int i=0;i<30;i++){
+    float fi=float(i);
+    float of=.004*hh(gl_FragCoord.xy+fract(T))*smoothstep(0.,15.,fi);
+    float pt=((.8+pow(fi,1.4)*.002)-ro.y)/(rd.y*2.+.4)-of;
+    vec3 bp=ro+pt*rd;
+    float rz=triRuido(bp.zx,.06);
+    vec4 c2=vec4((sin(1.-vec3(2.15,-.5,1.2)+fi*.045)*.5+.5)*rz,rz);
+    media=mix(media,c2,.5);
+    col+=media*exp2(-fi*.065-2.5)*smoothstep(0.,5.,fi);
+  }
+  col*=clamp(rd.y*15.+.4,0.,1.);
+  return col*1.9;
+}
+float montes(float a){float v=0.,k=.5;for(int i=0;i<5;i++){v+=k*abs(ruido(vec2(a,3.7))*2.-1.);a=a*2.1+1.3;k*=.5;}return v;}
+vec3 cielo(vec3 rd){
+  vec3 c=mix(vec3(.01,.015,.04),vec3(.02,.05,.1),1.-rd.y);
+  vec2 g=vec2(atan(rd.x,rd.z),rd.y)*vec2(90.,90.);
+  vec2 id=floor(g),f=fract(g)-.5;
+  float h=hh(id);
+  if(h>.965){vec2 o=vec2(hh(id+2.),hh(id+5.))-.5;float d=length(f-o*.6);c+=vec3(.85,.9,1.)*exp(-d*d*90.)*(h-.965)*30.*(.7+.3*sin(T*2.+h*40.));}
+  return c;
+}
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
-  float N=floor(mix(5.,15.,M.x)+.5);
-  float zoom=mix(.7,2.2,M.y);
-  float r=length(uv), a=atan(uv.y,uv.x)+T*.06;
-  float seg=6.28318/N; a=mod(a,seg); a=abs(a-seg*.5);
-  vec2 p=vec2(cos(a),sin(a))*r*zoom+vec2(.25*sin(T*.05),.2*cos(T*.04));
-  vec3 c=vec3(0.); vec2 z=p;
-  float s=0.;
-  for(int i=0;i<7;i++){
-    z=abs(z)/dot(z,z)-vec2(.88+.05*sin(T*.11),.64+.05*cos(T*.09));
-    float l=length(z);
-    float w=exp(-abs(l-1.)*7.);
-    c+=pal(float(i)*.13+l*.1+T*.025)*w;
-    s+=w;
+  vec3 ro=vec3(0.,0.,-6.7);
+  vec3 rd=normalize(vec3(uv+vec2(0.,.12),1.3));
+  rd.yz*=rot(-(M.y-.5)*.25);
+  rd.xz*=rot((M.x-.5)*.7+T*.015);
+  float a=atan(rd.x,rd.z);
+  float mh=.02+montes(a*1.6+4.)*.11;
+  float mh2=.01+montes(a*3.1+9.)*.06;
+  vec3 c;
+  if(rd.y>0.){
+    c=cielo(rd);
+    vec4 au=aurora(ro,rd);
+    c=c*(1.-au.a)+au.rgb;
+    if(rd.y<mh){float b=smoothstep(mh,mh-.004,rd.y);c=mix(c,vec3(.012,.02,.035)+au.rgb*.08,b);}
+    if(rd.y<mh2){float b=smoothstep(mh2,mh2-.003,rd.y);c=mix(c,vec3(.006,.01,.02),b);}
+  } else {
+    vec3 rr=vec3(rd.x,-rd.y,rd.z);
+    rr.y+=.004*sin(rd.z*60./max(-rd.y,.02)*.05+T*1.5)*smoothstep(0.,.2,-rd.y);
+    c=cielo(rr)*.5;
+    vec4 au=aurora(ro,rr);
+    c=c*(1.-au.a)+au.rgb*.55;
+    if(rr.y<mh){c=mix(c,vec3(.01,.015,.03),smoothstep(mh,mh-.004,rr.y));}
+    if(rr.y<mh2){c=mix(c,vec3(.005,.008,.016),smoothstep(mh2,mh2-.003,rr.y));}
+    c*=.8;
+    c=mix(c,vec3(.01,.015,.03),smoothstep(0.,.35,-rd.y)*.4);
   }
-  c/=max(s,1.2);
-  c=pow(c,vec3(1.8))*(1.6+P*1.2);
-  c*=.45+.8*smoothstep(1.4,0.,r);
-  c=c/(1.+c*.35);
-  c*=smoothstep(1.25,.25,r*.9);
-  gl_FragColor=vec4(c,1.);
+  c+=vec3(.3,1.,.6)*P*.15*exp(-abs(length(uv)-(1.-P))*10.);
+  c*=1.-.2*dot(uv,uv);
+  gl_FragColor=vec4(pow(clamp(c,0.,1.),vec3(.9)),1.);
 }`,
-
         // 08: agujero negro con lente gravitacional y disco de acreción
         agujero: `
 float fbm3(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*ruido(p);p=p*2.1+3.1;a*=.5;}return v;}
@@ -218,50 +266,6 @@ void main(){
   c=c/(1.+c*.5);
   c*=1.-.3*dot(uv,uv);
   gl_FragColor=vec4(pow(c,vec3(.9)),1.);
-}`,
-        // 09: horizonte synthwave: sol a franjas, montañas y cuadrícula infinita
-        horizonte: `
-float cresta(float x){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*abs(ruido(vec2(x,1.))*2.-1.);x=x*2.03+1.7;a*=.5;}return v;}
-void main(){
-  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
-  float hz=-.05+(M.y-.5)*.12;
-  float giro=(M.x-.5)*.8;
-  vec3 c;
-  if(uv.y>hz){
-    float y=uv.y-hz;
-    c=mix(vec3(1.,.38,.35),vec3(.18,.05,.32),smoothstep(0.,.35,y));
-    c=mix(c,vec3(.03,.02,.1),smoothstep(.3,.6,y));
-    vec2 s=uv-vec2(giro*-.15,hz+.2);
-    float ds=length(s);
-    float franjas=s.y<0.?step(.5,fract(s.y*28.-T*.6)+smoothstep(-.02,-.26,s.y)*.0+ (s.y+.26)*1.9):1.;
-    float sol=smoothstep(.255,.25,ds)*franjas;
-    vec3 colSol=mix(vec3(1.,.15,.55),vec3(1.,.9,.3),smoothstep(-.25,.25,s.y));
-    c+=vec3(1.,.3,.5)*.25*exp(-ds*4.);
-    c=mix(c,colSol,sol);
-    float m1=cresta(uv.x*2.2+giro*.6+3.)*.16;
-    float m2=cresta(uv.x*4.+giro*1.2+11.)*.09;
-    float aa=1.5/R.y;
-    c=mix(c,vec3(.12,.03,.22),smoothstep(m1+aa,m1,y));
-    c=mix(c,vec3(.06,.02,.12),smoothstep(m2+aa,m2,y));
-    c+=vec3(1.,.3,.8)*smoothstep(aa*2.,0.,abs(y-m2))*.6;
-  } else {
-    float y=hz-uv.y;
-    float z=.22/y;
-    vec2 g=vec2((uv.x+giro*.4*(1.-y))*z,z+T*1.4);
-    vec2 w=fwidth(g);
-    vec2 l=abs(fract(g)-.5);
-    vec2 lin=smoothstep(.5-w*1.5,vec2(.5),l);
-    float rejilla=max(lin.x,lin.y);
-    float halo=max(exp(-(.5-l.x)/max(w.x,1e-4)*.25),exp(-(.5-l.y)/max(w.y,1e-4)*.25));
-    float niebla=exp(-z*.07);
-    c=vec3(.03,.01,.07)+vec3(.2,.02,.25)*(1.-niebla)*.5;
-    c+=vec3(1.,.2,.85)*(rejilla+halo*.25)*niebla;
-    float sx=(uv.x+giro*.15)*3.5;
-    c+=vec3(1.,.45,.4)*exp(-y*10.)*.4*exp(-sx*sx);
-  }
-  c+=vec3(1.,.5,.8)*P*.3*exp(-abs(uv.y-hz)*20.);
-  c*=1.-.25*dot(uv,uv);
-  gl_FragColor=vec4(pow(clamp(c,0.,1.),vec3(.95)),1.);
 }`,
         // 10: ola de cubos (raymarching con repetición de dominio)
         cubos: `
@@ -320,7 +324,7 @@ void main(){
     };
 
     const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-    const BASE = { obsidiana: 1, tunel: 1, gel: .6, caleidoscopio: 1, agujero: 1, horizonte: 1, cubos: .65 };
+    const BASE = { obsidiana: 1, tunel: 1, gel: .6, aurora: .55, agujero: 1, cubos: .65 };
 
     function crearShader(canvas, nombre) {
         const gl = canvas.getContext('webgl', { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' });
@@ -456,6 +460,109 @@ void main(){
         };
     }
 
+    // ================= GLOBO CONECTADO =================
+    function crearGlobo(canvas) {
+        const ctx = canvas.getContext('2d');
+        let W = 0, H = 0;
+        const rad = Math.PI / 180;
+        const N = tactil ? 1400 : 2600;
+        const puntos = Array.from({ length: N }, (_, i) => {
+            const y = 1 - (i + .5) / N * 2, r = Math.sqrt(1 - y * y), a = i * 2.39996323;
+            return [Math.cos(a) * r, y, Math.sin(a) * r];
+        });
+        const hub = [21.5, -104.9];
+        const CIUDADES = [[19.43, -99.13, 'CDMX'], [20.67, -103.35, ''], [25.69, -100.32, 'MTY'], [34.05, -118.24, 'LA'], [40.71, -74.0, 'NYC'],
+            [4.71, -74.07, 'BOG'], [-23.55, -46.63, 'SAO'], [-34.6, -58.38, 'BUE'], [40.42, -3.7, 'MAD'], [51.5, -0.12, 'LON'], [35.68, 139.69, 'TYO'], [49.28, -123.12, 'YVR']];
+        const vec = ([la, lo]) => [Math.cos(la * rad) * Math.cos(lo * rad), Math.sin(la * rad), -Math.cos(la * rad) * Math.sin(lo * rad)];
+        const H0 = vec(hub);
+        const arcos = CIUDADES.map((c, k) => {
+            const B = vec(c), d = Math.acos(Math.max(-1, Math.min(1, H0[0] * B[0] + H0[1] * B[1] + H0[2] * B[2])));
+            const pts = [];
+            for (let q = 0; q <= 48; q++) {
+                const s = q / 48, a = Math.sin((1 - s) * d) / Math.sin(d), b = Math.sin(s * d) / Math.sin(d);
+                const alto = 1 + Math.sin(Math.PI * s) * d * .22;
+                pts.push([(H0[0] * a + B[0] * b) * alto, (H0[1] * a + B[1] * b) * alto, (H0[2] * a + B[2] * b) * alto]);
+            }
+            return { pts, nombre: c[2], fase: k * .37 };
+        });
+        return {
+            medir() {
+                const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+                if (w !== W || h !== H) { canvas.width = W = w; canvas.height = H = h; }
+            },
+            dibujar(t, ptr, dt) {
+                this.medir();
+                const giro = .087 + Math.sin(t * .12) * .45 + (ptr.sx - .5) * 2.2, incl = .35 + (ptr.sy - .5) * .7;
+                const R = Math.min(W, H) * .36, cx = W * .58, cy = H * .5;
+                const cg = Math.cos(giro), sg = Math.sin(giro), ci = Math.cos(incl), si = Math.sin(incl);
+                const proy = ([x, y, z]) => {
+                    const x1 = x * cg - z * sg, z1 = x * sg + z * cg;
+                    const y2 = y * ci - z1 * si, z2 = y * si + z1 * ci;
+                    return [cx + x1 * R, cy - y2 * R, z2];
+                };
+                ctx.clearRect(0, 0, W, H);
+                // atmósfera
+                const at = ctx.createRadialGradient(cx, cy, R * .9, cx, cy, R * 1.35);
+                at.addColorStop(0, 'rgba(110,162,255,.22)'); at.addColorStop(1, 'rgba(110,162,255,0)');
+                ctx.fillStyle = at; ctx.beginPath(); ctx.arc(cx, cy, R * 1.35, 0, 7); ctx.fill();
+                const cuerpo = ctx.createRadialGradient(cx - R * .35, cy - R * .4, R * .1, cx, cy, R);
+                cuerpo.addColorStop(0, '#13213f'); cuerpo.addColorStop(1, '#070c18');
+                ctx.fillStyle = cuerpo; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+                // puntos: atrás tenues, adelante brillantes
+                for (let pase = 0; pase < 2; pase++) {
+                    ctx.fillStyle = pase ? '#a9c6ff' : 'rgba(110,162,255,.22)';
+                    ctx.beginPath();
+                    for (const p of puntos) {
+                        const [x, y, z] = proy(p);
+                        if ((z > 0) !== !!pase) continue;
+                        const s = pase ? (.9 + z * 1.1) * dpr : .8 * dpr;
+                        ctx.rect(x - s / 2, y - s / 2, s, s);
+                    }
+                    ctx.fill();
+                }
+                // arcos con un paquete que viaja
+                ctx.lineCap = 'round';
+                arcos.forEach((a) => {
+                    const ciclo = (t * .18 + a.fase) % 1.4, cab = Math.min(1, ciclo / .7), cola = Math.max(0, (ciclo - .7) / .7);
+                    const q0 = Math.floor(cola * 48), q1 = Math.floor(cab * 48);
+                    let previo = null;
+                    for (let q = q0; q <= q1; q++) {
+                        const p = proy(a.pts[q]);
+                        if (previo) {
+                            const vis = Math.min(previo[2], p[2]) > -.15 ? 1 : .15;
+                            ctx.strokeStyle = `rgba(255,${Math.round(150 - q)},${Math.round(80 + q)},${.85 * vis})`;
+                            ctx.lineWidth = 1.6 * dpr;
+                            ctx.beginPath(); ctx.moveTo(previo[0], previo[1]); ctx.lineTo(p[0], p[1]); ctx.stroke();
+                        }
+                        previo = p;
+                    }
+                    if (cab < 1 && previo && previo[2] > -.15) {
+                        const g = ctx.createRadialGradient(previo[0], previo[1], 0, previo[0], previo[1], 7 * dpr);
+                        g.addColorStop(0, 'rgba(255,220,180,1)'); g.addColorStop(1, 'rgba(255,122,46,0)');
+                        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(previo[0], previo[1], 7 * dpr, 0, 7); ctx.fill();
+                    }
+                    const fin = proy(a.pts[48]);
+                    if (fin[2] > 0 && a.nombre) {
+                        ctx.fillStyle = 'rgba(255,190,140,.9)'; ctx.beginPath(); ctx.arc(fin[0], fin[1], 2.2 * dpr, 0, 7); ctx.fill();
+                        ctx.fillStyle = `rgba(226,232,240,${Math.min(1, fin[2] * 2) * .8})`;
+                        ctx.font = `600 ${10 * dpr}px Figtree, sans-serif`;
+                        ctx.fillText(a.nombre, fin[0] + 5 * dpr, fin[1] - 4 * dpr);
+                    }
+                });
+                // Tepic, el origen
+                const h = proy(H0);
+                if (h[2] > -.1) {
+                    const pul = (t * .8) % 1;
+                    ctx.strokeStyle = `rgba(255,122,46,${1 - pul})`; ctx.lineWidth = 1.5 * dpr;
+                    ctx.beginPath(); ctx.arc(h[0], h[1], (4 + pul * 18) * dpr, 0, 7); ctx.stroke();
+                    ctx.fillStyle = '#ff7a2e'; ctx.beginPath(); ctx.arc(h[0], h[1], 3.6 * dpr, 0, 7); ctx.fill();
+                    ctx.fillStyle = '#fff'; ctx.font = `700 ${12 * dpr}px Figtree, sans-serif`; ctx.textAlign = 'right';
+                    ctx.fillText('Tepic', h[0] - 9 * dpr, h[1] + 4 * dpr); ctx.textAlign = 'left';
+                }
+            },
+        };
+    }
+
     // ================= CAMPO MAGNÉTICO =================
     function crearCampo(canvas) {
         const ctx = canvas.getContext('2d');
@@ -553,6 +660,7 @@ void main(){
             });
         } else if (sec.querySelector('.moire')) motor = crearMoire(sec);
         else if (sec.querySelector('.tinta')) motor = crearTinta(sec);
+        else if (sec.querySelector('[data-globo]')) motor = crearGlobo(sec.querySelector('[data-globo]'));
         else if (sec.querySelector('[data-campo]')) {
             motor = crearCampo(sec.querySelector('[data-campo]'));
             sec.addEventListener('pointerdown', () => motor.invertir());
