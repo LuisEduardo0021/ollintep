@@ -4,52 +4,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#080d18">
     <title>Página no encontrada · Ollin-Tep Software</title>
     <link rel="icon" type="image/svg+xml" href="/resources/ollintep.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css?v=9.0">
+    <link rel="stylesheet" href="/css/styles.css?v=9.1">
 </head>
 <body>
+    <a class="skip-link" href="#principal">Saltar al contenido</a>
     <div class="liquid-bg" aria-hidden="true">
         <span class="blob blob-1"></span>
         <span class="blob blob-2"></span>
         <span class="blob blob-3"></span>
     </div>
     <div class="ascii-fondo" data-ascii-anim="lluvia" data-color="#22e1f0" aria-hidden="true"></div>
-    <main>
-    <section class="hero">
+    <main id="principal">
+    <section class="hero hero-404">
         <div class="hero-content">
             <img src="/resources/ollintep.svg" alt="Ollin-Tep Software" width="72" height="69" class="block mx-auto mb-6">
             <canvas class="pajaro pajaro-404" data-pajaro aria-hidden="true"></canvas>
             <h1 data-glitch>Esta página no existe</h1>
             <p>Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+            <p class="p404-ruta" hidden><span>ollin-tep.com</span><b></b></p>
+
+            <a class="p404-sugerencia" href="/" hidden>
+                <img src="/resources/ollintep.svg" alt="" width="44" height="44">
+                <span class="p404-sug-texto">
+                    <small>¿Buscabas esto?</small>
+                    <strong></strong>
+                    <em></em>
+                </span>
+                <span class="p404-flecha" aria-hidden="true">→</span>
+            </a>
+
             <div class="hero-btns">
                 <a href="/" class="m3-btn m3-btn-filled shadow-md"><span>Ir al inicio</span></a>
                 <a href="https://activation.ollin-tep.com/descargar" class="m3-btn m3-btn-tonal"><span>Descargar CroHub</span></a>
             </div>
+
+            <nav class="p404-atajos" aria-labelledby="p404-atajos-titulo">
+                <h2 id="p404-atajos-titulo">O ve directo a</h2>
+                <ul>
+                    <li><a href="/centzontle/" style="--c:#5a8af6"><img src="/resources/centzontle.png" alt="" width="18" height="18">Centzontle</a></li>
+                    <li><a href="/actapro/" style="--c:#1fe3d2"><img src="/resources/ollintep-actapro.svg" alt="" width="18" height="18">ActaPro</a></li>
+                    <li><a href="/agrocria/" style="--c:#c3cf6c"><img src="/resources/ollintep-agrocria.svg" alt="" width="18" height="18">Agro-Cria Pro</a></li>
+                    <li><a href="/diagmind/" style="--c:#4d8cf5"><img src="/resources/ollintep-diagmind.svg" alt="" width="18" height="18">Diagmind</a></li>
+                    <li><a href="/#suite" style="--c:#ff5ce8"><img src="/resources/suite/crohub.svg" alt="" width="18" height="18">Suite CroHub</a></li>
+                    <li><a href="/laboratorio/" style="--c:#a78bfa"><img src="/resources/ollintep.svg" alt="" width="18" height="18">Laboratorio</a></li>
+                    <li><a href="/#contacto" style="--c:#22e1f0"><img src="/resources/ollintep.svg" alt="" width="18" height="18">Contacto</a></li>
+                </ul>
+            </nav>
         </div>
     </section>
     </main>
     <div class="ascii-banda" data-texto="404" data-color="#22e1f0" aria-hidden="true"></div>
     <script>
-        // GitHub Pages sirve esta misma página para todos: se traduce aquí según la preferencia guardada o la del navegador
-        try {
-            var g = localStorage.getItem('ollintep-idioma');
-            var l = g || (navigator.languages || [navigator.language]).map(function (x) { return (x || '').slice(0, 2); }).filter(function (x) { return x === 'es' || x === 'en'; })[0] || 'en';
-            if (l === 'en') {
+        // GitHub Pages sirve esta misma página para todas las direcciones que no existen:
+        // se traduce aquí y se adivina qué página buscaba la persona a partir de la dirección.
+        (function () {
+            var ruta = decodeURI(location.pathname);
+            var enIngles = /^\/en(\/|$)/.test(ruta);
+            if (!enIngles) {
+                try {
+                    var g = localStorage.getItem('ollintep-idioma');
+                    var l = g || (navigator.languages || [navigator.language]).map(function (x) { return (x || '').slice(0, 2); }).filter(function (x) { return x === 'es' || x === 'en'; })[0] || 'en';
+                    enIngles = l === 'en';
+                } catch (e) {}
+            }
+            var EN = enIngles;
+            var pre = EN ? '/en' : '';
+
+            // Destinos: [dirección, nombre, descripción ES, descripción EN, logo, color, palabras que lo delatan]
+            var DESTINOS = [
+                ['/centzontle/', 'Centzontle', 'Punto de venta multigiro', 'Point of sale for any business', '/resources/centzontle.png', '#5a8af6',
+                    'centzontle restaurant restaurants restaurante restaurantes pos punto venta caja tienda comercio cafeteria'],
+                ['/actapro/', 'ActaPro', 'Gestión de actas y trámites', 'Minutes and procedure management', '/resources/ollintep-actapro.svg', '#1fe3d2',
+                    'actapro acta actas tramite tramites asamblea minutes'],
+                ['/agrocria/', 'Agro-Cria Pro', 'Software agropecuario y de riego', 'Farm and irrigation software', '/resources/ollintep-agrocria.svg', '#c3cf6c',
+                    'agrocria agro cria campo riego ganado cultivo cultivos rancho farm'],
+                ['/diagmind/', 'Diagmind', 'Diagnóstico de celulares Android', 'Android phone diagnostics', '/resources/ollintep-diagmind.svg', '#4d8cf5',
+                    'diagmind diag diagnostico android celular celulares telefono taller adb'],
+                ['/laboratorio/', 'Laboratorio', 'Experimentos visuales en tiempo real', 'Real-time visual experiments', '/resources/ollintep.svg', '#a78bfa',
+                    'laboratorio lab labs experimentos shaders demos'],
+                ['/#suite', 'Suite CroHub', 'Nueve apps de escritorio', 'Nine desktop apps', '/resources/suite/crohub.svg', '#ff5ce8',
+                    'crohub suite apps descargar download crovite crovect cromix croma cromofi croudio crobeat croguard cronmy pdf'],
+                ['/#a-medida', 'Software a medida', 'Plataformas hechas para tu operación', 'Platforms built for your operation', '/resources/ollintep.svg', '#346df1',
+                    'medida custom plataformas software desarrollo'],
+                ['/#diseno', 'Diseño', 'Logos, marca y publicidad', 'Logos, branding and ads', '/resources/ollintep.svg', '#f59e0b',
+                    'diseno design logo logos marca branding publicidad'],
+                ['/#redes', 'Redes', 'Redes, servidores y VLANs', 'Networks, servers and VLANs', '/resources/ollintep.svg', '#22e1f0',
+                    'redes red network networks vlan vlans servidores servidor'],
+                ['/#servicio-tecnico', 'Servicio técnico', 'Mantenimiento y reparación de equipo', 'Hardware maintenance and repair', '/resources/ollintep.svg', '#f97316',
+                    'servicio tecnico soporte support reparacion mantenimiento hardware'],
+                ['/#contacto', 'Contacto', 'Escríbenos o cotiza tu proyecto', 'Write to us or get a quote', '/resources/ollintep.svg', '#22e1f0',
+                    'contacto contact cotizar cotizacion quote whatsapp correo email']
+            ];
+            var NOMBRES_EN = { 'Laboratorio': 'Visual lab', 'Software a medida': 'Custom software', 'Diseño': 'Design', 'Redes': 'Networks', 'Servicio técnico': 'Tech support', 'Contacto': 'Contact', 'Suite CroHub': 'CroHub suite' };
+
+            function normal(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+            function distancia(a, b) {
+                var f = [], i, j, p, t;
+                for (j = 0; j <= b.length; j++) f[j] = j;
+                for (i = 1; i <= a.length; i++) {
+                    p = f[0]; f[0] = i;
+                    for (j = 1; j <= b.length; j++) { t = f[j]; f[j] = Math.min(f[j] + 1, f[j - 1] + 1, p + (a[i - 1] === b[j - 1] ? 0 : 1)); p = t; }
+                }
+                return f[b.length];
+            }
+            // Puntaje: 0 = igual; menos es mejor; Infinity = nada que ver
+            function puntaje(pedazo, palabra) {
+                if (pedazo === palabra) return 0;
+                if (pedazo.length >= 4 && palabra.length >= 4 && (palabra.indexOf(pedazo) === 0 || pedazo.indexOf(palabra) === 0)) return 0.5;
+                var d = distancia(pedazo, palabra), tope = Math.max(1, Math.floor(palabra.length / 4));
+                return d <= tope ? d : Infinity;
+            }
+
+            var pedazos = normal(ruta.replace(/^\/en(\/|$)/, '/')).replace(/(index)?\.html?$/, '').split(/[\/\-_.\s+]+/).filter(function (x) { return x.length >= 2; });
+            var mejor = null, mejorP = Infinity;
+            DESTINOS.forEach(function (d) {
+                d[6].split(' ').forEach(function (palabra) {
+                    pedazos.forEach(function (p) { var s = puntaje(p, palabra); if (s < mejorP) { mejorP = s; mejor = d; } });
+                });
+            });
+
+            if (EN) {
                 document.documentElement.lang = 'en';
                 document.title = 'Page not found · Ollin-Tep Software';
+                document.querySelector('.skip-link').textContent = 'Skip to content';
                 document.querySelector('h1').textContent = 'This page does not exist';
                 document.querySelector('.hero-content p').textContent = 'The link may be mistyped, or the page may have moved.';
+                document.querySelector('.p404-sug-texto small').textContent = 'Were you looking for this?';
                 var b = document.querySelectorAll('.hero-btns a');
                 b[0].href = '/en/'; b[0].firstElementChild.textContent = 'Go home';
                 b[1].firstElementChild.textContent = 'Download CroHub';
                 b[1].href = 'https://activation.ollin-tep.com/descargar?lang=en';
+                document.getElementById('p404-atajos-titulo').textContent = 'Or go straight to';
+                document.querySelectorAll('.p404-atajos a').forEach(function (a) {
+                    a.href = '/en' + a.getAttribute('href');
+                    var t = a.lastChild, n = t.textContent.trim();
+                    if (NOMBRES_EN[n]) t.textContent = NOMBRES_EN[n];
+                });
             }
-        } catch (e) {}
+
+            // La dirección que no existe (recortada si es muy larga)
+            if (ruta.length > 1) {
+                var r = document.querySelector('.p404-ruta');
+                r.querySelector('b').textContent = ruta.length > 48 ? ruta.slice(0, 46) + '…' : ruta;
+                r.hidden = false;
+            }
+
+            if (mejor) {
+                var s = document.querySelector('.p404-sugerencia');
+                s.href = pre + mejor[0];
+                s.style.setProperty('--c', mejor[5]);
+                s.querySelector('img').src = mejor[4];
+                s.querySelector('strong').textContent = EN ? (NOMBRES_EN[mejor[1]] || mejor[1]) : mejor[1];
+                s.querySelector('em').textContent = EN ? mejor[3] : mejor[2];
+                s.hidden = false;
+            }
+        })();
     </script>
-    <script src="/script/efectos.js?v=9.0"></script>
+    <script src="/script/efectos.js?v=9.1"></script>
 </body>
 </html>
