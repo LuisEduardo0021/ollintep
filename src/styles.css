@@ -6310,3 +6310,195 @@ html {
   #servicio-tecnico .service-list li:hover i { animation: none; }
   #servicio-tecnico .service-list li::before { transition: none; }
 }
+
+/* ==========================================================================
+   CÓMO TRABAJAMOS: cada principio se ilustra solo con una mini escena
+   ========================================================================== */
+.principle { position: relative; }
+.mini-caja {
+  position: absolute;
+  top: 1.35rem;
+  right: 1.35rem;
+  width: 104px;
+  height: 56px;
+  pointer-events: none;
+  z-index: 1;
+}
+.mini { position: absolute; inset: 0; display: block; }
+.mini span { position: absolute; display: block; }
+
+/* 1 · Trabajo que no se detiene: se cae internet, los datos se guardan en local y suben al volver */
+.mini-offline .nube {
+  top: 4px; right: 6px; width: 30px; height: 12px;
+  border-radius: 8px;
+  background: #6ea2ff;
+  box-shadow: 8px -5px 0 -1px #6ea2ff;
+  animation: nube-red 6s var(--ease-out) infinite;
+}
+.mini-offline .nube::after {
+  content: ""; position: absolute; left: 50%; top: -6px;
+  width: 2px; height: 26px; border-radius: 2px;
+  background: #f87171;
+  rotate: 45deg;
+  scale: 1 0;
+  animation: corte-red 6s var(--ease-out) infinite;
+}
+.mini-offline .disco {
+  left: 6px; bottom: 4px; width: 34px; height: 20px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1.5px #34d399;
+}
+.mini-offline .disco::after {
+  content: ""; position: absolute; right: 4px; bottom: 4px; width: 4px; height: 4px; border-radius: 50%;
+  background: #34d399; box-shadow: 0 0 5px #34d399;
+  animation: led-red 1.1s steps(1, end) infinite;
+}
+.mini-offline .dato {
+  left: calc(10px + var(--i) * 9px); bottom: 9px; width: 6px; height: 6px;
+  border-radius: 2px;
+  background: #34d399;
+  opacity: 0;
+  animation: dato-local 6s var(--ease-out) infinite;
+  animation-delay: calc(var(--i) * .35s);
+}
+@keyframes nube-red {
+  0%, 30% { opacity: 1; }
+  38%, 72% { opacity: .3; }
+  80%, 100% { opacity: 1; }
+}
+@keyframes corte-red {
+  0%, 30% { scale: 1 0; }
+  36%, 74% { scale: 1 1; }
+  80%, 100% { scale: 1 0; }
+}
+@keyframes dato-local {
+  0%, 36% { opacity: 0; translate: 0 -22px; }
+  44% { opacity: 1; translate: 0 0; }
+  76% { opacity: 1; translate: 0 0; }
+  92% { opacity: 0; translate: 58px -38px; }
+  100% { opacity: 0; translate: 58px -38px; }
+}
+
+/* 2 · Privacidad por diseño: lo que intenta salir del equipo rebota en su borde */
+.mini-privado .borde {
+  left: 26px; top: 0; width: 56px; height: 56px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgba(110, 162, 255, .55);
+  animation: borde-escudo 2.4s ease-in-out infinite;
+}
+.mini-privado .doc {
+  left: 47px; top: 17px; width: 14px; height: 19px;
+  border-radius: 2px;
+  background:
+    linear-gradient(#0b1220, #0b1220) 3px 5px / 8px 1.5px no-repeat,
+    linear-gradient(#0b1220, #0b1220) 3px 9px / 8px 1.5px no-repeat,
+    linear-gradient(#0b1220, #0b1220) 3px 13px / 5px 1.5px no-repeat,
+    #e2e8f0;
+}
+.mini-privado .rayo {
+  left: 53px; top: 27px; width: 3px; height: 3px; border-radius: 50%;
+  background: #ff7a2e;
+  box-shadow: 0 0 5px #ff7a2e;
+  rotate: var(--a);
+  transform-origin: 50% 50%;
+  animation: rayo-rebota 2.4s var(--ease-out) infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes rayo-rebota {
+  0% { translate: 0 0; opacity: 0; }
+  15% { opacity: 1; }
+  45% { translate: 0 -24px; }
+  55% { translate: 0 -24px; scale: 1.8; }
+  100% { translate: 0 0; opacity: 0; scale: 1; }
+}
+@keyframes borde-escudo {
+  0%, 100% { box-shadow: inset 0 0 0 1.5px rgba(110, 162, 255, .45); }
+  50% { box-shadow: inset 0 0 0 1.5px rgba(110, 162, 255, .9), 0 0 12px rgba(110, 162, 255, .35); }
+}
+
+/* 3 · Diseño cuidado: la misma pantalla se reacomoda de escritorio a móvil */
+.mini-responsivo .marco {
+  right: 0; top: 0; height: 56px; width: 100px;
+  padding: 6px;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 4px;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1.5px rgba(179, 155, 255, .7);
+  overflow: hidden;
+  animation: marco-responde 5s var(--ease-out) infinite;
+}
+.mini-responsivo .marco span {
+  position: static;
+  flex: 1 0 22px;
+  height: 18px;
+  border-radius: 3px;
+  background: rgba(179, 155, 255, .45);
+}
+.mini-responsivo .marco span:first-child { flex-basis: 100%; height: 7px; background: #b39bff; }
+@keyframes marco-responde {
+  0%, 30% { width: 100px; }
+  45%, 80% { width: 36px; }
+  95%, 100% { width: 100px; }
+}
+
+/* 4 · Trato directo: nos escribes y te contesta quien construye tu software */
+.mini-chat .burbuja { height: 14px; border-radius: 8px; opacity: 0; }
+.mini-chat .ellos {
+  left: 6px; top: 6px; width: 46px;
+  background: rgba(226, 232, 240, .85);
+  border-bottom-left-radius: 2px;
+  animation: burbuja-a 5s var(--ease-out) infinite;
+}
+.mini-chat .escribe {
+  right: 6px; top: 26px; width: 30px;
+  background: #6ea2ff;
+  border-bottom-right-radius: 2px;
+  animation: burbuja-b 5s var(--ease-out) infinite;
+}
+.mini-chat .escribe span {
+  top: 5px; width: 4px; height: 4px; border-radius: 50%; background: #0b1220;
+  animation: tecleo .9s ease-in-out infinite;
+}
+.mini-chat .escribe span:nth-child(1) { left: 7px; }
+.mini-chat .escribe span:nth-child(2) { left: 13px; animation-delay: .15s; }
+.mini-chat .escribe span:nth-child(3) { left: 19px; animation-delay: .3s; }
+.mini-chat .nos {
+  right: 6px; top: 26px; width: 62px; height: 22px;
+  background: #6ea2ff;
+  border-bottom-right-radius: 2px;
+  animation: burbuja-c 5s var(--ease-out) infinite;
+}
+@keyframes burbuja-a {
+  0%, 6% { opacity: 0; translate: 0 6px; }
+  14%, 90% { opacity: 1; translate: 0 0; }
+  100% { opacity: 0; }
+}
+@keyframes burbuja-b {
+  0%, 22% { opacity: 0; translate: 0 6px; }
+  30%, 48% { opacity: 1; translate: 0 0; }
+  52%, 100% { opacity: 0; }
+}
+@keyframes burbuja-c {
+  0%, 50% { opacity: 0; scale: .7; translate: 0 4px; }
+  58%, 90% { opacity: 1; scale: 1; translate: 0 0; }
+  100% { opacity: 0; }
+}
+@keyframes tecleo { 0%, 100% { translate: 0 0; } 50% { translate: 0 -2.5px; } }
+
+/* Con el cursor encima, la escena se acerca un poco */
+@media (hover: hover) and (pointer: fine) {
+  .mini-caja { transition: scale .3s var(--ease-out); transform-origin: 100% 0; }
+  .principle:hover .mini-caja { scale: 1.1; }
+}
+
+/* Pausa fuera de pantalla; quietas con movimiento reducido o en modo ligero (estado final legible) */
+#principios.fuera .mini span,
+#principios.fuera .mini span::after { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .mini span, .mini span::after { animation: none !important; }
+  .mini-offline .dato { opacity: 1; }
+  .mini-chat .ellos, .mini-chat .nos { opacity: 1; }
+  .mini-privado .rayo { display: none; }
+}
+.ligero .mini span, .ligero .mini span::after { animation: none !important; }
+.ligero .mini-offline .dato, .ligero .mini-chat .ellos, .ligero .mini-chat .nos { opacity: 1; }
+.ligero .mini-privado .rayo { display: none; }
