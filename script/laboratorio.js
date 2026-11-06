@@ -147,38 +147,7 @@ void main(){
 
         // 05: aurora boreal sobre montañas, reflejada en un lago (capas de ruido triangular)
         aurora: `
-const mat2 m2=mat2(.95534,.29552,-.29552,.95534);
-float tri(float x){return clamp(abs(fract(x)-.5),.01,.49);}
-vec2 tri2(vec2 p){return vec2(tri(p.x)+tri(p.y),tri(p.y+tri(p.x)));}
-float triRuido(vec2 p,float v){
-  float z=1.8,z2=2.5,rz=0.;
-  p*=rot(p.x*.06);
-  vec2 bp=p;
-  for(int i=0;i<5;i++){
-    vec2 dg=tri2(bp*1.85)*.75;
-    dg*=rot(T*v);
-    p-=dg/z2; bp*=1.3; z2*=.45; z*=.42;
-    p*=1.21+(rz-1.)*.02;
-    rz+=tri(p.x+tri(p.y))*z;
-    p*=-m2;
-  }
-  return clamp(1./pow(rz*29.,1.3),0.,.55);
-}
-vec4 aurora(vec3 ro,vec3 rd){
-  vec4 col=vec4(0.),media=vec4(0.);
-  for(int i=0;i<30;i++){
-    float fi=float(i);
-    float of=.004*hh(gl_FragCoord.xy+fract(T))*smoothstep(0.,15.,fi);
-    float pt=((.8+pow(fi,1.4)*.002)-ro.y)/(rd.y*2.+.4)-of;
-    vec3 bp=ro+pt*rd;
-    float rz=triRuido(bp.zx,.06);
-    vec4 c2=vec4((sin(1.-vec3(2.15,-.5,1.2)+fi*.045)*.5+.5)*rz,rz);
-    media=mix(media,c2,.5);
-    col+=media*exp2(-fi*.065-2.5)*smoothstep(0.,5.,fi);
-  }
-  col*=clamp(rd.y*15.+.4,0.,1.);
-  return col*1.9;
-}
+uniform sampler2D U; uniform float K;
 float montes(float a){float v=0.,k=.5;for(int i=0;i<5;i++){v+=k*abs(ruido(vec2(a,3.7))*2.-1.);a=a*2.1+1.3;k*=.5;}return v;}
 vec3 cielo(vec3 rd){
   vec3 c=mix(vec3(.01,.015,.04),vec3(.02,.05,.1),1.-rd.y);
@@ -200,7 +169,7 @@ void main(){
   vec3 c;
   if(rd.y>0.){
     c=cielo(rd);
-    vec4 au=aurora(ro,rd);
+    vec4 au=texture2D(U,gl_FragCoord.xy/R)*K;
     c=c*(1.-au.a)+au.rgb;
     if(rd.y<mh){float b=smoothstep(mh,mh-.004,rd.y);c=mix(c,vec3(.012,.02,.035)+au.rgb*.08,b);}
     if(rd.y<mh2){float b=smoothstep(mh2,mh2-.003,rd.y);c=mix(c,vec3(.006,.01,.02),b);}
@@ -208,7 +177,7 @@ void main(){
     vec3 rr=vec3(rd.x,-rd.y,rd.z);
     rr.y+=.004*sin(rd.z*60./max(-rd.y,.02)*.05+T*1.5)*smoothstep(0.,.2,-rd.y);
     c=cielo(rr)*.5;
-    vec4 au=aurora(ro,rr);
+    vec4 au=texture2D(U,gl_FragCoord.xy/R)*K;
     c=c*(1.-au.a)+au.rgb*.55;
     if(rr.y<mh){c=mix(c,vec3(.01,.015,.03),smoothstep(mh,mh-.004,rr.y));}
     if(rr.y<mh2){c=mix(c,vec3(.005,.008,.016),smoothstep(mh2,mh2-.003,rr.y));}
@@ -297,12 +266,17 @@ void main(){
   vec2 mu=(M-.5)*vec2(R.x/R.y,1.);
   vec3 rm=normalize(f*z+mu.x*r+mu.y*u);
   MP=ro+rm*(-ro.y/rm.y);
-  float t=0.,hit=0.;
-  for(int i=0;i<110;i++){
+  // el bloque más alto mide como mucho ~2.35: el rayo empieza justo encima y se corta bajo el suelo
+  float t=max(0.,(ro.y-2.4)/max(-rd.y,1e-3)),hit=0.;
+  for(int i=0;i<160;i++){
     vec3 p=ro+rd*t;
+    if(p.y<-.05||t>30.)break;
     float d=mapa(p);
     if(d<.001){hit=1.;break;}
-    t+=min(d,S*.45); if(t>30.)break;
+    // nunca cruzar a la celda vecina de un salto: ahí el bloque de al lado podría estar más cerca
+    vec2 lim=(floor(p.xz/S)+step(0.,rd.xz))*S;
+    vec2 tc=(lim-p.xz)/(rd.xz+sign(rd.xz)*1e-5+vec2(1e-6));
+    t+=max(min(d,min(tc.x,tc.y)+.002),.0008);
   }
   vec3 c=mix(vec3(.02,.02,.05),vec3(.07,.04,.13),uv.y+.5);
   if(hit>.5){
@@ -324,8 +298,63 @@ void main(){
 }`,
     };
 
+    // Capas suaves: lo difuso (la luz de la aurora) se calcula a media resolución en una textura
+    // y el shader principal lo compone a resolución completa con los bordes nítidos (estrellas, montes, lago).
+    const SUAVES = {
+        aurora: `uniform float K;
+const mat2 m2=mat2(.95534,.29552,-.29552,.95534);
+float tri(float x){return clamp(abs(fract(x)-.5),.01,.49);}
+vec2 tri2(vec2 p){return vec2(tri(p.x)+tri(p.y),tri(p.y+tri(p.x)));}
+float triRuido(vec2 p,float v){
+  float z=1.8,z2=2.5,rz=0.;
+  p*=rot(p.x*.06);
+  vec2 bp=p;
+  for(int i=0;i<5;i++){
+    vec2 dg=tri2(bp*1.85)*.75;
+    dg*=rot(T*v);
+    p-=dg/z2; bp*=1.3; z2*=.45; z*=.42;
+    p*=1.21+(rz-1.)*.02;
+    rz+=tri(p.x+tri(p.y))*z;
+    p*=-m2;
+  }
+  return clamp(1./pow(rz*29.,1.3),0.,.55);
+}
+vec4 aurora(vec3 ro,vec3 rd){
+  vec4 col=vec4(0.),media=vec4(0.);
+  for(int i=0;i<30;i++){
+    float fi=float(i);
+    float of=.004*hh(gl_FragCoord.xy+fract(T))*smoothstep(0.,15.,fi);
+    float pt=((.8+pow(fi,1.4)*.002)-ro.y)/(rd.y*2.+.4)-of;
+    vec3 bp=ro+pt*rd;
+    float rz=triRuido(bp.zx,.06);
+    vec4 c2=vec4((sin(1.-vec3(2.15,-.5,1.2)+fi*.045)*.5+.5)*rz,rz);
+    media=mix(media,c2,.5);
+    col+=media*exp2(-fi*.065-2.5)*smoothstep(0.,5.,fi);
+  }
+  col*=clamp(rd.y*15.+.4,0.,1.);
+  return col*1.9;
+}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec3 ro=vec3(0.,0.,-6.7);
+  vec3 rd=normalize(vec3(uv+vec2(0.,.12),1.3));
+  rd.yz*=rot(-(M.y-.5)*.25);
+  rd.xz*=rot((M.x-.5)*.7+T*.015);
+  vec4 au;
+  if(rd.y>0.) au=aurora(ro,rd);
+  else {
+    vec3 rr=vec3(rd.x,-rd.y,rd.z);
+    rr.y+=.004*sin(rd.z*60./max(-rd.y,.02)*.05+T*1.5)*smoothstep(0.,.2,-rd.y);
+    au=aurora(ro,rr);
+  }
+  gl_FragColor=au/K;
+}`,
+    };
+
     const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-    const BASE = { obsidiana: 1, tunel: 1, gel: .6, aurora: .55, agujero: 1, cubos: .65 };
+    // Tope de píxeles por cuadro: hasta ahí se dibuja a resolución nativa (nítido en Full HD y laptops);
+    // en pantallas enormes (retina grande, 4K) se reparte el tope para no ahogar la GPU.
+    const TOPE = { obsidiana: 3.2e6, tunel: 3.2e6, gel: 2.4e6, aurora: 2.4e6, agujero: 3.2e6, cubos: 2.4e6 };
 
     function crearShader(canvas, nombre) {
         const gl = canvas.getContext('webgl', { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' });
@@ -338,25 +367,70 @@ void main(){
             if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(nombre, gl.getShaderInfoLog(s));
             return s;
         };
-        const prog = gl.createProgram();
-        gl.attachShader(prog, compilar(gl.VERTEX_SHADER, VS));
-        gl.attachShader(prog, compilar(gl.FRAGMENT_SHADER, CABECERA + SHADERS[nombre]));
-        gl.linkProgram(prog);
-        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(nombre, gl.getProgramInfoLog(prog)); return null; }
-        gl.useProgram(prog);
+        const programa = (src) => {
+            const prog = gl.createProgram();
+            gl.attachShader(prog, compilar(gl.VERTEX_SHADER, VS));
+            gl.attachShader(prog, compilar(gl.FRAGMENT_SHADER, CABECERA + src));
+            gl.bindAttribLocation(prog, 0, 'a');
+            gl.linkProgram(prog);
+            if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(nombre, gl.getProgramInfoLog(prog)); return null; }
+            const u = {};
+            ['R', 'T', 'M', 'P', 'U', 'K'].forEach((k) => (u[k] = gl.getUniformLocation(prog, k)));
+            return { prog, u };
+        };
+        const principal = programa(SHADERS[nombre]);
+        if (!principal) return null;
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-        const u = {};
-        ['R', 'T', 'M', 'P'].forEach((k) => (u[k] = gl.getUniformLocation(prog, k)));
 
-        const maximo = BASE[nombre] * (tactil ? .75 : 1);
-        let escala = maximo, media = 16, ancho = 0, alto = 0;
+        // Capa suave (si el experimento la tiene): textura a media resolución; en coma flotante si se puede
+        let capa = null;
+        if (SUAVES[nombre]) {
+            const prog = programa(SUAVES[nombre]);
+            const medio = gl.getExtension('OES_texture_half_float');
+            const lineal = medio && gl.getExtension('OES_texture_half_float_linear');
+            gl.getExtension('EXT_color_buffer_half_float');
+            const tex = gl.createTexture(), fbo = gl.createFramebuffer();
+            gl.bindTexture(gl.TEXTURE_2D, tex);
+            [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach((k) => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE));
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            let tipo = medio && lineal ? medio.HALF_FLOAT_OES : gl.UNSIGNED_BYTE;
+            const reservar = (w, h) => {
+                gl.bindTexture(gl.TEXTURE_2D, tex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, tipo, null);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+                const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                return ok;
+            };
+            if (prog) capa = { prog, tex, fbo, reservar, w: 0, h: 0, get tipo() { return tipo; }, aBytes() { tipo = gl.UNSIGNED_BYTE; } };
+        }
+
+        const tope = (TOPE[nombre] || 2.4e6) * (tactil ? .6 : 1);
+        const maximoPara = () => Math.min(1, Math.sqrt(tope / Math.max(1, canvas.clientWidth * canvas.clientHeight * dpr * dpr)));
+        let maximo = maximoPara(), escala = maximo, media = 16, ancho = 0, alto = 0;
+        addEventListener('resize', () => { maximo = maximoPara(); escala = Math.min(escala, maximo); });
         const medir = () => {
             const w = Math.max(1, Math.round(canvas.clientWidth * dpr * escala));
             const h = Math.max(1, Math.round(canvas.clientHeight * dpr * escala));
-            if (w !== ancho || h !== alto) { canvas.width = ancho = w; canvas.height = alto = h; gl.viewport(0, 0, w, h); }
+            if (w !== ancho || h !== alto) { canvas.width = ancho = w; canvas.height = alto = h; }
+            if (capa) {
+                const cw = Math.max(1, Math.round(ancho * .5)), ch = Math.max(1, Math.round(alto * .5));
+                if (cw !== capa.w || ch !== capa.h) {
+                    capa.w = cw; capa.h = ch;
+                    if (!capa.reservar(cw, ch) && capa.tipo !== gl.UNSIGNED_BYTE) { capa.aBytes(); capa.reservar(cw, ch); }
+                }
+            }
+        };
+        const uniformes = (p, w, h, t, ptr) => {
+            gl.uniform2f(p.u.R, w, h);
+            gl.uniform1f(p.u.T, t);
+            gl.uniform2f(p.u.M, ptr.sx, ptr.sy);
+            gl.uniform1f(p.u.P, ptr.pulso);
         };
         return {
             medir,
@@ -364,14 +438,27 @@ void main(){
                 // resolución adaptativa: baja si el cuadro tarda, sube si sobra tiempo
                 if (dt) {
                     media += (dt * 1000 - media) * .05;
-                    if (media > 24 && escala > .35) { escala *= .85; media = 16; }
+                    if (media > 24 && escala > .6) { escala = Math.max(.6, escala * .88); media = 16; }
                     else if (media < 13 && escala < maximo) { escala = Math.min(maximo, escala * 1.08); media = 16; }
                 }
                 medir();
-                gl.uniform2f(u.R, ancho, alto);
-                gl.uniform1f(u.T, t);
-                gl.uniform2f(u.M, ptr.sx, ptr.sy);
-                gl.uniform1f(u.P, ptr.pulso);
+                // en 8 bits la luz se guarda a la mitad para que los brillos no se saturen
+                const K = capa && capa.tipo === gl.UNSIGNED_BYTE ? 2 : 1;
+                if (capa) {
+                    gl.bindFramebuffer(gl.FRAMEBUFFER, capa.fbo);
+                    gl.viewport(0, 0, capa.w, capa.h);
+                    gl.useProgram(capa.prog.prog);
+                    uniformes(capa.prog, capa.w, capa.h, t, ptr);
+                    gl.uniform1f(capa.prog.u.K, K);
+                    gl.drawArrays(gl.TRIANGLES, 0, 3);
+                    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                    gl.activeTexture(gl.TEXTURE0);
+                    gl.bindTexture(gl.TEXTURE_2D, capa.tex);
+                }
+                gl.viewport(0, 0, ancho, alto);
+                gl.useProgram(principal.prog);
+                uniformes(principal, ancho, alto, t, ptr);
+                if (capa) { gl.uniform1i(principal.u.U, 0); gl.uniform1f(principal.u.K, K); }
                 gl.drawArrays(gl.TRIANGLES, 0, 3);
             },
         };

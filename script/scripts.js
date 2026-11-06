@@ -1081,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let W = 0, H = 0, estrellas = [], marco = 0, mx = 0, my = 0, ox = 0, oy = 0, ultimoY = window.scrollY, impulso = 0;
         const nueva = (z) => ({ x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2, z: z ?? 0.15 + Math.random() * 0.85, clara: Math.random() < 0.7 });
         const ajustar = () => {
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
             W = heroEstrellas.offsetWidth; H = heroEstrellas.offsetHeight;
             lienzo.width = W * dpr; lienzo.height = H * dpr;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
