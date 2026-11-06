@@ -13,9 +13,7 @@
   "Boceto": "Sketch",
   "Impresión": "Print",
   "Donde la luz se dobla.": "Where light bends.",
-  "Un agujero negro con su disco de gas incandescente. La gravedad curva las estrellas a su alrededor. Mueve el cursor para inclinarlo.": "A black hole with its disk of glowing gas. Gravity bends the stars around it. Move the cursor to tilt it.",
   "Horizonte de sucesos": "Event horizon",
-  "Lente gravitacional · disco de acreción · efecto Doppler": "Gravitational lensing · accretion disk · Doppler effect",
   "Rumbo al atardecer.": "Into the sunset.",
   "Una carretera infinita con estética de los ochenta. Con el cursor giras el horizonte.": "An endless road with an eighties look. Your cursor turns the horizon.",
   "Perspectiva procedural · montañas fractales · cuadrícula antialias": "Procedural perspective · fractal mountains · antialiased grid",
@@ -775,5 +773,7 @@
   "Ollin-Tep Software, de Tepic, Nayarit: la suite CroHub de apps de escritorio, plataformas a medida, diseño de marca, redes y servicio técnico.": "Ollin-Tep Software, from Tepic, Nayarit: the CroHub desktop app suite, custom platforms, brand design, networks and tech support.",
   "ActaPro, de Ollin-Tep: captura actas, da seguimiento a pendientes y audita trámites administrativos desde un solo panel en la nube.": "ActaPro, by Ollin-Tep: record minutes, track pending items and audit administrative procedures from a single cloud dashboard.",
   "Agro-Cria Pro, de Ollin-Tep: cultivos, ganadería, invernaderos, balance hídrico FAO-56 y telemetría IoT en una sola plataforma.": "Agro-Cria Pro, by Ollin-Tep: crops, livestock, greenhouses, FAO-56 water balance and IoT telemetry in a single platform.",
-  "Diagmind, de Ollin-Tep: diagnóstico profesional de celulares Android por ADB, sin root, con telemetría de hardware e IA local.": "Diagmind, by Ollin-Tep: professional Android phone diagnostics over ADB, no root, with hardware telemetry and local AI."
+  "Diagmind, de Ollin-Tep: diagnóstico profesional de celulares Android por ADB, sin root, con telemetría de hardware e IA local.": "Diagmind, by Ollin-Tep: professional Android phone diagnostics over ADB, no root, with hardware telemetry and local AI.",
+  "Un agujero negro con su disco de gas incandescente. La gravedad dobla la luz: ves la parte de atrás del disco por encima y por debajo del horizonte. Mueve el cursor para inclinarlo.": "A black hole with its glowing gas disk. Gravity bends light: you see the back of the disk above and below the horizon. Move the cursor to tilt it.",
+  "Trazado de rayos · lente gravitacional · efecto Doppler": "Ray tracing · gravitational lensing · Doppler effect"
 }

@@ -190,6 +190,9 @@ void main(){
 }`,
         // 08: agujero negro con lente gravitacional y disco de acreción
         agujero: `
+// Trazado de rayos de Schwarzschild (unidades: radio del horizonte = 1). Cada rayo se curva hacia el centro;
+// donde cruza el plano del disco se acumula su luz. Así el disco de atrás se ve por encima y por debajo
+// del agujero y se une sin cortes con el de adelante, y el anillo de fotones aparece solo.
 float fbm3(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*ruido(p);p=p*2.1+3.1;a*=.5;}return v;}
 vec3 estrellas(vec2 p){
   vec3 c=vec3(0.);
@@ -202,37 +205,64 @@ vec3 estrellas(vec2 p){
   }
   return c;
 }
-vec4 disco(vec2 q,float rs){
-  float dr=length(q); if(dr<rs*1.45||dr>rs*5.)return vec4(0.);
-  float a=atan(q.y,q.x);
-  float x=(dr-rs*1.45)/(rs*3.55);
-  float v=fbm3(vec2(a*3.+T*.9/dr*rs*4.,dr*18.));
-  float bandas=.55+.45*sin(dr*70.-T*2.+v*5.);
-  float dens=smoothstep(0.,.08,x)*smoothstep(1.,.35,x)*(.35+.65*v)*bandas;
-  float dop=1.+.75*cos(a+1.4);
-  vec3 col=mix(vec3(1.,.95,.85),vec3(1.,.45,.12),smoothstep(0.,.5,x));
-  col=mix(col,vec3(.6,.12,.05),smoothstep(.5,1.,x));
-  return vec4(col*dens*dop*1.6,clamp(dens*1.4,0.,1.));
+const float RIN=3., ROUT=9.5;
+vec4 disco(vec3 p,vec3 v){
+  float r=length(p.xz); if(r<RIN||r>ROUT)return vec4(0.);
+  float x=(r-RIN)/(ROUT-RIN);
+  // el gas gira más rápido cerca del centro; el ruido se toma del punto girado (sin costura en ningún ángulo)
+  vec2 q=rot(T*2.2/pow(r,1.5))*p.xz;
+  float w=fbm3(q*.9+vec2(r*.35,0.));
+  float w2=ruido(q*2.6);
+  float bandas=.72+.28*sin(r*4.3-T*1.5+w*6.);
+  float dens=smoothstep(0.,.07,x)*smoothstep(1.,.25,x)*(.3+.7*w)*(.8+.4*w2)*bandas;
+  // brillo Doppler: el lado que viene hacia nosotros se ve más intenso
+  vec3 vt=normalize(vec3(-p.z,0.,p.x));
+  float dop=pow(clamp(1.+.55*dot(vt,-normalize(v))*sqrt(RIN/r),.25,2.),2.5);
+  vec3 col=mix(vec3(1.,.95,.85),vec3(1.,.45,.12),smoothstep(0.,.45,x));
+  col=mix(col,vec3(.6,.12,.05),smoothstep(.45,1.,x));
+  return vec4(col*dens*dop*1.5,clamp(dens*1.5,0.,1.));
 }
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
-  float rs=.12;
-  float r=length(uv);
-  float incl=mix(.16,.42,M.y);
-  mat2 giro=rot((M.x-.5)*.5);
-  vec2 dir=uv/max(r,1e-4);
-  vec2 lente=uv-dir*rs*rs*2.2/max(r,rs*.5);
-  vec3 c=estrellas(lente+vec2(T*.004,0.));
-  c+=vec3(.25,.12,.45)*fbm3(lente*2.5+5.)*.35+vec3(.05,.12,.3)*fbm3(lente*4.-T*.01)*.25;
-  vec2 qb=giro*lente; qb.y/=incl;
-  vec4 db=disco(qb,rs);
-  c=mix(c,db.rgb,db.a*smoothstep(-.02,.03,qb.y));
-  c*=smoothstep(rs*.98,rs*1.08,r);
-  c+=vec3(1.,.75,.5)*exp(-abs(r-rs*1.12)*90.)*.8;
-  vec2 qf=giro*uv; qf.y/=incl;
-  vec4 df=disco(qf,rs);
-  c=mix(c,df.rgb,df.a*smoothstep(.03,-.02,qf.y));
-  c+=vec3(1.,.6,.3)*P*.4*exp(-abs(r-(1.-P)*.9)*12.);
+  uv=rot((M.x-.5)*.5)*uv;
+  float elev=asin(mix(.16,.42,M.y));
+  float D=20.;
+  vec3 ro=D*vec3(0.,sin(elev),-cos(elev));
+  vec3 f=normalize(-ro), ri=normalize(cross(vec3(0.,1.,0.),f)), up=cross(f,ri);
+  vec3 rd=normalize(f+uv.x*ri+uv.y*up);
+  // fuera de r=14 la curvatura es mínima: el rayo llega en línea recta hasta esa esfera
+  float bq=dot(ro,rd), cq=dot(ro,ro)-196., disc=bq*bq-cq;
+  vec3 pos=ro+rd*max(0.,-bq-sqrt(max(disc,0.))), vel=rd;
+  vec3 hv=cross(pos,vel); float h2=dot(hv,hv);
+  vec3 acum=vec3(0.); float alfa=0., dentro=0.;
+  for(int i=0;i<90;i++){
+    if(disc<0.)break;
+    float r2=dot(pos,pos), r=sqrt(r2);
+    if(r<1.){dentro=1.;break;}
+    if(r>ROUT+1.&&dot(pos,vel)>0.)break;
+    // paso largo lejos del agujero y fino cerca del anillo de fotones (r≈1.5); integración de salto de rana
+    float dt=clamp(.13*r*smoothstep(1.,2.6,r)+.03,.03,1.2);
+    vec3 antes=pos;
+    vec3 ac=-1.5*h2*pos/(r2*r2*r);
+    pos+=vel*dt+.5*ac*dt*dt;
+    float n2=dot(pos,pos);
+    vel+=.5*(ac-1.5*h2*pos/(n2*n2*sqrt(n2)))*dt;
+    if(antes.y*pos.y<0.){
+      vec3 cruce=mix(antes,pos,antes.y/(antes.y-pos.y));
+      vec4 d=disco(cruce,vel);
+      acum+=(1.-alfa)*d.rgb; alfa+=(1.-alfa)*d.a;
+      if(alfa>.98)break;
+    }
+  }
+  vec3 c=vec3(0.);
+  if(dentro<.5){
+    vec3 dir=normalize(vel);
+    vec2 cielo=vec2(atan(dir.x,dir.z),asin(clamp(dir.y,-1.,1.)))*.8;
+    c=estrellas(cielo+vec2(T*.004,0.));
+    c+=vec3(.25,.12,.45)*fbm3(cielo*2.5+5.)*.35+vec3(.05,.12,.3)*fbm3(cielo*4.-T*.01)*.25;
+  }
+  c=c*(1.-alfa)+acum;
+  c+=vec3(1.,.6,.3)*P*.4*exp(-abs(length(uv)-(1.-P)*.9)*12.);
   c=c/(1.+c*.5);
   c*=1.-.3*dot(uv,uv);
   gl_FragColor=vec4(pow(c,vec3(.9)),1.);
