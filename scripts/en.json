@@ -1,4 +1,6 @@
 {
+  "Muestras de nuestro código": "Samples of our code",
+  "Así se ve nuestro trabajo por dentro: código tipado, configuración documentada y servidores reproducibles.": "This is what our work looks like inside: typed code, documented configuration and reproducible servers.",
   "_igual": ["SoC", "UFS", "PMIC", "15 cm", "45 cm", "85 %", "18 mm", "1", "IoT 915 MHz", "Rust + Tauri", "&copy;", "0 root", "&lt; 3s", "ActaPro", "Acta", "Agro-Cria", "Agro-Cria Pro", "Audio", "BusinessApplication", "Centzontle", "CroBeat", "CroGroove", "CroGuard", "CroHub", "Croma Studio", "Cromofi", "Cronmy", "Croudio", "Crovect Studio", "Crovite PDF", "DesktopApplication", "Diag", "Diagmind", "MX", "Offline", "Ollin-Tep", "Ollin-Tep Software", "Pro", "Premium", "React 19", "Rust + Tauri 2.0", "SQLite", "SoC &middot; UFS 4.0 &middot; PMIC", "Software", "UtilitiesApplication", "VPN", "Video", "Windows 10 & 11", "administrador@ollin-tep.com", "by Ollin-Tep", "mind", "NDVI 0.84 &middot; ET0 4.82 mm/d", "Linux (DEB, RPM, AppImage)", "Base"],
   "Hay 20 escondidos en esta página. ¿Los encuentras?": "There are 20 hiding on this page. Can you find them?",
   "de 20 encontrados": "of 20 found",

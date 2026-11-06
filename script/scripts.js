@@ -1657,4 +1657,115 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         pintarCuenta();
     }
+    // --- Bloque de código: pestañas, números de línea, líneas resaltadas y copiar (como CodeBlock de shadcn, sin React) ---
+    document.querySelectorAll('[data-codigo]').forEach((fig) => {
+        const fuentes = [...fig.querySelectorAll('script[type="text/plain"]')];
+        if (!fuentes.length) return;
+        const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const REGLAS = {
+            ts: /(\/\/.*$)|('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)|\b(import|from|export|async|await|function|return|const|let|type|new|if|else|for|of)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|\b([a-z_]\w*)(?=\s*\()/gm,
+            cfg: /(^\s*!.*$)|(\b\B)|(^\s*(?:no\s+)?(?:vlan|name|interface|description|switchport|spanning-tree|ip)\b)|\b(\d+(?:[.,/]\d+)*)\b|\b([A-Z][A-Za-z]*Ethernet[\d/]+|[A-Z]{3,})|\b(mode|trunk|allowed|portfast|dhcp|snooping)\b/gm,
+            yaml: /(#.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(^\s*[\w-]+(?=:))|\b(\d+(?:\.\d+)?)\b|(\b\B)|(\b(?:postgres|unless-stopped)\b)/gm,
+        };
+        const CLASES = ['', 'tk-com', 'tk-str', 'tk-key', 'tk-num', 'tk-tipo', 'tk-fn'];
+        const resaltar = (codigo, leng) => {
+            const re = REGLAS[leng];
+            if (!re) return esc(codigo);
+            return codigo.split('\n').map((linea) => {
+                let html = '', ult = 0;
+                linea.replace(re, (m, ...g) => {
+                    const pos = g[6];
+                    const k = g.slice(0, 6).findIndex((x) => x);
+                    if (k < 0 || !m) return m;
+                    html += esc(linea.slice(ult, pos)) + `<span class="${CLASES[k + 1]}">${esc(m)}</span>`;
+                    ult = pos + m.length;
+                    return m;
+                });
+                return html + esc(linea.slice(ult));
+            });
+        };
+        const pestanas = fuentes.map((s) => ({
+            nombre: s.dataset.nombre || 'código',
+            codigo: s.textContent.replace(/^\n/, '').replace(/\s+$/, ''),
+            lenguaje: s.dataset.lenguaje || '',
+            lineas: (s.dataset.resaltar || '').split(',').map(Number).filter(Boolean),
+        }));
+        fuentes.forEach((s) => s.remove());
+
+        const caja = document.createElement('div');
+        caja.className = 'codigo-caja';
+        const uid = 'cod' + Math.random().toString(36).slice(2, 7);
+        caja.innerHTML = `<div class="codigo-barra">
+                <span class="codigo-luces" aria-hidden="true"><i></i><i></i><i></i></span>
+                <div class="codigo-tabs" role="tablist">${pestanas.map((p, i) =>
+                    `<button type="button" role="tab" id="${uid}-t${i}" aria-controls="${uid}-p" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${esc(p.nombre)}</button>`).join('')}</div>
+                <button type="button" class="codigo-copiar" aria-label="${T('Copiar código', 'Copy code')}"><i class="fas fa-copy" aria-hidden="true"></i><span>${T('Copiar', 'Copy')}</span></button>
+            </div>
+            <div class="codigo-cuerpo" role="tabpanel" id="${uid}-p" tabindex="0"><pre><code></code></pre></div>`;
+        fig.insertBefore(caja, fig.firstChild);
+        const tabs = [...caja.querySelectorAll('[role="tab"]')];
+        const codigo = caja.querySelector('code');
+        const panel = caja.querySelector('[role="tabpanel"]');
+        const copiar = caja.querySelector('.codigo-copiar');
+        let activa = 0;
+
+        const mostrar = (i, foco) => {
+            activa = i;
+            tabs.forEach((b, j) => {
+                b.setAttribute('aria-selected', j === i);
+                b.tabIndex = j === i ? 0 : -1;
+            });
+            if (foco) tabs[i].focus();
+            const lista = tabs[i].parentElement, b = tabs[i];
+            if (b.offsetLeft < lista.scrollLeft || b.offsetLeft + b.offsetWidth > lista.scrollLeft + lista.clientWidth)
+                lista.scrollTo({ left: b.offsetLeft - 8, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            const p = pestanas[i];
+            panel.setAttribute('aria-labelledby', tabs[i].id);
+            panel.dataset.lenguaje = p.lenguaje;
+            codigo.innerHTML = resaltar(p.codigo, p.lenguaje).map((l, j) =>
+                `<span class="ln${p.lineas.includes(j + 1) ? ' on' : ''}" data-n="${j + 1}" style="--i:${j}">${l || ' '}</span>`).join('');
+            caja.classList.remove('entra');
+            void caja.offsetWidth;
+            caja.classList.add('entra');
+        };
+        tabs.forEach((b, i) => b.addEventListener('click', () => mostrar(i)));
+        caja.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+            const paso = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+            if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); mostrar(e.key === 'Home' ? 0 : tabs.length - 1, true); }
+            else if (paso) { e.preventDefault(); mostrar((activa + paso + tabs.length) % tabs.length, true); }
+        });
+
+        let reloj;
+        copiar.addEventListener('click', async () => {
+            const texto = pestanas[activa].codigo;
+            try {
+                await navigator.clipboard.writeText(texto);
+            } catch {
+                const ta = Object.assign(document.createElement('textarea'), { value: texto });
+                ta.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+            }
+            copiar.classList.add('hecho');
+            copiar.querySelector('i').className = 'fas fa-check';
+            copiar.querySelector('span').textContent = T('Copiado', 'Copied');
+            clearTimeout(reloj);
+            reloj = setTimeout(() => {
+                copiar.classList.remove('hecho');
+                copiar.querySelector('i').className = 'fas fa-copy';
+                copiar.querySelector('span').textContent = T('Copiar', 'Copy');
+            }, 2000);
+        });
+
+        mostrar(0);
+        caja.classList.remove('entra');
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((ents) => {
+                if (ents.some((e) => e.isIntersecting)) { caja.classList.add('entra'); obs.disconnect(); }
+            }, { threshold: 0.25 });
+            obs.observe(caja);
+        } else caja.classList.add('entra');
+    });
 });

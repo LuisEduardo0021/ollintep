@@ -83,7 +83,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=7.5">
+    <link rel="stylesheet" href="css/styles.css?v=7.6">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -336,6 +336,61 @@
                 </div>
             </a>
         </div>
+
+        <figure class="codigo" data-codigo aria-label="Muestras de nuestro código">
+            <figcaption class="codigo-pie">Así se ve nuestro trabajo por dentro: código tipado, configuración documentada y servidores reproducibles.</figcaption>
+            <script type="text/plain" data-nombre="venta.ts" data-lenguaje="ts" data-resaltar="9,10,11,16">import { db } from './db'
+import type { Sale, Item } from './types'
+
+export async function closeSale(sale: Sale): Promise<Sale> {
+  const total = sale.items.reduce(
+    (sum: number, item: Item) => sum + item.price * item.qty, 0
+  )
+
+  return db.transaction(async (tx) => {
+    await tx.stock.decrement(sale.items)
+    await tx.sales.insert({ ...sale, total, closedAt: new Date() })
+    await tx.audit.log('sale.closed', { id: sale.id, total })
+
+    // offline first: syncs when the network comes back
+    return { ...sale, total, status: 'closed' }
+  })
+}
+</script>
+            <script type="text/plain" data-nombre="switch-core.cfg" data-lenguaje="cfg" data-resaltar="2,5,8,13,14,15">! VLANs by area
+vlan 10
+ name CAJA
+!
+vlan 20
+ name OFICINAS
+!
+vlan 30
+ name CAMARAS
+!
+interface GigabitEthernet1/0/24
+ description Uplink to firewall
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+ spanning-tree portfast trunk
+!
+ip dhcp snooping vlan 10,20,30
+</script>
+            <script type="text/plain" data-nombre="docker-compose.yml" data-lenguaje="yaml" data-resaltar="4,5,13,14">services:
+  api:
+    image: ollintep/centzontle-api:2.4
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://pos@db/centzontle
+    depends_on: [db]
+    ports: ["443:8443"]
+
+  db:
+    image: postgres:17
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./backups:/backups
+</script>
+        </figure>
 
         <ul class="service-list">
             <li><i class="fas fa-laptop-code" aria-hidden="true"></i><h3>Desarrollo de software</h3><p>Aplicaciones web, móviles y de escritorio a medida, con arquitecturas limpias y seguras pensadas para crecer con tu negocio.</p></li>
@@ -722,7 +777,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=7.5"></script>
-    <script src="script/efectos.js?v=7.5"></script>
+    <script src="script/scripts.js?v=7.6"></script>
+    <script src="script/efectos.js?v=7.6"></script>
 </body>
 </html>
