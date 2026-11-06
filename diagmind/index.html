@@ -53,7 +53,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=8.8">
+    <link rel="stylesheet" href="../css/styles.css?v=8.9">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -127,9 +127,20 @@
             <h2 class="section-title">Diagnóstico de precisión en segundos</h2>
             <p class="text-slate-400 text-base md:text-lg">Optimizado para talleres de reparación, centros de servicio técnico y empresas de reacondicionamiento móvil.</p>
         </div>
+        <div class="proceso-centro">
+            <div class="ascii-pieza proceso proceso-tema" data-diagmind-proceso aria-hidden="true">
+                <ol class="proceso-pasos">
+                    <li>Conexión</li>
+                    <li>Batería</li>
+                    <li>Hardware</li>
+                    <li>Pantalla</li>
+                    <li>Informe</li>
+                </ol>
+            </div>
+        </div>
         <div class="services-grid">
 
-            <div class="service-card active-card group">
+            <div class="service-card active-card group" data-foco="adb">
                 <div class="card-icon">
                     <i class="fas fa-usb"></i>
                 </div>
@@ -138,7 +149,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="bateria">
                 <div class="card-icon">
                     <i class="fas fa-battery-half"></i>
                 </div>
@@ -147,7 +158,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="cpu">
                 <div class="card-icon">
                     <i class="fas fa-microchip"></i>
                 </div>
@@ -156,7 +167,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="pantalla">
                 <div class="card-icon">
                     <i class="fas fa-mobile-screen-button"></i>
                 </div>
@@ -165,7 +176,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="probe">
                 <div class="card-icon">
                     <i class="fas fa-shield-halved"></i>
                 </div>
@@ -174,7 +185,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="ia">
                 <div class="card-icon">
                     <i class="fas fa-brain"></i>
                 </div>
@@ -412,7 +423,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=8.8"></script>
-    <script src="../script/efectos.js?v=8.8"></script>
+    <script src="../script/scripts.js?v=8.9"></script>
+    <script src="../script/efectos.js?v=8.9"></script>
 </body>
 </html>

@@ -2514,6 +2514,218 @@
         });
     });
 
+    // --- DIAGMIND: un teléfono en el banco de pruebas. Conexión por ADB, batería, hardware, pantalla e informe,
+    // en el azul eléctrico y marino del logo. Las tarjetas de características (data-foco) saltan a su etapa.
+    document.querySelectorAll('[data-diagmind-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.6, 4.6, 4.8, 4.8, 5], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { adb: 0, probe: 0, bateria: 1, cpu: 2, pantalla: 3, ia: 4 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const AZUL = '#4d8cf5', ELEC = '#0c5ce0', MARINO = '#193662', CLARO = '#9cc0ff', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171';
+        const L = ING
+            ? { term: ['$ adb devices', 'R5CT40XYZ  device', 'no root · USB debugging ✓', 'installing companion probe…', 'probe 2.4 ready'], salud: 'Health', ciclos: 'cycles', temp: 'temp', curva: 'Charge curve', nucleos: 'Cores', memoria: 'RAM 12 GB', lectura: 'Read', escritura: 'Write', toque: 'Touch grid', muerta: 'dead zone found', colores: 'RGB', prox: 'Proximity ✓', informe: 'Device report', grado: 'Grade', items: ['Battery 87%', 'SoC and UFS 4.0', 'Display with 1 zone', 'Knox 0x0'], ia: 'Local AI: replace the digitizer; battery is still fine.', firmado: 'Signed report' }
+            : { term: ['$ adb devices', 'R5CT40XYZ  device', 'sin root · depuración USB ✓', 'instalando companion probe…', 'probe 2.4 listo'], salud: 'Salud', ciclos: 'ciclos', temp: 'temp', curva: 'Curva de carga', nucleos: 'Núcleos', memoria: 'RAM 12 GB', lectura: 'Lectura', escritura: 'Escritura', toque: 'Rejilla táctil', muerta: 'zona muerta detectada', colores: 'RGB', prox: 'Proximidad ✓', informe: 'Informe del equipo', grado: 'Grado', items: ['Batería 87%', 'SoC y UFS 4.0', 'Pantalla con 1 zona', 'Knox 0x0'], ia: 'IA local: cambiar el digitalizador; la batería sigue bien.', firmado: 'Informe firmado' };
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(156,192,255,.8)', alin = 'left', tam = 9, peso = 500) => {
+            ctx.fillStyle = col; ctx.font = `${peso} ${tam}px ui-monospace, Menlo, monospace`; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const caja2 = (x, y, w, h, r, relleno, borde, ancho = 1) => { redondo(x, y, w, h, r); if (relleno) { ctx.fillStyle = relleno; ctx.fill(); } if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = ancho; ctx.stroke(); } };
+        const paloma = (x, y, s, col = VERDE) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x - s * .3, y + s * .7); ctx.lineTo(x + s, y - s * .7); ctx.stroke(); };
+        const corta = (txt, max) => txt.length > max ? txt.slice(0, Math.max(1, max - 1)) + '…' : txt;
+        // el teléfono en el banco: marco, isla de cámaras y pantalla
+        const telefono = (x, y, w, h, pantalla = '#06102a') => {
+            caja2(x, y, w, h, w * .14, '#0b1220', 'rgba(203,213,225,.7)', 1.3);
+            caja2(x + w * .07, y + w * .07, w * .86, h - w * .14, w * .09, pantalla, null);
+            punto(x + w / 2, y + w * .16, w * .035, '#1e293b');
+        };
+        // rejilla táctil: el dedo recorre en zigzag y una celda no responde
+        const RC = 6, RF = 10, MUERTA = [4, 3];
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .88;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+            caja2(zona.x - 6, zona.y - 4, zona.w + 12, zona.h + 8, 10, 'rgba(3,11,29,.82)', 'rgba(77,140,245,.24)');
+
+            if (e === 0) {
+                // 1. CONEXIÓN: cable USB, datos que viajan y la terminal de ADB
+                const th = zona.h * .82, tw = th * .48, tx = zona.x + 6, ty = zona.y + (zona.h - th) / 2;
+                telefono(tx, ty, tw, th);
+                const lx = tx + tw / 2, ly = ty + th;
+                const cx = zona.x + zona.w * .5 - 12, cy = zona.y + zona.h * .5;
+                ctx.strokeStyle = 'rgba(203,213,225,.6)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.bezierCurveTo(lx, ly + 20, cx - 40, cy + 40, cx, cy); ctx.stroke();
+                caja2(cx - 2, cy - 5, 12, 10, 2, '#cbd5e1', null);
+                if (p > .12) for (let k = 0; k < 3; k++) { const q = (t * .8 + k / 3) % 1, m = 1 - q, x = m * m * m * lx + 3 * m * m * q * lx + 3 * m * q * q * (cx - 40) + q * q * q * cx, y = m * m * m * ly + 3 * m * m * q * (ly + 20) + 3 * m * q * q * (cy + 40) + q * q * q * cy; punto(x, y, 2.2, k % 2 ? CLARO : AZUL); }
+                // logo en la pantalla del teléfono
+                if (p > .5) { ctx.globalAlpha = alfa * entre(p, .5, .6); const q = entre(p, .5, .85); ctx.strokeStyle = 'rgba(156,192,255,.25)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(tx + tw / 2, ty + th / 2, tw * .2, 0, 7); ctx.stroke(); ctx.strokeStyle = AZUL; ctx.beginPath(); ctx.arc(tx + tw / 2, ty + th / 2, tw * .2, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * q); ctx.stroke(); rotulo('probe', tx + tw / 2, ty + th / 2 + tw * .34, CLARO, 'center', 7.5, 600); ctx.globalAlpha = alfa; }
+                // terminal
+                const rx = zona.x + zona.w * .5, rw = zona.x + zona.w - rx;
+                caja2(rx, zona.y + 4, rw, zona.h - 8, 8, '#020817', 'rgba(77,140,245,.35)');
+                [ROJO, AMBAR, VERDE].forEach((cc, k) => punto(rx + 9 + k * 8, zona.y + 13, 2.3, cc));
+                const libre = Math.floor((rw - 18) / 4.9);
+                L.term.forEach((n, k) => {
+                    const q = entre(p, .08 + k * .15, .16 + k * .15); if (!q) return;
+                    const txt = n.slice(0, Math.ceil(n.length * q));
+                    const col = k === 0 ? '#e2e8f0' : k === 2 || k === 4 ? VERDE : k === 1 ? CLARO : 'rgba(156,192,255,.75)';
+                    rotulo(corta(txt, libre), rx + 9, zona.y + 34 + k * 18, col, 'left', 8, k === 4 ? 700 : 500);
+                });
+            } else if (e === 1) {
+                // 2. BATERÍA: la pila con su salud, ciclos y temperatura, y la curva de carga
+                const bw = Math.min(zona.w * .22, 74), bh = zona.h * .7, bx = zona.x + 14, by = zona.y + (zona.h - bh) / 2 + 6;
+                caja2(bx + bw * .32, by - 8, bw * .36, 9, 2, 'rgba(203,213,225,.7)', null);
+                caja2(bx, by, bw, bh, 8, '#020817', 'rgba(203,213,225,.7)', 1.6);
+                const salud = .87 * sale(entre(p, .08, .5));
+                const g = ctx.createLinearGradient(0, by + bh, 0, by); g.addColorStop(0, ELEC); g.addColorStop(1, AZUL);
+                caja2(bx + 5, by + 5 + (bh - 10) * (1 - salud), bw - 10, (bh - 10) * salud, 5, g, null);
+                rotulo(`${Math.round(salud * 100)}%`, bx + bw / 2, by + bh / 2, '#fff', 'center', 13, 800);
+                rotulo(L.salud, bx + bw / 2, by + bh / 2 + 16, CLARO, 'center', 7.5, 600);
+                // datos
+                const dx = bx + bw + 22, dw = zona.x + zona.w - dx;
+                [[`412 ${L.ciclos}`, AMBAR], [`31.4 °C ${L.temp}`, VERDE], ['4 500 mAh · 3 915 mAh', CLARO]].forEach(([n, col], k) => {
+                    const q = entre(p, .2 + k * .08, .28 + k * .08); if (!q) return;
+                    ctx.globalAlpha = alfa * q; rotulo(n, dx, zona.y + 14 + k * 16, col, 'left', 8, 700);
+                });
+                ctx.globalAlpha = alfa;
+                // curva de carga (porcentaje y corriente)
+                const gx = dx, gy = zona.y + 66, gw = dw - 6, gh = zona.h - 86;
+                rotulo(L.curva, gx, gy - 8, 'rgba(156,192,255,.85)', 'left', 8, 600);
+                ctx.strokeStyle = 'rgba(77,140,245,.15)'; ctx.lineWidth = 1;
+                for (let k = 0; k <= 4; k++) { const y = gy + gh * k / 4; ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx + gw, y); ctx.stroke(); }
+                const hasta = entre(p, .3, .9);
+                const pct = (s) => 1 - Math.exp(-s * 2.6), corr = (s) => s < .55 ? .85 : .85 * Math.exp(-(s - .55) * 4.5);
+                [[pct, AZUL, 2], [corr, AMBAR, 1.4]].forEach(([f, col, ancho]) => {
+                    ctx.strokeStyle = col; ctx.lineWidth = ancho; ctx.beginPath();
+                    for (let k = 0; k <= 80 * hasta; k++) { const s = k / 80, x = gx + gw * s, y = gy + gh * (1 - f(s)); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+                    ctx.stroke();
+                });
+                rotulo('%', gx + gw, gy + 8, AZUL, 'right', 8, 700); rotulo('A', gx + gw, gy + gh * .2, AMBAR, 'right', 8, 700);
+            } else if (e === 2) {
+                // 3. HARDWARE: el SoC con sus ocho núcleos, la memoria y la velocidad del almacenamiento
+                const cs = Math.min(zona.h * .62, zona.w * .36), cx = zona.x + 10, cy = zona.y + (zona.h - cs) / 2;
+                for (let k = 0; k < 7; k++) { const off = cs * (.12 + k * .127); ctx.fillStyle = 'rgba(156,192,255,.5)'; [[cx + off, cy - 5, 2, 5], [cx + off, cy + cs, 2, 5], [cx - 5, cy + off, 5, 2], [cx + cs, cy + off, 5, 2]].forEach(r => ctx.fillRect(...r)); }
+                caja2(cx, cy, cs, cs, 6, MARINO, AZUL, 1.4);
+                const nc = 8, m = 8, cel = (cs - m * 3) / 4, celH = (cs - m * 3 - 18) / 2;
+                for (let k = 0; k < nc; k++) {
+                    const i = k % 4, j = Math.floor(k / 4), x = cx + m + i * (cel + m / 3), y = cy + m + j * (celH + m);
+                    const carga = .35 + .6 * Math.abs(Math.sin(t * (1.3 + k * .27) + k)) * sale(entre(p, .08 + k * .03, .25 + k * .03));
+                    caja2(x, y, cel, celH, 3, '#020817', 'rgba(77,140,245,.4)');
+                    const col = carga > .85 ? AMBAR : AZUL;
+                    caja2(x + 2, y + 2 + (celH - 4) * (1 - carga), cel - 4, (celH - 4) * carga, 2, col, null);
+                }
+                rotulo('SoC · 8 × 3.3 GHz', cx + cs / 2, cy + cs - 10, CLARO, 'center', 7.5, 600);
+                // memoria y UFS
+                const dx = cx + cs + 24, dw = zona.x + zona.w - dx;
+                rotulo(L.memoria, dx, zona.y + 18, '#e2e8f0', 'left', 9, 700);
+                caja2(dx, zona.y + 28, dw, 8, 4, 'rgba(77,140,245,.15)', null);
+                caja2(dx, zona.y + 28, dw * .58 * sale(entre(p, .2, .45)), 8, 4, AZUL, null);
+                rotulo('6.9 / 12 GB', dx + dw, zona.y + 18, CLARO, 'right', 8);
+                rotulo('UFS 4.0', dx, zona.y + 60, '#e2e8f0', 'left', 9, 700);
+                [[L.lectura, 4100, AZUL], [L.escritura, 2650, CLARO]].forEach(([n, v, col], k) => {
+                    const q = sale(entre(p, .4 + k * .12, .7 + k * .12)), yy = zona.y + 80 + k * 32;
+                    rotulo(n, dx, yy, 'rgba(156,192,255,.85)', 'left', 8);
+                    rotulo(`${Math.round(v * q)} MB/s`, dx + dw, yy, col, 'right', 9, 800);
+                    caja2(dx, yy + 9, dw, 6, 3, 'rgba(77,140,245,.12)', null); caja2(dx, yy + 9, dw * v / 4500 * q, 6, 3, col, null);
+                });
+                if (p > .84) { ctx.globalAlpha = alfa * entre(p, .84, .9); paloma(dx + 5, zona.y + zona.h - 14, 4); rotulo(ING ? 'Hardware OK' : 'Hardware en orden', dx + 15, zona.y + zona.h - 14, VERDE, 'left', 8, 700); }
+            } else if (e === 3) {
+                // 4. PANTALLA: el dedo recorre la rejilla táctil, aparece la zona muerta y siguen el RGB y el sensor
+                const th = zona.h * .96, tw = th * .5, tx = zona.x + 10, ty = zona.y + (zona.h - th) / 2;
+                telefono(tx, ty, tw, th);
+                const sx = tx + tw * .07, sy = ty + tw * .07, sw = tw * .86, sh = th - tw * .14, cw = sw / RC, ch = sh / RF;
+                const recorrido = entre(p, .05, .6) * RC * RF;
+                let dedo = null;
+                for (let n = 0; n < RC * RF; n++) {
+                    const j = Math.floor(n / RC), i = j % 2 ? RC - 1 - (n % RC) : n % RC;
+                    const x = sx + i * cw, y = sy + j * ch, muerta = i === MUERTA[0] && j === MUERTA[1];
+                    ctx.strokeStyle = 'rgba(77,140,245,.25)'; ctx.lineWidth = 1; ctx.strokeRect(x + .5, y + .5, cw - 1, ch - 1);
+                    if (n < recorrido) { ctx.fillStyle = muerta ? 'rgba(248,113,113,.75)' : 'rgba(77,140,245,.45)'; ctx.fillRect(x + 1, y + 1, cw - 2, ch - 2); }
+                    if (n === Math.floor(recorrido) && recorrido < RC * RF) dedo = [x + cw / 2, y + ch / 2];
+                }
+                if (dedo) { punto(dedo[0], dedo[1], 7, 'rgba(255,255,255,.35)'); punto(dedo[0], dedo[1], 3.5, '#fff'); }
+                // a la derecha: lista de pruebas
+                const dx = tx + tw + 22, dw = zona.x + zona.w - dx;
+                rotulo(L.toque, dx, zona.y + 16, '#e2e8f0', 'left', 9, 700);
+                rotulo(`${Math.min(RC * RF, Math.floor(recorrido))}/${RC * RF}`, dx + dw, zona.y + 16, CLARO, 'right', 8);
+                const vio = recorrido > MUERTA[1] * RC + RC - 1 - MUERTA[0];
+                if (vio) rotulo(`⚠ ${corta(L.muerta, Math.floor(dw / 4.6))}`, dx, zona.y + 34, ROJO, 'left', 8, 700);
+                // prueba RGB
+                if (p > .62) {
+                    ctx.globalAlpha = alfa * entre(p, .62, .66);
+                    rotulo(L.colores, dx, zona.y + 62, '#e2e8f0', 'left', 9, 700);
+                    ['#ef4444', '#22c55e', '#3b82f6', '#ffffff'].forEach((col, k) => { const on = entre(p, .64 + k * .04, .68 + k * .04); caja2(dx + k * 22, zona.y + 74, 18, 18, 4, col, null); if (on >= 1) paloma(dx + k * 22 + 9, zona.y + 100, 3); });
+                    ctx.globalAlpha = alfa;
+                }
+                if (p > .82) { ctx.globalAlpha = alfa * entre(p, .82, .88); rotulo(L.prox, dx, zona.y + 124, VERDE, 'left', 8, 700); }
+            } else {
+                // 5. INFORME: grado, lista de hallazgos, la recomendación de la IA local y el informe firmado
+                caja2(zona.x + 2, zona.y + 2, zona.w - 4, zona.h - 4, 8, '#f1f5f9', null);
+                rotulo(L.informe, zona.x + 14, zona.y + 18, MARINO, 'left', 10, 800);
+                rotulo('Galaxy S24 Ultra · SM-S928B', zona.x + 14, zona.y + 32, '#64748b', 'left', 8);
+                // grado
+                const gx = zona.x + zona.w - 46, gy = zona.y + 34, gr = Math.min(28, zona.h * .12), gq = sale(entre(p, .06, .3));
+                ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(12,92,224,.15)'; ctx.beginPath(); ctx.arc(gx, gy, gr, 0, 7); ctx.stroke();
+                ctx.strokeStyle = ELEC; ctx.beginPath(); ctx.arc(gx, gy, gr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * .92 * gq); ctx.stroke();
+                rotulo('A', gx, gy - 1, MARINO, 'center', 15, 800); rotulo(L.grado, gx, gy + gr + 10, '#64748b', 'center', 7.5);
+                // hallazgos
+                L.items.forEach((n, k) => {
+                    const q = entre(p, .18 + k * .08, .24 + k * .08); if (!q) return;
+                    const yy = zona.y + 60 + k * 22, aviso = k === 2;
+                    ctx.globalAlpha = alfa * q;
+                    if (aviso) rotulo('!', zona.x + 18, yy, '#d97706', 'center', 10, 800); else paloma(zona.x + 18, yy, 3.6, '#059669');
+                    rotulo(n, zona.x + 30, yy, aviso ? '#b45309' : '#1e293b', 'left', 8, 600);
+                });
+                ctx.globalAlpha = alfa;
+                // IA local escribe la recomendación
+                const iy = zona.y + 60 + 4 * 22 + 10;
+                if (p > .5) {
+                    const q = entre(p, .5, .78), txt = L.ia.slice(0, Math.ceil(L.ia.length * q));
+                    caja2(zona.x + 12, iy - 4, zona.w - 24, 30, 6, 'rgba(12,92,224,.08)', 'rgba(12,92,224,.35)');
+                    const ancho = Math.floor((zona.w - 44) / 4.7);
+                    const corte = txt.length > ancho ? Math.max(txt.lastIndexOf(' ', ancho), ancho * .6 | 0) : txt.length;
+                    rotulo(txt.slice(0, corte), zona.x + 20, iy + 6, ELEC, 'left', 8, 600);
+                    if (txt.length > corte) rotulo(corta(txt.slice(corte).trim(), ancho), zona.x + 20, iy + 18, ELEC, 'left', 8, 600);
+                }
+                if (p > .8) { ctx.globalAlpha = alfa * entre(p, .8, .86); paloma(zona.x + 18, zona.y + zona.h - 16, 3.6, '#059669'); rotulo(`${L.firmado} · SHA-256`, zona.x + 28, zona.y + zona.h - 16, '#047857', 'left', 8, 700); }
+            }
+            ctx.restore();
+        };
+        const estatico = !mueve();
+        const fijo = () => { antes = null; if (!caja.dataset.foco) reloj = INICIO[2] + DUR[2] * .88; dibujar(0); };
+        if (estatico) { fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('[data-foco]').forEach(el => {
+            el.addEventListener('pointerenter', () => { caja.dataset.foco = el.dataset.foco; if (estatico) dibujar(0); });
+            el.addEventListener('pointerleave', () => { if (caja.dataset.foco === el.dataset.foco) delete caja.dataset.foco; if (estatico) fijo(); });
+        });
+    });
+
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
         if (!escena || ligero()) return caja.remove();
