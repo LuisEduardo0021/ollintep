@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const lado = n % 2 ? -1 : 1;
                 plano.style.transform = `translate3d(${lado * 15}vw, 0, ${-d * PROFUNDIDAD - 120}px) rotateY(${-lado * (5 + d * 7)}deg)`;
-                plano.style.opacity = d < 0 ? limitar(1 + d * 2.5) : limitar(1 - d * 0.55);
+                plano.style.opacity = d < 0 ? limitar(1 + d * 2.5) : limitar(1 - d * 1.4);   // la siguiente captura no se asoma detrás del texto
                 texto.style.opacity = limitar(1 - Math.abs(d) * 5);
                 texto.style.transform = `translate3d(0, calc(-50% + ${d * 90}px), 0)`;
             });

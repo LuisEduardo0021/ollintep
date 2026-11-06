@@ -30,60 +30,86 @@
         return c;
     };
 
-    // --- METABALLS (Suite): nueve gotas de color, una por app, se funden en una al hacer scroll. «Nueve apps. Un solo lanzador.»
+    // --- METABALLS (Suite): nueve gotas de gel, una por app con su icono, se funden en una al hacer scroll y aparece CroHub.
+    // «Nueve apps. Un solo lanzador.» Resolución completa de la pantalla y borde antialias de un píxel calculado con el gradiente.
     document.querySelectorAll('[data-metaballs]').forEach(caja => {
         if (!escritorio || !mueve()) return caja.remove();
         const c = lienzo('metaballs-lienzo');
-        const gl = c.getContext('webgl', { alpha: true, antialias: false, powerPreference: 'low-power' });
+        const gl = c.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, powerPreference: 'low-power' });
         if (!gl) return caja.remove();
-        const COLORES = ['#f97316', '#fbbf24', '#84cc16', '#a855f7', '#14b8a6', '#ef4444', '#ec4899', '#22d3ee', '#3b82f6'];
-        const rgb = COLORES.flatMap(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255));
-        const compilar = (tipo, src) => { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+        const APPS = [['crovite-pdf', '#ff8a3d'], ['croma-studio', '#ffcf3a'], ['cronmy', '#c2ec3e'], ['crovect-studio', '#c04df6'], ['cromofi', '#2fd6c4'],
+            ['croudio', '#ff5562'], ['crobeat', '#8a86ff'], ['cromix', '#22d3ee'], ['croguard', '#4fc4ff']];
+        const rgb = [...APPS.flatMap(([, h]) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255)), .9, .93, 1];   // la décima es el cursor
+        const compilar = (tipo, src) => { const sh = gl.createShader(tipo); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; };
         const prog = gl.createProgram();
         gl.attachShader(prog, compilar(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
-        gl.attachShader(prog, compilar(gl.FRAGMENT_SHADER, `precision mediump float;
-            uniform vec3 b[9];uniform vec3 k[9];uniform vec2 r;uniform float m;
-            void main(){vec2 u=gl_FragCoord.xy;float f=0.;vec3 col=vec3(0.);
-            for(int i=0;i<9;i++){vec2 d=u-b[i].xy;float v=b[i].z*b[i].z/max(dot(d,d),1.);f+=v;col+=k[i]*v;}
-            col/=max(f,.001);col=mix(col,vec3(1.,.478,.18),m);
-            float a=smoothstep(.95,1.08,f);float brillo=smoothstep(1.08,2.6,f)*.28;
-            gl_FragColor=vec4((col+brillo)*a,a);}`));
+        gl.attachShader(prog, compilar(gl.FRAGMENT_SHADER, `precision highp float;
+            uniform vec3 b[10];uniform vec3 k[10];uniform float m;uniform float s;
+            void main(){
+              vec2 u=gl_FragCoord.xy;float f=0.;vec3 col=vec3(0.);float w=0.;vec2 g=vec2(0.);
+              for(int i=0;i<10;i++){
+                vec2 d=u-b[i].xy;float r2=b[i].z*b[i].z;float dd=dot(d,d)+r2*.04+1.;float v=r2/dd;
+                f+=v;g+=-2.*r2*d/(dd*dd);float q=v*v;col+=k[i]*q;w+=q;
+              }
+              col/=max(w,1e-5);col=mix(col,vec3(1.,.478,.18),m);
+              float gm=max(length(g),1e-4);
+              float a=clamp((f-1.)/gm+.5,0.,1.);
+              if(a<=0.){gl_FragColor=vec4(0.);return;}
+              // Normal de la superficie a partir del gradiente: luz difusa, brillo especular y borde iluminado (gel)
+              vec3 n=normalize(vec3(-g/(f*f)*s*.8,1.));
+              vec3 L=normalize(vec3(-.45,.65,.62));
+              float dif=.78+.3*max(dot(n,L),0.);
+              float esp=pow(max(dot(reflect(-L,n),vec3(0.,0.,1.)),0.),48.);
+              float borde=pow(max(1.-n.z,0.),2.2);
+              vec3 c=col*dif+vec3(1.)*esp*.85+col*borde*.55+vec3(.9,.95,1.)*borde*.18;
+              c*=1.-smoothstep(1.6,6.,f)*.12;
+              gl_FragColor=vec4(c*a,a);
+            }`));
+        gl.bindAttribLocation(prog, 0, 'p');
         gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn('metaballs:', gl.getProgramInfoLog(prog)); return caja.remove(); }
         gl.useProgram(prog);
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
         gl.enableVertexAttribArray(0);
-        gl.bindAttribLocation(prog, 0, 'p');
-        gl.linkProgram(prog);
-        gl.useProgram(prog);
-        gl.vertexAttribPointer(gl.getAttribLocation(prog, 'p'), 2, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
         gl.uniform3fv(gl.getUniformLocation(prog, 'k'), new Float32Array(rgb));
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        const uB = gl.getUniformLocation(prog, 'b'), uM = gl.getUniformLocation(prog, 'm');
+        const uB = gl.getUniformLocation(prog, 'b'), uM = gl.getUniformLocation(prog, 'm'), uS = gl.getUniformLocation(prog, 's');
         caja.append(c);
-        // A media resolución: son formas suaves, no se nota, y cuesta la cuarta parte
-        const medir = () => { c.width = Math.ceil(caja.clientWidth / 2); c.height = Math.ceil(caja.clientHeight / 2); gl.viewport(0, 0, c.width, c.height); };
+        // Iconos de las apps sobre sus gotas y CroHub en el centro cuando se funden: SVG, nítidos a cualquier escala
+        const capa = document.createElement('div');
+        capa.className = 'metaballs-iconos';
+        const iconos = APPS.map(([id]) => { const im = new Image(); im.src = new URL(`../resources/suite/${id}-icono.svg`, base).href; im.alt = ''; im.decoding = 'async'; capa.append(im); return im; });
+        const hub = new Image(); hub.src = new URL('../resources/suite/crohub.svg', base).href; hub.alt = ''; hub.className = 'mb-hub'; capa.append(hub);
+        caja.append(capa);
+        // Resolución completa (hasta 2× en pantallas densas): el usuario pidió que todo se vea súper definido
+        let esc = 1;
+        const medir = () => { esc = Math.min(devicePixelRatio || 1, 2); c.width = Math.round(caja.clientWidth * esc); c.height = Math.round(caja.clientHeight * esc); gl.viewport(0, 0, c.width, c.height); };
         medir();
         addEventListener('resize', medir);
-        const pos = new Float32Array(27);
-        let cursorX = -1, cursorY = -1, cx = 0, cy = 0;
+        const pos = new Float32Array(30);
+        let cursorX = -1, cursorY = -1, cx = 0, cy = 0, fuerza = 0;
         const zona = caja.closest('section') || caja;
         zona.addEventListener('pointermove', (ev) => {
             const r = caja.getBoundingClientRect();
-            if (cursorX < 0) { cx = (ev.clientX - r.left) / 2; cy = (r.bottom - ev.clientY) / 2; }
-            cursorX = (ev.clientX - r.left) / 2;
-            cursorY = (r.bottom - ev.clientY) / 2;   // WebGL cuenta desde abajo y el lienzo va a media resolución
+            if (cursorX < 0) { cx = (ev.clientX - r.left) * esc; cy = (r.bottom - ev.clientY) * esc; }
+            cursorX = (ev.clientX - r.left) * esc;
+            cursorY = (r.bottom - ev.clientY) * esc;   // WebGL cuenta desde abajo
         }, { passive: true });
         zona.addEventListener('pointerleave', () => { cursorX = cursorY = -1; });
-        bucle(caja, 50, (t) => {
+        bucle(caja, 60, (t) => {
             const r = caja.getBoundingClientRect();
             const p = limitar((innerHeight * .92 - r.top) / (innerHeight * .55));
             const e = p * p * (3 - 2 * p);
             const w = c.width, h = c.height;
-            // El cursor las atrae con inercia
-            cx += (cursorX - cx) * .07;
-            cy += (cursorY - cy) * .07;
+            cx += (cursorX - cx) * .12;
+            cy += (cursorY - cy) * .12;
+            // La gota del cursor solo existe cuando está dentro de la franja
+            const dentro = cursorX >= 0 && cursorY > -h * .2 && cursorY < h * 1.2;
+            fuerza += ((dentro ? 1 : 0) - fuerza) * .08;
+            const R = h * .125;
             for (let i = 0; i < 9; i++) {
                 // Separadas: cada gota vaga por su cuenta y a ratos toca a sus vecinas
                 const ox = w * (.08 + i * .105) + Math.sin(t * .8 + i * 2.1) * w * .045 + Math.cos(t * .37 + i) * w * .02;
@@ -93,16 +119,31 @@
                 const salida = Math.pow(Math.max(0, Math.sin(t * .45 + i * 1.1)), 8);
                 const radio = h * (.13 + Math.sin(t * .8 + i) * .05 + salida * .1);
                 const mx = w / 2 + Math.cos(ang) * radio * 2.1, my = h / 2 + Math.sin(ang) * radio * .85;
-                const ax = (cx - (ox + (mx - ox) * e)) * .22, ay = (cy - (oy + (my - oy) * e)) * .22;
-                pos[i * 3] = ox + (mx - ox) * e + (cursorX < 0 ? 0 : ax);
-                pos[i * 3 + 1] = limitar(oy + (my - oy) * e + (cursorX < 0 ? 0 : ay), h * .3, h * .7);
-                pos[i * 3 + 2] = (h * .125) * (1 - e * .3) + Math.sin(t * 1.6 + i * 2) * h * .014;
+                const bx = ox + (mx - ox) * e, by = oy + (my - oy) * e;
+                // El cursor las atrae un poco, con inercia
+                const ax = (cx - bx) * .14 * fuerza, ay = (cy - by) * .14 * fuerza;
+                pos[i * 3] = bx + ax;
+                pos[i * 3 + 1] = limitar(by + ay, h * .3, h * .7);
+                pos[i * 3 + 2] = R * (1 - e * .3) + Math.sin(t * 1.6 + i * 2) * h * .014;
             }
+            pos[27] = cx; pos[28] = limitar(cy, h * .2, h * .8); pos[29] = R * .62 * fuerza;
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.uniform3fv(uB, pos);
             gl.uniform1f(uM, limitar((e - .72) / .28) * .62);
+            gl.uniform1f(uS, R);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
+            // Iconos: siguen a su gota en píxeles CSS; se apagan al fundirse y CroHub aparece en el centro
+            const visible = limitar(1 - e * 1.8), lado = R / esc * .78;
+            iconos.forEach((im, i) => {
+                im.style.width = im.style.height = lado + 'px';
+                im.style.transform = `translate(${pos[i * 3] / esc - lado / 2}px, ${(h - pos[i * 3 + 1]) / esc - lado / 2}px) scale(${.6 + visible * .4})`;
+                im.style.opacity = visible;
+            });
+            const fin = limitar((e - .8) / .2), lh = R / esc * 1.05;
+            hub.style.width = lh + 'px';
+            hub.style.transform = `translate(${w / 2 / esc - lh / 2}px, ${h / 2 / esc - lh * 259 / 237 / 2}px) scale(${.7 + fin * .3})`;
+            hub.style.opacity = fin;
         });
     });
 
