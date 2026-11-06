@@ -497,7 +497,7 @@ void main(){
     // ================= ENJAMBRE =================
     function crearEnjambre(canvas) {
         const ctx = canvas.getContext('2d');
-        let W = 0, H = 0, N = 0, x, y, vx, vy, tx, ty, color;
+        let W = 0, H = 0, N = 0, x, y, vx, vy, tx, ty, color, rangos = [];
         let modo = 'flujo', cambio = 0;
         const COLORES = ['#6ea2ff', '#8b9dff', '#a78bfa', '#c084fc', '#f0abfc', '#ff9a5c', '#ff7a2e'];
         const preparar = () => {
@@ -520,11 +520,16 @@ void main(){
             N = puntos.length / 2;
             x = new Float32Array(N); y = new Float32Array(N); vx = new Float32Array(N); vy = new Float32Array(N);
             tx = new Float32Array(N); ty = new Float32Array(N); color = new Uint8Array(N);
-            for (let k = 0; k < N; k++) {
-                tx[k] = puntos[k * 2]; ty[k] = puntos[k * 2 + 1];
+            // cada partícula recibe su color y se ordenan por color: así cada color se dibuja de un tramo
+            const col = new Uint8Array(N);
+            for (let k = 0; k < N; k++) col[k] = Math.min(COLORES.length - 1, Math.floor((puntos[k * 2] / W) * COLORES.length + Math.random() * .8));
+            const orden = Array.from({ length: N }, (_, k) => k).sort((a, b) => col[a] - col[b]);
+            rangos = COLORES.map(() => [N, 0]);
+            orden.forEach((o, k) => {
+                tx[k] = puntos[o * 2]; ty[k] = puntos[o * 2 + 1]; color[k] = col[o];
                 x[k] = quieto ? tx[k] : Math.random() * W; y[k] = quieto ? ty[k] : Math.random() * H;
-                color[k] = Math.min(COLORES.length - 1, Math.floor((tx[k] / W) * COLORES.length + Math.random() * .8));
-            }
+                const r = rangos[col[o]]; r[0] = Math.min(r[0], k); r[1] = k + 1;
+            });
             ctx.fillStyle = '#05070d'; ctx.fillRect(0, 0, W, H);
             modo = 'flujo'; cambio = 1.2;
         };
@@ -546,17 +551,18 @@ void main(){
                 cambio -= dt;
                 if (cambio <= 0) { modo = modo === 'flujo' ? 'forma' : 'flujo'; cambio = modo === 'forma' ? 8 : 1.8; }
                 const px = ptr.sx * W, py = (1 - ptr.sy) * H, radio = 110 * dpr, f = dt * 60;
+                const freno = Math.pow(modo === 'forma' ? .86 : .94, f), atraer = .011 * f, empuje = .32 * dpr * f;
                 ctx.globalCompositeOperation = 'source-over';
                 ctx.fillStyle = 'rgba(5,7,13,.24)';
                 ctx.fillRect(0, 0, W, H);
                 for (let k = 0; k < N; k++) {
                     if (modo === 'forma') {
-                        vx[k] += (tx[k] - x[k]) * .011 * f; vy[k] += (ty[k] - y[k]) * .011 * f;
-                        vx[k] *= Math.pow(.86, f); vy[k] *= Math.pow(.86, f);
+                        vx[k] += (tx[k] - x[k]) * atraer; vy[k] += (ty[k] - y[k]) * atraer;
+                        vx[k] *= freno; vy[k] *= freno;
                     } else {
                         const a = Math.sin(x[k] * .0035 / dpr + t * .4) * 2.2 + Math.cos(y[k] * .0042 / dpr - t * .3) * 2.2;
-                        vx[k] += Math.cos(a) * .32 * dpr * f; vy[k] += Math.sin(a) * .32 * dpr * f;
-                        vx[k] *= Math.pow(.94, f); vy[k] *= Math.pow(.94, f);
+                        vx[k] += Math.cos(a) * empuje; vy[k] += Math.sin(a) * empuje;
+                        vx[k] *= freno; vy[k] *= freno;
                     }
                     if (ptr.dentro) {
                         const dx = x[k] - px, dy = y[k] - py, d2 = dx * dx + dy * dy;
@@ -571,7 +577,7 @@ void main(){
                 for (let c = 0; c < COLORES.length; c++) {
                     ctx.fillStyle = COLORES[c];
                     ctx.beginPath();
-                    for (let k = 0; k < N; k++) if (color[k] === c) ctx.rect(x[k], y[k], s, s);
+                    for (let k = rangos[c][0]; k < rangos[c][1]; k++) ctx.rect(x[k], y[k], s, s);
                     ctx.fill();
                 }
             },
@@ -592,12 +598,13 @@ void main(){
             return (TIERRA[n >> 3] >> (n & 7)) & 1;
         };
         const N = tactil ? 9000 : 16000;
-        const puntos = [];
+        const lista = [];
         for (let i = 0; i < N; i++) {
             const y = 1 - (i + .5) / N * 2, r = Math.sqrt(1 - y * y), a = i * 2.39996323;
             const x = Math.cos(a) * r, z = Math.sin(a) * r;
-            if (esTierra(Math.asin(y) / rad, Math.atan2(-z, x) / rad)) puntos.push([x, y, z]);
+            if (esTierra(Math.asin(y) / rad, Math.atan2(-z, x) / rad)) lista.push(x, y, z);
         }
+        const puntos = Float32Array.from(lista), NP = puntos.length / 3, PX = new Float32Array(NP), PY = new Float32Array(NP), PZ = new Float32Array(NP);
         // meridianos y paralelos cada 30°
         const reticula = [];
         for (let lo = -180; lo < 180; lo += 30) reticula.push(Array.from({ length: 37 }, (_, k) => vec([-90 + k * 5, lo])));
@@ -652,33 +659,46 @@ void main(){
                 });
                 ctx.stroke();
                 // continentes en puntos: atrás tenues, adelante brillantes y más grandes hacia el centro
-                const cubos = [[], [], []];
-                for (const p of puntos) {
-                    const q = proy(p);
-                    cubos[q[2] < 0 ? 0 : q[2] < .5 ? 1 : 2].push(q);
+                for (let i = 0, j = 0; i < NP; i++, j += 3) {
+                    const x = puntos[j], y = puntos[j + 1], z = puntos[j + 2];
+                    const x1 = x * cg - z * sg, z1 = x * sg + z * cg;
+                    PX[i] = cx + x1 * R; PY[i] = cy - (y * ci - z1 * si) * R; PZ[i] = y * si + z1 * ci;
                 }
-                [['rgba(110,162,255,.14)', .9], ['#7fa6ef', 1.4], ['#c3d7ff', 1.8]].forEach(([col, tam], k) => {
+                [['rgba(110,162,255,.14)', .9, -9, 0], ['#7fa6ef', 1.4, 0, .5], ['#c3d7ff', 1.8, .5, 9]].forEach(([col, tam, z0, z1], k) => {
                     ctx.fillStyle = col;
                     ctx.beginPath();
-                    for (const [x, y, z] of cubos[k]) { const s = (k ? tam * (.75 + z * .35) : tam) * dpr; ctx.rect(x - s / 2, y - s / 2, s, s); }
+                    for (let i = 0; i < NP; i++) {
+                        const z = PZ[i]; if (z < z0 || z >= z1) continue;
+                        const s = (k ? tam * (.75 + z * .35) : tam) * dpr; ctx.rect(PX[i] - s / 2, PY[i] - s / 2, s, s);
+                    }
                     ctx.fill();
                 });
                 // arcos con un paquete que viaja
                 ctx.lineCap = 'round';
+                // los tramos de todos los arcos se agrupan por tono (8) y visibilidad (2): 16 trazos por cuadro en vez de cientos
+                const BANDAS = 8, tramos = Array.from({ length: BANDAS * 2 }, () => []);
+                const cabezas = [];
                 arcos.forEach((a) => {
                     const ciclo = (t * .18 + a.fase) % 1.4, cab = Math.min(1, ciclo / .7), cola = Math.max(0, (ciclo - .7) / .7);
                     const q0 = Math.floor(cola * 48), q1 = Math.floor(cab * 48);
                     let previo = null;
                     for (let q = q0; q <= q1; q++) {
                         const p = proy(a.pts[q]);
-                        if (previo) {
-                            const vis = Math.min(previo[2], p[2]) > -.15 ? 1 : .15;
-                            ctx.strokeStyle = `rgba(255,${Math.round(150 - q)},${Math.round(80 + q)},${.85 * vis})`;
-                            ctx.lineWidth = 1.6 * dpr;
-                            ctx.beginPath(); ctx.moveTo(previo[0], previo[1]); ctx.lineTo(p[0], p[1]); ctx.stroke();
-                        }
+                        if (previo) tramos[Math.min(BANDAS - 1, (q * BANDAS / 49) | 0) * 2 + (Math.min(previo[2], p[2]) > -.15 ? 1 : 0)].push(previo[0], previo[1], p[0], p[1]);
                         previo = p;
                     }
+                    cabezas.push([a, cab, previo]);
+                });
+                ctx.lineWidth = 1.6 * dpr;
+                tramos.forEach((seg, k) => {
+                    if (!seg.length) return;
+                    const q = ((k >> 1) + .5) * 49 / BANDAS, vis = k & 1 ? 1 : .15;
+                    ctx.strokeStyle = `rgba(255,${Math.round(150 - q)},${Math.round(80 + q)},${.85 * vis})`;
+                    ctx.beginPath();
+                    for (let i = 0; i < seg.length; i += 4) { ctx.moveTo(seg[i], seg[i + 1]); ctx.lineTo(seg[i + 2], seg[i + 3]); }
+                    ctx.stroke();
+                });
+                cabezas.forEach(([a, cab, previo]) => {
                     if (cab < 1 && previo && previo[2] > -.15) {
                         const g = ctx.createRadialGradient(previo[0], previo[1], 0, previo[0], previo[1], 7 * dpr);
                         g.addColorStop(0, 'rgba(255,220,180,1)'); g.addColorStop(1, 'rgba(255,122,46,0)');

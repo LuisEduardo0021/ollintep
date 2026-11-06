@@ -592,6 +592,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Recorrido: el scroll mueve una cámara entre las capturas; se detiene en cada una para leer ---
+    // Videos de fondo: WebM (VP9, ~3 veces más ligero) donde se puede; MP4 para el resto (Safari antiguo)
+    const extVideo = document.createElement('video').canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
+
     const viaje = document.querySelector('.viaje');
     if (viaje) {
         const pasos = [...viaje.querySelectorAll('.vj-paso')].map(paso => ({ plano: paso.querySelector('.vj-plano'), texto: paso.querySelector('.vj-texto'), nombre: paso.dataset.fondo, fondo: null }));
@@ -599,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ancho = window.matchMedia('(min-width: 961px)');
         const limitar = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
         const PROFUNDIDAD = 1100;
-        let avance = 0, objetivo = 0, marco = 0, enVista = false, sonando = null;
+        let avance = 0, objetivo = 0, marco = 0, enVista = false, enPantalla = false, sonando = null;
 
         // Fondos de video (ambiente, no producto): se crean al acercarse a la sección y solo suena el de la escena actual.
         // Con la lista de móvil, movimiento reducido o modo ligero no se crean ni se descargan.
@@ -616,8 +619,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 v.playsInline = true;
                 v.preload = 'none';
                 v.disablePictureInPicture = true;
-                v.poster = new URL(`${paso.nombre}.jpg`, base).href;
-                v.src = new URL(`${paso.nombre}.mp4`, base).href;
+                v.poster = new URL(`${paso.nombre}.webp`, base).href;
+                v.src = new URL(`${paso.nombre}.${extVideo}`, base).href;
                 capa.append(v);
                 paso.fondo = v;
             });
@@ -625,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const elegirFondo = (camara) => {
             const actual = pasos[Math.round(camara)]?.fondo;
-            const quiere = enVista && viaje.classList.contains('activa') && !document.documentElement.classList.contains('ligero') ? actual : null;
+            const quiere = enPantalla && viaje.classList.contains('activa') && !document.documentElement.classList.contains('ligero') ? actual : null;
             if (quiere === sonando) return;
             sonando?.pause();
             sonando = quiere;
@@ -692,6 +695,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (enVista && viaje.classList.contains('activa')) { crearFondos(); pintar(); }
             else elegirFondo(0);
         }, { rootMargin: '100% 0px' }).observe(viaje);
+        // Pero solo se reproduce (y se descarga) cuando la sección ya está en pantalla; antes basta el póster
+        new IntersectionObserver(([e]) => {
+            enPantalla = e.isIntersecting;
+            if (viaje.classList.contains('activa')) pintar();
+        }).observe(viaje);
     }
 
     // --- Fondos de video de ambiente (data-video): solo en escritorio, se crean al acercarse y suenan solo a la vista.
@@ -715,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
             v.playsInline = true;
             v.preload = 'auto';
             v.disablePictureInPicture = true;
-            v.src = new URL(`${seccion.dataset.video}.mp4`, baseVideo).href;
+            v.src = new URL(`${seccion.dataset.video}.${extVideo}`, baseVideo).href;
             v.addEventListener('playing', () => capa.classList.add('listo'), { once: true });
             v.addEventListener('timeupdate', () => { if (esLigero()) v.pause(); });
             capa.append(v);
