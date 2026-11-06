@@ -743,5 +743,10 @@
   "Diagnóstico": "Diagnosis",
   "Limpieza": "Cleaning",
   "Armado": "Assembly",
-  "Entrega": "Delivery"
+  "Entrega": "Delivery",
+  "Requisitos": "Requirements",
+  "Datos": "Data",
+  "Interfaz": "Interface",
+  "Pruebas": "Testing",
+  "Despliegue": "Deployment"
 }

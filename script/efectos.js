@@ -1506,6 +1506,308 @@
         });
     });
 
+    // --- SOFTWARE A MEDIDA: cómo nace una plataforma. Requisitos, modelo de datos, interfaz, pruebas y despliegue.
+    document.querySelectorAll('[data-medida-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.6, 4.6, 5.2, 4.6, 5.2], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const suave = (x) => { x = limitar(x); return x * x * (3 - 2 * x); };
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const AZUL = '#6ea2ff', CIAN = '#22e1f0', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171', ROSA = '#f472b6', VIOLETA = '#b39bff';
+        const L = ING
+            ? { cols: ['Checkout', 'Inventory', 'Reports'], notas: ['charge', 'receipt', 'cash-up', 'stock', 'alerts', 'purchases', 'daily sales', 'margin'], historias: '8 STORIES · 3 MODULES', migra: 'migration 0007 ✓', kpi: ['Sales', 'Tickets', 'Goal'], titulo: 'panel · Summary', menu: ['Summary', 'Checkout', 'Stock', 'Reports'],
+                pruebas: ['closes the sale and updates stock', 'rejects a sale with no items', 'applies credit to the customer', 'syncs when the network returns', 'prints the receipt', 'cash-up matches the drawer'], resumen: (n, f) => `${n} tests · ${f} failed`, cobertura: 'coverage', prod: 'v1.4.0 IN PRODUCTION ✓', cola: (n) => `${n} queued`, sinRed: 'offline', sync: 'synced' }
+            : { cols: ['Caja', 'Inventario', 'Reportes'], notas: ['cobrar', 'ticket', 'corte', 'stock', 'alertas', 'compras', 'ventas/día', 'margen'], historias: '8 HISTORIAS · 3 MÓDULOS', migra: 'migración 0007 ✓', kpi: ['Ventas', 'Tickets', 'Meta'], titulo: 'panel · Resumen', menu: ['Resumen', 'Caja', 'Stock', 'Reportes'],
+                pruebas: ['cierra la venta y descuenta stock', 'rechaza una venta sin artículos', 'aplica el crédito al cliente', 'sincroniza al volver la red', 'imprime el ticket', 'el corte cuadra con la caja'], resumen: (n, f) => `${n} pruebas · ${f} fallas`, cobertura: 'cobertura', prod: 'v1.4.0 EN PRODUCCIÓN ✓', cola: (n) => `${n} en cola`, sinRed: 'sin red', sync: 'sincronizado' };
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(148,163,184,.8)', alin = 'left', tam = 9, peso = 500) => {
+            ctx.fillStyle = col; ctx.font = `${peso} ${tam}px ui-monospace, Menlo, monospace`; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const caja2 = (x, y, w, h, r, relleno, borde, ancho = 1, guion = null) => { redondo(x, y, w, h, r); if (relleno) { ctx.fillStyle = relleno; ctx.fill(); } if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = ancho; ctx.setLineDash(guion || []); ctx.stroke(); ctx.setLineDash([]); } };
+        const paloma = (x, y, s, col = VERDE) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x - s * .3, y + s * .7); ctx.lineTo(x + s, y - s * .7); ctx.stroke(); };
+        const medidas = (pts) => { const l = []; let total = 0; for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); l.push(d); total += d; } return [l, total]; };
+        const tramo = (pts, q, col, ancho = 1.2) => {
+            const [largos, total] = medidas(pts);
+            let resta = total * limitar(q);
+            if (resta <= 0) return;
+            ctx.strokeStyle = col; ctx.lineWidth = ancho; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+            for (let i = 1; i < pts.length && resta > 0; i++) { const f = Math.min(1, resta / (largos[i - 1] || 1)); ctx.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f); resta -= largos[i - 1]; }
+            ctx.stroke();
+        };
+        const enRuta = (pts, q) => {
+            const [largos, total] = medidas(pts);
+            let d = total * limitar(q);
+            for (let i = 1; i < pts.length; i++) { if (d <= largos[i - 1]) { const f = d / (largos[i - 1] || 1); return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f]; } d -= largos[i - 1]; }
+            return pts[pts.length - 1];
+        };
+        const cursor = (x, y, clic = 0) => {
+            if (clic) { ctx.strokeStyle = `rgba(110,162,255,${1 - clic})`; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x, y, 4 + clic * 12, 0, 7); ctx.stroke(); }
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 13); ctx.lineTo(x + 3.5, y + 9.5); ctx.lineTo(x + 8.5, y + 9.5); ctx.closePath();
+            ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.strokeStyle = '#0b1220'; ctx.lineWidth = 1; ctx.stroke();
+        };
+        // Modelo de datos: tablas con sus campos (nombre, tipo de llave) y columna en la que van
+        const TABLAS = [
+            { n: 'customers', col: 0, v: .06, campos: [['id', 'PK'], ['name'], ['credit']] },
+            { n: 'sales', col: 1, v: .04, campos: [['id', 'PK'], ['customer_id', 'FK'], ['total'], ['closed_at']] },
+            { n: 'sale_items', col: 1, v: .56, campos: [['sale_id', 'FK'], ['product_id', 'FK'], ['qty']] },
+            { n: 'products', col: 2, v: .5, campos: [['id', 'PK'], ['name'], ['price'], ['stock']] },
+        ];
+        const NOTAS = L.notas.map((n, i) => ({ n, col: i < 3 ? 0 : i < 6 ? 1 : 2, fila: i < 3 ? i : i < 6 ? i - 3 : i - 6, u: azarDe(i + 3), v: azarDe(i + 50), r: (azarDe(i + 90) - .5) * .5, color: [AMBAR, ROSA, CIAN, VERDE][i % 4] }));
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+
+            if (e === 0) {
+                // 1. REQUISITOS: notas de la entrevista que se acomodan en módulos
+                caja2(zona.x, zona.y, zona.w, zona.h, 10, '#0d1526', 'rgba(148,163,184,.3)');
+                ctx.fillStyle = 'rgba(148,163,184,.12)';
+                for (let x = zona.x + 10; x < zona.x + zona.w; x += 14) for (let y = zona.y + 10; y < zona.y + zona.h; y += 14) ctx.fillRect(x, y, 1, 1);
+                const cw = zona.w / 3, nw = Math.min(cw * .76, 96), nh = Math.min((zona.h - 74) / 3.3, 42);
+                const orden = entre(p, .25, .75);
+                L.cols.forEach((n, k) => {
+                    const q = entre(p, .12 + k * .05, .25 + k * .05);
+                    ctx.globalAlpha = alfa * q;
+                    rotulo(n.toUpperCase(), zona.x + cw * (k + .5), zona.y + 16, 'rgba(226,232,240,.9)', 'center', 9, 700);
+                    ctx.fillStyle = 'rgba(110,162,255,.5)'; ctx.fillRect(zona.x + cw * k + 12, zona.y + 26, cw - 24, 1);
+                });
+                ctx.globalAlpha = alfa;
+                const arrastra = 4;  // la nota que se lleva con el cursor
+                NOTAS.forEach((m, i) => {
+                    const q = suave(entre(orden, i * .06, i * .06 + .5)), ap = sale(entre(p, .02 + i * .025, .12 + i * .025));
+                    if (!ap) return;
+                    const x0 = zona.x + 10 + m.u * (zona.w - nw - 20), y0 = zona.y + 34 + m.v * (zona.h - nh - 44);
+                    const x1 = zona.x + cw * (m.col + .5) - nw / 2, y1 = zona.y + 36 + m.fila * (nh + 8);
+                    const x = x0 + (x1 - x0) * q, y = y0 + (y1 - y0) * q, r = m.r * (1 - q);
+                    ctx.save(); ctx.globalAlpha = alfa * ap; ctx.translate(x + nw / 2, y + nh / 2); ctx.rotate(r);
+                    ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
+                    caja2(-nw / 2, -nh / 2, nw, nh, 3, m.color, null);
+                    ctx.shadowColor = 'transparent';
+                    rotulo(m.n, -nw / 2 + 6, -nh / 2 + 10, '#0b1220', 'left', 9, 700);
+                    ctx.fillStyle = 'rgba(11,18,32,.35)'; ctx.fillRect(-nw / 2 + 6, nh / 2 - 12, nw * .5, 2); ctx.fillRect(-nw / 2 + 6, nh / 2 - 7, nw * .32, 2);
+                    ctx.restore();
+                    if (i === arrastra && q > 0 && q < 1) cursor(x + nw * .7, y + nh * .6);
+                });
+                const fin = entre(p, .8, .86);
+                if (fin) { ctx.globalAlpha = alfa * fin; caja2(zona.x + zona.w / 2 - 80, zona.y + zona.h - 24, 160, 18, 9, 'rgba(15,23,42,.9)', AZUL); rotulo(L.historias, zona.x + zona.w / 2, zona.y + zona.h - 15, AZUL, 'center', 9, 700); }
+            } else if (e === 1) {
+                // 2. DATOS: el modelo relacional se arma campo por campo y se unen las llaves
+                caja2(zona.x - 6, zona.y - 4, zona.w + 12, zona.h + 8, 10, 'rgba(10,15,28,.82)', 'rgba(148,163,184,.18)');
+                const tw = Math.min(zona.w * .3, 128), fh = Math.min(15, zona.h * .055), hh = fh + 4, chico = tw < 112 ? 7.5 : 9;
+                const colX = [zona.x, zona.x + (zona.w - tw) / 2, zona.x + zona.w - tw];
+                const pos = TABLAS.map(tb => ({ x: colX[tb.col], y: zona.y + tb.v * zona.h }));
+                const fila = (i, k) => [pos[i].x, pos[i].y + hh + fh * (k + .5) + 2];
+                // relaciones primero, debajo de las tablas: [tabla, campo] → [tabla, campo]
+                const rel = [[0, 0, 1, 1], [1, 0, 2, 0], [3, 0, 2, 1]];
+                rel.forEach(([a, ka, b, kb], j) => {
+                    const q = entre(p, .55 + j * .1, .72 + j * .1); if (!q) return;
+                    const [ax, ay] = fila(a, ka), [bx, by] = fila(b, kb);
+                    let pts;
+                    if (a === 0) pts = [[ax + tw, ay], [(ax + tw + bx) / 2, ay], [(ax + tw + bx) / 2, by], [bx, by]];
+                    else if (a === 1) pts = [[ax, ay], [ax - 12, ay], [bx - 12, by], [bx, by]];
+                    else pts = [[ax, ay], [ax - 14, ay], [ax - 14, by], [bx + tw, by]];
+                    tramo(pts, q, AMBAR, 1.3);
+                    if (q >= 1) { const [ex, ey] = pts[pts.length - 1], d = pts[pts.length - 2][0] < ex ? -1 : 1; ctx.strokeStyle = AMBAR; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(ex + d * 7, ey); ctx.lineTo(ex, ey - 4); ctx.moveTo(ex + d * 7, ey); ctx.lineTo(ex, ey + 4); ctx.stroke(); }
+                });
+                TABLAS.forEach((tb, i) => {
+                    const q = sale(entre(p, .04 + i * .1, .16 + i * .1)); if (!q) return;
+                    const x = pos[i].x, y = pos[i].y + (1 - q) * 10, alto = hh + fh * tb.campos.length + 4;
+                    ctx.globalAlpha = alfa * q;
+                    caja2(x, y, tw, alto, 5, '#0f1a30', 'rgba(110,162,255,.55)');
+                    ctx.save(); redondo(x, y, tw, alto, 5); ctx.clip(); ctx.fillStyle = 'rgba(110,162,255,.22)'; ctx.fillRect(x, y, tw, hh); ctx.restore();
+                    rotulo(tb.n, x + 7, y + hh / 2, 'rgba(226,240,255,.95)', 'left', 9, 700);
+                    tb.campos.forEach(([n, k], j) => {
+                        const qq = entre(p, .1 + i * .1 + j * .04, .16 + i * .1 + j * .04); if (!qq) return;
+                        ctx.globalAlpha = alfa * qq * q;
+                        const yy = y + hh + fh * (j + .5) + 2;
+                        rotulo(n, x + 6, yy, k === 'PK' ? '#f8fafc' : 'rgba(203,213,225,.85)', 'left', chico);
+                        if (k) rotulo(k, x + tw - 5, yy, k === 'PK' ? CIAN : AMBAR, 'right', chico - 1, 700);
+                    });
+                });
+                ctx.globalAlpha = alfa;
+                const fin = entre(p, .86, .9);
+                if (fin) { ctx.globalAlpha = alfa * fin; const fx = colX[2], fy = zona.y + zona.h * .14; paloma(fx + 5, fy, 4); rotulo(L.migra, fx + 14, fy, VERDE); rotulo('PostgreSQL · SQLite', fx, fy + 16, 'rgba(148,163,184,.8)', 'left', 8); }
+            } else if (e === 2) {
+                // 3. INTERFAZ: un boceto en gris que se convierte en el panel real, y su versión de teléfono
+                const movil = entre(p, .72, .86);
+                const aw = zona.w * (1 - .26 * sale(movil)), ah = zona.h, ax = zona.x, ay = zona.y;
+                caja2(ax, ay, aw, ah, 8, '#0b1220', 'rgba(148,163,184,.5)', 1.2);
+                [ROJO, AMBAR, VERDE].forEach((cc, k) => punto(ax + 10 + k * 8, ay + 9, 2.4, cc));
+                rotulo(L.titulo, ax + aw / 2, ay + 9, 'rgba(148,163,184,.85)', 'center', 8);
+                ctx.fillStyle = 'rgba(148,163,184,.2)'; ctx.fillRect(ax, ay + 18, aw, 1);
+                const real = entre(p, .3, .58);              // barrido de boceto a diseño
+                const barX = ax + aw * real;
+                const crece = sale(entre(p, .5, .7));
+                const piezas = (modo) => {
+                    const sb = aw * .22, cx = ax + sb + 10, cw2 = aw - sb - 20, top = ay + 26;
+                    if (modo) { ctx.fillStyle = '#0f1a30'; ctx.fillRect(ax + 1, ay + 19, sb, ah - 20); }
+                    L.menu.forEach((n, k) => {
+                        const yy = top + 8 + k * 18;
+                        if (modo) { if (k === (p > .7 ? 1 : 0)) caja2(ax + 6, yy - 7, sb - 12, 14, 4, 'rgba(110,162,255,.22)', null); rotulo(n, ax + 12, yy, 'rgba(203,213,225,.9)', 'left', 8); }
+                        else { ctx.fillStyle = 'rgba(148,163,184,.3)'; ctx.fillRect(ax + 10, yy - 2, sb * .6, 4); }
+                    });
+                    const kw = (cw2 - 12) / 3, kh = Math.min(42, ah * .2);
+                    const val = [`$${Math.round(48320 * crece).toLocaleString('en-US')}`, `${Math.round(312 * crece)}`, `${Math.round(94 * crece)}%`];
+                    for (let k = 0; k < 3; k++) {
+                        const kx = cx + k * (kw + 6);
+                        if (modo) { caja2(kx, top, kw, kh, 5, '#111c33', 'rgba(110,162,255,.3)'); rotulo(L.kpi[k], kx + 7, top + 10, 'rgba(148,163,184,.85)', 'left', 8); rotulo(val[k], kx + 7, top + kh - 13, [AZUL, VIOLETA, VERDE][k], 'left', Math.min(13, kw / 6.5), 700); }
+                        else { caja2(kx, top, kw, kh, 3, null, 'rgba(148,163,184,.45)', 1, [3, 3]); ctx.strokeStyle = 'rgba(148,163,184,.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(kx, top); ctx.lineTo(kx + kw, top + kh); ctx.moveTo(kx + kw, top); ctx.lineTo(kx, top + kh); ctx.stroke(); }
+                    }
+                    const gy = top + kh + 10, gh = ah - (gy - ay) - 12, gw = cw2 * .62;
+                    if (modo) caja2(cx, gy, gw, gh, 5, '#111c33', 'rgba(110,162,255,.3)'); else caja2(cx, gy, gw, gh, 3, null, 'rgba(148,163,184,.45)', 1, [3, 3]);
+                    const nb = 9, bw = (gw - 20) / nb;
+                    for (let k = 0; k < nb; k++) {
+                        const alto = (gh - 26) * (.3 + azarDe(k + 11) * .65);
+                        const bx = cx + 10 + k * bw, by = gy + gh - 8;
+                        if (modo) { const sube = sale(entre(p, .45 + k * .02, .62 + k * .02)), g2 = ctx.createLinearGradient(0, by - alto, 0, by); g2.addColorStop(0, CIAN); g2.addColorStop(1, AZUL); ctx.fillStyle = g2; ctx.fillRect(bx + 2, by - alto * sube, bw - 4, alto * sube); }
+                        else { ctx.strokeStyle = 'rgba(148,163,184,.35)'; ctx.lineWidth = 1; ctx.strokeRect(bx + 2, by - alto, bw - 4, alto); }
+                    }
+                    const lx = cx + gw + 8, lw = cw2 - gw - 8;
+                    if (modo) caja2(lx, gy, lw, gh, 5, '#111c33', 'rgba(110,162,255,.3)'); else caja2(lx, gy, lw, gh, 3, null, 'rgba(148,163,184,.45)', 1, [3, 3]);
+                    for (let k = 0; k < 5; k++) {
+                        const yy = gy + 12 + k * Math.min(18, (gh - 16) / 5);
+                        if (modo) { punto(lx + 9, yy, 3, [AZUL, VERDE, AMBAR, ROSA, CIAN][k]); ctx.fillStyle = 'rgba(226,232,240,.6)'; ctx.fillRect(lx + 16, yy - 2, lw * .45, 3); ctx.fillStyle = 'rgba(148,163,184,.4)'; ctx.fillRect(lx + lw - 20, yy - 2, 12, 3); }
+                        else { ctx.fillStyle = 'rgba(148,163,184,.3)'; ctx.fillRect(lx + 8, yy - 2, lw - 16, 4); }
+                    }
+                };
+                ctx.save(); ctx.beginPath(); ctx.rect(barX, ay + 19, aw, ah); ctx.clip(); piezas(false); ctx.restore();
+                if (real > 0) { ctx.save(); ctx.beginPath(); ctx.rect(ax, ay + 19, barX - ax, ah); ctx.clip(); piezas(true); ctx.restore(); }
+                if (real > 0 && real < 1) { ctx.save(); ctx.strokeStyle = VIOLETA; ctx.lineWidth = 1.5; ctx.shadowColor = VIOLETA; ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(barX, ay + 19); ctx.lineTo(barX, ay + ah); ctx.stroke(); ctx.restore(); }
+                // cursor que recorre y hace clic en el segundo elemento del menú
+                if (p > .58 && p < .9) {
+                    const ruta = [[ax + aw * .6, ay + ah * .7], [ax + aw * .12, ay + 26 + 8 + 18]], q = suave(entre(p, .6, .7));
+                    const [mx, my] = enRuta(ruta, q);
+                    cursor(mx, my, q >= 1 ? entre(p, .7, .78) : 0);
+                }
+                if (movil) {
+                    ctx.globalAlpha = alfa * movil;
+                    const ph = zona.h * .94, pw = Math.min(ph * .48, zona.w * .24), px = zona.x + zona.w - pw + (1 - sale(movil)) * 30, py = zona.y + (zona.h - ph) / 2;
+                    caja2(px, py, pw, ph, 12, '#0b1220', 'rgba(203,213,225,.7)', 1.3);
+                    const ix = px + 7, iw = pw - 14;
+                    for (let k = 0; k < 3; k++) { const ky = py + 18 + k * 26; caja2(ix, ky, iw, 22, 4, '#111c33', 'rgba(110,162,255,.3)'); rotulo(L.kpi[k], ix + 5, ky + 7, 'rgba(148,163,184,.85)', 'left', 7); ctx.fillStyle = [AZUL, VIOLETA, VERDE][k]; ctx.fillRect(ix + 5, ky + 13, iw * (.35 + k * .12), 4); }
+                    const gy = py + 18 + 3 * 26, gh = ph - (gy - py) - 14;
+                    caja2(ix, gy, iw, gh, 4, '#111c33', 'rgba(110,162,255,.3)');
+                    const bw = (iw - 8) / 6;
+                    for (let k = 0; k < 6; k++) { const alto = (gh - 12) * (.3 + azarDe(k + 11) * .65); ctx.fillStyle = AZUL; ctx.fillRect(ix + 4 + k * bw + 1.5, gy + gh - 5 - alto, bw - 3, alto); }
+                }
+            } else if (e === 3) {
+                // 4. PRUEBAS: la suite corre, una prueba falla, se corrige y todo pasa
+                const tw2 = zona.w * .68;
+                caja2(zona.x, zona.y, tw2, zona.h, 8, '#0a0f1c', 'rgba(148,163,184,.4)');
+                [ROJO, AMBAR, VERDE].forEach((cc, k) => punto(zona.x + 10 + k * 8, zona.y + 9, 2.4, cc));
+                ctx.fillStyle = 'rgba(148,163,184,.2)'; ctx.fillRect(zona.x, zona.y + 18, tw2, 1);
+                const segunda = p > .5;                      // segunda corrida tras la corrección
+                const base = segunda ? .56 : .04;
+                const verLista = !(p > .4 && p < .56);
+                rotulo(segunda ? '$ npm test' : '$ npm test', zona.x + 9, zona.y + 30, 'rgba(203,213,225,.9)');
+                const paso = Math.min(17, (zona.h - 70) / L.pruebas.length);
+                if (verLista) L.pruebas.forEach((n, k) => {
+                    const q = entre(p, base + k * .045, base + k * .045 + .04); if (!q) return;
+                    const falla = !segunda && k === 3;
+                    const yy = zona.y + 46 + k * paso;
+                    ctx.globalAlpha = alfa * q;
+                    rotulo(falla ? '✕' : '✓', zona.x + 10, yy, falla ? ROJO : VERDE, 'left', 9, 700);
+                    rotulo(n, zona.x + 22, yy, falla ? ROJO : 'rgba(203,213,225,.88)', 'left', 8);
+                    if (tw2 > 250) rotulo(`${Math.round(4 + azarDe(k + (segunda ? 9 : 0)) * 30)}ms`, zona.x + tw2 - 8, yy, 'rgba(100,116,139,.9)', 'right', 8);
+                });
+                ctx.globalAlpha = alfa;
+                const ry = zona.y + zona.h - 18;
+                if (!segunda && p > .34 && p < .4) { caja2(zona.x + 8, ry - 9, tw2 - 16, 18, 4, 'rgba(248,113,113,.12)', ROJO); rotulo(L.resumen(48, 1), zona.x + 16, ry, ROJO, 'left', 8, 700); }
+                if (segunda && p > .84) { caja2(zona.x + 8, ry - 9, tw2 - 16, 18, 4, 'rgba(52,211,153,.12)', VERDE); rotulo(L.resumen(48, 0), zona.x + 16, ry, VERDE, 'left', 8, 700); }
+                // la corrección: un diff entre corridas
+                if (!verLista) {
+                    ctx.globalAlpha = alfa * Math.min(entre(p, .4, .43), 1 - entre(p, .53, .56));
+                    const dx = zona.x + 10, dy = zona.y + zona.h * .34, dw = tw2 - 20;
+                    rotulo('sync.ts', dx, dy - 10, 'rgba(148,163,184,.85)', 'left', 8);
+                    caja2(dx, dy, dw, 44, 5, '#111827', 'rgba(148,163,184,.5)');
+                    ctx.fillStyle = 'rgba(248,113,113,.12)'; ctx.fillRect(dx + 1, dy + 5, dw - 2, 15); ctx.fillStyle = 'rgba(52,211,153,.12)'; ctx.fillRect(dx + 1, dy + 24, dw - 2, 15);
+                    rotulo('- if (online) sync()', dx + 8, dy + 12, ROJO, 'left', 8);
+                    rotulo('+ queue.flush().then(sync)', dx + 8, dy + 31, VERDE, 'left', 8);
+                    ctx.globalAlpha = alfa;
+                }
+                // anillo de cobertura
+                const rx = zona.x + tw2 + (zona.w - tw2) / 2, rcy = zona.y + zona.h * .42, rr = Math.min((zona.w - tw2) * .34, zona.h * .26);
+                const cob = segunda ? .81 + .13 * sale(entre(p, .58, .86)) : .81 * sale(entre(p, .05, .36));
+                ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(148,163,184,.15)'; ctx.beginPath(); ctx.arc(rx, rcy, rr, 0, 7); ctx.stroke();
+                ctx.strokeStyle = cob > .9 ? VERDE : AMBAR; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(rx, rcy, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.001, cob)); ctx.stroke(); ctx.lineCap = 'butt';
+                rotulo(`${Math.round(cob * 100)}%`, rx, rcy, '#f1f5f9', 'center', Math.min(14, rr * .55), 700);
+                rotulo(L.cobertura, rx, rcy + rr + 14, 'rgba(148,163,184,.85)', 'center', 8);
+            } else {
+                // 5. DESPLIEGUE: el pipeline publica y los equipos sincronizan, incluso el que se quedó sin red
+                caja2(zona.x - 6, zona.y - 4, zona.w + 12, zona.h + 8, 10, 'rgba(10,15,28,.82)', 'rgba(148,163,184,.18)');
+                const etapas = ['build', 'test', 'deploy', 'prod'], ny = zona.y + 14, nx0 = zona.x + 20, nx1 = zona.x + zona.w - 20;
+                const nodoX = (k) => nx0 + (nx1 - nx0) * k / 3;
+                etapas.forEach((n, k) => {
+                    const x = nodoX(k), q = entre(p, .04 + k * .09, .1 + k * .09);
+                    if (k) { ctx.strokeStyle = 'rgba(148,163,184,.3)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(nodoX(k - 1) + 9, ny); ctx.lineTo(x - 9, ny); ctx.stroke(); tramo([[nodoX(k - 1) + 9, ny], [x - 9, ny]], entre(p, k * .09 - .02, .04 + k * .09), VERDE, 1.6); }
+                    punto(x, ny, 8, q >= 1 ? 'rgba(52,211,153,.18)' : '#111827');
+                    ctx.strokeStyle = q >= 1 ? VERDE : q > 0 ? AZUL : 'rgba(148,163,184,.5)'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x, ny, 8, 0, 7); ctx.stroke();
+                    if (q > 0 && q < 1) { ctx.strokeStyle = AZUL; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.arc(x, ny, 8, t * 6, t * 6 + 1.6); ctx.stroke(); }
+                    if (q >= 1) paloma(x, ny, 3.4);
+                    rotulo(n, x, ny + 17, 'rgba(203,213,225,.85)', 'center', 8);
+                });
+                const sx = zona.x + zona.w / 2, sy = zona.y + zona.h * .56, sw = 46, sh = 34;
+                const vivo = entre(p, .38, .44);
+                const eq = [
+                    { x: zona.x + zona.w * .13, y: sy, tipo: 'laptop' },
+                    { x: zona.x + zona.w * .87, y: sy, tipo: 'tablet' },
+                    { x: sx, y: zona.y + zona.h - 22, tipo: 'tel' },
+                ];
+                const cortado = (k) => k === 1 && p > .5 && p < .72;
+                eq.forEach((d, k) => {
+                    const q = sale(entre(p, .4 + k * .04, .5 + k * .04)); if (!q) return;
+                    ctx.globalAlpha = alfa * q;
+                    ctx.strokeStyle = cortado(k) ? 'rgba(248,113,113,.5)' : 'rgba(110,162,255,.35)'; ctx.setLineDash(cortado(k) ? [3, 4] : []); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(sx, sy); ctx.stroke(); ctx.setLineDash([]);
+                    if (!cortado(k) && vivo >= 1) for (let j = 0; j < 2; j++) { const f = (t * .9 + j * .5 + k * .3) % 1, ida = j ? f : 1 - f; punto(d.x + (sx - d.x) * ida, d.y + (sy - d.y) * ida, 2, j ? CIAN : VIOLETA); }
+                });
+                ctx.globalAlpha = alfa * Math.max(.35, vivo);
+                caja2(sx - sw / 2, sy - sh / 2, sw, sh, 4, '#111a2e', vivo >= 1 ? VERDE : 'rgba(148,163,184,.5)', 1.3);
+                for (let k = 0; k < 3; k++) { ctx.fillStyle = 'rgba(148,163,184,.25)'; ctx.fillRect(sx - sw / 2 + 6, sy - sh / 2 + 6 + k * 9, sw - 20, 4); punto(sx + sw / 2 - 8, sy - sh / 2 + 8 + k * 9, 1.6, vivo >= 1 && azarDe(k + Math.floor(t * 6)) > .3 ? VERDE : '#334155'); }
+                eq.forEach((d, k) => {
+                    const q = sale(entre(p, .4 + k * .04, .5 + k * .04)); if (!q) return;
+                    ctx.globalAlpha = alfa * q;
+                    if (d.tipo === 'laptop') { caja2(d.x - 20, d.y - 15, 40, 26, 3, '#0b1220', 'rgba(203,213,225,.7)', 1.2); caja2(d.x - 25, d.y + 11, 50, 4, 2, '#334155', null); }
+                    else if (d.tipo === 'tablet') caja2(d.x - 15, d.y - 20, 30, 40, 4, '#0b1220', cortado(k) ? ROJO : 'rgba(203,213,225,.7)', 1.2);
+                    else caja2(d.x - 8, d.y - 14, 16, 28, 3, '#0b1220', 'rgba(203,213,225,.7)', 1.2);
+                    if (k === 1) {
+                        if (cortado(k)) { const n = 1 + Math.floor(entre(p, .52, .7) * 2.99); rotulo(L.sinRed, d.x, d.y - 29, ROJO, 'center', 8, 700); rotulo(L.cola(n), d.x, d.y + 30, AMBAR, 'center', 8); }
+                        else if (p >= .72) rotulo(L.sync, d.x, d.y + 30, VERDE, 'center', 8);
+                    }
+                });
+                const fin = entre(p, .8, .86);
+                if (fin) { ctx.globalAlpha = alfa * fin; rotulo(L.prod, sx, sy - sh / 2 - 12, VERDE, 'center', 9, 700); }
+            }
+            ctx.restore();
+        };
+        if (!mueve()) { reloj = INICIO[2] + DUR[2] * .66; const fijo = () => { antes = null; dibujar(0); }; fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+    });
+
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
         if (!escena || ligero()) return caja.remove();
