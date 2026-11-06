@@ -6215,3 +6215,98 @@ html {
   .paleta span,
   #diseno .service-list li::before { transition: none; }
 }
+
+/* ==========================================================================
+   SERVICIO TÉCNICO: barra de diagnóstico, palomita de revisado y herramienta en hover
+   ========================================================================== */
+#servicio-tecnico .service-list { position: relative; }
+/* La línea superior es una barra de diagnóstico que se llena al recorrer la sección */
+#servicio-tecnico .service-list::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1.5px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #6ea2ff, #34d399);
+  box-shadow: 0 0 10px rgba(52, 211, 153, .45);
+  transform-origin: left;
+  scale: 1 1;
+  pointer-events: none;
+}
+@supports (animation-timeline: view()) {
+  #servicio-tecnico .service-list::before {
+    animation: diagnostico linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 50%;
+  }
+  /* Cada servicio recibe su palomita de «revisado» cuando la barra pasa por él */
+  #servicio-tecnico .service-list li::after {
+    animation: revisado linear both;
+    animation-timeline: view();
+    animation-range: entry 40% cover 45%;
+  }
+}
+@keyframes diagnostico { from { scale: 0 1; filter: hue-rotate(-40deg); } }
+@keyframes revisado {
+  0%, 60% { scale: 0; opacity: 0; }
+  80% { scale: 1.25; opacity: 1; }
+  100% { scale: 1; opacity: 1; }
+}
+#servicio-tecnico .service-list li { position: relative; }
+#servicio-tecnico .service-list li::after {
+  content: "✓";
+  position: absolute;
+  top: -4px;
+  left: 1.45rem;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #34d399;
+  color: #052e1c;
+  font: 800 9px/1 system-ui, sans-serif;
+  box-shadow: 0 0 0 3px var(--md-sys-color-surface, #0b1020);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #servicio-tecnico .service-list li { cursor: default; }
+  /* El icono se mueve como una herramienta al apretar */
+  #servicio-tecnico .service-list li i { transition: color .2s var(--ease-out); transform-origin: 40% 60%; }
+  #servicio-tecnico .service-list li:hover i { color: #34d399; animation: herramienta .5s var(--ease-out); }
+  /* Esquinas de «marco de diagnóstico» alrededor del servicio */
+  #servicio-tecnico .service-list li::before {
+    content: "";
+    position: absolute;
+    inset: -14px -16px;
+    background:
+      linear-gradient(#34d399, #34d399) 0 0 / 14px 1.5px no-repeat,
+      linear-gradient(#34d399, #34d399) 0 0 / 1.5px 14px no-repeat,
+      linear-gradient(#34d399, #34d399) 100% 0 / 14px 1.5px no-repeat,
+      linear-gradient(#34d399, #34d399) 100% 0 / 1.5px 14px no-repeat,
+      linear-gradient(#34d399, #34d399) 0 100% / 14px 1.5px no-repeat,
+      linear-gradient(#34d399, #34d399) 0 100% / 1.5px 14px no-repeat,
+      linear-gradient(#34d399, #34d399) 100% 100% / 14px 1.5px no-repeat,
+      linear-gradient(#34d399, #34d399) 100% 100% / 1.5px 14px no-repeat;
+    opacity: 0;
+    scale: 1.06;
+    transition: opacity .2s var(--ease-out), scale .25s var(--ease-out);
+    pointer-events: none;
+  }
+  #servicio-tecnico .service-list li:hover::before { opacity: 1; scale: 1; }
+}
+@keyframes herramienta {
+  0% { rotate: 0deg; }
+  30% { rotate: -22deg; }
+  60% { rotate: 10deg; }
+  100% { rotate: 0deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #servicio-tecnico .service-list::before,
+  #servicio-tecnico .service-list li::after,
+  #servicio-tecnico .service-list li:hover i { animation: none; }
+  #servicio-tecnico .service-list li::before { transition: none; }
+}

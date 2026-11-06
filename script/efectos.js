@@ -342,12 +342,12 @@
     const azarDe = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
     const ESCENAS = {
         // Portada, servicio técnico: un gabinete de PC abierto en mantenimiento, con ventiladores, memorias y un barrido de diagnóstico
-        gabinete: (v, col, fil, t) => {
+        gabinete: (v, col, fil, t, foco) => {
             const ASPECTO = 1.75;   // las celdas son más altas que anchas
             const alto = fil - 1, ancho = Math.min(col - 1, Math.round(alto * ASPECTO * .95));
             const x0 = Math.floor((col - ancho) / 2), y0 = 0;
             const X = (u) => x0 + Math.round(u * ancho), Y = (w) => y0 + Math.round(w * alto);
-            const pon = (i, j, n) => { if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
+            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
             const marco = (a, b, c, d, n) => {
                 for (let i = X(a); i <= X(c); i++) { pon(i, Y(b), n); pon(i, Y(d), n); }
                 for (let j = Y(b); j <= Y(d); j++) { pon(X(a), j, n); pon(X(c), j, n); }
@@ -399,6 +399,95 @@
             // Barrido de diagnóstico de arriba abajo
             const barrido = (t * .22) % 2.2;
             if (barrido <= 1) { const j = Y(barrido); for (let i = X(0) + 1; i < X(1); i++) v[j * col + i] = Math.max(v[j * col + i], .4); }
+            // Foco: el servicio bajo el cursor se dibuja sobre el gabinete
+            const k = foco.k, dt = foco.dt;
+            const suave = (q) => 1 - Math.pow(1 - Math.min(1, Math.max(0, q)), 3);
+            if (foco.n === 'armado') {
+                // Una memoria entra en su ranura, encaja con un destello y vuelve a empezar
+                const q = (dt % 2.4) / 1.4, baja = suave(q);
+                const a = .43 + 4 * .055, top = -.45 + baja * .55;
+                for (let j = Y(top); j <= Y(top + .32); j++) { pon(X(a), j, k); pon(X(a) + 1, j, k); }
+                if (q >= 1 && q < 1.25) for (let j = Y(.08); j <= Y(.44); j++) { pon(X(a) - 1, j, .8 * k); pon(X(a) + 1, j, .8 * k); }
+                // y la gráfica se desliza a su lugar desde la izquierda
+                const g = suave(((dt + .6) % 2.4) / 1.4), dx = (1 - g) * -.5;
+                for (let i = X(.08 + dx); i <= X(.78 + dx); i++) { pon(i, Y(.52), .9 * k); pon(i, Y(.74), .9 * k); }
+            } else if (foco.n === 'servidores') {
+                // Racks a los lados del gabinete, con unidades y luces de actividad
+                [[1, x0 - 3], [x0 + ancho + 3, col - 2]].forEach(([a, b], lado) => {
+                    if (b - a < 4) return;
+                    for (let i = a; i <= b; i++) { pon(i, 0, .8 * k); pon(i, fil - 1, .8 * k); }
+                    for (let j = 0; j < fil; j++) { pon(a, j, .8 * k); pon(b, j, .8 * k); }
+                    for (let j = 2; j < fil - 2; j += 3) {
+                        for (let i = a + 2; i <= b - 2; i++) pon(i, j, .35 * k);
+                        pon(b - 2, j, azarDe(j * 7 + lado + Math.floor(t * 6)) > .45 ? k : .2 * k);
+                        pon(b - 4, j, azarDe(j * 3 + lado + Math.floor(t * 9)) > .6 ? k : .2 * k);
+                    }
+                });
+            } else if (foco.n === 'hardware') {
+                // Limpieza: el polvo sale volando de los ventiladores
+                [[.2, .25], [.25, .63], [.6, .63]].forEach(([u, w], f) => {
+                    for (let n = 0; n < 44; n++) {
+                        const vida = (t * .9 + azarDe(n * 13 + f) ) % 1, ang = azarDe(n * 7 + f * 3) * 6.283;
+                        const d = vida * 16;
+                        pon(X(u) + Math.cos(ang) * d * 1.75, Y(w) + Math.sin(ang) * d, (1.1 - vida) * k);
+                    }
+                });
+            } else if (['firmware', 'impresoras', 'graphene'].includes(foco.n)) {
+                // El gabinete se apaga y en su lugar aparece el equipo del servicio
+                for (let n = 0; n < v.length; n++) v[n] *= 1 - .82 * k;
+                const cx = Math.round(col / 2), cy = Math.round(fil / 2);
+                const rect = (a, b, c, d, n) => { for (let i = a; i <= c; i++) { pon(i, b, n); pon(i, d, n); } for (let j = b; j <= d; j++) { pon(a, j, n); pon(c, j, n); } };
+                if (foco.n === 'firmware') {
+                    // Un chip con sus patas y una barra de actualización que avanza
+                    const lado = Math.round(fil * .22);
+                    rect(cx - lado * 2, cy - lado - 4, cx + lado * 2, cy + lado - 4, k);
+                    for (let j = cy - lado - 2; j <= cy + lado - 6; j += 2) { pon(cx - lado * 2 - 1, j, .7 * k); pon(cx - lado * 2 - 2, j, .7 * k); pon(cx + lado * 2 + 1, j, .7 * k); pon(cx + lado * 2 + 2, j, .7 * k); }
+                    for (let i = cx - lado * 2 + 2; i <= cx + lado * 2 - 2; i += 3) { pon(i, cy - lado - 5, .7 * k); pon(i, cy + lado - 3, .7 * k); }
+                    const pulso = .4 + .5 * Math.abs(Math.sin(t * 3));
+                    for (let j = cy - 5; j <= cy - 3; j++) for (let i = cx - 4; i <= cx + 4; i++) pon(i, j, pulso * k);
+                    const by = cy + lado + 2, bw = Math.round(col * .32), avance = (dt * .35) % 1.15;
+                    rect(cx - bw, by, cx + bw, by + 2, .7 * k);
+                    for (let i = cx - bw + 1; i <= cx - bw + 1 + Math.min(1, avance) * (bw * 2 - 2); i++) pon(i, by + 1, avance > 1 ? (Math.floor(t * 8) % 2 ? k : .4 * k) : .9 * k);
+                } else if (foco.n === 'impresoras') {
+                    // Sublimación como en las HiTi: la foto sale en cuatro pasadas (amarillo, magenta, cian y laminado)
+                    const pw = Math.round(col * .3), py = Math.round(fil * .18);
+                    rect(cx - pw, py - 4, cx + pw, py, k);
+                    for (let i = cx - pw + 2; i < cx + pw - 6; i += 2) pon(i, py - 2, .35 * k);
+                    pon(cx + pw - 3, py - 2, Math.floor(t * 4) % 2 ? k : .3 * k);
+                    const hw = Math.round(pw * .8), alto = fil - py - 3, ciclo = 6, q = (dt % ciclo) / ciclo;
+                    const pasada = Math.min(3, Math.floor(q * 4)), r = (q * 4) % 1, ida = pasada % 2 === 0;
+                    const cabeza = py + 1 + Math.round((ida ? r : 1 - r) * alto);
+                    for (let j = py + 1; j <= py + 1 + alto; j++) {
+                        const hecho = pasada + (ida ? (j <= cabeza ? 1 : 0) : (j >= cabeza ? 1 : 0));
+                        const n = [.08, .22, .38, .55, .72][Math.min(4, hecho)];
+                        for (let i = cx - hw; i <= cx + hw; i++) {
+                            const borde = i === cx - hw || i === cx + hw || j === py + 1 + alto;
+                            const foto = Math.sin(i * .25 + j * .4) * .1 + Math.cos(Math.hypot(i - cx, (j - py - alto / 2) * 1.75) * .3) * .08;
+                            pon(i, j, (borde ? .6 : n + foto * Math.min(1, hecho)) * k);
+                        }
+                    }
+                    for (let i = cx - hw - 2; i <= cx + hw + 2; i++) pon(i, cabeza, k);
+                } else {
+                    // Un Pixel: la pantalla se llena con la retícula hexagonal del grafeno y aparece un candado
+                    const ph = fil - 3, pw = Math.round(ph * .5 * 1.75 / 2);
+                    rect(cx - pw, 1, cx + pw, ph + 1, k);
+                    for (let i = cx - 2; i <= cx + 2; i++) pon(i, 2, .6 * k);
+                    const llena = Math.min(1, (dt % 4.5) / 2.6);
+                    for (let j = 4; j <= ph - 1; j++) for (let i = cx - pw + 2; i <= cx + pw - 2; i++) {
+                        const fila = Math.floor((j - 4) / 2), desp = fila % 2 ? 3 : 0;
+                        const enHex = ((i + desp) % 6 === 0 || (j % 2 === 0 && (i + desp) % 6 < 4 && (i + desp) % 6 > 0));
+                        const orden = (j - 4) / (ph - 5);
+                        if (enHex && orden <= llena) pon(i, j, (.35 + .25 * Math.sin(t * 2 + i * .3)) * k);
+                    }
+                    if (llena >= 1) {
+                        // Candado en el centro
+                        const ly = Math.round(fil * .55);
+                        for (let j = ly; j <= ly + 4; j++) for (let i = cx - 4; i <= cx + 4; i++) pon(i, j, (j === ly || j === ly + 4 || i === cx - 4 || i === cx + 4) ? k : .15 * k);
+                        for (let a = Math.PI; a <= Math.PI * 2; a += .1) pon(cx + Math.cos(a) * 3, ly - 1 + Math.sin(a) * 3, k);
+                        pon(cx, ly + 2, k);
+                    }
+                }
+            }
         },
         // Portada, diseño: un logo que se traza con la pluma, nodo a nodo, con sus manejadores; al cerrarse se rellena y vuelve a empezar
         trazo: (v, col, fil, t, foco) => {
@@ -690,7 +779,7 @@
         const dibujar = (t) => {
             v.fill(0);
             const desde = +caja.dataset.focoT || 0;
-            escena(v, col, fil, t, { n: caja.dataset.foco || '', k: Math.min(1, Math.max(0, (t - desde) / .35)) });
+            escena(v, col, fil, t, { n: caja.dataset.foco || '', k: Math.min(1, Math.max(0, (t - desde) / .35)), dt: t - desde });
             ctx.clearRect(0, 0, c.width, c.height);
             for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
                 const n = v[j * col + i];
