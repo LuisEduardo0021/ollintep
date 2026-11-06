@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Redes e infraestructura', 'Networks and infrastructure'), T('Planos, servidores, VLANs, switches y routers', 'Plans, servers, VLANs, switches and routers'), raizIdioma + 'index.html#redes', 'fa-network-wired'],
         [T('VLANs', 'VLANs'), T('Segmentación de tu red', 'Segmenting your network'), raizIdioma + 'index.html#redes', 'fa-layer-group'],
         [T('Servicio técnico', 'Technical service'), T('Mantenimiento de hardware y firmware', 'Hardware and firmware maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-screwdriver-wrench'],
-        [T('Armado de PC', 'PC building'), T('Armamos tu PC', 'We build your PC'), raizIdioma + 'index.html#servicio-tecnico', 'fa-desktop'],
+        [T('Armado de PC', 'PC building'), T('Ensamblado a la medida', 'Custom-built PCs'), raizIdioma + 'index.html#servicio-tecnico', 'fa-desktop'],
         [T('PC y servidores', 'PCs and servers'), T('Mantenimiento', 'Maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-server'],
         [T('Impresoras y photobooths', 'Printers and photobooths'), T('Mantenimiento, también HiTi', 'Maintenance, including HiTi'), raizIdioma + 'index.html#servicio-tecnico', 'fa-print'],
         [T('GrapheneOS en Pixel', 'GrapheneOS on Pixel'), T('Instalación en Google Pixel', 'Installed on Google Pixel'), raizIdioma + 'index.html#servicio-tecnico', 'fa-mobile-screen-button'],
