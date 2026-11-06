@@ -7072,3 +7072,10 @@ html:has(.lz-ventana[open]) {
 @keyframes icono-llave { 0%, 60%, 100% { transform: none; } 70% { transform: rotate(-18deg); } 80% { transform: rotate(12deg); } 90% { transform: rotate(-6deg); } }
 @keyframes icono-imprime { 0%, 100% { transform: translateY(0); } 20% { transform: translateY(1px) scaleY(.94); } 40% { transform: translateY(-2px); } 60% { transform: none; } }
 .ligero #servicio-tecnico .service-list li i { animation: none; }
+
+/* Páginas de plataforma: las pastillas de etapa toman el color del tema (el de cada logo) */
+.proceso-tema .proceso-pasos li.activo { color: var(--md-sys-color-on-primary); background: var(--md-sys-color-primary); box-shadow: 0 0 18px -4px var(--md-sys-color-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .feature-col[data-foco] { transition: box-shadow .3s; }
+  .feature-col[data-foco]:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent); }
+}

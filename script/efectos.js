@@ -1808,6 +1808,258 @@
         else bucle(caja, 60, dibujar);
     });
 
+    // --- CENTZONTLE: un pedido a lo largo del día. Comanda, cocina, cobro, inventario y corte, en el azul del logo.
+    // Las columnas de funciones (data-foco) saltan a su etapa.
+    document.querySelectorAll('[data-centzontle-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.8, 4.6, 4.6, 4.6, 5], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { venta: 0, clientes: 2, inventario: 3, gestion: 4 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const suave = (x) => { x = limitar(x); return x * x * (3 - 2 * x); };
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const AZUL = '#5a8af6', REY = '#346df1', CLARO = '#a9c3ff', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171';
+        const L = ING
+            ? { mesa: 'Table', platos: [['Fish tacos', 2, 95], ['Shrimp ceviche', 1, 160], ['Horchata', 2, 35]], enviar: 'SEND TO KITCHEN', cols: ['To do', 'Cooking', 'Ready'], total: 'Total', pagado: 'PAID ✓', ticket: 'Digital receipt sent', metodos: ['Cash', 'Card', 'QR / SPEI'], lista: 'Table 5 ready',
+                insumos: [['Tortillas', 'pcs'], ['Fish', 'kg'], ['Shrimp', 'kg'], ['Lime', 'kg']], minimo: 'MIN', orden: 'Purchase order · Shrimp 5 kg', ventas: 'Sales today', pico: 'peak 2–3 pm', corte: 'Cash-up', cuadra: 'BALANCED ✓', factura: 'CFDI 4.0 issued' }
+            : { mesa: 'Mesa', platos: [['Tacos de pescado', 2, 95], ['Ceviche de camarón', 1, 160], ['Horchata', 2, 35]], enviar: 'ENVIAR A COCINA', cols: ['Pendiente', 'Preparando', 'Listo'], total: 'Total', pagado: 'PAGADO ✓', ticket: 'Ticket digital enviado', metodos: ['Efectivo', 'Tarjeta', 'QR / SPEI'], lista: 'Mesa 5 lista',
+                insumos: [['Tortillas', 'pz'], ['Pescado', 'kg'], ['Camarón', 'kg'], ['Limón', 'kg']], minimo: 'MÍN', orden: 'Orden de compra · Camarón 5 kg', ventas: 'Ventas de hoy', pico: 'pico 14–15 h', corte: 'Corte de caja', cuadra: 'CUADRA ✓', factura: 'CFDI 4.0 timbrado' };
+        const TOTAL_CUENTA = L.platos.reduce((a, [, n, pr]) => a + n * pr, 0);
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(148,163,184,.8)', alin = 'left', tam = 9, peso = 500) => {
+            ctx.fillStyle = col; ctx.font = `${peso} ${tam}px ui-monospace, Menlo, monospace`; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const caja2 = (x, y, w, h, r, relleno, borde, ancho = 1) => { redondo(x, y, w, h, r); if (relleno) { ctx.fillStyle = relleno; ctx.fill(); } if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = ancho; ctx.stroke(); } };
+        const paloma = (x, y, s, col = VERDE) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x - s * .3, y + s * .7); ctx.lineTo(x + s, y - s * .7); ctx.stroke(); };
+        const dinero = (n) => `$${Math.round(n).toLocaleString('en-US')}`;
+        const corta = (txt, max) => txt.length > max ? txt.slice(0, max - 1) + '…' : txt;
+        const cursor = (x, y, clic = 0) => {
+            if (clic) { ctx.strokeStyle = `rgba(169,195,255,${1 - clic})`; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(x, y, 4 + clic * 12, 0, 7); ctx.stroke(); }
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 13); ctx.lineTo(x + 3.5, y + 9.5); ctx.lineTo(x + 8.5, y + 9.5); ctx.closePath();
+            ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.strokeStyle = '#0b1220'; ctx.lineWidth = 1; ctx.stroke();
+        };
+        // Plano del salón: mesas (u, v, sillas) en coordenadas relativas
+        const MESAS = [[.17, .24, 4], [.5, .24, 2], [.83, .24, 4], [.17, .7, 2], [.5, .7, 4], [.83, .7, 6]];
+        const ACTIVA = 4;  // la mesa 5 hace el pedido
+        // Código QR fijo: tres marcos de esquina y módulos al azar
+        const QR_N = 15;
+        const QR = Array.from({ length: QR_N }, (_, i) => Array.from({ length: QR_N }, (_, j) => {
+            const marco = (a, b) => a < 7 && b < 7 && (a === 0 || a === 6 || b === 0 || b === 6 || (a > 1 && a < 5 && b > 1 && b < 5));
+            const zonaMarco = (a, b) => a < 8 && b < 8;
+            if (zonaMarco(i, j)) return marco(i, j);
+            if (zonaMarco(QR_N - 1 - i, j)) return marco(QR_N - 1 - i, j);
+            if (zonaMarco(i, QR_N - 1 - j)) return marco(i, QR_N - 1 - j);
+            return azarDe(i * 31 + j * 7) > .5;
+        }));
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .88;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+            caja2(zona.x - 6, zona.y - 4, zona.w + 12, zona.h + 8, 10, 'rgba(8,13,24,.82)', 'rgba(90,138,246,.22)');
+
+            if (e === 0) {
+                // 1. COMANDA: el salón; la mesa 5 se ocupa y la tableta arma el pedido
+                const sw = zona.w * .5, sx = zona.x, sy = zona.y, sh = zona.h;
+                ctx.strokeStyle = 'rgba(148,163,184,.25)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); redondo(sx + 2, sy + 2, sw - 4, sh - 4, 8); ctx.stroke(); ctx.setLineDash([]);
+                const mr = Math.min(sw * .09, sh * .085);
+                MESAS.forEach(([u, v, n], k) => {
+                    const x = sx + u * sw, y = sy + v * sh, activa = k === ACTIVA && p > .12, ocupada = k === 1 || k === 5;
+                    const col = activa ? AZUL : ocupada ? 'rgba(251,191,36,.7)' : 'rgba(148,163,184,.45)';
+                    for (let s = 0; s < n; s++) { const a = s / n * Math.PI * 2 - Math.PI / 2; punto(x + Math.cos(a) * mr * 1.5, y + Math.sin(a) * mr * 1.5, mr * .28, activa ? 'rgba(90,138,246,.6)' : 'rgba(148,163,184,.25)'); }
+                    caja2(x - mr, y - mr, mr * 2, mr * 2, mr * .5, activa ? 'rgba(90,138,246,.22)' : '#0f172a', col, activa ? 1.6 : 1);
+                    rotulo(`${k + 1}`, x, y, activa ? '#fff' : 'rgba(148,163,184,.85)', 'center', 9, 700);
+                    if (activa) { const q = (t * .8) % 1; ctx.strokeStyle = `rgba(90,138,246,${.5 - q * .5})`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(x, y, mr * (1.6 + q * .8), 0, 7); ctx.stroke(); }
+                });
+                if (p > .12) { const [u, v] = MESAS[ACTIVA], seg = Math.floor(entre(p, .12, 1) * 260); rotulo(`⏱ ${String(Math.floor(seg / 60)).padStart(2, '0')}:${String(seg % 60).padStart(2, '0')}`, sx + u * sw, sy + v * sh + mr * 2.4, CLARO, 'center', 8); }
+                // tableta con el pedido
+                const tx = zona.x + sw + 10, tw = zona.w - sw - 10, ty = zona.y + 2, th = zona.h - 4;
+                caja2(tx, ty, tw, th, 10, '#0b1220', 'rgba(203,213,225,.55)', 1.3);
+                rotulo(`${L.mesa} 5`, tx + 10, ty + 14, '#e2e8f0', 'left', 10, 700);
+                ctx.fillStyle = 'rgba(148,163,184,.2)'; ctx.fillRect(tx + 8, ty + 26, tw - 16, 1);
+                const largo = Math.max(8, Math.floor((tw - 70) / 5.6));
+                let suma = 0;
+                L.platos.forEach(([n, cant, pr], k) => {
+                    const q = sale(entre(p, .22 + k * .13, .32 + k * .13)); if (!q) return;
+                    const yy = ty + 40 + k * 22;
+                    ctx.globalAlpha = alfa * q;
+                    caja2(tx + 8, yy - 9, tw - 16, 18, 4, 'rgba(90,138,246,.1)', null);
+                    rotulo(`${cant}×`, tx + 13, yy, AZUL, 'left', 8, 700);
+                    rotulo(corta(n, largo), tx + 30, yy, 'rgba(226,232,240,.92)', 'left', 8);
+                    rotulo(dinero(cant * pr), tx + tw - 13, yy, 'rgba(148,163,184,.9)', 'right', 8);
+                    if (q >= 1) suma += cant * pr;
+                });
+                ctx.globalAlpha = alfa;
+                rotulo(L.total, tx + 10, ty + th - 44, 'rgba(148,163,184,.9)', 'left', 9);
+                rotulo(dinero(suma), tx + tw - 10, ty + th - 44, '#f1f5f9', 'right', 11, 700);
+                const enviado = p > .78;
+                caja2(tx + 8, ty + th - 30, tw - 16, 20, 6, enviado ? 'rgba(52,211,153,.18)' : REY, enviado ? VERDE : null);
+                rotulo(enviado ? '✓' : L.enviar, tx + tw / 2, ty + th - 20, enviado ? VERDE : '#fff', 'center', 8, 700);
+                if (p > .6 && p < .86) { const q = suave(entre(p, .6, .72)); cursor(tx + tw * (.85 - .35 * q), ty + th * (.45 + .45 * q), entre(p, .72, .8)); }
+            } else if (e === 1) {
+                // 2. COCINA (KDS): las comandas avanzan de columna y el cronómetro cambia de color
+                const cw = zona.w / 3;
+                L.cols.forEach((n, k) => {
+                    const x = zona.x + k * cw;
+                    rotulo(n.toUpperCase(), x + 8, zona.y + 12, [AMBAR, AZUL, VERDE][k], 'left', 8, 700);
+                    ctx.fillStyle = 'rgba(148,163,184,.18)'; ctx.fillRect(x + 6, zona.y + 22, cw - 12, 1);
+                    if (k) ctx.fillRect(x, zona.y + 6, 1, zona.h - 12);
+                });
+                const tarjetas = [
+                    { m: 2, nace: 0, pasa: [.15, .5], min: 9 },
+                    { m: 5, nace: .08, pasa: [.36, .74], min: 3, nuestra: true },
+                    { m: 6, nace: .3, pasa: [.66, 9], min: 1 },
+                ];
+                const h = Math.min(58, (zona.h - 40) / 3 - 6);
+                tarjetas.forEach((tj, k) => {
+                    const ap = sale(entre(p, tj.nace, tj.nace + .08)); if (!ap) return;
+                    const pos = suave(entre(p, tj.pasa[0], tj.pasa[0] + .08)) + suave(entre(p, tj.pasa[1], tj.pasa[1] + .08));
+                    const w = cw - 16, x = zona.x + 8 + pos * cw, y = zona.y + 30 + k * (h + 6) - (1 - ap) * 10;
+                    ctx.globalAlpha = alfa * ap;
+                    caja2(x, y, w, h, 6, tj.nuestra ? 'rgba(90,138,246,.16)' : '#111a2e', tj.nuestra ? AZUL : 'rgba(148,163,184,.35)', tj.nuestra ? 1.4 : 1);
+                    rotulo(`${L.mesa} ${tj.m}`, x + 7, y + 10, '#e2e8f0', 'left', 8, 700);
+                    const mins = tj.min + Math.floor(p * 6), mc = pos >= 2 ? VERDE : mins > 11 ? ROJO : mins > 7 ? AMBAR : 'rgba(203,213,225,.85)';
+                    rotulo(`${mins}′`, x + w - 7, y + 10, mc, 'right', 8, 700);
+                    for (let j = 0; j < 3; j++) { ctx.fillStyle = 'rgba(203,213,225,.35)'; ctx.fillRect(x + 7, y + 20 + j * 8, w * (.4 + azarDe(k * 5 + j) * .4), 3); }
+                    if (pos >= 2) paloma(x + w - 10, y + h - 9, 3.4);
+                });
+                ctx.globalAlpha = alfa;
+                if (p > .82) { ctx.globalAlpha = alfa * entre(p, .82, .88); rotulo(`🔔 ${L.lista}`, zona.x + zona.w - 8, zona.y + zona.h - 8, VERDE, 'right', 9, 700); }
+            } else if (e === 2) {
+                // 3. COBRO: la cuenta, el método de pago, el QR y el ticket digital
+                const cw = zona.w * .5, ty = zona.y + 4, th = zona.h - 14, tw = cw - 8;
+                caja2(zona.x, ty, tw, th, 6, '#f8fafc', null);
+                ctx.fillStyle = 'rgba(8,13,24,1)';
+                for (let x = zona.x + 5; x < zona.x + tw; x += 10) { ctx.beginPath(); ctx.arc(x, ty + th, 4, Math.PI, 0); ctx.fill(); }
+                rotulo('CENTZONTLE', zona.x + tw / 2, ty + 14, '#0b1220', 'center', 9, 800);
+                rotulo(`${L.mesa} 5 · 14:32`, zona.x + tw / 2, ty + 27, '#475569', 'center', 8);
+                const largo = Math.max(8, Math.floor((tw - 60) / 5.4));
+                L.platos.forEach(([n, cant, pr], k) => {
+                    const yy = ty + 46 + k * 15;
+                    rotulo(`${cant} ${corta(n, largo)}`, zona.x + 9, yy, '#1e293b', 'left', 8);
+                    rotulo(dinero(cant * pr), zona.x + tw - 9, yy, '#1e293b', 'right', 8);
+                });
+                const ly = ty + 46 + 3 * 15 - 4;
+                ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(zona.x + 9, ly); ctx.lineTo(zona.x + tw - 9, ly); ctx.stroke(); ctx.setLineDash([]);
+                rotulo(L.total, zona.x + 9, ly + 12, '#0b1220', 'left', 9, 800);
+                rotulo(dinero(TOTAL_CUENTA), zona.x + tw - 9, ly + 12, '#0b1220', 'right', 10, 800);
+                if (th > 150) {
+                    const sub = TOTAL_CUENTA / 1.16;
+                    rotulo('Subtotal', zona.x + 9, ly + 28, '#64748b', 'left', 8); rotulo(dinero(sub), zona.x + tw - 9, ly + 28, '#64748b', 'right', 8);
+                    rotulo(ING ? 'VAT 16%' : 'IVA 16%', zona.x + 9, ly + 40, '#64748b', 'left', 8); rotulo(dinero(TOTAL_CUENTA - sub), zona.x + tw - 9, ly + 40, '#64748b', 'right', 8);
+                    rotulo(ING ? 'Thanks for coming!' : '¡Gracias por su visita!', zona.x + tw / 2, ly + 58, '#475569', 'center', 8);
+                }
+                if (p > .62) { ctx.save(); ctx.globalAlpha = alfa * entre(p, .62, .68); ctx.translate(zona.x + tw / 2, ty + th - 30); ctx.rotate(-.18); caja2(-42, -12, 84, 24, 4, null, '#059669', 2); rotulo(L.pagado, 0, 0, '#059669', 'center', 10, 800); ctx.restore(); }
+                const mx = zona.x + cw + 4, mw = zona.w - cw - 4, elegido = p > .2 ? 2 : -1;
+                L.metodos.forEach((n, k) => {
+                    const yy = zona.y + 4 + k * 24, q = sale(entre(p, .04 + k * .04, .12 + k * .04));
+                    ctx.globalAlpha = alfa * q;
+                    caja2(mx, yy, mw, 20, 6, k === elegido ? 'rgba(90,138,246,.2)' : '#111a2e', k === elegido ? AZUL : 'rgba(148,163,184,.3)', k === elegido ? 1.4 : 1);
+                    rotulo(n, mx + 10, yy + 10, k === elegido ? '#fff' : 'rgba(203,213,225,.85)', 'left', 8, 600);
+                });
+                ctx.globalAlpha = alfa;
+                const qs = Math.min(mw * .55, zona.h - 128), qx = mx + (mw - qs) / 2, qy = zona.y + 84;
+                if (p > .24 && qs > 30) {
+                    const aparece = entre(p, .24, .44), cel = qs / QR_N;
+                    caja2(qx - 5, qy - 5, qs + 10, qs + 10, 5, '#f8fafc', null);
+                    ctx.fillStyle = '#0b1220';
+                    for (let i = 0; i < QR_N; i++) for (let j = 0; j < QR_N; j++) if (QR[i][j] && (i + j) / (2 * QR_N) < aparece) ctx.fillRect(qx + i * cel, qy + j * cel, cel + .3, cel + .3);
+                    if (p > .44 && p < .62) { const sy = qy + qs * ((t * 1.4) % 1); ctx.strokeStyle = AZUL; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(qx - 6, sy); ctx.lineTo(qx + qs + 6, sy); ctx.stroke(); }
+                }
+                if (p > .7) {
+                    ctx.globalAlpha = alfa * entre(p, .7, .78);
+                    const fy = zona.y + zona.h - 24;
+                    paloma(mx + 5, fy, 4); rotulo(L.ticket, mx + 14, fy, VERDE, 'left', 8, 600);
+                    rotulo(dinero(TOTAL_CUENTA) + ' · SPEI', mx + 14, fy + 13, 'rgba(148,163,184,.85)', 'left', 8);
+                }
+            } else if (e === 3) {
+                // 4. INVENTARIO: cada venta descuenta insumos; el camarón cruza el mínimo y sale la orden de compra
+                const niveles = [[.8, .62], [.7, .55], [.42, .16], [.6, .5]];
+                const bx = zona.x + 8, bw = zona.w - 16, fila = Math.min(50, (zona.h - 50) / 4);
+                const baja = suave(entre(p, .1, .62)), minimo = .25;
+                L.insumos.forEach(([n, u], k) => {
+                    const yy = zona.y + 14 + k * fila, [a, b] = niveles[k], nivel = a + (b - a) * baja, bajo = nivel < minimo;
+                    rotulo(n, bx, yy, '#e2e8f0', 'left', 9, 600);
+                    rotulo(`${Math.round(nivel * (k ? 20 : 400))} ${u}`, bx + bw, yy, bajo ? ROJO : 'rgba(148,163,184,.9)', 'right', 8, 700);
+                    const by = yy + 9, bh = 7;
+                    caja2(bx, by, bw, bh, 3, 'rgba(148,163,184,.14)', null);
+                    const g = ctx.createLinearGradient(bx, 0, bx + bw, 0); g.addColorStop(0, bajo ? '#b91c1c' : REY); g.addColorStop(1, bajo ? ROJO : AZUL);
+                    caja2(bx, by, bw * nivel, bh, 3, g, null);
+                    ctx.fillStyle = AMBAR; ctx.fillRect(bx + bw * minimo, by - 3, 1.5, bh + 6);
+                    if (k === 3) rotulo(L.minimo, bx + bw * minimo, by + bh + 8, AMBAR, 'center', 7, 700);
+                    if (bajo) { ctx.strokeStyle = `rgba(248,113,113,${.4 + Math.sin(t * 8) * .3})`; ctx.lineWidth = 1.5; redondo(bx - 4, yy - 9, bw + 8, fila - 4, 6); ctx.stroke(); }
+                });
+                if (p < .62) for (let k = 0; k < 3; k++) { const q = (t * .9 + k / 3) % 1; ctx.globalAlpha = alfa * (1 - q) * .9; rotulo('−1', bx + bw * (.5 + k * .14), zona.y + 14 + k * fila - q * 14, CLARO, 'center', 8, 700); }
+                ctx.globalAlpha = alfa;
+                const oc = entre(p, .7, .78);
+                if (oc) {
+                    ctx.globalAlpha = alfa * oc;
+                    const oy = zona.y + zona.h - 28 + (1 - oc) * 10;
+                    caja2(bx, oy, bw, 24, 6, 'rgba(251,191,36,.12)', AMBAR);
+                    rotulo('🛒 ' + L.orden, bx + 10, oy + 12, AMBAR, 'left', 8, 700);
+                    if (p > .84) paloma(bx + bw - 12, oy + 12, 4);
+                }
+            } else {
+                // 5. CORTE: ventas por hora, la hora pico, el corte que cuadra y la factura
+                const gw = zona.w * .58, gx = zona.x + 6, gy = zona.y + 26, gh = zona.h - 50;
+                rotulo(L.ventas, gx, zona.y + 9, 'rgba(203,213,225,.9)', 'left', 9, 600);
+                const horas = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+                const val = horas.map((h, k) => .18 + Math.exp(-((h - 14.3) ** 2) / 4) * .7 + Math.exp(-((h - 20) ** 2) / 2) * .35 + azarDe(k) * .08);
+                const max = Math.max(...val), bw = gw / horas.length;
+                horas.forEach((h, k) => {
+                    const crece = sale(entre(p, .04 + k * .025, .2 + k * .025)), alto = gh * val[k] / max * crece, pico = h === 14;
+                    if (alto > .5) { const g = ctx.createLinearGradient(0, gy + gh - alto, 0, gy + gh); g.addColorStop(0, pico ? CLARO : AZUL); g.addColorStop(1, REY); caja2(gx + k * bw + 1.5, gy + gh - alto, bw - 3, alto, 2, g, null); }
+                    if (k % 3 === 0) rotulo(`${h}`, gx + k * bw + bw / 2, gy + gh + 9, 'rgba(148,163,184,.75)', 'center', 7);
+                });
+                if (p > .5) { ctx.globalAlpha = alfa * entre(p, .5, .56); rotulo(L.pico, gx + 6 * bw + bw / 2, gy - 8 + gh * (1 - val[6] / max), CLARO, 'center', 8, 700); }
+                ctx.globalAlpha = alfa;
+                const total = 18640 * sale(entre(p, .1, .55));
+                const cx = zona.x + gw + 16, cw = zona.w - gw - 16;
+                caja2(cx, zona.y + 2, cw, zona.h - 4, 8, '#0f172a', 'rgba(90,138,246,.35)');
+                rotulo(L.corte, cx + 9, zona.y + 16, '#e2e8f0', 'left', 9, 700);
+                [[L.metodos[0], .38], [L.metodos[1], .41], [L.metodos[2], .21]].forEach(([n, f], k) => { const yy = zona.y + 38 + k * 18; rotulo(n, cx + 9, yy, 'rgba(148,163,184,.9)', 'left', 8); rotulo(dinero(total * f), cx + cw - 9, yy, 'rgba(226,232,240,.92)', 'right', 8); });
+                ctx.fillStyle = 'rgba(148,163,184,.25)'; ctx.fillRect(cx + 9, zona.y + 38 + 3 * 18 - 6, cw - 18, 1);
+                rotulo(dinero(total), cx + cw - 9, zona.y + 38 + 3 * 18 + 7, '#fff', 'right', 12, 800);
+                if (p > .64) { ctx.globalAlpha = alfa * entre(p, .64, .7); caja2(cx + 9, zona.y + zona.h - 50, cw - 18, 18, 9, 'rgba(52,211,153,.14)', VERDE); rotulo(L.cuadra, cx + cw / 2, zona.y + zona.h - 41, VERDE, 'center', 8, 800); }
+                if (p > .76) { ctx.globalAlpha = alfa * entre(p, .76, .82); paloma(cx + 14, zona.y + zona.h - 20, 3.5, CLARO); rotulo(L.factura, cx + 22, zona.y + zona.h - 20, CLARO, 'left', cw < 150 ? 7 : 8, 600); }
+            }
+            ctx.restore();
+        };
+        const estatico = !mueve();
+        const fijo = () => { antes = null; if (!caja.dataset.foco) reloj = INICIO[2] + DUR[2] * .8; dibujar(0); };
+        if (estatico) { fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('[data-foco]').forEach(el => {
+            el.addEventListener('pointerenter', () => { caja.dataset.foco = el.dataset.foco; if (estatico) dibujar(0); });
+            el.addEventListener('pointerleave', () => { if (caja.dataset.foco === el.dataset.foco) delete caja.dataset.foco; if (estatico) fijo(); });
+        });
+    });
+
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
         if (!escena || ligero()) return caja.remove();

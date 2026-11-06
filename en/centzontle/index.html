@@ -44,7 +44,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=8.5">
+    <link rel="stylesheet" href="../../css/styles.css?v=8.6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="theme-centzontle">
@@ -125,15 +125,24 @@
     </section>
 
     <section id="funciones" class="section-block">
-        <header class="block-head">
+        <header class="block-head block-head-pieza">
             <div>
                 <p class="eyebrow eyebrow-blue">Built from departments</p>
                 <h2 class="block-title">Turn on what you use. Nothing more.</h2>
                 <p class="block-lead">Each feature is a department you switch on in Settings. Your team sees only what applies to them, by role.</p>
             </div>
+            <div class="ascii-pieza proceso proceso-tema" data-centzontle-proceso aria-hidden="true">
+                <ol class="proceso-pasos">
+                    <li>Order</li>
+                    <li>Kitchen</li>
+                    <li>Checkout</li>
+                    <li>Inventory</li>
+                    <li>Cash-up</li>
+                </ol>
+            </div>
         </header>
         <div class="feature-cols">
-            <div class="feature-col">
+            <div class="feature-col" data-foco="venta">
                 <h3><i class="fas fa-cash-register" aria-hidden="true"></i>Sales</h3>
                 <ul>
                     <li>Checkout with cash, card or QR/SPEI</li>
@@ -143,7 +152,7 @@
                     <li>Cash closings, cash in and cash out</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="inventario">
                 <h3><i class="fas fa-boxes-stacked" aria-hidden="true"></i>Inventory</h3>
                 <ul>
                     <li>Products and inventory</li>
@@ -153,7 +162,7 @@
                     <li>Recipes and costing; size and color variants</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="clientes">
                 <h3><i class="fas fa-user-group" aria-hidden="true"></i>Customers</h3>
                 <ul>
                     <li>Customers and loyalty program</li>
@@ -163,7 +172,7 @@
                     <li>Digital tickets</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="gestion">
                 <h3><i class="fas fa-chart-line" aria-hidden="true"></i>Management</h3>
                 <ul>
                     <li>Dashboards, reports and executive summaries</li>
@@ -269,7 +278,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=8.5"></script>
-    <script src="../../script/efectos.js?v=8.5"></script>
+    <script src="../../script/scripts.js?v=8.6"></script>
+    <script src="../../script/efectos.js?v=8.6"></script>
 </body>
 </html>

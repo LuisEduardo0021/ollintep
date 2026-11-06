@@ -748,5 +748,9 @@
   "Datos": "Data",
   "Interfaz": "Interface",
   "Pruebas": "Testing",
-  "Despliegue": "Deployment"
+  "Despliegue": "Deployment",
+  "Comanda": "Order",
+  "Cocina": "Kitchen",
+  "Cobro": "Checkout",
+  "Corte": "Cash-up"
 }

@@ -50,7 +50,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/styles.css?v=8.5">
+    <link rel="stylesheet" href="../css/styles.css?v=8.6">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -136,15 +136,24 @@
 
     <!-- Funciones por departamento -->
     <section id="funciones" class="section-block">
-        <header class="block-head">
+        <header class="block-head block-head-pieza">
             <div>
                 <p class="eyebrow eyebrow-blue">Se arma por departamentos</p>
                 <h2 class="block-title">Enciende lo que usas. Nada más.</h2>
                 <p class="block-lead">Cada función es un departamento que se activa en Configuración. Tu equipo ve solo lo que le toca, según su rol.</p>
             </div>
+            <div class="ascii-pieza proceso proceso-tema" data-centzontle-proceso aria-hidden="true">
+                <ol class="proceso-pasos">
+                    <li>Comanda</li>
+                    <li>Cocina</li>
+                    <li>Cobro</li>
+                    <li>Inventario</li>
+                    <li>Corte</li>
+                </ol>
+            </div>
         </header>
         <div class="feature-cols">
-            <div class="feature-col">
+            <div class="feature-col" data-foco="venta">
                 <h3><i class="fas fa-cash-register" aria-hidden="true"></i>Venta</h3>
                 <ul>
                     <li>Caja y cobro en efectivo, tarjeta o QR/SPEI</li>
@@ -154,7 +163,7 @@
                     <li>Cortes de caja, entradas y salidas de efectivo</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="inventario">
                 <h3><i class="fas fa-boxes-stacked" aria-hidden="true"></i>Inventario</h3>
                 <ul>
                     <li>Productos e inventario</li>
@@ -164,7 +173,7 @@
                     <li>Recetas y costeo; variantes de talla y color</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="clientes">
                 <h3><i class="fas fa-user-group" aria-hidden="true"></i>Clientes</h3>
                 <ul>
                     <li>Clientes y programa de fidelización</li>
@@ -174,7 +183,7 @@
                     <li>Tickets digitales</li>
                 </ul>
             </div>
-            <div class="feature-col">
+            <div class="feature-col" data-foco="gestion">
                 <h3><i class="fas fa-chart-line" aria-hidden="true"></i>Gestión</h3>
                 <ul>
                     <li>Tableros, reportes y resúmenes ejecutivos</li>
@@ -284,7 +293,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=8.5"></script>
-    <script src="../script/efectos.js?v=8.5"></script>
+    <script src="../script/scripts.js?v=8.6"></script>
+    <script src="../script/efectos.js?v=8.6"></script>
 </body>
 </html>
