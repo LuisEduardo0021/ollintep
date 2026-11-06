@@ -757,5 +757,9 @@
   "Revisión": "Review",
   "Votación": "Vote",
   "Firma": "Signature",
-  "Archivo": "Archive"
+  "Archivo": "Archive",
+  "Sensores": "Sensors",
+  "Satélite": "Satellite",
+  "Riego": "Irrigation",
+  "Ganado": "Livestock"
 }
