@@ -2312,6 +2312,13 @@ button:focus-visible {
   gap: 2.5rem;
 }
 
+@media (min-width: 1200px) {
+  .footer-grid:has(> :nth-child(5)) {
+    grid-template-columns: 1.5fr repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
 .footer-brand p {
   margin: 1rem 0 0;
   max-width: 32ch;
@@ -3266,6 +3273,14 @@ body.theme-restaurant .m3-btn-filled:hover {
 
 .nav-pill.is-on {
   opacity: 1;
+}
+
+/* Con Diseño y Redes el menú es más largo: que nunca parta un enlace en dos líneas */
+@media (min-width: 869px) {
+  .nav-links a { white-space: nowrap; }
+}
+@media (min-width: 869px) and (max-width: 1180px) {
+  .nav-links a { padding: 0.5rem 0.6rem; font-size: 0.8rem; letter-spacing: 0; }
 }
 
 @media (min-width: 869px) {

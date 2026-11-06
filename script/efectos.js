@@ -400,6 +400,123 @@
             const barrido = (t * .22) % 2.2;
             if (barrido <= 1) { const j = Y(barrido); for (let i = X(0) + 1; i < X(1); i++) v[j * col + i] = Math.max(v[j * col + i], .4); }
         },
+        // Portada, diseño: un logo que se traza con la pluma, nodo a nodo, con sus manejadores; al cerrarse se rellena y vuelve a empezar
+        trazo: (v, col, fil, t) => {
+            const ASPECTO = 1.75;
+            const alto = fil - 2, ancho = Math.min(col - 2, Math.round(alto * ASPECTO));
+            const x0 = Math.floor((col - ancho) / 2), y0 = 1;
+            const X = (u) => x0 + u * ancho, Y = (w) => y0 + w * alto;
+            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
+            const linea = (a, b, c, d, n, paso = 1) => {
+                const k = Math.max(Math.abs(X(c) - X(a)), Math.abs(Y(d) - Y(b)), 1);
+                for (let q = 0; q <= k; q += paso) pon(X(a + (c - a) * q / k), Y(b + (d - b) * q / k), n);
+            };
+            // Segmentos cúbicos: [inicio, control 1, control 2, fin], en una gota con un corte en diagonal
+            const SEG = [
+                [[.5, .04], [.8, .04], [.97, .42], [.9, .62]],
+                [[.9, .62], [.82, .9], [.6, .97], [.45, .95]],
+                [[.45, .95], [.2, .92], [.04, .7], [.1, .5]],
+                [[.1, .5], [.16, .24], [.3, .04], [.5, .04]],
+            ];
+            const bez = (g, q) => { const m = 1 - q; return [0, 1].map(e => m * m * m * g[0][e] + 3 * m * m * q * g[1][e] + 3 * m * q * q * g[2][e] + q * q * q * g[3][e]); };
+            const N = 90, ciclo = 9, f = (t % ciclo) / ciclo;            // 0-.62 trazo, .62-.85 relleno, después pausa
+            const avance = Math.min(1, f / .62) * SEG.length;
+            // Relleno con trama que crece desde abajo cuando la figura ya está cerrada
+            if (f > .62) {
+                const nivel = Math.min(1, (f - .62) / .2);
+                const pol = SEG.flatMap(g => Array.from({ length: 24 }, (_, q) => bez(g, q / 24)));
+                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
+                    const u = (i - x0) / ancho, w = (j - y0) / alto;
+                    if (w < 1 - nivel * 1.05) continue;
+                    let dentro = false;
+                    for (let a = 0, b = pol.length - 1; a < pol.length; b = a++) {
+                        if ((pol[a][1] > w) !== (pol[b][1] > w) && u < (pol[b][0] - pol[a][0]) * (w - pol[a][1]) / (pol[b][1] - pol[a][1]) + pol[a][0]) dentro = !dentro;
+                    }
+                    if (dentro) pon(i, j, ((i + j) % 3 === 0) ? .5 : .22);
+                }
+                // El corte en diagonal que convierte la gota en marca
+                for (let q = 0; q <= 1; q += .01) { const u = .3 + .44 * q, w = .78 - .48 * q; const i = Math.round(X(u)), j = Math.round(Y(w)); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = .02; }
+            }
+            // Guía tenue de lo que falta y trazo firme de lo hecho
+            SEG.forEach((g, k) => {
+                for (let q = 0; q <= N; q++) {
+                    const [u, w] = bez(g, q / N);
+                    const hecho = k + q / N <= avance;
+                    if (hecho) pon(X(u), Y(w), 1); else if (q % 3 === 0) pon(X(u), Y(w), .13);
+                }
+            });
+            // Nodos: los ya puestos como cuadros; en el segmento activo, sus manejadores
+            const activo = Math.min(SEG.length - 1, Math.floor(avance));
+            SEG.forEach((g, k) => {
+                if (k > avance) return;
+                const [u, w] = g[0];
+                for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) pon(X(u) + di, Y(w) + dj, di || dj ? .85 : .2);
+            });
+            if (f < .62) {
+                const g = SEG[activo];
+                linea(g[0][0], g[0][1], g[1][0], g[1][1], .4, 2);
+                linea(g[3][0], g[3][1], g[2][0], g[2][1], .4, 2);
+                [g[1], g[2]].forEach(([u, w]) => { pon(X(u), Y(w), 1); pon(X(u) + 1, Y(w), .7); pon(X(u) - 1, Y(w), .7); });
+                // La pluma en la punta del trazo
+                const [pu, pw] = bez(g, avance - activo);
+                for (let d = 0; d < 6; d++) pon(X(pu) + d * 1.4 + 1, Y(pw) - d * .8 - 1, d < 2 ? 1 : .65);
+            }
+        },
+        // Portada, redes: router, switch y tres VLAN; los paquetes viajan sin cruzar de una VLAN a otra
+        red: (v, col, fil, t) => {
+            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
+            const P = (u, w) => [u * (col - 1), w * (fil - 1)];
+            const tramo = (a, b, n, paso = 1) => {
+                const k = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]), 1);
+                for (let q = 0; q <= k; q += paso) pon(a[0] + (b[0] - a[0]) * q / k, a[1] + (b[1] - a[1]) * q / k, n);
+            };
+            const caja = (c, an, al, n, borde = n) => {
+                for (let i = -an; i <= an; i++) for (let j = -al; j <= al; j++) pon(c[0] + i, c[1] + j, Math.abs(i) === an || Math.abs(j) === al ? borde : n);
+            };
+            const nube = P(.5, .06), router = P(.5, .24), sw = P(.5, .46);
+            const grupos = [.17, .5, .83].map((u, g) => ({ u, hosts: [-.1, 0, .1].map(d => P(u + d, .86)), g }));
+            // Enlaces: la subida a internet punteada, el resto continuo
+            tramo(nube, router, .35, 2);
+            tramo(router, sw, .5);
+            grupos.forEach(G => {
+                const bajada = P(G.u, .66);
+                tramo(sw, bajada, .45);
+                G.hosts.forEach(h => { tramo(bajada, [h[0], bajada[1]], .45); tramo([h[0], bajada[1]], h, .45); });
+                // Recuadro punteado de la VLAN
+                const a = P(G.u - .15, .6), b = P(G.u + .15, .97);
+                for (let i = a[0]; i <= b[0]; i += 2) { pon(i, a[1], .3); pon(i, b[1], .3); }
+                for (let j = a[1]; j <= b[1]; j += 2) { pon(a[0], j, .3); pon(b[0], j, .3); }
+            });
+            // Equipos: el switch con sus puertos parpadeando
+            caja(nube, 4, 1, .25, .6);
+            caja(router, 3, 1, .3, .9);
+            caja(sw, Math.round(col * .2), 1, .2, .9);
+            for (let k = 0; k < 12; k++) pon(sw[0] - col * .18 + k * col * .033, sw[1], azarDe(k * 5 + Math.floor(t * 6)) > .5 ? 1 : .35);
+            grupos.forEach(G => G.hosts.forEach((h, k) => caja(h, 1, 1, azarDe(G.g * 9 + k + Math.floor(t * 2)) > .7 ? .9 : .4, .75)));
+            // Paquetes: cada uno hace host → switch → host de su misma VLAN; de vez en cuando uno sube al router
+            const ruta = (pts, q) => {
+                const largos = pts.slice(1).map((p, k) => Math.hypot(p[0] - pts[k][0], p[1] - pts[k][1]));
+                let d = q * largos.reduce((a, b) => a + b, 0);
+                for (let k = 0; k < largos.length; k++) {
+                    if (d <= largos[k]) { const r = d / largos[k]; return [pts[k][0] + (pts[k + 1][0] - pts[k][0]) * r, pts[k][1] + (pts[k + 1][1] - pts[k][1]) * r]; }
+                    d -= largos[k];
+                }
+                return pts[pts.length - 1];
+            };
+            for (let n = 0; n < 9; n++) {
+                const G = grupos[n % 3], vuelta = Math.floor(t * .35 + azarDe(n) * 7);
+                const q = (t * .35 + azarDe(n) * 7) % 1;
+                const de = G.hosts[Math.floor(azarDe(n * 3 + vuelta) * 3)];
+                const sube = azarDe(n * 7 + vuelta) > .7;
+                const a = G.hosts[Math.floor(azarDe(n * 5 + vuelta) * 3)];
+                const bajada = P(G.u, .66);
+                const pts = sube
+                    ? [de, [de[0], bajada[1]], bajada, sw, router, nube]
+                    : [de, [de[0], bajada[1]], bajada, sw, bajada, [a[0], bajada[1]], a];
+                const [x, y] = ruta(pts, q);
+                pon(x, y, 1); pon(x + 1, y, .8); pon(x - 1, y, .8);
+            }
+        },
         // Agro-Cria: el agua de riego, con superficie y reflejos
         olas: (v, col, fil, t) => {
             for (let i = 0; i < col; i++) {
