@@ -765,5 +765,15 @@
   "Conexión": "Connection",
   "Batería": "Battery",
   "Pantalla": "Display",
-  "Informe": "Report"
+  "Informe": "Report",
+  "ActaPro · Gestión de actas y trámites": "ActaPro · Minutes and procedure management",
+  "ActaPro · Gestión de actas y trámites | Ollin-Tep": "ActaPro · Minutes and procedure management | Ollin-Tep",
+  "Agro-Cria Pro · Software agropecuario y de riego": "Agro-Cria Pro · Farm and irrigation software",
+  "Agro-Cria Pro · Software agropecuario y de riego | Ollin-Tep": "Agro-Cria Pro · Farm and irrigation software | Ollin-Tep",
+  "Diagmind · Diagnóstico de celulares Android": "Diagmind · Android phone diagnostics",
+  "Diagmind · Diagnóstico de celulares Android | Ollin-Tep": "Diagmind · Android phone diagnostics | Ollin-Tep",
+  "Ollin-Tep Software, de Tepic, Nayarit: la suite CroHub de apps de escritorio, plataformas a medida, diseño de marca, redes y servicio técnico.": "Ollin-Tep Software, from Tepic, Nayarit: the CroHub desktop app suite, custom platforms, brand design, networks and tech support.",
+  "ActaPro, de Ollin-Tep: captura actas, da seguimiento a pendientes y audita trámites administrativos desde un solo panel en la nube.": "ActaPro, by Ollin-Tep: record minutes, track pending items and audit administrative procedures from a single cloud dashboard.",
+  "Agro-Cria Pro, de Ollin-Tep: cultivos, ganadería, invernaderos, balance hídrico FAO-56 y telemetría IoT en una sola plataforma.": "Agro-Cria Pro, by Ollin-Tep: crops, livestock, greenhouses, FAO-56 water balance and IoT telemetry in a single platform.",
+  "Diagmind, de Ollin-Tep: diagnóstico profesional de celulares Android por ADB, sin root, con telemetría de hardware e IA local.": "Diagmind, by Ollin-Tep: professional Android phone diagnostics over ADB, no root, with hardware telemetry and local AI."
 }
