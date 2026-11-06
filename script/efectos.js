@@ -530,116 +530,6 @@
                 }
             }
         },
-        // Portada, diseño: un logo que se traza con la pluma, nodo a nodo, con sus manejadores; al cerrarse se rellena y vuelve a empezar
-        trazo: (v, col, fil, t, foco) => {
-            const ASPECTO = 1.75;
-            const alto = fil - 2, ancho = Math.min(col - 2, Math.round(alto * ASPECTO));
-            const x0 = Math.floor((col - ancho) / 2), y0 = 1;
-            const X = (u) => x0 + u * ancho, Y = (w) => y0 + w * alto;
-            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
-            const linea = (a, b, c, d, n, paso = 1) => {
-                const k = Math.max(Math.abs(X(c) - X(a)), Math.abs(Y(d) - Y(b)), 1);
-                for (let q = 0; q <= k; q += paso) pon(X(a + (c - a) * q / k), Y(b + (d - b) * q / k), n);
-            };
-            // Segmentos cúbicos: [inicio, control 1, control 2, fin], en una gota con un corte en diagonal
-            const SEG = [
-                [[.5, .04], [.8, .04], [.97, .42], [.9, .62]],
-                [[.9, .62], [.82, .9], [.6, .97], [.45, .95]],
-                [[.45, .95], [.2, .92], [.04, .7], [.1, .5]],
-                [[.1, .5], [.16, .24], [.3, .04], [.5, .04]],
-            ];
-            const bez = (g, q) => { const m = 1 - q; return [0, 1].map(e => m * m * m * g[0][e] + 3 * m * m * q * g[1][e] + 3 * m * q * q * g[2][e] + q * q * q * g[3][e]); };
-            const N = 90, ciclo = 9, f = (t % ciclo) / ciclo;            // 0-.62 trazo, .62-.85 relleno, después pausa
-            const avance = Math.min(1, f / .62) * SEG.length;
-            // Relleno con trama que crece desde abajo cuando la figura ya está cerrada
-            if (f > .62) {
-                const nivel = Math.min(1, (f - .62) / .2);
-                const pol = SEG.flatMap(g => Array.from({ length: 24 }, (_, q) => bez(g, q / 24)));
-                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
-                    const u = (i - x0) / ancho, w = (j - y0) / alto;
-                    if (w < 1 - nivel * 1.05) continue;
-                    let dentro = false;
-                    for (let a = 0, b = pol.length - 1; a < pol.length; b = a++) {
-                        if ((pol[a][1] > w) !== (pol[b][1] > w) && u < (pol[b][0] - pol[a][0]) * (w - pol[a][1]) / (pol[b][1] - pol[a][1]) + pol[a][0]) dentro = !dentro;
-                    }
-                    if (dentro) pon(i, j, ((i + j) % 3 === 0) ? .5 : .22);
-                }
-                // El corte en diagonal que convierte la gota en marca
-                for (let q = 0; q <= 1; q += .01) { const u = .3 + .44 * q, w = .78 - .48 * q; const i = Math.round(X(u)), j = Math.round(Y(w)); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = .02; }
-            }
-            // Foco: el servicio bajo el cursor se dibuja en la escena
-            const k = foco.k;
-            if (foco.n === 'logotipos') {
-                // Construcción: círculos guía y todos los manejadores a la vista
-                [[.5, .5, .46], [.62, .38, .28], [.36, .66, .2]].forEach(([u, w, r]) => {
-                    for (let a = 0; a < 6.283; a += .035) pon(X(u + Math.cos(a) * r * alto / ancho * ASPECTO * .55), Y(w + Math.sin(a) * r), .3 * k);
-                });
-                linea(0, 1, 1, 0, .2 * k, 3); linea(0, .5, 1, .5, .14 * k, 4); linea(.5, 0, .5, 1, .14 * k, 4);
-                SEG.forEach(g => {
-                    linea(g[0][0], g[0][1], g[1][0], g[1][1], .45 * k, 2); linea(g[3][0], g[3][1], g[2][0], g[2][1], .45 * k, 2);
-                    [g[1], g[2]].forEach(([u, w]) => pon(X(u), Y(w), k));
-                });
-            } else if (foco.n === 'identidad' || foco.n === 'publicidad') {
-                const pol = SEG.flatMap(g => Array.from({ length: 24 }, (_, q) => bez(g, q / 24)));
-                const escala = foco.n === 'publicidad' ? 1 + Math.sin(t * 5) * .04 * k : 1;
-                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
-                    const u = .5 + ((i - x0) / ancho - .5) / escala, w = .5 + ((j - y0) / alto - .5) / escala;
-                    let dentro = false;
-                    for (let a = 0, b = pol.length - 1; a < pol.length; b = a++) {
-                        if ((pol[a][1] > w) !== (pol[b][1] > w) && u < (pol[b][0] - pol[a][0]) * (w - pol[a][1]) / (pol[b][1] - pol[a][1]) + pol[a][0]) dentro = !dentro;
-                    }
-                    // Identidad: franjas de la paleta; publicidad: la marca llena que late
-                    if (dentro) pon(i, j, (foco.n === 'identidad' ? [.25, .45, .65, .85][Math.floor(u * 4 + t * .6) & 3] : .6) * k);
-                }
-                if (foco.n === 'publicidad') {
-                    // Rayos que salen de la marca, como en un cartel
-                    // Rayos continuos con un pulso de luz que sale hacia fuera
-                    const pulso = .54 + ((t * .7) % 1) * .4;
-                    for (let r = 0; r < 14; r++) {
-                        const a = r / 14 * 6.283 + .11;
-                        for (let d = .54; d <= .95; d += .006) {
-                            const n = Math.max(.25, 1 - Math.abs(d - pulso) * 12);
-                            pon(X(.5 + Math.cos(a) * d * alto * ASPECTO / ancho), Y(.5 + Math.sin(a) * d), n * k);
-                        }
-                    }
-                }
-            } else if (foco.n === 'interfaces') {
-                // Una ventana de app alrededor: barra con tres botones, menú lateral y tarjetas
-                const m = (a, b, c, d, n) => { linea(a, b, c, b, n); linea(a, d, c, d, n); linea(a, b, a, d, n); linea(c, b, c, d, n); };
-                const xa = -.22, xb = 1.22;
-                const U = (q) => xa + (xb - xa) * q;
-                m(U(0), -.02, U(1), 1.02, .7 * k);
-                linea(U(0), .1, U(1), .1, .5 * k);
-                [.02, .04, .06].forEach(q => pon(X(U(q)), Y(.05), k));
-                linea(U(.18), .1, U(.18), 1.02, .4 * k);
-                for (let r = 0; r < 6; r++) linea(U(.03), .2 + r * .12, U(.03 + .1 * (.6 + azarDe(r) * .4)), .2 + r * .12, .35 * k, 1);
-                m(U(.82), .2, U(.97), .45, .4 * k); m(U(.82), .55, U(.97), .9, .4 * k);
-            }
-            // Guía tenue de lo que falta y trazo firme de lo hecho
-            SEG.forEach((g, k) => {
-                for (let q = 0; q <= N; q++) {
-                    const [u, w] = bez(g, q / N);
-                    const hecho = k + q / N <= avance;
-                    if (hecho) pon(X(u), Y(w), 1); else if (q % 3 === 0) pon(X(u), Y(w), .13);
-                }
-            });
-            // Nodos: los ya puestos como cuadros; en el segmento activo, sus manejadores
-            const activo = Math.min(SEG.length - 1, Math.floor(avance));
-            SEG.forEach((g, k) => {
-                if (k > avance) return;
-                const [u, w] = g[0];
-                for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) pon(X(u) + di, Y(w) + dj, di || dj ? .85 : .2);
-            });
-            if (f < .62) {
-                const g = SEG[activo];
-                linea(g[0][0], g[0][1], g[1][0], g[1][1], .4, 2);
-                linea(g[3][0], g[3][1], g[2][0], g[2][1], .4, 2);
-                [g[1], g[2]].forEach(([u, w]) => { pon(X(u), Y(w), 1); pon(X(u) + 1, Y(w), .7); pon(X(u) - 1, Y(w), .7); });
-                // La pluma en la punta del trazo
-                const [pu, pw] = bez(g, avance - activo);
-                for (let d = 0; d < 6; d++) pon(X(pu) + d * 1.4 + 1, Y(pw) - d * .8 - 1, d < 2 ? 1 : .65);
-            }
-        },
         // Portada, redes: router, switch y tres VLAN; los paquetes viajan sin cruzar de una VLAN a otra
         red: (v, col, fil, t, foco) => {
             const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
@@ -804,9 +694,351 @@
             }
         },
     };
+    // --- PROCESO DE UN LOGO (Diseño): boceto en papel → digital → ASCII → vector → impresión y mockups.
+    // Usa el logo real de Ollin-Tep. Al pasar el cursor por un servicio, la escena salta a la etapa que le toca.
+    document.querySelectorAll('[data-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = document.documentElement.lang === 'en';
+        const FORMAS = [
+            { d: 'M0 222.289V95.5572L126.054 0H180.949V225L128.087 222.289H0Z', color: '#16284F', claro: '#3d5fae' },
+            { d: 'M179.593 0C210.659 0 235.843 25.184 235.843 56.25C235.843 87.0898 211.025 112.132 180.271 112.495V170.105H123.343V56.25C123.343 25.184 148.527 0 179.593 0Z', color: '#1A56DB', claro: '#1A56DB' },
+            { d: 'M123.343 168.75A56.25 56.25 0 1 0 235.843 168.75A56.25 56.25 0 1 0 123.343 168.75Z', color: '#0B63F6', claro: '#0B63F6' },
+            { d: 'M0 182.053C4.50337 204.596 24.2991 221.619 48.1133 221.848L48.1172 221.852H0V182.053Z', color: '#1A56DB', claro: '#1A56DB' },
+        ];
+        // Anclas y manijas a partir del trazado (M, L, H, V, C, A)
+        FORMAS.forEach(f => {
+            f.ruta = new Path2D(f.d);
+            f.anclas = []; f.manijas = [];
+            const tok = f.d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g);
+            let i = 0, x = 0, y = 0, cmd = '';
+            const n = () => +tok[i++];
+            while (i < tok.length) {
+                if (/[A-Za-z]/.test(tok[i])) cmd = tok[i++];
+                if (cmd === 'Z') continue;
+                if (cmd === 'M' || cmd === 'L') { x = n(); y = n(); }
+                else if (cmd === 'H') x = n();
+                else if (cmd === 'V') y = n();
+                else if (cmd === 'C') { const a = [n(), n()], b = [n(), n()]; f.manijas.push([x, y, ...a]); x = n(); y = n(); f.manijas.push([x, y, ...b]); }
+                else if (cmd === 'A') { i += 5; x = n(); y = n(); }
+                f.anclas.push([x, y]);
+            }
+        });
+        // Muestras del contorno para el boceto a lápiz
+        const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+        svg.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden';
+        document.body.append(svg);
+        FORMAS.forEach(f => {
+            const p = document.createElementNS(ns, 'path');
+            p.setAttribute('d', f.d); svg.append(p);
+            const L = p.getTotalLength();
+            f.pts = Array.from({ length: 141 }, (_, k) => { const q = p.getPointAtLength(L * k / 140); return [q.x, q.y]; });
+        });
+        svg.remove();
+        const rasters = new Map();
+        const raster = (an, al) => {
+            const clave = an + 'x' + al;
+            if (!rasters.has(clave)) {
+                const o = document.createElement('canvas'); o.width = an; o.height = al;
+                const oc = o.getContext('2d', { willReadFrequently: true });
+                oc.scale(an / 236, al / 225);
+                FORMAS.forEach(f => { oc.fillStyle = f.color; oc.fill(f.ruta); });
+                rasters.set(clave, oc.getImageData(0, 0, an, al).data);
+            }
+            return rasters.get(clave);
+        };
+        const DUR = [4.4, 3.4, 3.8, 4.4, 5.2], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { logotipos: 3, identidad: 4, publicidad: 4, interfaces: 1 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const logo = (x, y, esc, alfa = 1, claro = false) => {
+            ctx.save(); ctx.globalAlpha *= alfa; ctx.translate(x, y); ctx.scale(esc, esc);
+            FORMAS.forEach(f => { ctx.fillStyle = claro ? f.claro : f.color; ctx.fill(f.ruta); });
+            ctx.restore();
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const ventana = (a) => {
+            const vw = W * .9, vh = H * .86, vx = (W - vw) / 2, vy = H * .03;
+            ctx.save(); ctx.globalAlpha = a;
+            redondo(vx, vy, vw, vh, 12); ctx.fillStyle = '#0d1424'; ctx.fill();
+            ctx.strokeStyle = 'rgba(148,163,184,.25)'; ctx.lineWidth = 1; ctx.stroke();
+            ctx.fillStyle = 'rgba(255,255,255,.04)'; ctx.fillRect(vx, vy + 22, vw, 1);
+            ['#ff5f57', '#febc2e', '#28c840'].forEach((col, k) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(vx + 14 + k * 12, vy + 11, 3.5, 0, 7); ctx.fill(); });
+            ctx.fillStyle = 'rgba(203,213,225,.55)'; ctx.font = '600 9px Figtree, sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('logo.crovect', vx + vw / 2, vy + 14);
+            for (let k = 0; k < 5; k++) { redondo(vx + 8, vy + 34 + k * 20, 12, 12, 3); ctx.fillStyle = k === 1 ? '#6ea2ff' : 'rgba(148,163,184,.22)'; ctx.fill(); }
+            ctx.strokeStyle = 'rgba(148,163,184,.25)';
+            for (let x = vx + 32; x < vx + vw - 6; x += 10) { ctx.beginPath(); ctx.moveTo(x, vy + 23); ctx.lineTo(x, vy + 23 + ((x - vx) % 50 < 10 ? 6 : 3)); ctx.stroke(); }
+            ctx.restore();
+            return { vx, vy, vw, vh };
+        };
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .88;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            // aparición de la etapa y salida hacia la siguiente
+            const ent = sale(entre(p, 0, .12)), sal = 1 - entre(p, .9, 1);
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            const L = Math.min(H * .56, W * .46), s = L / 236;
+            const ox = W / 2 - L / 2, oy = H * .45 - 225 * s / 2;
+            const X = (u) => ox + u * s, Y = (w) => oy + w * s;
+
+            if (e === 0) {
+                // 1. BOCETO: hoja, guías y lápiz con trazos dobles temblorosos
+                ctx.save(); ctx.globalAlpha = Math.min(ent, sal);
+                ctx.translate(W / 2, H * .45); ctx.rotate(-.035);
+                const pw = Math.min(W * .7, H * 1.05), ph = pw * .78;
+                ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10;
+                ctx.fillStyle = '#f3eee3'; ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+                ctx.shadowColor = 'transparent';
+                ctx.strokeStyle = 'rgba(110,140,200,.18)'; ctx.lineWidth = 1;
+                for (let y = -ph / 2 + 16; y < ph / 2; y += 13) { ctx.beginPath(); ctx.moveTo(-pw / 2 + 6, y); ctx.lineTo(pw / 2 - 6, y); ctx.stroke(); }
+                ctx.strokeStyle = 'rgba(220,90,90,.35)'; ctx.beginPath(); ctx.moveTo(-pw / 2 + 22, -ph / 2); ctx.lineTo(-pw / 2 + 22, ph / 2); ctx.stroke();
+                ctx.restore();
+                ctx.save(); ctx.globalAlpha = Math.min(ent, sal);
+                // guías de construcción
+                const g = sale(entre(p, .05, .2));
+                ctx.strokeStyle = 'rgba(70,90,140,.35)'; ctx.lineWidth = .8; ctx.setLineDash([3, 3]);
+                ctx.beginPath(); ctx.arc(X(179.6), Y(168.75), 56.25 * s * g, 0, 7); ctx.stroke();
+                ctx.beginPath(); ctx.arc(X(179.6), Y(56.25), 56.25 * s * g, 0, 7); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(X(-10), Y(112)); ctx.lineTo(X(-10 + 260 * g), Y(112)); ctx.stroke();
+                ctx.setLineDash([]);
+                // trazos a lápiz
+                const total = entre(p, .12, .82) * FORMAS.length;
+                let punta = null;
+                ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                FORMAS.forEach((f, i) => {
+                    const hecho = limitar(total - i);
+                    if (!hecho) return;
+                    const k = Math.floor(hecho * (f.pts.length - 1));
+                    for (let pase = 0; pase < 2; pase++) {
+                        ctx.strokeStyle = pase ? 'rgba(40,40,52,.55)' : 'rgba(40,40,52,.85)';
+                        ctx.lineWidth = pase ? .8 : 1.25;
+                        ctx.beginPath();
+                        for (let j = 0; j <= k; j++) {
+                            const [u, w] = f.pts[j];
+                            const jx = (azarDe(i * 997 + j * 13 + pase * 71) - .5) * (pase ? 3.2 : 1.6), jy = (azarDe(i * 991 + j * 17 + pase * 53) - .5) * (pase ? 3.2 : 1.6);
+                            const px = X(u + jx), py = Y(w + jy);
+                            j ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+                            if (j === k) punta = [px, py];
+                        }
+                        ctx.stroke();
+                    }
+                });
+                // sombreado a rayas en la pieza oscura
+                const r = entre(p, .8, .9);
+                if (r) {
+                    ctx.save(); ctx.translate(ox, oy); ctx.scale(s, s); ctx.clip(FORMAS[0].ruta);
+                    ctx.strokeStyle = 'rgba(40,40,52,.4)'; ctx.lineWidth = .9 / s;
+                    for (let d = -240; d < 240 * (r * 2 - 1); d += 9) { ctx.beginPath(); ctx.moveTo(d, 230); ctx.lineTo(d + 230, 0); ctx.stroke(); }
+                    ctx.restore();
+                    punta = punta && r < 1 ? [X(60 + r * 80), Y(170 - r * 80)] : punta;
+                }
+                // lápiz
+                if (punta && p < .9) {
+                    ctx.save(); ctx.translate(punta[0], punta[1]); ctx.rotate(-.75);
+                    ctx.fillStyle = '#f2c94c'; ctx.fillRect(4, -3.5, 46, 7);
+                    ctx.fillStyle = '#e9d8b4'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(8, -3.5); ctx.lineTo(8, 3.5); ctx.fill();
+                    ctx.fillStyle = '#333'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(2.6, -1.2); ctx.lineTo(2.6, 1.2); ctx.fill();
+                    ctx.fillStyle = '#e88aa0'; ctx.fillRect(50, -3.5, 7, 7);
+                    ctx.restore();
+                }
+                ctx.restore();
+            }
+
+            if (e === 1) {
+                // 2. DIGITAL: la hoja se escanea; detrás de la barra queda un mapa de bits
+                const v = ventana(ent * sal);
+                ctx.save(); ctx.globalAlpha = sal;
+                const barra = v.vy + 24 + sale(entre(p, .08, .75)) * (v.vh - 24);
+                const pc = 24, pr = Math.round(pc * 225 / 236), cel = L / pc, datos = raster(pc, pr);
+                for (let j = 0; j < pr; j++) for (let i = 0; i < pc; i++) {
+                    const a = datos[(j * pc + i) * 4 + 3] / 255;
+                    if (a < .15) continue;
+                    const y = oy + j * cel;
+                    if (y > barra) continue;
+                    const lum = (datos[(j * pc + i) * 4] * .3 + datos[(j * pc + i) * 4 + 1] * .59 + datos[(j * pc + i) * 4 + 2] * .11);
+                    const gris = Math.round(110 + lum * .9);
+                    ctx.fillStyle = `rgba(${gris},${gris},${gris + 12},${a})`;
+                    ctx.fillRect(ox + i * cel + .5, y + .5, cel - 1, cel - 1);
+                }
+                // lo que falta por escanear: el boceto en claro
+                ctx.save(); ctx.beginPath(); ctx.rect(0, barra, W, H); ctx.clip();
+                ctx.strokeStyle = 'rgba(203,213,225,.6)'; ctx.lineWidth = 1;
+                FORMAS.forEach((f, i) => { ctx.beginPath(); f.pts.forEach(([u, w], j) => { const px = X(u + (azarDe(i * 997 + j * 13) - .5) * 1.6), py = Y(w + (azarDe(i * 991 + j * 17) - .5) * 1.6); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); });
+                ctx.restore();
+                if (p < .8) {
+                    const gr = ctx.createLinearGradient(0, barra - 18, 0, barra + 2);
+                    gr.addColorStop(0, 'rgba(34,225,240,0)'); gr.addColorStop(1, 'rgba(34,225,240,.45)');
+                    ctx.fillStyle = gr; ctx.fillRect(v.vx + 1, barra - 18, v.vw - 2, 18);
+                    ctx.fillStyle = '#7df3ff'; ctx.fillRect(v.vx + 1, barra, v.vw - 2, 1.5);
+                }
+                ctx.fillStyle = 'rgba(148,163,184,.75)'; ctx.font = '500 9px ui-monospace, monospace'; ctx.textAlign = 'left';
+                ctx.fillText(`${ING ? 'SCAN' : 'ESCANEO'} 600 DPI · ${Math.round(entre(p, .08, .75) * 100)} %`, v.vx + 30, v.vy + v.vh - 9);
+                ctx.restore();
+            }
+
+            if (e === 2) {
+                // 3. ASCII: cada píxel se vuelve un carácter; primero al azar y luego en su sitio
+                const v = ventana(sal);
+                ctx.save(); ctx.globalAlpha = sal;
+                const cols = 30, cw = L / cols, ch = cw * 1.55, rows = Math.round(225 * s / ch), datos = raster(cols, rows);
+                ctx.font = `600 ${ch * .95}px ui-monospace, Menlo, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                const fija = entre(p, .05, .6);
+                for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+                    const q = (j * cols + i) * 4, a = datos[q + 3] / 255;
+                    if (a < .12) continue;
+                    let r = datos[q], g = datos[q + 1], b = datos[q + 2];
+                    const luz = .55 + .45 * (1 - j / rows) * (1 - i / cols * .4);
+                    r = Math.min(255, r * 1.6 + 60 * luz); g = Math.min(255, g * 1.4 + 70 * luz); b = Math.min(255, b + 40);
+                    const listo = azarDe(i * 31 + j * 7) < fija;
+                    const ramp = ' .:-=+*#%@';
+                    const k = listo ? Math.max(2, Math.min(9, Math.round(a * (.5 + luz * .5) * 9))) : 1 + Math.floor(azarDe(i + j * 57 + Math.floor(t * 14)) * 9);
+                    ctx.fillStyle = listo ? `rgb(${r | 0},${g | 0},${b | 0})` : 'rgba(110,162,255,.45)';
+                    ctx.fillText(ramp[k], ox + (i + .5) * cw, oy + (j + .5) * ch);
+                }
+                ctx.fillStyle = 'rgba(148,163,184,.75)'; ctx.font = '500 9px ui-monospace, monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                ctx.fillText(`${cols}×${rows} ${ING ? 'CHARACTERS · RAMP' : 'CARACTERES · RAMPA'} " .:-=+*#%@"`, v.vx + 30, v.vy + v.vh - 9);
+                ctx.restore();
+            }
+
+            if (e === 3) {
+                // 4. VECTOR: contornos limpios, anclas, manijas y relleno final
+                const v = ventana(sal);
+                ctx.save(); ctx.globalAlpha = sal;
+                const tr = sale(entre(p, 0, .45)), nod = entre(p, .25, .5) * (1 - entre(p, .82, .95)), rel = sale(entre(p, .55, .8));
+                ctx.save(); ctx.translate(ox, oy); ctx.scale(s, s);
+                FORMAS.forEach(f => {
+                    ctx.globalAlpha = sal * rel; ctx.fillStyle = f.claro; ctx.fill(f.ruta);
+                    ctx.globalAlpha = sal * (1 - rel * .7);
+                    ctx.strokeStyle = '#6ea2ff'; ctx.lineWidth = 1.4 / s;
+                    ctx.setLineDash([800 * tr, 800]); ctx.stroke(f.ruta);
+                });
+                ctx.setLineDash([]);
+                ctx.restore();
+                if (nod > 0) {
+                    ctx.globalAlpha = sal * nod;
+                    FORMAS.forEach(f => {
+                        ctx.strokeStyle = 'rgba(203,213,225,.7)'; ctx.lineWidth = 1;
+                        f.manijas.forEach(([ax, ay, hx, hy]) => {
+                            ctx.beginPath(); ctx.moveTo(X(ax), Y(ay)); ctx.lineTo(X(hx), Y(hy)); ctx.stroke();
+                            ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(X(hx), Y(hy), 2.4, 0, 7); ctx.fill();
+                        });
+                        f.anclas.forEach(([ax, ay]) => { ctx.fillStyle = '#fff'; ctx.fillRect(X(ax) - 2.5, Y(ay) - 2.5, 5, 5); ctx.strokeStyle = '#2f6bff'; ctx.strokeRect(X(ax) - 2.5, Y(ay) - 2.5, 5, 5); });
+                    });
+                }
+                // caja de selección con sus ocho tiradores
+                const sel = entre(p, .6, .72);
+                if (sel) {
+                    ctx.globalAlpha = sal * sel;
+                    const bx = X(-6), by = Y(-6), bw = 248 * s, bh = 237 * s;
+                    ctx.strokeStyle = '#6ea2ff'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]); ctx.strokeRect(bx, by, bw, bh); ctx.setLineDash([]);
+                    [[0, 0], [.5, 0], [1, 0], [0, .5], [1, .5], [0, 1], [.5, 1], [1, 1]].forEach(([a, b]) => { ctx.fillStyle = '#0d1424'; ctx.fillRect(bx + a * bw - 3, by + b * bh - 3, 6, 6); ctx.strokeStyle = '#6ea2ff'; ctx.strokeRect(bx + a * bw - 3, by + b * bh - 3, 6, 6); });
+                }
+                // cursor que arrastra un nodo
+                const cu = sale(entre(p, .3, .55));
+                const cx = X(260 - 80 * cu), cy = Y(-20 + 140 * cu);
+                ctx.globalAlpha = sal * (1 - entre(p, .85, .95));
+                ctx.fillStyle = '#fff'; ctx.strokeStyle = '#0d1424'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy + 13); ctx.lineTo(cx + 3.6, cy + 9.6); ctx.lineTo(cx + 6.4, cy + 15); ctx.lineTo(cx + 8.4, cy + 14); ctx.lineTo(cx + 5.8, cy + 8.8); ctx.lineTo(cx + 10, cy + 8.8); ctx.closePath(); ctx.fill(); ctx.stroke();
+                ctx.globalAlpha = sal;
+                ctx.fillStyle = 'rgba(148,163,184,.75)'; ctx.font = '500 9px ui-monospace, monospace'; ctx.textAlign = 'left';
+                ctx.fillText(`VECTOR · ${FORMAS.reduce((a, f) => a + f.anclas.length, 0)} ${ING ? 'NODES · INFINITELY SCALABLE' : 'NODOS · ESCALABLE AL INFINITO'}`, v.vx + 30, v.vy + v.vh - 9);
+                ctx.restore();
+            }
+
+            if (e === 4) {
+                // 5. IMPRESIÓN: tarjeta, playera y cartel; marcas de corte y CMYK
+                ctx.save(); ctx.globalAlpha = Math.min(ent, sal);
+                const bob = (k) => Math.sin(t * 1.4 + k * 1.7) * 2.5;
+                const llega = (k) => sale(entre(p, .04 + k * .1, .34 + k * .1));
+                const U = Math.min(W / 3.3, H * .62);
+                // tarjeta de presentación
+                {
+                    const k = llega(0), w = U * 1.05, h = w * .58, x = W * .2, y = H * .42 + (1 - k) * 60 + bob(0);
+                    ctx.save(); ctx.globalAlpha *= k; ctx.translate(x, y); ctx.rotate(-.12);
+                    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8;
+                    ctx.fillStyle = '#f8fafc'; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.shadowColor = 'transparent';
+                    logo(-w / 2 + h * .18, -h * .38, h * .4 / 225);
+                    ctx.fillStyle = '#16284F'; ctx.fillRect(-w / 2 + h * .18, h * .2, w * .42, 3.5);
+                    ctx.fillStyle = '#94a3b8'; ctx.fillRect(-w / 2 + h * .18, h * .3, w * .3, 2.5);
+                    ctx.strokeStyle = 'rgba(203,213,225,.6)'; ctx.lineWidth = .8;
+                    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => {
+                        ctx.beginPath(); ctx.moveTo(a * (w / 2 + 3), b * h / 2); ctx.lineTo(a * (w / 2 + 11), b * h / 2);
+                        ctx.moveTo(a * w / 2, b * (h / 2 + 3)); ctx.lineTo(a * w / 2, b * (h / 2 + 11)); ctx.stroke();
+                    });
+                    ctx.restore();
+                }
+                // playera
+                {
+                    const k = llega(1), w = U * .95, x = W * .52, y = H * .4 + (1 - k) * 60 + bob(1);
+                    ctx.save(); ctx.globalAlpha *= k; ctx.translate(x, y); ctx.scale(w / 100, w / 100);
+                    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6;
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.beginPath(); ctx.moveTo(-18, -52); ctx.quadraticCurveTo(0, -42, 18, -52); ctx.lineTo(48, -38); ctx.lineTo(40, -14); ctx.lineTo(30, -18);
+                    ctx.lineTo(30, 52); ctx.lineTo(-30, 52); ctx.lineTo(-30, -18); ctx.lineTo(-40, -14); ctx.lineTo(-48, -38); ctx.closePath(); ctx.fill();
+                    ctx.shadowColor = 'transparent';
+                    ctx.strokeStyle = 'rgba(100,116,139,.35)'; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(-18, -52); ctx.quadraticCurveTo(0, -38, 18, -52); ctx.stroke();
+                    logo(-12, -22, 24 / 236);
+                    ctx.restore();
+                }
+                // cartel / lona
+                {
+                    const k = llega(2), h = U * 1.15, w = h * .68, x = W * .82, y = H * .42 + (1 - k) * 60 + bob(2);
+                    ctx.save(); ctx.globalAlpha *= k; ctx.translate(x, y); ctx.rotate(.06);
+                    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8;
+                    const gr = ctx.createLinearGradient(0, -h / 2, 0, h / 2); gr.addColorStop(0, '#0B63F6'); gr.addColorStop(1, '#16284F');
+                    ctx.fillStyle = gr; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.shadowColor = 'transparent';
+                    ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(0, -h * .14, w * .32, 0, 7); ctx.fill();
+                    logo(-w * .17, -h * .14 - w * .16, w * .34 / 236);
+                    ctx.fillStyle = '#fff'; ctx.fillRect(-w * .3, h * .2, w * .6, 4);
+                    ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(-w * .22, h * .29, w * .44, 2.5);
+                    ctx.restore();
+                }
+                // CMYK y marca de registro
+                const m = entre(p, .45, .6);
+                if (m) {
+                    ctx.globalAlpha = Math.min(ent, sal) * m;
+                    ['#00aeef', '#ec008c', '#fff200', '#231f20'].forEach((col, k) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(14 + k * 13, H - 40, 5, 0, 7); ctx.fill(); });
+                    ctx.strokeStyle = 'rgba(226,232,240,.8)'; ctx.lineWidth = 1;
+                    const rx = W - 22, ry = H - 40;
+                    ctx.beginPath(); ctx.arc(rx, ry, 6, 0, 7); ctx.moveTo(rx - 10, ry); ctx.lineTo(rx + 10, ry); ctx.moveTo(rx, ry - 10); ctx.lineTo(rx, ry + 10); ctx.stroke();
+                }
+                ctx.restore();
+            }
+        };
+        const estatico = !mueve();
+        if (estatico) { reloj = INICIO[3] + DUR[3] * .88; const fijo = () => { antes = null; caja.dataset.foco = ''; dibujar(0); }; fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
+            li.addEventListener('pointerenter', () => { caja.dataset.foco = li.dataset.foco; if (estatico) dibujar(0); });
+            li.addEventListener('pointerleave', () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; if (estatico) { reloj = INICIO[3] + DUR[3] * .88; dibujar(0); } });
+        });
+    });
+
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
-        if (!escena || ligero()) return caja.querySelector('.paleta') ? undefined : caja.remove();   // la paleta de Diseño es CSS: se queda
+        if (!escena || ligero()) return caja.remove();
         const c = lienzo('ascii-lienzo');
         caja.append(c);
         const ctx = c.getContext('2d');
