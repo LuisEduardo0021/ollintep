@@ -530,102 +530,6 @@
                 }
             }
         },
-        // Portada, redes: router, switch y tres VLAN; los paquetes viajan sin cruzar de una VLAN a otra
-        red: (v, col, fil, t, foco) => {
-            const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
-            const P = (u, w) => [u * (col - 1), w * (fil - 1)];
-            const tramo = (a, b, n, paso = 1) => {
-                const k = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]), 1);
-                for (let q = 0; q <= k; q += paso) pon(a[0] + (b[0] - a[0]) * q / k, a[1] + (b[1] - a[1]) * q / k, n);
-            };
-            const caja = (c, an, al, n, borde = n) => {
-                for (let i = -an; i <= an; i++) for (let j = -al; j <= al; j++) pon(c[0] + i, c[1] + j, Math.abs(i) === an || Math.abs(j) === al ? borde : n);
-            };
-            const nube = P(.5, .06), router = P(.5, .24), sw = P(.5, .46);
-            const grupos = [.17, .5, .83].map((u, g) => ({ u, hosts: [-.1, 0, .1].map(d => P(u + d, .86)), g }));
-            // Enlaces: la subida a internet punteada, el resto continuo
-            tramo(nube, router, .35, 2);
-            tramo(router, sw, .5);
-            grupos.forEach(G => {
-                const bajada = P(G.u, .66);
-                tramo(sw, bajada, .45);
-                G.hosts.forEach(h => { tramo(bajada, [h[0], bajada[1]], .45); tramo([h[0], bajada[1]], h, .45); });
-                // Recuadro punteado de la VLAN
-                const a = P(G.u - .15, .6), b = P(G.u + .15, .97);
-                for (let i = a[0]; i <= b[0]; i += 2) { pon(i, a[1], .3); pon(i, b[1], .3); }
-                for (let j = a[1]; j <= b[1]; j += 2) { pon(a[0], j, .3); pon(b[0], j, .3); }
-            });
-            // Equipos: el switch con sus puertos parpadeando
-            caja(nube, 4, 1, .25, .6);
-            caja(router, 3, 1, .3, .9);
-            caja(sw, Math.round(col * .2), 1, .2, .9);
-            for (let k = 0; k < 12; k++) pon(sw[0] - col * .18 + k * col * .033, sw[1], azarDe(k * 5 + Math.floor(t * 6)) > .5 ? 1 : .35);
-            grupos.forEach(G => G.hosts.forEach((h, k) => caja(h, 1, 1, azarDe(G.g * 9 + k + Math.floor(t * 2)) > .7 ? .9 : .4, .75)));
-            // Foco: el servicio bajo el cursor se ilumina en la topología
-            const k = foco.k;
-            if (foco.n === 'planos') {
-                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) if (j % 4 === 0 || i % 8 === 0) pon(i, j, .16 * k);
-                const r = Math.round(((t * .5) % 1) * fil);
-                for (let i = 0; i < col; i++) pon(i, r, .5 * k);
-            } else if (foco.n === 'servidores') {
-                caja(router, 3, 1, .85 * k, 1); caja(nube, 4, 1, .5 * k, 1);
-                // Rack junto al router, con unidades que se encienden
-                for (let u = 0; u < 4; u++) caja([router[0] + 12, router[1] - 3 + u * 2], 4, 0, azarDe(u + Math.floor(t * 5)) > .4 ? .9 * k : .3 * k);
-            } else if (foco.n === 'vlans') {
-                grupos.forEach((G, g) => {
-                    const a = P(G.u - .15, .6), b = P(G.u + .15, .97);
-                    for (let j = a[1]; j <= b[1]; j++) for (let i = a[0]; i <= b[0]; i++) {
-                        const borde = j === a[1] || j === b[1] || i === a[0] || i === b[0];
-                        pon(i, j, borde ? k : ((i + j + g) % (3 + g) === 0 ? .35 : .08) * k);
-                    }
-                });
-            } else if (foco.n === 'switch') {
-                caja(sw, Math.round(col * .2), 1, .45 * k, 1);
-                for (let n = 0; n < 12; n++) pon(sw[0] - col * .18 + n * col * .033, sw[1], azarDe(n * 5 + Math.floor(t * 22)) > .4 ? 1 : .3);
-            } else if (foco.n === 'firewall') {
-                // Un muro entre internet y el router; lo que llega de fuera rebota
-                const yw = Math.round((nube[1] + router[1]) / 2);
-                for (let i = -9; i <= 9; i++) { pon(router[0] + i, yw, (i + 30) % 3 ? .9 * k : .4 * k); pon(router[0] + i, yw - 1, (i + 31) % 3 ? .7 * k : .3 * k); }
-                for (let n = 0; n < 3; n++) {
-                    const q = (t * .8 + n / 3) % 1, x = router[0] - 6 + n * 6;
-                    const y = q < .5 ? nube[1] + 1 + (yw - 2 - nube[1]) * q * 2 : yw - 2 - (yw - 2 - nube[1]) * (q - .5) * 2;
-                    pon(x, y, k);
-                }
-            } else if (foco.n === 'wifi') {
-                grupos.forEach((G, g) => {
-                    // Un punto de acceso por VLAN; la cobertura baja en ondas hacia sus equipos
-                    const c = P(G.u, .62);
-                    caja(c, 2, 0, k, k);
-                    for (let o = 0; o < 3; o++) {
-                        const r = 1 + ((t * 4 + o * 2.4 + g) % 7);
-                        for (let a = Math.PI * .2; a < Math.PI * .8; a += .03) pon(c[0] + Math.cos(a) * r * 1.75, c[1] + Math.sin(a) * r, (1 - r / 8) * k);
-                    }
-                });
-            }
-            // Paquetes: cada uno hace host → switch → host de su misma VLAN; de vez en cuando uno sube al router
-            const ruta = (pts, q) => {
-                const largos = pts.slice(1).map((p, k) => Math.hypot(p[0] - pts[k][0], p[1] - pts[k][1]));
-                let d = q * largos.reduce((a, b) => a + b, 0);
-                for (let k = 0; k < largos.length; k++) {
-                    if (d <= largos[k]) { const r = d / largos[k]; return [pts[k][0] + (pts[k + 1][0] - pts[k][0]) * r, pts[k][1] + (pts[k + 1][1] - pts[k][1]) * r]; }
-                    d -= largos[k];
-                }
-                return pts[pts.length - 1];
-            };
-            for (let n = 0; n < 9; n++) {
-                const G = grupos[n % 3], vuelta = Math.floor(t * .35 + azarDe(n) * 7);
-                const q = (t * .35 + azarDe(n) * 7) % 1;
-                const de = G.hosts[Math.floor(azarDe(n * 3 + vuelta) * 3)];
-                const sube = foco.n !== 'vlans' && azarDe(n * 7 + vuelta) > (foco.n === 'servidores' ? .25 : .7);
-                const a = G.hosts[Math.floor(azarDe(n * 5 + vuelta) * 3)];
-                const bajada = P(G.u, .66);
-                const pts = sube
-                    ? [de, [de[0], bajada[1]], bajada, sw, router, nube]
-                    : [de, [de[0], bajada[1]], bajada, sw, bajada, [a[0], bajada[1]], a];
-                const [x, y] = ruta(pts, q);
-                pon(x, y, 1); pon(x + 1, y, .8); pon(x - 1, y, .8);
-            }
-        },
         // Agro-Cria: el agua de riego, con superficie y reflejos
         olas: (v, col, fil, t) => {
             for (let i = 0; i < col; i++) {
@@ -1069,6 +973,313 @@
         caja.closest('section')?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
             li.addEventListener('pointerenter', () => { caja.dataset.foco = li.dataset.foco; if (estatico) dibujar(0); });
             li.addEventListener('pointerleave', () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; if (estatico) { reloj = INICIO[2] + DUR[2] * .88; dibujar(0); } });
+        });
+    });
+
+    // --- PROCESO DE UNA RED (Redes): plano → servidores → VLANs → firewall → Wi-Fi.
+    // Al pasar el cursor por un servicio, la escena salta a la etapa que le toca.
+    document.querySelectorAll('[data-red-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.6, 4.4, 4.6, 4.6, 4.8], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { planos: 0, servidores: 1, vlans: 2, switch: 2, firewall: 3, wifi: 4 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const AZUL = '#6ea2ff', CIAN = '#22e1f0', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171', VIOLETA = '#b39bff';
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(148,163,184,.8)', alin = 'left') => {
+            ctx.fillStyle = col; ctx.font = '500 9px ui-monospace, Menlo, monospace'; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const medidas = (pts) => { const l = []; let total = 0; for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); l.push(d); total += d; } return [l, total]; };
+        // una línea que se dibuja de a poco (q de 0 a 1)
+        const tramo = (pts, q, col, ancho = 1.2, guion = null) => {
+            const [largos, total] = medidas(pts);
+            let resta = total * limitar(q);
+            if (resta <= 0) return;
+            ctx.strokeStyle = col; ctx.lineWidth = ancho; ctx.setLineDash(guion || []);
+            ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+            for (let i = 1; i < pts.length && resta > 0; i++) {
+                const f = Math.min(1, resta / (largos[i - 1] || 1));
+                ctx.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f);
+                resta -= largos[i - 1];
+            }
+            ctx.stroke(); ctx.setLineDash([]);
+        };
+        // posición a lo largo de una polilínea (q de 0 a 1)
+        const enRuta = (pts, q) => {
+            const [largos, total] = medidas(pts);
+            let d = total * limitar(q);
+            for (let i = 1; i < pts.length; i++) {
+                if (d <= largos[i - 1]) { const f = d / (largos[i - 1] || 1); return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f]; }
+                d -= largos[i - 1];
+            }
+            return pts[pts.length - 1];
+        };
+        const equipo = (x, y, w, h, col, leds = 0, t = 0, semilla = 0) => {
+            redondo(x - w / 2, y - h / 2, w, h, 3); ctx.fillStyle = '#111a2e'; ctx.fill();
+            ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
+            for (let k = 0; k < leds; k++) punto(x - w / 2 + 6 + k * 5, y, 1.3, azarDe(semilla + k * 7 + Math.floor(t * 7)) > .45 ? col : 'rgba(148,163,184,.25)');
+        };
+        // planta de oficina compartida por el plano y el Wi-Fi
+        const planta = (x0, y0, w, h) => {
+            const P = (u, v) => [x0 + u * w, y0 + v * h];
+            return {
+                P,
+                muros: [
+                    [P(0, 0), P(1, 0), P(1, 1), P(0, 1), P(0, 0)],
+                    [P(.42, 0), P(.42, .38)], [P(.42, .55), P(.42, 1)],
+                    [P(.42, .5), P(.72, .5)], [P(.84, .5), P(1, .5)],
+                    [P(0, .62), P(.18, .62)], [P(.28, .62), P(.42, .62)],
+                ],
+            };
+        };
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .8;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+
+            if (e === 0) {
+                // 1. PLANO: papel azul de plano, muros, equipos y cableado propuesto
+                redondo(zona.x, zona.y, zona.w, zona.h, 10); ctx.fillStyle = '#0a2350'; ctx.fill();
+                ctx.save(); ctx.clip();
+                ctx.strokeStyle = 'rgba(147,197,253,.10)'; ctx.lineWidth = 1;
+                for (let x = zona.x; x < zona.x + zona.w; x += 12) { ctx.beginPath(); ctx.moveTo(x, zona.y); ctx.lineTo(x, zona.y + zona.h); ctx.stroke(); }
+                for (let y = zona.y; y < zona.y + zona.h; y += 12) { ctx.beginPath(); ctx.moveTo(zona.x, y); ctx.lineTo(zona.x + zona.w, y); ctx.stroke(); }
+                ctx.restore();
+                const pl = planta(zona.x + 18, zona.y + 18, zona.w - 36, zona.h - 46);
+                const m = entre(p, .05, .4);
+                pl.muros.forEach((mu, k) => tramo(mu, entre(m, k * .08, k * .08 + .45), 'rgba(226,240,255,.9)', 1.6));
+                const sw = pl.P(.21, .3), dispositivos = [[pl.P(.12, .82), 'PC'], [pl.P(.3, .82), 'PC'], [pl.P(.6, .22), 'AP'], [pl.P(.6, .78), 'CAM'], [pl.P(.9, .25), 'AP'], [pl.P(.9, .78), 'POS']];
+                const d = entre(p, .35, .55);
+                if (d) {
+                    ctx.globalAlpha = alfa * d;
+                    equipo(sw[0], sw[1], 34, 12, CIAN, 4, t, 3); rotulo('SW-01', sw[0], sw[1] - 13, 'rgba(186,230,253,.9)', 'center');
+                    dispositivos.forEach(([q, n]) => { punto(q[0], q[1], 4, '#0a2350'); ctx.strokeStyle = 'rgba(226,240,255,.9)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(q[0], q[1], 4, 0, 7); ctx.stroke(); rotulo(n, q[0], q[1] + 10, 'rgba(186,230,253,.8)', 'center'); });
+                    ctx.globalAlpha = alfa;
+                }
+                const cab = entre(p, .5, .85);
+                dispositivos.forEach(([q], k) => {
+                    const ruta = [[sw[0], sw[1] + 6], [sw[0], q[1] - 14 + (k % 2) * 4], [q[0], q[1] - 14 + (k % 2) * 4], [q[0], q[1] - 4]];
+                    tramo(ruta, entre(cab, k * .1, k * .1 + .5), 'rgba(34,225,240,.85)', 1, [4, 3]);
+                });
+                rotulo(ING ? 'NETWORK-PLAN-01 · SCALE 1:100' : 'PLANO-RED-01 · ESC 1:100', zona.x + 14, zona.y + zona.h - 12, 'rgba(186,230,253,.75)');
+                rotulo(`CAT6 · ${Math.round(cab * 148)} m`, zona.x + zona.w - 14, zona.y + zona.h - 12, 'rgba(186,230,253,.75)', 'right');
+            }
+
+            if (e === 1) {
+                // 2. SERVIDORES: un rack donde cada equipo entra en su lugar y enciende
+                const rw = Math.min(W * .42, 170), rh = zona.h * .96, rx = W * .36 - rw / 2, ry = zona.y + zona.h * .02;
+                redondo(rx - 8, ry, rw + 16, rh, 6); ctx.fillStyle = '#0c1220'; ctx.fill(); ctx.strokeStyle = 'rgba(148,163,184,.35)'; ctx.lineWidth = 1; ctx.stroke();
+                const U = 11, alto = (rh - 16) / U;
+                for (let k = 0; k <= U; k++) { ctx.fillStyle = 'rgba(148,163,184,.25)'; ctx.fillRect(rx - 5, ry + 8 + k * alto - .5, 2, 1); ctx.fillRect(rx + rw + 3, ry + 8 + k * alto - .5, 2, 1); }
+                const piezas = [
+                    { u: 0, n: 1, tipo: 'patch', col: AMBAR }, { u: 1, n: 1, tipo: 'switch', col: CIAN }, { u: 2, n: 1, tipo: 'switch', col: CIAN },
+                    { u: 3, n: 1, tipo: 'fw', col: ROJO }, { u: 5, n: 2, tipo: 'srv', col: VERDE }, { u: 7, n: 2, tipo: 'srv', col: VERDE }, { u: 9, n: 2, tipo: 'nas', col: VIOLETA },
+                ];
+                piezas.forEach((pz, k) => {
+                    const q = sale(entre(p, .05 + k * .07, .22 + k * .07));
+                    if (!q) return;
+                    const y = ry + 8 + pz.u * alto + 1, h = pz.n * alto - 2, x = rx + (1 - q) * (W - rx);
+                    redondo(x, y, rw, h, 2); ctx.fillStyle = '#16213a'; ctx.fill(); ctx.strokeStyle = 'rgba(148,163,184,.4)'; ctx.stroke();
+                    const encendido = q > .98;
+                    if (pz.tipo === 'patch' || pz.tipo === 'switch') {
+                        for (let i = 0; i < 12; i++) {
+                            const px = x + 8 + i * (rw - 34) / 12;
+                            ctx.fillStyle = '#0b1120'; ctx.fillRect(px, y + h / 2 - 2.5, 5, 5);
+                            if (encendido && pz.tipo === 'switch') punto(px + 2.5, y + h / 2 - 4.5, .9, azarDe(i * 13 + k + Math.floor(t * 9)) > .4 ? pz.col : 'rgba(148,163,184,.2)');
+                        }
+                    } else {
+                        for (let i = 0; i < 6; i++) { ctx.fillStyle = 'rgba(148,163,184,.12)'; ctx.fillRect(x + rw * .4 + i * 9, y + 3, 6, h - 6); }
+                        if (encendido) { punto(x + 8, y + h / 2, 1.8, pz.col); punto(x + 15, y + h / 2, 1.4, azarDe(k * 9 + Math.floor(t * 6)) > .3 ? AZUL : 'rgba(148,163,184,.2)'); }
+                    }
+                    if (encendido) rotulo({ patch: 'PATCH', switch: 'SW', fw: 'FW', srv: 'SRV', nas: 'NAS' }[pz.tipo], x + rw - 6, y + h / 2, 'rgba(203,213,225,.7)', 'right');
+                });
+                // estado a la derecha
+                const lineas = ING ? ['$ provision --plan', '✓ firewall', '✓ core switches', '✓ servers', '✓ backups'] : ['$ provision --plan', '✓ firewall', '✓ switches', '✓ servidores', '✓ respaldos'];
+                const vis = Math.floor(entre(p, .3, .8) * lineas.length + .001);
+                const tx = rx + rw + 22;
+                lineas.slice(0, vis).forEach((l, k) => rotulo(l, tx, ry + 22 + k * 15, k ? VERDE : 'rgba(203,213,225,.85)'));
+                if (p > .82) { punto(tx + 3, ry + rh - 10, 3, VERDE); rotulo('ONLINE', tx + 11, ry + rh - 10, VERDE); }
+            }
+
+            if (e === 2) {
+                // 3. VLANs: cada área en su segmento; un paquete que intenta cruzar es rechazado
+                const sw = [W / 2, zona.y + 14];
+                const grupos = [[ING ? 'VLAN 10 POS' : 'VLAN 10 CAJA', CIAN], [ING ? 'VLAN 20 OFFICE' : 'VLAN 20 OFICINA', AZUL], [ING ? 'VLAN 30 CCTV' : 'VLAN 30 CÁMARAS', VIOLETA], [ING ? 'VLAN 40 GUESTS' : 'VLAN 40 INVITADOS', AMBAR]];
+                const gw = zona.w / 4, bus = sw[1] + 26;
+                const ap = sale(entre(p, .02, .25));
+                grupos.forEach(([nombre, col], g) => {
+                    const gx = zona.x + g * gw + 3, gy = zona.y + zona.h * .4, ancho = gw - 6, alto = zona.h * .58;
+                    const bx = gx + ancho / 2;
+                    tramo([[sw[0], sw[1] + 7], [sw[0], bus], [bx, bus], [bx, gy]], entre(p, .08 + g * .04, .3 + g * .04), col, 1.3);
+                    ctx.globalAlpha = alfa * ap;
+                    redondo(gx, gy, ancho, alto, 8); ctx.fillStyle = col + '14'; ctx.fill();
+                    ctx.setLineDash([3, 3]); ctx.strokeStyle = col + 'aa'; ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
+                    const [n1, n2] = nombre.split(' ').length > 2 ? [nombre.split(' ').slice(0, 2).join(' '), nombre.split(' ').slice(2).join(' ')] : [nombre, ''];
+                    rotulo(n1, bx, gy + alto - 22, col, 'center'); rotulo(n2, bx, gy + alto - 10, col, 'center');
+                    for (let h = 0; h < 3; h++) {
+                        const hx = gx + ancho * (.2 + h * .3), hy = gy + alto * .42;
+                        ctx.strokeStyle = col + '88'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(hx, hy - 5); ctx.lineTo(hx, gy + 10); ctx.lineTo(bx, gy + 10); ctx.lineTo(bx, gy); ctx.stroke();
+                        redondo(hx - 6, hy - 5, 12, 10, 2); ctx.fillStyle = '#111a2e'; ctx.fill(); ctx.strokeStyle = col; ctx.stroke();
+                        // tráfico dentro de su propia VLAN
+                        if (p > .3) {
+                            const q = (t * .5 + h * .33 + g * .21) % 1;
+                            const pos = enRuta([[hx, hy - 5], [hx, gy + 10], [bx, gy + 10], [bx, bus], [sw[0], bus], [sw[0], sw[1] + 7]], q);
+                            punto(pos[0], pos[1], 2, col);
+                        }
+                    }
+                    ctx.globalAlpha = alfa;
+                });
+                equipo(sw[0], sw[1], 74, 14, CIAN, 11, t, 11);
+                // intento de cruce: invitados → caja, bloqueado en el switch
+                const ic = entre(p, .45, .85);
+                if (ic > 0 && ic < 1) {
+                    const desde = [zona.x + 3 * gw + gw / 2, zona.y + zona.h * .4], hacia = [zona.x + gw / 2, zona.y + zona.h * .4];
+                    const ruta = [desde, [desde[0], bus], [hacia[0], bus], hacia];
+                    const q = Math.min(ic * 1.5, .5);
+                    const pos = enRuta(ruta, q);
+                    punto(pos[0], pos[1], 3.2, AMBAR);
+                    if (ic * 1.5 > .5) {
+                        const k = sale(entre(ic * 1.5, .5, .8));
+                        ctx.strokeStyle = ROJO; ctx.lineWidth = 2; const s = 3 + k * 4;
+                        ctx.beginPath(); ctx.moveTo(pos[0] - s, pos[1] - s); ctx.lineTo(pos[0] + s, pos[1] + s); ctx.moveTo(pos[0] + s, pos[1] - s); ctx.lineTo(pos[0] - s, pos[1] + s); ctx.stroke();
+                        ctx.globalAlpha = alfa * k;
+                        redondo(pos[0] - 62, pos[1] + 9, 124, 14, 7); ctx.fillStyle = 'rgba(127,29,29,.9)'; ctx.fill();
+                        rotulo(ING ? 'DENIED · inter-VLAN' : 'DENEGADO · entre VLANs', pos[0], pos[1] + 16, '#fecaca', 'center');
+                        ctx.globalAlpha = alfa;
+                    }
+                }
+            }
+
+            if (e === 3) {
+                // 4. FIREWALL: lo de fuera rebota en el muro; la VPN de la sucursal pasa por su túnel
+                const muroX = W * .5, top = zona.y + 18, bot = zona.y + zona.h - 4;
+                const nube = [W * .15, H * .26];
+                ctx.fillStyle = 'rgba(148,163,184,.2)';
+                [[0, 0, 15], [13, -6, 12], [-13, -4, 11], [24, 4, 9], [-22, 6, 8]].forEach(([dx, dy, r]) => { ctx.beginPath(); ctx.arc(nube[0] + dx, nube[1] + dy, r, 0, 7); ctx.fill(); });
+                rotulo('INTERNET', nube[0], nube[1] + 24, 'rgba(203,213,225,.8)', 'center');
+                // muro de ladrillos que se levanta
+                const sube = sale(entre(p, .02, .25));
+                const filas = 10, lh = (bot - top) / filas;
+                for (let f = 0; f < filas; f++) {
+                    if (f / filas >= sube) break;
+                    const y = bot - (f + 1) * lh, des = f % 2 ? 7 : 0;
+                    ctx.fillStyle = f % 2 ? '#c2410c' : '#b13c0b'; ctx.fillRect(muroX - 20, y + 1, 40, lh - 2);
+                    ctx.fillStyle = '#05070d';
+                    for (let k = 0; k < 3; k++) { const mx = muroX - 20 + des + 6 + k * 14; if (mx > muroX - 19 && mx < muroX + 19) ctx.fillRect(mx, y + 1, 1.5, lh - 2); }
+                }
+                if (sube > .95) {
+                    const pul = 1 + Math.sin(t * 3) * .05;
+                    ctx.save(); ctx.translate(muroX, top - 8); ctx.scale(pul, pul);
+                    ctx.fillStyle = '#0f172a'; ctx.strokeStyle = ROJO; ctx.lineWidth = 1.5;
+                    ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(8, -4.5); ctx.quadraticCurveTo(8, 6, 0, 10); ctx.quadraticCurveTo(-8, 6, -8, -4.5); ctx.closePath(); ctx.fill(); ctx.stroke();
+                    ctx.restore();
+                }
+                // oficina
+                const of = [W * .83, H * .3];
+                equipo(of[0], of[1], 46, 26, AZUL, 0); rotulo(ING ? 'OFFICE' : 'OFICINA', of[0], of[1] + 22, 'rgba(203,213,225,.8)', 'center');
+                for (let k = 0; k < 3; k++) punto(of[0] - 12 + k * 12, of[1], 2, azarDe(k + Math.floor(t * 3)) > .3 ? VERDE : 'rgba(148,163,184,.3)');
+                // ataques que rebotan
+                let bloqueados = 0;
+                for (let n = 0; n < 7; n++) {
+                    const ciclo = 1.6, q = ((t + n * .37) % ciclo) / ciclo;
+                    bloqueados += Math.floor((t + n * .37) / ciclo);
+                    if (p < .22) continue;
+                    const y0 = nube[1] + (azarDe(n * 3) - .5) * 20, y1 = top + 10 + azarDe(n * 5) * (bot - top - 40);
+                    let x, y, a = 1;
+                    if (q < .6) { const k = q / .6; x = nube[0] + 22 + (muroX - 22 - nube[0] - 22) * k; y = y0 + (y1 - y0) * k; }
+                    else {
+                        const k = (q - .6) / .4; x = muroX - 22 - k * 26; y = y1 + k * 16; a = 1 - k;
+                        ctx.strokeStyle = `rgba(248,113,113,${(1 - k) * .8})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(muroX - 20, y1, 3 + k * 9, 0, 7); ctx.stroke();
+                    }
+                    ctx.globalAlpha = alfa * a; punto(x, y, 2.4, ROJO); ctx.globalAlpha = alfa;
+                }
+                // túnel VPN desde la sucursal, que atraviesa el muro
+                const suc = [W * .15, H * .7], tunel = [[suc[0] + 20, suc[1]], [of[0], suc[1]], [of[0], of[1] + 14]];
+                equipo(suc[0], suc[1], 34, 20, VERDE, 0); rotulo(ING ? 'BRANCH' : 'SUCURSAL', suc[0], suc[1] + 18, 'rgba(203,213,225,.8)', 'center');
+                const tv = entre(p, .3, .55);
+                if (tv) {
+                    ctx.globalAlpha = alfa * tv;
+                    ctx.strokeStyle = 'rgba(52,211,153,.22)'; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                    ctx.beginPath(); tunel.forEach(([x, y], k) => k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); ctx.lineCap = 'butt';
+                    tramo(tunel, tv, VERDE, 1, [5, 4]);
+                    const lx = (suc[0] + muroX) / 2 - 6, ly = suc[1] - 13;
+                    ctx.strokeStyle = VERDE; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(lx, ly - 2, 3.5, Math.PI, 0); ctx.stroke(); ctx.fillStyle = VERDE; ctx.fillRect(lx - 5, ly - 2, 10, 7);
+                    for (let n = 0; n < 3; n++) { const pos = enRuta(tunel, (t * .4 + n / 3) % 1); punto(pos[0], pos[1], 2.4, '#a7f3d0'); }
+                    ctx.globalAlpha = alfa;
+                    rotulo('VPN · WireGuard', (muroX + of[0]) / 2 + 6, suc[1] - 12, VERDE, 'center');
+                }
+                rotulo(`${ING ? 'BLOCKED' : 'BLOQUEADOS'}: ${(12840 + bloqueados).toLocaleString(ING ? 'en-US' : 'es-MX')}`, zona.x + zona.w - 2, zona.y + 6, ROJO, 'right');
+            }
+
+            if (e === 4) {
+                // 5. WI-FI: puntos de acceso con su cobertura y un teléfono que recorre la oficina sin perder señal
+                const x0 = zona.x + 10, y0 = zona.y + 6, pw = zona.w - 20, ph = zona.h - 24;
+                const pl = planta(x0, y0, pw, ph);
+                const aps = [pl.P(.2, .3), pl.P(.72, .25), pl.P(.64, .8)];
+                const cob = sale(entre(p, .08, .45));
+                ctx.save();
+                ctx.beginPath(); ctx.rect(x0, y0, pw, ph); ctx.clip();
+                ctx.globalCompositeOperation = 'lighter';
+                aps.forEach(([x, y], k) => {
+                    const r = pw * .36 * cob;
+                    if (r < 1) return;
+                    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+                    g.addColorStop(0, 'rgba(52,211,153,.38)'); g.addColorStop(.55, 'rgba(250,204,21,.13)'); g.addColorStop(1, 'rgba(248,113,113,0)');
+                    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+                    for (let w = 0; w < 3; w++) {
+                        const q = (t * .45 + w / 3 + k * .2) % 1;
+                        ctx.strokeStyle = `rgba(110,231,183,${(1 - q) * .4 * cob})`; ctx.lineWidth = 1;
+                        ctx.beginPath(); ctx.arc(x, y, 6 + q * r * .75, 0, 7); ctx.stroke();
+                    }
+                });
+                ctx.restore();
+                pl.muros.forEach((mu) => tramo(mu, 1, 'rgba(203,213,225,.55)', 1.4));
+                aps.forEach(([x, y], k) => { redondo(x - 8, y - 4, 16, 8, 4); ctx.fillStyle = '#e2e8f0'; ctx.fill(); punto(x, y, 1.6, azarDe(k + Math.floor(t * 4)) > .3 ? '#059669' : '#94a3b8'); rotulo(`AP-0${k + 1}`, x, y - 11, 'rgba(226,232,240,.9)', 'center'); });
+                if (p > .25) {
+                    const ruta = [pl.P(.08, .85), pl.P(.3, .85), pl.P(.34, .46), pl.P(.55, .38), pl.P(.9, .36), pl.P(.88, .8), pl.P(.5, .9), pl.P(.08, .85)];
+                    const pos = enRuta(ruta, (t * .07) % 1);
+                    const cerca = Math.max(...aps.map(([x, y]) => 1 - Math.hypot(x - pos[0], y - pos[1]) / (pw * .45)));
+                    const barras = Math.max(2, Math.min(4, Math.round(cerca * 4 + 1.5)));
+                    redondo(pos[0] - 5, pos[1] - 8, 10, 16, 2.5); ctx.fillStyle = '#0f172a'; ctx.fill(); ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.stroke();
+                    for (let b = 0; b < 4; b++) { ctx.fillStyle = b < barras ? VERDE : 'rgba(148,163,184,.3)'; ctx.fillRect(pos[0] + 8 + b * 3, pos[1] + 4 - (3 + b * 2), 2, 3 + b * 2); }
+                }
+                rotulo(ING ? 'COVERAGE −65 dBm · ROAMING 802.11r' : 'COBERTURA −65 dBm · ROAMING 802.11r', x0, zona.y + zona.h - 6, 'rgba(110,231,183,.85)');
+            }
+            ctx.restore();
+        };
+        const estatico = !mueve();
+        if (estatico) { reloj = INICIO[2] + DUR[2] * .8; const fijo = () => { antes = null; dibujar(0); }; fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
+            li.addEventListener('pointerenter', () => { caja.dataset.foco = li.dataset.foco; if (estatico) dibujar(0); });
+            li.addEventListener('pointerleave', () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; if (estatico) { reloj = INICIO[2] + DUR[2] * .8; dibujar(0); } });
         });
     });
 

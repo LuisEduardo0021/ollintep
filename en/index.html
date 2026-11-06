@@ -77,7 +77,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=8.0">
+    <link rel="stylesheet" href="../css/styles.css?v=8.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
@@ -420,7 +420,15 @@ ip dhcp snooping vlan 10,20,30
                 <p class="block-lead">We design, deploy and configure your company's infrastructure: servers, VLANs, switches, routers, firewalls and wireless connectivity.</p>
                 <a href="#contacto" class="m3-btn m3-btn-filled block-cta">Plan my network <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
             </div>
-            <div class="ascii-pieza" data-ascii-anim="red" data-celda="fina" data-color="#6ea2ff" aria-hidden="true"></div>
+            <div class="ascii-pieza proceso proceso-red" data-red-proceso aria-hidden="true">
+                <ol class="proceso-pasos">
+                    <li>Plan</li>
+                    <li>Servers</li>
+                    <li>VLANs</li>
+                    <li>Firewall</li>
+                    <li>Wi-Fi</li>
+                </ol>
+            </div>
         </header>
         <ul class="service-list">
             <li data-foco="planos"><i class="fas fa-diagram-project" aria-hidden="true"></i><h3>Network and server plans</h3><p>Topology and technical documentation of your infrastructure before the first device is installed.</p></li>
@@ -764,7 +772,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=8.0"></script>
-    <script src="../script/efectos.js?v=8.0"></script>
+    <script src="../script/scripts.js?v=8.1"></script>
+    <script src="../script/efectos.js?v=8.1"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
     const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const tactil = matchMedia('(pointer: coarse)').matches;
     const dpr = Math.min(devicePixelRatio || 1, 2);
+    const MAPA_TIERRA = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADI/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA/v8/IOb//z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD+///P////////AAAAAAAAAAB4AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAPj//3/+//////8fAAAAwB0AAHz/AwAAAD8AAAAAAAAAAAAAAAAAAAAAAAAAGPD//wf8//////8DAACA/z8AAAAAAAAAAP8EAAAAAAAAAAAAAAAAAAAAAAB4+N3///n//////38AAACA/wcAAAAAAAAAAIBfAAAAAAAAAAAAAAAAAAAAAOA4RHjyP/D///////8DAAAAPA4AAAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAAP7H+Pv/P8D///////8DAAAAEAAAAAAA8gEAALj/HwAAAAAAAAAAAAAAAAAAAOD//7//HwAA/v////8DAAAAAAAAAADgDwAA4P//PwAA6N8BAAAAAAAAAAAAAA8cAHD/DwAA+P////8BAAAAAAAAAAD4AAAA/P//HwAAAAEAAAAAAAAAAAAAgP8Dx/f5fwAA8P////8AAAAAAAAAAAA+AAzw/////4cfAAcAAAAAAAAAAAAAwP9/x3/8/wEA8P///z8AAAAAAAAAAAAPAJ7+//////8/gP8BAAAAAwCAAAAAAO//D3/8/x8A8P///z8AAAAAAAAAAAAPgP////////8///8PAACAAAD4/wAAEMD/P/j4//8A4P///z8AAAAAAPwHAAAcgN//////////////DwAAAAD+///z/5//f/7D//8B4P///w8AAAAA4P8/ADCAn9///////////////99/A+D/////////H/7Ph/8BgP///wMAAAAA/P//B4P/////////////////////HwD/////////////h/kfwP//BwAAAAAA/P//H/P//9///////////////////8P/////////////A/x/wP//AyAYAAAA/v////////////////////////////H/////////////gf8dgP9/APA/AAAA//N/8P//////////////////////4MD/////////////w/8HAP8PAOA/AADA//P//v////////////////////9/AAf+///////////jRPAPAP4HAIADAADw//z///////////////////////9/AID///////////8Aw+cPAP4DAAAAAAD8P/7/////////////////////////AMD//////////38AwB8AAPgDAAAAAAD+H/7/////////////////////+f8DAOD//////////z8AwH8IAOABAAAAAAT+f/7/////////////////////wH8AAAD8N4D//////x8AwH8cAAAAAAAAAAD+f/j///////////////////9/8AAAAAD0DwD8/////38A4P8/AAAAAAAAoAGcH/z//////////////////wMAeAAAAADADgDw//////8AgP9/AAAAAAAA8APAX/b//////////////////wAAfgAAAAAwAgDg//////8PkP9/AAAAAAAA4ANwH/7/////////////////PwAAfwAAAAAeAADA////////wP//AAAAAAAA8AfwB/7/////////////////HwCAPwAAAIABAACA/v//////8///BwAAAAAA/A/w8///////////////////PwCAPwAAADgAAACA/v//////4///DwAAAAAAPA/+/////////////////////wUADwAAAAAAAAAA+f//////5///DwAAAAAAvD///////////////////////w8ABwAADAAAAAAA8P//////////HwAAAAAAjJ///////////////////////w8AAwAAAAAAAAAA8P//////////DQAAAAAAgOf//////////////////////w2AAAAAAAAAAAAA4P////////8xPAAAAAAAAPz//////////////////////w0AAAAAAAAAAAAAgP////////8PfgAAAAAAgP///////////////////////wQAAAAAAAAAAAAAgP////////8P/gAAAAAAAP7/////////////////////fwQAAAAAAAAAAAAAAP////////+fQAAAAAAAAPz//////R/+////////////PwwAAAAAAAAAAAAAAP//////////AAAAAAAAAPj////j/w/+////////////PwIBAAAAAAAAAAAAAP////////8fAAAAAAAAAPj//f9h/of/////////////Dw4AAAAAAAAAAAAAAP///////z8EAAAAAAAA+P/H8/8B8If/////////////Bz4AAAAAAAAAAAAAgP///////z8AAAAAAAAA+H/gx/8A4A/+//////////9/AA8AAAAAAAAAAAAAAP///////z8AAAAAAAAA+H8gn//54R/8//////////8/AAEAAAAAAAAAAAAAAP///////wcAAAAAAAAA+B8wvP///z/+/////////98fAAMAAAAAAAAAAAAAAP///////wMAAAAAAAAA+I8wEM///x/8/////////28OAAMAAAAAAAAAAAAAAP///////wEAAAAAgAAA+A8AGN///x/8/////////wMegAMAAAAAAAAAAAAAAP7//////wEAAAAAAAAA+AcADv7//x/8/////////38cwAEAAAAAAAAAAAAAAPz//////wAAAAAAAAAAwOJ/AIT3/////////////x888AEAAAAAAAAAAAAAAPj//////wEAAAAAAAAAQPx/ADAg/////////////w88/gEAAAAAAAAAAAAAAPj/////fwAAAAAAAAAA4P9/AAAA/////////////w+MfwAAAAAAAAAAAAAAAOD/////HwAAAAAAAAAA8P//AACA/////////////x/kDwAAAAAAAAAAAAAAAID/////DwAAAAAAAAAA+P//BweA/////////////x/AAAAAAAAAAAAAAAAAAID/////BwAAAAAAAAAA/P//D3/M/////////////z9AAAAAAAAAAAAAAAAAAAD7////BwAAAAAAAAAA/P///////////////////z8AAAAAAAAAAAAAAAAAAAD//78HBwAAAAAAAAAA/P///////9///////////z8AAAAAAAAAAAAAAAAAAAD0/w8ADgAAAAAAAAAM/////////5///////////z8AAAAAAAAAAAAAAAAAAADu/wcADgAAAAAAAACA//////+//x///////////x8AAAAAAAAAAAAAAAAAAADY/wcATAAAAAAAAADA//////8//z/s/////////w8AAAAAAAAAAAAAAAAAAACQ/wcADAAAAAAAAADg//////9//v/Y/////////w8AAAAAAAAAAAAAAAAAAAAw/wcAYAAAAAAAAADg//////9//v8egP///////zcAAAAAAAAAAAAAAAAAAABg/gMAAAEAAAAAAADw/////////P9/AP///////zEAAAAAAAAAAAAAAAAAAAAA/AMAPwIAAAAAAAD4////////+f//AP7/////fxAAAAAAAAAAAAAAAAAAAAAA/Acc8AAAAAAAAAD4////////+f//AP7/H///HwAAAAAAAAAAAACAAAAAAAAA/AcewAMAAAAAAAD4////////+f9/AOD/B/9/BAAAAAAAAAAAAAAAAQAAAAAA+A8eAHgAAAAAAAD4////////4f8/AOD/A/4/BgAAAAAAAAAAAAAAAAAAAAAA8P8PQPwCAAAAAADw////////4/8fAOD/APw/AiAAAAAAAAAAAAAAAAAAAAAAwP8PAAAAAAAAAADw////////x/8PAOB/APx/AHAAAAAAAAAAAAAAAAAAAAAAAP8PAABAAAAAAAD4////////x/8BAOA/APz/ADAAAAAAAAAAAAAAAAAAAAAAAMj/AQAAAAAAABD4////////z/8AAMAfAMD/ATAAAAAAAAAAAAAAAAAAAAAAAAD/AQAAAAAAAAD4////////nz8AAMAPAMD/AXAAAAAAAAAAAAAAAAAAAAAAAAD8AQAAAAAAAAD4/////////wcAAIAfAMD/A/AAAAAAAAAAAAAAAAAAAAAAAADgARAAAAAAAAD4/////////wAAAIAPAMH+A6ABAAAAAAAAAAAAAAAAAAAAAADAAHwAAAAAAADw/////////3AAAIAPAMD4AcgDAAAAAAAAAAAAAAAAAAAAAADAAf9/AAAAAADg/////////38AAAAPAED4AMgDAAAAAAAAAAAAAAAAAAAAAACAE/9/AAAAAADA/////////38AAAAfAMBgAMQDAAAAAAAAAAAAAAAAAAAAAAAA////AQAAAACA/////////z8AAAASAMAAAIIHAAAAAAAAAAAAAAAAAAAAAAAAzP//AwAAAACA/////////z8AAAAwAIABAMAHAAAAAAAAAAAAAAAAAAAAAAAAwP//BwAAAAAA/v///////x8AAAAwAAADAAMDAAAAAAAAAAAAAAAAAAAAAAAAwP//fwAAAAAA/A/+/////x8AAAAAABgHgAcAAAAAAAAAAAAAAAAAAAAAAAAAwP///wEAAAAAEAD8/////w8AAAAAADAPwAcAAAAAAAAAAAAAAAAAAAAAAAAAwP///wEAAAAAAADw/////wcAAAAAAOAO4AMAAAAAAAAAAAAAAAAAAAAAAAAA4P///wMAAAAAAADA/////wMAAAAAAOAP+AMQAAAAAAAAAAAAAAAAAAAAAAAA4P///wMAAAAAAADg/////wEAAAAAAIAf/gcYAAAAAAAAAAAAAAAAAAAAAAAA8P///wMAAAAAAADg////fwAAAAAAAIAP/vMZAAAAAAAAAAAAAAAAAAAAAAAD+P///x8AAAAAAADg////fwAAAAAAAAAf/ivIAwAAAAAAAAAAAAAAAAAAAAAA+P///38AAAAAAADg////PwAAAAAAAAA//vnAMwAAAAAAAAAAAAAAAAAAAAAA+P////8DAAAAAADA////HwAAAAAAAAB+/DkA9wEEAAAAAAAAAAAAAAAAAAAA+P////8fAAAAAACA////DwAAAAAAAAA80Hl8/g8AAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAACA////DwAAAAAAAAA4AHgA+D8YAAAAAAAAAAAAAAAAAAAA+P//////AQAAAAAA////DwAAAAAAAAAwAFgAxL9PAAAAAAAAAAAAAAAAAAAA+P//////AQAAAAAA////DwAAAAAAAADgDQAAxP+AAAAAAAAAAAAAAAAAAAAA8P//////AQAAAAAA/v//DwAAAAAAAACAPwCEwP8AAAAAAAAAAAAAAAAAAAAA4P//////AQAAAAAA/v//DwAAAAAAAAAA+P8HQM8BCgAAAAAAAAAAAAAAAAAA4P//////AQAAAAAA/v//DwAAAAAAAAAAABgBAIAHMAAAAAAAAAAAAAAAAAAAwP//////AAAAAAAA/v//HwAAAAAAAAAAAIAAAAQGIAAAAAAAAAAAAAAAAAAAwP////9/AAAAAAAA/P//HwAAAAAAAAAAAADAEwQAAAAAAAAAAAAAAAAAAAAAgP////8/AAAAAAAA/v//HyAAAAAAAAAAAADAHw4AAAAAgAAAAAAAAAAAAAAAAP////8fAAAAAAAA////HzAAAAAAAAAAAADAHw4AAAAAAAAAAAAAAAAAAAAAAP////8fAAAAAAAA////HzgAAAAAAAAAAADuDx4AAAAAAAAAAAAAAAAAAAAAAP7///8fAAAAAAAA////H3wAAAAAAAAAAAD/Hz4AAAgAAAAAAAAAAAAAAAAAAPj///8fAAAAAAAA////Dz8AAAAAAAAAAID/vz4AABiAAAAAQAAAAAAAAAAAAPD///8fAAAAAACA////Az8AAAAAAAAAAMD//z8AAABgAAAAAAAAAAAAAAAAAOD///8fAAAAAAAA////AT8AAAAAAAAAAMD//38AAAAAAAAAAAAAAAAAAAAAAMD///8PAAAAAAAA/v9/AB8AAAAAAAAAAOD///8AAAAAAAAAAAAAAAAAAAAAAMD///8PAAAAAAAA/v9/AB8gAAAAAAAAAP7///8BAAEAAAAAAAAAAAAAAAAAAMD///8HAAAAAAAA/P9/gA8IAAAAAAAAgP////8DAAIAAAAAAAAAAAAAAAAAAMD///8HAAAAAAAA/P//gA8AAAAAAAAAwP////8HAAQAAAAAAAAAAAAAAAAAAOD//38AAAAAAAAA/P//gA8AAAAAAAAA4P////8HAAAAAAAAAAAAAAAAAAAAAOD//x8AAAAAAAAA/P9/AA8AAAAAAAAA4P////8PAAAAAAAAAAAAAAAAAAAAAOD//w8AAAAAAAAA+P8fAAMAAAAAAAAA4P////8fAAAAAAAAAAAAAAAAAAAAAOD//w8AAAAAAAAA+P8fAAAAAAAAAAAA4P////8fAAAAAAAAAAAAAAAAAAAAAOD//w8AAAAAAAAA+P8fAAAAAAAAAAAAwP////8/AAAAAAAAAAAAAAAAAAAAAPD//wcAAAAAAAAA8P8fAAAAAAAAAAAAwP////8/AAAAAAAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8PAAAAAAAAAAAAgP////8/AAAAAAAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8HAAAAAAAAAAAAgP////8fAAAAAAAAAAAAAAAAAAAAAPD//wEAAAAAAAAAwP8DAAAAAAAAAAAAgP////8fAAAAAAAAAAAAAAAAAAAAAPD//wAAAAAAAAAAwP8BAAAAAAAAAAAAgP8H/P8fAAAAAAAAAAAAAAAAAAAAAPD/fwAAAAAAAAAAwP8AAAAAAAAAAAAAgP8A+P8PAAAAAAAAAAAAAAAAAAAAAPD/PwAAAAAAAAAAgAMAAAAAAAAAAAAAgAcA6P8HAAAAAAAAAAAAAAAAAAAAAPj/BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8HAAAGAAAAAAAAAAAAAAAAAPj/BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP8DAAAMAAAAAAAAAAAAAAAAAPz/BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8DAAAIAAAAAAAAAAAAAAAAAPz/AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH4AAAA8AAAAAAAAAAAAAAAAAPg/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAAAPw/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAZAAAAAAAAAAAAAAAAAPwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOABAAAPAAAAAAAAAAAAAAAAAPwfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAAIADCAAAAAAAAAAAAAAAAP4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAOABAAAAAAAAAAAAAAAAAP4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAP4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwAAAAAAAAAAAAAAAAAAP8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAAAAAAAAAAAP4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8AAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH6AAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAPAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/AAAAAAAAAAAAAAAAAMAfAAAAgP//fIDn/wAAAAAAAAAAAAAAAAAAAAAAAIAHAAAAAAAAAAAAAAAAAP7/PwDA/////////z8AAAAAAAAAAAAAAAAAAAAAAAAeAAAAAAAAAAAAAAAg8P///wP8//////////9/AAAAAAAAAAAAAAAAAAAAAPg/AAAAAAAAAAAAAADg+////wP/////////////DwAAAAAAAAAAAAAAAAAAAPN/AAAAAAAAIIJ//17///////H/////////////3wcAAAAAAAAAAAAAAAAAAP9/AAAAAAAA//////////////j//////////////38AAAAAAAAAAAAAoA8AAHr/AAAAAACA////////////f////////////////z8AAAAAAAAAYAYA4P///f//AAAAAAD4/////////////////////////////y8AAAAAAACA8f43gP////9/AAAAAAD8/////////////////////////////wEAAAAAAPT///////////8fAAAAAOD/////////////////////////////fwAAAAAA4P///////////38AAAAAwP//////////////////////////////fwAAAADg/////////////wcAAAAA/v///////////////////////////////xwAAAAA////////////P4AAAPwA/////////////////////////////////wcAAAAf8v///////////3ADAP4B+///////////////////////////////HwAAAAAAwP///////////yH6wT8A////////////////////////////////HwAAAACA//////////////8PAAD8////////////////////////////////PwAAAAAA/P////////////9/8P///////////////////////////////////wMAAP7///////////////////////////////////////////////////////8B/4//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////';
 
     // --- Idioma ---
     const idioma = document.querySelector('[data-idioma]');
@@ -465,15 +466,28 @@ void main(){
         const ctx = canvas.getContext('2d');
         let W = 0, H = 0;
         const rad = Math.PI / 180;
-        const N = tactil ? 1400 : 2600;
-        const puntos = Array.from({ length: N }, (_, i) => {
+        const vec = ([la, lo]) => [Math.cos(la * rad) * Math.cos(lo * rad), Math.sin(la * rad), -Math.cos(la * rad) * Math.sin(lo * rad)];
+        // Máscara de tierra 360×180 (1 bit por grado) a partir de Natural Earth 1:50m, dominio público
+        const TIERRA = Uint8Array.from(atob(MAPA_TIERRA), (ch) => ch.charCodeAt(0));
+        const esTierra = (la, lo) => {
+            const i = Math.min(359, Math.max(0, Math.floor(lo + 180))), j = Math.min(179, Math.max(0, Math.floor(90 - la)));
+            const n = j * 360 + i;
+            return (TIERRA[n >> 3] >> (n & 7)) & 1;
+        };
+        const N = tactil ? 9000 : 16000;
+        const puntos = [];
+        for (let i = 0; i < N; i++) {
             const y = 1 - (i + .5) / N * 2, r = Math.sqrt(1 - y * y), a = i * 2.39996323;
-            return [Math.cos(a) * r, y, Math.sin(a) * r];
-        });
+            const x = Math.cos(a) * r, z = Math.sin(a) * r;
+            if (esTierra(Math.asin(y) / rad, Math.atan2(-z, x) / rad)) puntos.push([x, y, z]);
+        }
+        // meridianos y paralelos cada 30°
+        const reticula = [];
+        for (let lo = -180; lo < 180; lo += 30) reticula.push(Array.from({ length: 37 }, (_, k) => vec([-90 + k * 5, lo])));
+        for (let la = -60; la <= 60; la += 30) reticula.push(Array.from({ length: 73 }, (_, k) => vec([la, -180 + k * 5])));
         const hub = [21.5, -104.9];
         const CIUDADES = [[19.43, -99.13, 'CDMX'], [20.67, -103.35, ''], [25.69, -100.32, 'MTY'], [34.05, -118.24, 'LA'], [40.71, -74.0, 'NYC'],
             [4.71, -74.07, 'BOG'], [-23.55, -46.63, 'SAO'], [-34.6, -58.38, 'BUE'], [40.42, -3.7, 'MAD'], [51.5, -0.12, 'LON'], [35.68, 139.69, 'TYO'], [49.28, -123.12, 'YVR']];
-        const vec = ([la, lo]) => [Math.cos(la * rad) * Math.cos(lo * rad), Math.sin(la * rad), -Math.cos(la * rad) * Math.sin(lo * rad)];
         const H0 = vec(hub);
         const arcos = CIUDADES.map((c, k) => {
             const B = vec(c), d = Math.acos(Math.max(-1, Math.min(1, H0[0] * B[0] + H0[1] * B[1] + H0[2] * B[2])));
@@ -508,18 +522,30 @@ void main(){
                 const cuerpo = ctx.createRadialGradient(cx - R * .35, cy - R * .4, R * .1, cx, cy, R);
                 cuerpo.addColorStop(0, '#13213f'); cuerpo.addColorStop(1, '#070c18');
                 ctx.fillStyle = cuerpo; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
-                // puntos: atrás tenues, adelante brillantes
-                for (let pase = 0; pase < 2; pase++) {
-                    ctx.fillStyle = pase ? '#a9c6ff' : 'rgba(110,162,255,.22)';
-                    ctx.beginPath();
-                    for (const p of puntos) {
-                        const [x, y, z] = proy(p);
-                        if ((z > 0) !== !!pase) continue;
-                        const s = pase ? (.9 + z * 1.1) * dpr : .8 * dpr;
-                        ctx.rect(x - s / 2, y - s / 2, s, s);
-                    }
-                    ctx.fill();
+                // retícula: solo la cara visible
+                ctx.strokeStyle = 'rgba(110,162,255,.13)'; ctx.lineWidth = 1 * dpr;
+                ctx.beginPath();
+                reticula.forEach((linea) => {
+                    let antes = null;
+                    linea.forEach((q) => {
+                        const p = proy(q);
+                        if (p[2] > 0 && antes && antes[2] > 0) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]);
+                        antes = p;
+                    });
+                });
+                ctx.stroke();
+                // continentes en puntos: atrás tenues, adelante brillantes y más grandes hacia el centro
+                const cubos = [[], [], []];
+                for (const p of puntos) {
+                    const q = proy(p);
+                    cubos[q[2] < 0 ? 0 : q[2] < .5 ? 1 : 2].push(q);
                 }
+                [['rgba(110,162,255,.14)', .9], ['#7fa6ef', 1.4], ['#c3d7ff', 1.8]].forEach(([col, tam], k) => {
+                    ctx.fillStyle = col;
+                    ctx.beginPath();
+                    for (const [x, y, z] of cubos[k]) { const s = (k ? tam * (.75 + z * .35) : tam) * dpr; ctx.rect(x - s / 2, y - s / 2, s, s); }
+                    ctx.fill();
+                });
                 // arcos con un paquete que viaja
                 ctx.lineCap = 'round';
                 arcos.forEach((a) => {
