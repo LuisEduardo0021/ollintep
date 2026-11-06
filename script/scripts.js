@@ -574,9 +574,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Manifiesto: cada palabra se ilumina según el scroll (--p: su posición de 0 a 1; el CSS hace el resto) ---
     document.querySelectorAll('.manifesto-text').forEach(el => {
-        const palabras = el.textContent.trim().split(/\s+/);
-        el.setAttribute('aria-label', el.textContent.trim());
+        const texto = el.textContent.trim(), palabras = texto.split(/\s+/);
+        // El texto completo queda para lectores de pantalla (un <p> no admite aria-label); las palabras animadas se ocultan.
+        const lector = document.createElement('span');
+        lector.className = 'sr-only';
+        lector.textContent = texto;
         el.textContent = '';
+        el.append(lector);
         palabras.forEach((p, i) => {
             const w = document.createElement('span');
             w.className = 'mw';
