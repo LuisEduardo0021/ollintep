@@ -6912,3 +6912,8 @@ html:has(.lz-ventana[open]) {
 }
 .codigo-tabs { position: relative; }
 .codigo-cuerpo { scrollbar-width: thin; scrollbar-color: rgba(148, 163, 184, 0.3) transparent; }
+
+/* Diseño: dos botones (cotizar y laboratorio) */
+.block-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+.btn-lab i { transition: transform .4s var(--ease-out); }
+.btn-lab:hover i { transform: rotate(-18deg) scale(1.15); }

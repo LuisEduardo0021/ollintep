@@ -31,6 +31,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://ollin-tep.com/laboratorio/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://ollin-tep.com/en/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -56,6 +62,12 @@
   </url>
   <url>
     <loc>https://ollin-tep.com/en/diagmind/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ollin-tep.com/en/laboratorio/</loc>
     <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

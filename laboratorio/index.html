@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>/*idioma*/(function(){try{var k='ollintep-idioma',s=localStorage,q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')s.setItem(k,q);var g=s.getItem(k);if(g==='es'||/bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse/i.test(navigator.userAgent))return;var l=g||(navigator.languages||[navigator.language]).map(function(x){return(x||'').slice(0,2)}).filter(function(x){return x==='es'||x==='en'})[0]||'en';if(l==='en')location.replace('/en'+location.pathname+location.search+location.hash)}catch(e){}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio visual | Ollin-Tep Software</title>
+    <meta name="description" content="Laboratorio de diseño de Ollin-Tep: shaders, partículas, caleidoscopios y tipografía viva dibujados en tiempo real en tu navegador.">
+    <link rel="canonical" href="https://ollin-tep.com/laboratorio/">
+    <link rel="alternate" hreflang="es" href="https://ollin-tep.com/laboratorio/">
+    <link rel="alternate" hreflang="en" href="https://ollin-tep.com/en/laboratorio/">
+    <link rel="alternate" hreflang="x-default" href="https://ollin-tep.com/laboratorio/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Ollin-Tep Software">
+    <meta property="og:locale" content="es_MX">
+    <meta property="og:url" content="https://ollin-tep.com/laboratorio/">
+    <meta property="og:title" content="Laboratorio visual de Ollin-Tep">
+    <meta property="og:description" content="Shaders, partículas y tipografía viva: lo que podemos crear para tu marca.">
+    <meta property="og:image" content="https://ollin-tep.com/resources/og/laboratorio-og-v3.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="../resources/ollintep.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/laboratorio.css?v=7.7">
+</head>
+<body>
+    <a class="saltar" href="#obsidiana">Saltar al contenido</a>
+
+    <header class="barra">
+        <a href="../index.html" class="marca"><img src="../resources/ollintep.svg" alt="" width="28" height="28"><span>Ollin-Tep</span><em>Laboratorio</em></a>
+        <nav class="barra-der">
+            <a href="#" class="idioma" data-idioma>EN</a>
+            <a href="../index.html#contacto" class="barra-cta">Quiero algo así</a>
+        </nav>
+    </header>
+
+    <nav class="indice" aria-label="Experimentos">
+        <a href="#obsidiana" aria-label="Obsidiana líquida"></a>
+        <a href="#tunel" aria-label="Túnel"></a>
+        <a href="#gel" aria-label="Gel"></a>
+        <a href="#enjambre" aria-label="Enjambre"></a>
+        <a href="#caleidoscopio" aria-label="Caleidoscopio"></a>
+        <a href="#moire" aria-label="Moiré"></a>
+        <a href="#tinta" aria-label="Tinta"></a>
+    </nav>
+
+    <main>
+        <section id="obsidiana" class="exp exp-portada">
+            <canvas class="lienzo" data-shader="obsidiana" aria-hidden="true"></canvas>
+            <div class="portada">
+                <p class="sobre">Laboratorio visual · Ollin-Tep</p>
+                <h1><span class="h1-a">Ollin</span><span class="h1-b">significa movimiento.</span></h1>
+                <p class="portada-texto">Este es nuestro laboratorio de diseño. Nada de lo que ves es un video: cada píxel se calcula en tiempo real, en tu navegador, mientras lo miras.</p>
+                <p class="pista"><span class="raton" aria-hidden="true"></span>Mueve el cursor y desplázate</p>
+            </div>
+            <p class="ficha"><b>01</b> Obsidiana líquida <i>Shader GLSL · deformación de dominio · ruido fractal</i></p>
+        </section>
+
+        <section id="tunel" class="exp">
+            <canvas class="lienzo" data-shader="tunel" aria-hidden="true"></canvas>
+            <div class="exp-texto">
+                <h2>Un viaje sin fin.</h2>
+                <p>Un túnel de grecas que nunca termina. La velocidad sigue tu desplazamiento.</p>
+            </div>
+            <p class="ficha"><b>02</b> Túnel de grecas <i>Proyección polar · patrón procedural · neón</i></p>
+        </section>
+
+        <section id="gel" class="exp">
+            <canvas class="lienzo" data-shader="gel" aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-der">
+                <h2>Materia que respira.</h2>
+                <p>Formas que se funden entre sí con brillo de película delgada. Tu cursor es una gota más.</p>
+            </div>
+            <p class="ficha"><b>03</b> Gel iridiscente <i>Raymarching · campos de distancia · iridiscencia</i></p>
+        </section>
+
+        <section id="enjambre" class="exp">
+            <canvas class="lienzo" data-enjambre aria-hidden="true"></canvas>
+            <div class="exp-texto exp-texto-abajo">
+                <h2>Miles de partículas, una sola idea.</h2>
+                <p>Fluyen como corriente y se ordenan para formar nuestro nombre. Toca o haz clic para dispersarlas.</p>
+            </div>
+            <p class="ficha"><b>04</b> Enjambre <i>Campo de flujo · física de resortes · canvas</i></p>
+        </section>
+
+        <section id="caleidoscopio" class="exp">
+            <canvas class="lienzo" data-shader="caleidoscopio" aria-hidden="true"></canvas>
+            <div class="exp-texto">
+                <h2>Simetría infinita.</h2>
+                <p>Mueve el cursor de lado a lado para cambiar el número de espejos y de arriba abajo para acercarte.</p>
+            </div>
+            <p class="ficha"><b>05</b> Caleidoscopio <i>Plegado angular · teselado · paleta coseno</i></p>
+        </section>
+
+        <section id="moire" class="exp exp-moire">
+            <div class="moire" aria-hidden="true">
+                <span class="moire-a"></span><span class="moire-b"></span><span class="moire-c"></span>
+            </div>
+            <div class="exp-texto exp-texto-der">
+                <h2>Ilusión pura.</h2>
+                <p>Solo líneas finas. Cuando se cruzan, tu ojo inventa ondas que no existen.</p>
+            </div>
+            <p class="ficha"><b>06</b> Moiré <i>CSS puro · gradientes repetidos · modos de fusión</i></p>
+        </section>
+
+        <section id="tinta" class="exp exp-tinta">
+            <svg class="tinta" viewBox="0 0 1200 400" role="img" aria-label="Diseño">
+                <defs>
+                    <linearGradient id="tinta-grad" x1="0" x2="1" y1="0" y2="1">
+                        <stop offset="0" stop-color="#6ea2ff"/>
+                        <stop offset=".5" stop-color="#c084fc"/>
+                        <stop offset="1" stop-color="#ff7a2e"/>
+                    </linearGradient>
+                    <filter id="tinta-filtro" x="-20%" y="-30%" width="140%" height="160%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="7" result="ruido"/>
+                        <feDisplacementMap in="SourceGraphic" in2="ruido" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+                    </filter>
+                </defs>
+                <g filter="url(#tinta-filtro)">
+                    <text x="600" y="270" text-anchor="middle" class="tinta-txt tinta-r">DISEÑO</text>
+                    <text x="600" y="270" text-anchor="middle" class="tinta-txt tinta-b">DISEÑO</text>
+                    <text x="600" y="270" text-anchor="middle" class="tinta-txt tinta-p">DISEÑO</text>
+                </g>
+            </svg>
+            <div class="exp-texto exp-texto-abajo">
+                <h2>Tipografía viva.</h2>
+                <p>Letras que se derriten como tinta en agua. Pasa el cursor por encima para agitarlas.</p>
+            </div>
+            <p class="ficha"><b>07</b> Tinta <i>Filtros SVG · turbulencia · desplazamiento</i></p>
+        </section>
+
+        <section class="cierre">
+            <h2>¿Y si tu marca se moviera así?</h2>
+            <p>Llevamos esta misma técnica a sitios web, presentaciones, pantallas para punto de venta, campañas e identidades de marca.</p>
+            <div class="cierre-btns">
+                <a href="../index.html#contacto" class="boton boton-lleno">Cotizar un proyecto</a>
+                <a href="../index.html#diseno" class="boton">Ver servicios de diseño</a>
+            </div>
+            <p class="cierre-pie">© Ollin-Tep Software · Tepic, Nayarit, México</p>
+        </section>
+    </main>
+
+    <script src="../script/laboratorio.js?v=7.7"></script>
+</body>
+</html>

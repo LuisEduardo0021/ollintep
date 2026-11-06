@@ -6,7 +6,7 @@ import json, os, re, sys
 RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 DIC = json.load(open(os.path.join(RAIZ, 'scripts/en.json'), encoding='utf-8'))
 IGUAL = set(DIC.pop('_igual')) | {'@@ALT@@'}
-PAGINAS = ['index.html', 'centzontle/index.html', 'actapro/index.html', 'agrocria/index.html', 'diagmind/index.html']
+PAGINAS = ['index.html', 'centzontle/index.html', 'actapro/index.html', 'agrocria/index.html', 'diagmind/index.html', 'laboratorio/index.html']
 NO_ES_TEXTO = re.compile(r'^(https?:|width=|#|summary_|website$|en_US$|noindex$|\d|[\w.+-]+@)')
 faltan = {}
 

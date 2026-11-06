@@ -797,6 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Software a medida', 'Custom software'), T('Plataformas y consultoría', 'Platforms and consulting'), raizIdioma + 'index.html#a-medida', 'fa-laptop-code'],
         [T('Tepic, Nayarit', 'Tepic, Nayarit'), T('Nuestra región, en pixel art', 'Our region, in pixel art'), raizIdioma + 'index.html#nayarit', 'fa-location-dot'],
         [T('Diseño', 'Design'), T('Logos, identidad de marca y publicidad', 'Logos, brand identity and advertising'), raizIdioma + 'index.html#diseno', 'fa-pen-nib'],
+        [T('Laboratorio visual', 'Visual lab'), T('Shaders, partículas y tipografía viva', 'Shaders, particles and living type'), raizIdioma + 'laboratorio/index.html', 'fa-wand-magic-sparkles'],
         [T('Publicidad', 'Advertising'), T('Anuncios, carteles y lonas', 'Ads, posters and banners'), raizIdioma + 'index.html#diseno', 'fa-bullhorn'],
         [T('Redes e infraestructura', 'Networks and infrastructure'), T('Planos, servidores, VLANs, switches y routers', 'Plans, servers, VLANs, switches and routers'), raizIdioma + 'index.html#redes', 'fa-network-wired'],
         [T('VLANs', 'VLANs'), T('Segmentación de tu red', 'Segmenting your network'), raizIdioma + 'index.html#redes', 'fa-layer-group'],
