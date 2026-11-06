@@ -752,5 +752,10 @@
   "Comanda": "Order",
   "Cocina": "Kitchen",
   "Cobro": "Checkout",
-  "Corte": "Cash-up"
+  "Corte": "Cash-up",
+  "Captura": "Capture",
+  "Revisión": "Review",
+  "Votación": "Vote",
+  "Firma": "Signature",
+  "Archivo": "Archive"
 }

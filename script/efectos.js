@@ -2060,6 +2060,222 @@
         });
     });
 
+    // --- ACTAPRO: la vida de un acta. Captura, revisión, votación, firma y archivo con historial inmutable,
+    // en el turquesa y marino del logo. Las tarjetas de características (data-foco) saltan a su etapa.
+    document.querySelectorAll('[data-actapro-proceso]').forEach(caja => {
+        const c = lienzo('proceso-lienzo');
+        caja.prepend(c);
+        const ctx = c.getContext('2d');
+        const pasos = [...caja.querySelectorAll('.proceso-pasos li')];
+        const ING = raiz.lang === 'en';
+        const DUR = [4.6, 4.8, 4.8, 4.4, 5], INICIO = DUR.map((_, i) => DUR.slice(0, i).reduce((a, b) => a + b, 0));
+        const TOTAL = DUR.reduce((a, b) => a + b, 0);
+        const FOCO = { captura: 0, pendientes: 1, roles: 3, dashboard: 4 };
+        const sale = (x) => 1 - Math.pow(1 - limitar(x), 3);
+        const entre = (x, a, b) => limitar((x - a) / (b - a));
+        const TURQ = '#1fe3d2', AZUL = '#3d63ff', MEDIO = '#0063c6', CLARO = '#8ff3ea', VERDE = '#34d399', AMBAR = '#fbbf24', ROJO = '#f87171';
+        const L = ING
+            ? { campos: [['Folio', 'ACT-2026-0142'], ['Type', 'Ordinary session'], ['Amount', '$1,250,000'], ['Area', 'Public works']], evid: 'Evidence', guardado: 'SAVED · v1', pend: ['Attach signed minutes', 'Fix amount in item 3', 'Add attendance list'], obs: 'Item 3: amount does not match the budget', revisor: 'Reviewer', votos: ['For', 'Against', 'Abstain'], quorum: 'QUORUM 12/15', aprobado: 'APPROVED', firma: 'Signed with e.firma', sello: 'SEALED', hist: ['created', 'reviewed', 'voted', 'signed', 'archived'], cerrado: 'FILE CLOSED · IMMUTABLE' }
+            : { campos: [['Folio', 'ACT-2026-0142'], ['Tipo', 'Sesión ordinaria'], ['Monto', '$1,250,000'], ['Área', 'Obras públicas']], evid: 'Evidencias', guardado: 'GUARDADO · v1', pend: ['Adjuntar acta firmada', 'Corregir monto del punto 3', 'Agregar lista de asistencia'], obs: 'Punto 3: el monto no coincide con el presupuesto', revisor: 'Revisor', votos: ['A favor', 'En contra', 'Abstención'], quorum: 'QUÓRUM 12/15', aprobado: 'APROBADO', firma: 'Firmado con e.firma', sello: 'SELLADO', hist: ['creada', 'revisada', 'votada', 'firmada', 'archivada'], cerrado: 'EXPEDIENTE CERRADO · INMUTABLE' };
+        let W = 0, H = 0, dpr = 1, reloj = 0, antes = null, etapaVista = -1;
+
+        const medir = () => {
+            dpr = Math.min(devicePixelRatio || 1, 2);
+            const w = caja.clientWidth, h = caja.clientHeight;
+            if (w !== W || h !== H) { W = w; H = h; c.width = w * dpr; c.height = h * dpr; }
+        };
+        const redondo = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); };
+        const punto = (x, y, r, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); };
+        const rotulo = (txt, x, y, col = 'rgba(148,163,184,.8)', alin = 'left', tam = 9, peso = 500) => {
+            ctx.fillStyle = col; ctx.font = `${peso} ${tam}px ui-monospace, Menlo, monospace`; ctx.textAlign = alin; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y);
+        };
+        const caja2 = (x, y, w, h, r, relleno, borde, ancho = 1) => { redondo(x, y, w, h, r); if (relleno) { ctx.fillStyle = relleno; ctx.fill(); } if (borde) { ctx.strokeStyle = borde; ctx.lineWidth = ancho; ctx.stroke(); } };
+        const paloma = (x, y, s, col = VERDE) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - s, y); ctx.lineTo(x - s * .3, y + s * .7); ctx.lineTo(x + s, y - s * .7); ctx.stroke(); };
+        const corta = (txt, max) => txt.length > max ? txt.slice(0, max - 1) + '…' : txt;
+        const hex = (n, largo = 8) => Array.from({ length: largo }, (_, k) => Math.floor(azarDe(n * 13 + k) * 16).toString(16)).join('');
+        // Trazo de una firma a mano: curva paramétrica con lazos
+        const FIRMA = [];
+        for (let i = 0; i <= 140; i++) { const s = i / 140, w = s * 24; FIRMA.push([s * .86 + .06 * Math.cos(w) - .06, .55 - (.3 * Math.sin(w) * (.55 + .45 * Math.sin(s * 3.2 + .6))) - (s - .5) * .18]); }
+        {   // remate: sale en curva del último lazo y regresa por debajo
+            const [x0, y0] = FIRMA[FIRMA.length - 1], cx = x0 + .1, cy = 1.02, x1 = -.02, y1 = .86;
+            for (let i = 1; i <= 36; i++) { const s = i / 36, m = 1 - s; FIRMA.push([m * m * x0 + 2 * m * s * cx + s * s * x1, m * m * y0 + 2 * m * s * cy + s * s * y1]); }
+        }
+        // Miembros de la asamblea y su voto (0 a favor, 1 en contra, 2 abstención)
+        const VOTO = [0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0];
+
+        const dibujar = (tAbs) => {
+            medir();
+            if (!W || !H) return;
+            const dt = antes === null ? 0 : Math.min(tAbs - antes, .1);
+            antes = tAbs;
+            const foco = FOCO[caja.dataset.foco];
+            if (foco !== undefined) reloj = INICIO[foco] + DUR[foco] * .88;
+            else reloj = (reloj + dt) % TOTAL;
+            let e = 0; while (e < 4 && reloj >= INICIO[e + 1]) e++;
+            const p = (reloj - INICIO[e]) / DUR[e];
+            if (e !== etapaVista) { etapaVista = e; pasos.forEach((li, k) => li.classList.toggle('activo', k === e)); }
+            const alfa = Math.min(sale(entre(p, 0, .1)), 1 - entre(p, .92, 1));
+            const t = tAbs;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            ctx.save(); ctx.globalAlpha = alfa;
+            const zona = { x: W * .04, y: H * .03, w: W * .92, h: H * .84 };
+            caja2(zona.x - 6, zona.y - 4, zona.w + 12, zona.h + 8, 10, 'rgba(0,10,40,.78)', 'rgba(31,227,210,.22)');
+
+            if (e === 0) {
+                // 1. CAPTURA: el formulario se llena campo por campo y llegan las evidencias
+                const fw = zona.w * .6, fx = zona.x + 4;
+                rotulo(ING ? 'New minutes' : 'Nueva acta', fx, zona.y + 12, '#e2f7f5', 'left', 10, 700);
+                const fila = Math.min(40, (zona.h - 40) / 4.4);
+                L.campos.forEach(([n, v], k) => {
+                    const yy = zona.y + 28 + k * fila, q = entre(p, .08 + k * .14, .2 + k * .14);
+                    rotulo(n, fx, yy + 4, 'rgba(148,163,184,.85)', 'left', 8);
+                    const activo = q > 0 && q < 1;
+                    caja2(fx, yy + 11, fw - 8, 18, 5, '#04153a', activo ? TURQ : 'rgba(61,99,255,.35)', activo ? 1.4 : 1);
+                    const txt = v.slice(0, Math.floor(v.length * q));
+                    rotulo(txt, fx + 7, yy + 20, '#f1f5f9', 'left', 8, 600);
+                    if (activo && Math.sin(t * 10) > 0) { ctx.font = '600 8px ui-monospace, Menlo, monospace'; ctx.fillStyle = TURQ; ctx.fillRect(fx + 8 + ctx.measureText(txt).width, yy + 15, 1.2, 10); }
+                });
+                // evidencias
+                const ex = zona.x + fw + 6, ew = zona.w - fw - 6;
+                rotulo(L.evid, ex, zona.y + 12, 'rgba(148,163,184,.9)', 'left', 8, 600);
+                caja2(ex, zona.y + 22, ew, zona.h - 60, 8, 'rgba(31,227,210,.05)', null);
+                ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(31,227,210,.4)'; redondo(ex, zona.y + 22, ew, zona.h - 60, 8); ctx.stroke(); ctx.setLineDash([]);
+                ['PDF', 'JPG', 'XLSX'].forEach((tipo, k) => {
+                    const q = sale(entre(p, .3 + k * .12, .42 + k * .12)); if (!q) return;
+                    const dw = Math.min(ew * .34, 34), dh = dw * 1.25, dx = ex + 10 + (k % 2) * (dw + 10), dy = zona.y + 32 + Math.floor(k / 2) * (dh + 10) - (1 - q) * 30;
+                    ctx.globalAlpha = alfa * q;
+                    caja2(dx, dy, dw, dh, 3, '#e2f7f5', null);
+                    ctx.fillStyle = [ROJO, AZUL, VERDE][k]; ctx.fillRect(dx, dy + dh - 11, dw, 11);
+                    rotulo(tipo, dx + dw / 2, dy + dh - 5.5, '#fff', 'center', 7, 800);
+                    for (let j = 0; j < 3; j++) { ctx.fillStyle = 'rgba(15,23,42,.3)'; ctx.fillRect(dx + 4, dy + 5 + j * 5, dw * (.4 + azarDe(k * 3 + j) * .4), 2); }
+                });
+                ctx.globalAlpha = alfa;
+                const g = entre(p, .8, .86);
+                if (g) { ctx.globalAlpha = alfa * g; caja2(zona.x + 4, zona.y + zona.h - 26, zona.w - 8, 20, 6, 'rgba(31,227,210,.12)', TURQ); rotulo(`✓ ${L.guardado} · ${hex(1)}`, zona.x + zona.w / 2, zona.y + zona.h - 16, TURQ, 'center', 8, 700); }
+            } else if (e === 1) {
+                // 2. REVISIÓN: el revisor marca una observación y la lista de pendientes se va cerrando
+                const dw = zona.w * .5, dx = zona.x + 4, dy = zona.y + 4, dh = zona.h - 8;
+                caja2(dx, dy, dw, dh, 5, '#f1f5f9', null);
+                rotulo('ACT-2026-0142', dx + 10, dy + 12, '#001180', 'left', 8, 800);
+                for (let k = 0; k < 11; k++) {
+                    const yy = dy + 28 + k * Math.min(15, (dh - 40) / 11), marca = k === 5;
+                    if (marca) { const q = entre(p, .12, .26); ctx.fillStyle = `rgba(251,191,36,${.45 * q})`; ctx.fillRect(dx + 8, yy - 4, (dw - 16) * q, 8); }
+                    ctx.fillStyle = 'rgba(15,23,42,.35)'; ctx.fillRect(dx + 10, yy - 1.5, (dw - 20) * (.55 + azarDe(k + 20) * .4), 3);
+                }
+                // burbuja de observación
+                const oq = sale(entre(p, .24, .34));
+                if (oq) {
+                    ctx.globalAlpha = alfa * oq;
+                    const bx = dx + dw * .3, by = dy + 28 + 5 * Math.min(15, (dh - 40) / 11) + 12, bw = zona.w * .5, bh = 34;
+                    caja2(bx, by, bw, bh, 6, '#04153a', AMBAR, 1.2);
+                    rotulo(`💬 ${L.revisor}`, bx + 7, by + 10, AMBAR, 'left', 8, 700);
+                    rotulo(corta(L.obs, Math.floor((bw - 14) / 5.2)), bx + 7, by + 23, 'rgba(241,245,249,.9)', 'left', 7.5);
+                    ctx.globalAlpha = alfa;
+                }
+                // pendientes
+                const px = zona.x + dw + 14, pw = zona.w - dw - 14;
+                rotulo(ING ? 'Pending' : 'Pendientes', px, zona.y + 12, '#e2f7f5', 'left', 9, 700);
+                L.pend.forEach((n, k) => {
+                    const yy = zona.y + 34 + k * 26, hecho = p > .45 + k * .13;
+                    ctx.strokeStyle = hecho ? VERDE : 'rgba(148,163,184,.5)'; ctx.lineWidth = 1.2; ctx.strokeRect(px, yy - 5, 10, 10);
+                    if (hecho) paloma(px + 5, yy, 3.4);
+                    rotulo(corta(n, Math.floor((pw - 18) / 5.2)), px + 16, yy, hecho ? 'rgba(148,163,184,.7)' : '#f1f5f9', 'left', 8);
+                    if (hecho) { ctx.font = '500 8px ui-monospace, Menlo, monospace'; ctx.fillStyle = 'rgba(148,163,184,.6)'; ctx.fillRect(px + 16, yy, Math.min(pw - 18, ctx.measureText(corta(n, Math.floor((pw - 18) / 5.2))).width) * entre(p, .45 + k * .13, .5 + k * .13), 1); }
+                });
+                const fin = entre(p, .86, .9);
+                if (fin) { ctx.globalAlpha = alfa * fin; rotulo(ING ? '3/3 resolved' : '3/3 resueltos', px, zona.y + zona.h - 12, VERDE, 'left', 9, 700); }
+            } else if (e === 2) {
+                // 3. VOTACIÓN: los miembros votan alrededor de la mesa y el conteo sube
+                const cx = zona.x + zona.w * .3, cy = zona.y + zona.h * .5, r = Math.min(zona.w * .22, zona.h * .36);
+                caja2(cx - r * .55, cy - r * .32, r * 1.1, r * .64, r * .3, 'rgba(61,99,255,.12)', 'rgba(61,99,255,.4)');
+                rotulo(L.quorum, cx, cy, p > .12 ? TURQ : 'rgba(148,163,184,.7)', 'center', 8, 700);
+                const cuenta = [0, 0, 0];
+                VOTO.forEach((v, k) => {
+                    const a = k / VOTO.length * Math.PI * 2 - Math.PI / 2, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * .78;
+                    const vota = p > .18 + k * .045;
+                    if (vota) cuenta[v]++;
+                    const col = vota ? [VERDE, ROJO, AMBAR][v] : 'rgba(148,163,184,.45)';
+                    punto(x, y - 4, 4.5, col); caja2(x - 6, y + 1, 12, 7, 3.5, col, null);
+                    if (vota && p < .18 + k * .045 + .06) { const q = entre(p, .18 + k * .045, .24 + k * .045); ctx.strokeStyle = col; ctx.globalAlpha = alfa * (1 - q); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(x, y, 6 + q * 12, 0, 7); ctx.stroke(); ctx.globalAlpha = alfa; }
+                });
+                const bx = zona.x + zona.w * .62, bw = zona.w * .38 - 6;
+                L.votos.forEach((n, k) => {
+                    const yy = zona.y + 24 + k * 34, col = [VERDE, ROJO, AMBAR][k];
+                    rotulo(n, bx, yy, 'rgba(226,232,240,.9)', 'left', 8, 600); rotulo(`${cuenta[k]}`, bx + bw, yy, col, 'right', 10, 800);
+                    caja2(bx, yy + 9, bw, 6, 3, 'rgba(148,163,184,.14)', null);
+                    if (cuenta[k]) caja2(bx, yy + 9, bw * cuenta[k] / VOTO.length, 6, 3, col, null);
+                });
+                const fin = entre(p, .78, .84);
+                if (fin) { ctx.save(); ctx.globalAlpha = alfa * fin; ctx.translate(bx + bw / 2, zona.y + zona.h - 24); ctx.rotate(-.06); caja2(-48, -12, 96, 24, 5, 'rgba(52,211,153,.14)', VERDE, 1.6); rotulo(`${L.aprobado} ${cuenta.join('-')}`, 0, 0, VERDE, 'center', 9, 800); ctx.restore(); }
+            } else if (e === 3) {
+                // 4. FIRMA: la firma se traza sobre la línea y cae el sello con su huella criptográfica
+                const fx = zona.x + zona.w * .08, fw = zona.w * .84, fy = zona.y + zona.h * .16, fh = zona.h * .4;
+                caja2(zona.x + 4, zona.y + 4, zona.w - 8, zona.h - 8, 6, '#f1f5f9', null);
+                const q = entre(p, .08, .55), n = Math.floor(FIRMA.length * q);
+                if (n > 1) {
+                    ctx.strokeStyle = '#001180'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
+                    for (let i = 0; i < n; i++) { const [u, v] = FIRMA[i], x = fx + (u + .06) * fw * .72, y = fy + v * fh; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+                    ctx.stroke(); ctx.lineCap = 'butt';
+                    if (q < 1) { const [u, v] = FIRMA[n - 1]; punto(fx + (u + .06) * fw * .72, fy + v * fh, 2.4, MEDIO); }
+                }
+                const ly = fy + fh + 8;
+                ctx.fillStyle = '#334155'; ctx.fillRect(fx, ly, fw * .72, 1);
+                rotulo(ING ? 'Board secretary' : 'Secretaría del ayuntamiento', fx, ly + 12, '#475569', 'left', 8);
+                if (p > .55) { ctx.globalAlpha = alfa * entre(p, .55, .6); paloma(fx + 4, ly + 28, 4, '#059669'); rotulo(L.firma, fx + 14, ly + 28, '#047857', 'left', 8, 700); rotulo(`SHA-256 ${hex(7, 16)}…`, fx, ly + 44, '#64748b', 'left', 7.5); ctx.globalAlpha = alfa; }
+                // sello que cae
+                const s = entre(p, .62, .72);
+                if (s) {
+                    const sx = fx + fw * .86, sy = fy + fh * .55, esc = 1 + (1 - sale(s)) * .8;
+                    ctx.save(); ctx.globalAlpha = alfa * sale(s); ctx.translate(sx, sy); ctx.scale(esc, esc); ctx.rotate(-.2);
+                    const rr = Math.min(zona.h * .2, 34);
+                    ctx.strokeStyle = MEDIO; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, rr, 0, 7); ctx.stroke(); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, rr - 5, 0, 7); ctx.stroke();
+                    rotulo(L.sello, 0, -3, MEDIO, 'center', 8, 800); rotulo('ActaPro', 0, 9, MEDIO, 'center', 7, 600);
+                    ctx.restore();
+                }
+            } else {
+                // 5. ARCHIVO: cada evento del acta queda encadenado al anterior por su huella; nadie puede alterarlo
+                const n = L.hist.length, bw = Math.min(zona.w / n - 10, 74), gap = (zona.w - bw * n) / (n - 1), bh = 52, by = zona.y + (zona.h - 44 - bh) / 2 + 6;
+                L.hist.forEach((ev, k) => {
+                    const q = sale(entre(p, .04 + k * .1, .14 + k * .1)); if (!q) return;
+                    const x = zona.x + k * (bw + gap), y = by - (1 - q) * 14;
+                    ctx.globalAlpha = alfa * q;
+                    if (k) { const x0 = x - gap, ym = by + bh / 2; ctx.strokeStyle = TURQ; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(x0, ym); ctx.lineTo(x, ym); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 5, ym - 3); ctx.lineTo(x, ym); ctx.lineTo(x - 5, ym + 3); ctx.stroke(); }
+                    caja2(x, y, bw, bh, 6, '#04153a', k === n - 1 ? TURQ : 'rgba(61,99,255,.55)', k === n - 1 ? 1.5 : 1);
+                    rotulo(`#${k + 1}`, x + 6, y + 10, 'rgba(148,163,184,.8)', 'left', 7);
+                    rotulo(ev, x + bw / 2, y + 24, '#e2f7f5', 'center', bw < 60 ? 7 : 8, 700);
+                    rotulo(hex(k + 30, 6), x + bw / 2, y + 40, CLARO, 'center', 7);
+                });
+                ctx.globalAlpha = alfa;
+                // intento de alterar un bloque: se marca en rojo y se rechaza
+                const ataque = entre(p, .6, .66) - entre(p, .74, .8);
+                if (ataque > 0) {
+                    const k = 2, x = zona.x + k * (bw + gap);
+                    ctx.strokeStyle = `rgba(248,113,113,${ataque})`; ctx.lineWidth = 2; redondo(x - 3, by - 3, bw + 6, bh + 6, 8); ctx.stroke();
+                    ctx.globalAlpha = alfa * ataque; rotulo(ING ? '✕ edit rejected' : '✕ edición rechazada', x + bw / 2, by + bh + 14, ROJO, 'center', 8, 700); ctx.globalAlpha = alfa;
+                }
+                // tablero mínimo
+                const ky = zona.y + zona.h - 44;
+                [[ING ? 'Minutes' : 'Actas', 142], [ING ? 'Open' : 'Abiertas', 9], [ING ? 'Avg. days' : 'Días prom.', 4.2]].forEach(([n, v], k) => {
+                    const kw = (zona.w - 16) / 3, kx = zona.x + k * (kw + 8);
+                    caja2(kx, ky, kw, 22, 5, 'rgba(61,99,255,.1)', 'rgba(61,99,255,.3)');
+                    rotulo(n, kx + 7, ky + 11, 'rgba(148,163,184,.85)', 'left', 7.5); rotulo(String(v), kx + kw - 7, ky + 11, TURQ, 'right', 9, 800);
+                });
+                const fin = entre(p, .82, .88);
+                if (fin) { ctx.globalAlpha = alfa * fin; rotulo(L.cerrado, zona.x + zona.w / 2, zona.y + 12, VERDE, 'center', 9, 800); }
+            }
+            ctx.restore();
+        };
+        const estatico = !mueve();
+        const fijo = () => { antes = null; if (!caja.dataset.foco) reloj = INICIO[2] + DUR[2] * .88; dibujar(0); };
+        if (estatico) { fijo(); addEventListener('resize', fijo); }
+        else bucle(caja, 60, dibujar);
+        caja.closest('section')?.querySelectorAll('[data-foco]').forEach(el => {
+            el.addEventListener('pointerenter', () => { caja.dataset.foco = el.dataset.foco; if (estatico) dibujar(0); });
+            el.addEventListener('pointerleave', () => { if (caja.dataset.foco === el.dataset.foco) delete caja.dataset.foco; if (estatico) fijo(); });
+        });
+    });
+
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
         if (!escena || ligero()) return caja.remove();

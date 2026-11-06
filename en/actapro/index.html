@@ -81,7 +81,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=8.6">
+    <link rel="stylesheet" href="../../css/styles.css?v=8.7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
         .video-thumb.screenshot-thumb {
@@ -163,9 +163,20 @@
             <h2 class="section-title">The full life cycle of a procedure</h2>
             <p class="text-slate-400 text-base md:text-lg">From first entry to closing the file, with a complete, transparent history of every change.</p>
         </div>
+        <div class="proceso-centro">
+            <div class="ascii-pieza proceso proceso-tema" data-actapro-proceso aria-hidden="true">
+                <ol class="proceso-pasos">
+                    <li>Capture</li>
+                    <li>Review</li>
+                    <li>Vote</li>
+                    <li>Signature</li>
+                    <li>Archive</li>
+                </ol>
+            </div>
+        </div>
         <div class="services-grid">
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="captura">
                 <div class="card-icon">
                     <i class="fas fa-file-signature"></i>
                 </div>
@@ -174,7 +185,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card active-card group">
+            <div class="service-card active-card group" data-foco="pendientes">
                 <div class="card-icon">
                     <i class="fas fa-list-check"></i>
                 </div>
@@ -183,7 +194,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="dashboard">
                 <div class="card-icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
@@ -192,7 +203,7 @@
                 <div class="card-glow"></div>
             </div>
 
-            <div class="service-card group">
+            <div class="service-card group" data-foco="roles">
                 <div class="card-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
@@ -421,7 +432,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=8.6"></script>
-    <script src="../../script/efectos.js?v=8.6"></script>
+    <script src="../../script/scripts.js?v=8.7"></script>
+    <script src="../../script/efectos.js?v=8.7"></script>
 </body>
 </html>
