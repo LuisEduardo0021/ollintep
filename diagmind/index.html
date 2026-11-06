@@ -53,11 +53,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=8.4">
+    <link rel="stylesheet" href="../css/styles.css?v=8.5">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-<body class="theme-diagmind bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white">
+<body class="theme-diagmind bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
 
     <!-- Fondo líquido -->
@@ -221,12 +221,12 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shadow-md hover:shadow-xl group">
-                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-sky-950/40">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-[#193662]/40">
                     <img src="../resources/screenshots/diagmind-pcb.webp" alt="Esquema interactivo de placa madre PCB con Snapdragon 8 Gen 3 e inspección de buses" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
                 <div class="px-2 pb-2">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold uppercase">Topología de Placa Madre</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0c5ce0]/25 text-[#9cc0ff] font-bold uppercase">Topología de Placa Madre</span>
                         <span class="text-[10px] text-emerald-400 font-mono">SoC &middot; UFS 4.0 &middot; PMIC</span>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-1.5">Inspección de Circuitos en Tiempo Real</h3>
@@ -235,13 +235,13 @@
             </div>
 
             <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shadow-md hover:shadow-xl group">
-                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-sky-950/40">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-[#193662]/40">
                     <img src="../resources/screenshots/diagmind-report.webp" alt="Informe forense de hardware, salud de batería, originalidad AMOLED y Knox" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
                 <div class="px-2 pb-2">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">Auditoría Técnica</span>
-                        <span class="text-[10px] text-sky-400 font-mono">Grado A+ &middot; Knox 0x0</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0c5ce0]/25 text-[#9cc0ff] font-bold uppercase">Auditoría Técnica</span>
+                        <span class="text-[10px] text-[#4d8cf5] font-mono">Grado A+ &middot; Knox 0x0</span>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-1.5">Certificado de Grado & Originalidad</h3>
                     <p class="text-slate-400 text-xs leading-relaxed">Auditoría con validación de ciclos de batería, velocidad secuencial UFS 4.0 (4,180 MB/s), firma criptográfica de pantalla original AMOLED DDC-CI y dictamen emitido por IA local (Phi-3).</p>
@@ -251,7 +251,7 @@
     </section>
 
     <!-- Sección de Tecnología -->
-    <div class="ascii-banda" data-ascii="screenshots/diagmind-pcb.webp" data-color="#22e1f0" aria-hidden="true"></div>
+    <div class="ascii-banda" data-ascii="screenshots/diagmind-pcb.webp" data-color="#4d8cf5" aria-hidden="true"></div>
 
     <section id="tecnologia" class="about max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="about-grid">
@@ -304,7 +304,7 @@
     </section>
 
     <!-- Sección de Precios / Licencias -->
-    <div class="ascii-banda ascii-banda-baja" data-ascii-anim="osciloscopio" data-color="#22e1f0" aria-hidden="true"></div>
+    <div class="ascii-banda ascii-banda-baja" data-ascii-anim="osciloscopio" data-color="#4d8cf5" aria-hidden="true"></div>
 
     <section id="precios" class="pricing max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -378,8 +378,8 @@
         <div class="contact-info contact-info-centered">
             <p>Contáctanos para habilitar una licencia de prueba en tu taller:</p>
             <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone text-cyan-400"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-cyan-400"></i> administrador@ollin-tep.com</a></li>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-[#4d8cf5]"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-[#4d8cf5]"></i> administrador@ollin-tep.com</a></li>
             </ul>
         </div>
     </section>
@@ -412,7 +412,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=8.4"></script>
-    <script src="../script/efectos.js?v=8.4"></script>
+    <script src="../script/scripts.js?v=8.5"></script>
+    <script src="../script/efectos.js?v=8.5"></script>
 </body>
 </html>

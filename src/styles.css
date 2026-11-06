@@ -40,7 +40,7 @@
     --line: rgba(148, 163, 184, 0.14);
     --line-strong: rgba(148, 163, 184, 0.26);
     --surface-raise: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
-    --crohub: #ff7a2e;
+    --crohub: #ff5ce8;
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
     /* --- Tokens dinámicos de acento y brillo por servicio --- */
@@ -1694,6 +1694,13 @@ button:focus-visible {
   color: #9cc0ff;
 }
 
+.eyebrow-crohub {
+  color: transparent;
+  background: linear-gradient(90deg, #ff7aee, #99d1ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* --- Tipografía de secciones (todas las páginas) --- */
 .hero h1 {
   font-size: clamp(2.5rem, 5.6vw, 4.4rem);
@@ -1857,8 +1864,8 @@ button:focus-visible {
 }
 
 .path-suite {
-  --path-glow: rgba(255, 122, 46, 0.16);
-  --path-accent: #ff9a5c;
+  --path-glow: rgba(255, 11, 239, 0.13);
+  --path-accent: #ff7aee;
 }
 
 .path-custom {
@@ -1926,7 +1933,7 @@ button:focus-visible {
 }
 
 .path-suite .link-arrow {
-  color: #ff9a5c;
+  color: #ff7aee;
 }
 
 .path-custom .link-arrow {
@@ -2840,144 +2847,219 @@ button:focus-visible {
    PALETAS Y TEMAS POR SERVICIO / PRODUCTO
    ========================================================================== */
 
-/* --- 1. ActaPro: Tema Índigo / Royal Tech (Gobernanza y Actas) --- */
-body.theme-actapro {
-  --md-sys-color-primary: #818cf8;          /* Indigo 400 */
-  --md-sys-color-on-primary: #0a0e1a;
-  --md-sys-color-primary-container: rgba(129, 140, 248, 0.16);
-  --md-sys-color-on-primary-container: #e0e7ff;
-  --md-sys-color-secondary: #a78bfa;        /* Purple 400 */
-  --md-sys-color-secondary-container: rgba(167, 139, 250, 0.16);
-  --md-sys-color-on-secondary-container: #ede9fe;
+/* Cada tema sale de los colores de su logo (resources/…): el tono principal se aclara lo justo
+   para leerse sobre el fondo oscuro y los tonos profundos del logo quedan en degradados y brillos. */
 
-  --hero-gradient-end: #a5b4fc;
-  --service-btn-hover: #a5b4fc;
-  --service-glow: rgba(99, 102, 241, 0.35);
-  --service-glow-hover: rgba(129, 140, 248, 0.45);
-  --service-card-glow: rgba(99, 102, 241, 0.18);
-  --service-plan-glow: rgba(99, 102, 241, 0.3);
-  --service-subtle-glow: rgba(129, 140, 248, 0.14);
-  --service-icon-hover: rgba(129, 140, 248, 0.24);
-  --service-orbit-border: rgba(129, 140, 248, 0.22);
-  --service-orbit-glow: rgba(99, 102, 241, 0.3);
-  --service-connector: rgba(129, 140, 248, 0.22);
+/* --- 0. Centzontle: azul rey del logo (#346df1) --- */
+body.theme-centzontle {
+  --md-sys-color-primary: #5a8af6;
+  --md-sys-color-on-primary: #050c1f;
+  --md-sys-color-primary-container: rgba(90, 138, 246, 0.16);
+  --md-sys-color-on-primary-container: #dbe6ff;
+  --md-sys-color-secondary: #346df1;
+  --md-sys-color-secondary-container: rgba(52, 109, 241, 0.16);
+  --md-sys-color-on-secondary-container: #dbe6ff;
+
+  --hero-gradient-end: #a9c3ff;
+  --service-btn-hover: #a9c3ff;
+  --service-glow: rgba(52, 109, 241, 0.35);
+  --service-glow-hover: rgba(90, 138, 246, 0.45);
+  --service-card-glow: rgba(52, 109, 241, 0.18);
+  --service-plan-glow: rgba(52, 109, 241, 0.3);
+  --service-subtle-glow: rgba(90, 138, 246, 0.14);
+  --service-icon-hover: rgba(90, 138, 246, 0.24);
+  --service-orbit-border: rgba(90, 138, 246, 0.22);
+  --service-orbit-glow: rgba(52, 109, 241, 0.3);
+  --service-connector: rgba(90, 138, 246, 0.22);
+}
+body.theme-centzontle .liquid-bg .blob-1 {
+  background: radial-gradient(circle, rgba(52, 109, 241, 0.24) 0%, transparent 70%);
+}
+body.theme-centzontle .liquid-bg .blob-2 {
+  background: radial-gradient(circle, rgba(90, 138, 246, 0.18) 0%, transparent 70%);
+}
+body.theme-centzontle .liquid-bg .blob-3 {
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.16) 0%, transparent 70%);
+}
+body.theme-centzontle .scroll-progress {
+  background: linear-gradient(90deg, #1e40af, #346df1, #8fb0ff);
+}
+body.theme-centzontle .btn-primary,
+body.theme-centzontle .m3-btn-filled {
+  background: linear-gradient(135deg, #2a5fe6, #346df1);
+  color: #ffffff;
+  font-weight: 700;
+}
+body.theme-centzontle .btn-primary:hover,
+body.theme-centzontle .m3-btn-filled:hover {
+  background: linear-gradient(135deg, #346df1, #5a8af6);
+  color: #ffffff;
+}
+body.theme-centzontle .eyebrow-blue {
+  color: #a9c3ff;
+}
+body.theme-centzontle ::selection {
+  background: #5a8af6;
+  color: #050c1f;
 }
 
+/* --- 1. ActaPro: turquesa a azul marino del logo (#00e8d4 → #001180) --- */
+body.theme-actapro {
+  --md-sys-color-primary: #1fe3d2;
+  --md-sys-color-on-primary: #00141f;
+  --md-sys-color-primary-container: rgba(31, 227, 210, 0.16);
+  --md-sys-color-on-primary-container: #cbfbf6;
+  --md-sys-color-secondary: #3d63ff;
+  --md-sys-color-secondary-container: rgba(61, 99, 255, 0.16);
+  --md-sys-color-on-secondary-container: #dbe3ff;
+
+  --hero-gradient-end: #8ff3ea;
+  --service-btn-hover: #8ff3ea;
+  --service-glow: rgba(0, 120, 200, 0.35);
+  --service-glow-hover: rgba(31, 227, 210, 0.45);
+  --service-card-glow: rgba(0, 120, 200, 0.18);
+  --service-plan-glow: rgba(0, 120, 200, 0.3);
+  --service-subtle-glow: rgba(31, 227, 210, 0.14);
+  --service-icon-hover: rgba(31, 227, 210, 0.24);
+  --service-orbit-border: rgba(31, 227, 210, 0.22);
+  --service-orbit-glow: rgba(0, 120, 200, 0.3);
+  --service-connector: rgba(31, 227, 210, 0.22);
+}
 body.theme-actapro .liquid-bg .blob-1 {
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 232, 212, 0.18) 0%, transparent 70%);
 }
 body.theme-actapro .liquid-bg .blob-2 {
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 17, 128, 0.42) 0%, transparent 70%);
 }
 body.theme-actapro .liquid-bg .blob-3 {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 90, 200, 0.2) 0%, transparent 70%);
 }
 body.theme-actapro .scroll-progress {
-  background: linear-gradient(90deg, #4f46e5, #818cf8, #c084fc);
+  background: linear-gradient(90deg, #001180, #0063c6, #00e8d4);
 }
 body.theme-actapro .btn-primary,
 body.theme-actapro .m3-btn-filled {
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
-  color: #ffffff;
+  background: linear-gradient(135deg, #00e8d4, #00b8d9);
+  color: #001226;
+  font-weight: 700;
 }
 body.theme-actapro .btn-primary:hover,
 body.theme-actapro .m3-btn-filled:hover {
-  background: linear-gradient(135deg, #6366f1, #818cf8);
-  color: #ffffff;
+  background: linear-gradient(135deg, #5ff0e3, #00d0e0);
+  color: #001226;
+}
+body.theme-actapro .eyebrow-blue {
+  color: #8ff3ea;
+}
+body.theme-actapro ::selection {
+  background: #1fe3d2;
+  color: #001226;
 }
 
-/* --- 2. Agro-Cria Pro: Tema Esmeralda / Bio Green (Agrotecnología & Hídrico) --- */
+/* --- 2. Agro-Cria Pro: olivo, bosque, tierra y crema del logo (#bbc863, #31694e, #8a5f41, #f0e491) --- */
 body.theme-agrocria {
-  --md-sys-color-primary: #10b981;          /* Emerald 500 */
-  --md-sys-color-on-primary: #022c22;
-  --md-sys-color-primary-container: rgba(16, 185, 129, 0.16);
-  --md-sys-color-on-primary-container: #d1fae5;
-  --md-sys-color-secondary: #14b8a6;        /* Teal 500 */
-  --md-sys-color-secondary-container: rgba(20, 184, 166, 0.16);
-  --md-sys-color-on-secondary-container: #ccfbf1;
+  --md-sys-color-primary: #c3cf6c;
+  --md-sys-color-on-primary: #151b08;
+  --md-sys-color-primary-container: rgba(195, 207, 108, 0.16);
+  --md-sys-color-on-primary-container: #f1f5d2;
+  --md-sys-color-secondary: #5aa27c;
+  --md-sys-color-secondary-container: rgba(90, 162, 124, 0.16);
+  --md-sys-color-on-secondary-container: #d6efe0;
 
-  --hero-gradient-end: #6ee7b7;
-  --service-btn-hover: #34d399;
-  --service-glow: rgba(16, 185, 129, 0.35);
-  --service-glow-hover: rgba(52, 211, 153, 0.45);
-  --service-card-glow: rgba(16, 185, 129, 0.18);
-  --service-plan-glow: rgba(16, 185, 129, 0.3);
-  --service-subtle-glow: rgba(16, 185, 129, 0.14);
-  --service-icon-hover: rgba(16, 185, 129, 0.24);
-  --service-orbit-border: rgba(16, 185, 129, 0.22);
-  --service-orbit-glow: rgba(16, 185, 129, 0.3);
-  --service-connector: rgba(16, 185, 129, 0.25);
+  --hero-gradient-end: #f0e491;
+  --service-btn-hover: #f0e491;
+  --service-glow: rgba(49, 105, 78, 0.35);
+  --service-glow-hover: rgba(195, 207, 108, 0.45);
+  --service-card-glow: rgba(49, 105, 78, 0.18);
+  --service-plan-glow: rgba(49, 105, 78, 0.3);
+  --service-subtle-glow: rgba(195, 207, 108, 0.14);
+  --service-icon-hover: rgba(195, 207, 108, 0.24);
+  --service-orbit-border: rgba(195, 207, 108, 0.22);
+  --service-orbit-glow: rgba(49, 105, 78, 0.3);
+  --service-connector: rgba(195, 207, 108, 0.22);
 }
-
 body.theme-agrocria .liquid-bg .blob-1 {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(187, 200, 99, 0.2) 0%, transparent 70%);
 }
 body.theme-agrocria .liquid-bg .blob-2 {
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(49, 105, 78, 0.34) 0%, transparent 70%);
 }
 body.theme-agrocria .liquid-bg .blob-3 {
-  background: radial-gradient(circle, rgba(20, 184, 166, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(138, 95, 65, 0.22) 0%, transparent 70%);
 }
 body.theme-agrocria .scroll-progress {
-  background: linear-gradient(90deg, #059669, #10b981, #34d399);
+  background: linear-gradient(90deg, #31694e, #bbc863, #f0e491);
 }
 body.theme-agrocria .btn-primary,
 body.theme-agrocria .m3-btn-filled {
-  background: linear-gradient(135deg, #059669, #10b981);
-  color: #022c22;
+  background: linear-gradient(135deg, #a9b852, #c3cf6c);
+  color: #151b08;
   font-weight: 700;
 }
 body.theme-agrocria .btn-primary:hover,
 body.theme-agrocria .m3-btn-filled:hover {
-  background: linear-gradient(135deg, #10b981, #34d399);
-  color: #022c22;
+  background: linear-gradient(135deg, #c3cf6c, #f0e491);
+  color: #151b08;
+}
+body.theme-agrocria .eyebrow-blue {
+  color: #dfe6a3;
+}
+body.theme-agrocria ::selection {
+  background: #c3cf6c;
+  color: #151b08;
 }
 
-/* --- 3. Diagmind: Tema Cyber Sky & Cyan Eléctrico (Auditoría Android & Telemetría) --- */
+/* --- 3. Diagmind: azul eléctrico y marino del logo (#0c5ce0, #193662) --- */
 body.theme-diagmind {
-  --md-sys-color-primary: #38bdf8;          /* Sky 400 */
-  --md-sys-color-on-primary: #04101e;
-  --md-sys-color-primary-container: rgba(56, 189, 248, 0.16);
-  --md-sys-color-on-primary-container: #bae6fd;
-  --md-sys-color-secondary: #06b6d4;        /* Cyan 500 */
-  --md-sys-color-secondary-container: rgba(6, 182, 212, 0.16);
-  --md-sys-color-on-secondary-container: #cffafe;
+  --md-sys-color-primary: #4d8cf5;
+  --md-sys-color-on-primary: #030b1d;
+  --md-sys-color-primary-container: rgba(77, 140, 245, 0.16);
+  --md-sys-color-on-primary-container: #d9e6ff;
+  --md-sys-color-secondary: #0c5ce0;
+  --md-sys-color-secondary-container: rgba(12, 92, 224, 0.16);
+  --md-sys-color-on-secondary-container: #d9e6ff;
 
-  --hero-gradient-end: #7dd3fc;
-  --service-btn-hover: #7dd3fc;
-  --service-glow: rgba(56, 189, 248, 0.35);
-  --service-glow-hover: rgba(56, 189, 248, 0.45);
-  --service-card-glow: rgba(56, 189, 248, 0.18);
-  --service-plan-glow: rgba(56, 189, 248, 0.3);
-  --service-subtle-glow: rgba(56, 189, 248, 0.14);
-  --service-icon-hover: rgba(56, 189, 248, 0.24);
-  --service-orbit-border: rgba(56, 189, 248, 0.22);
-  --service-orbit-glow: rgba(56, 189, 248, 0.3);
-  --service-connector: rgba(56, 189, 248, 0.22);
+  --hero-gradient-end: #9cc0ff;
+  --service-btn-hover: #9cc0ff;
+  --service-glow: rgba(12, 92, 224, 0.35);
+  --service-glow-hover: rgba(77, 140, 245, 0.45);
+  --service-card-glow: rgba(12, 92, 224, 0.18);
+  --service-plan-glow: rgba(12, 92, 224, 0.3);
+  --service-subtle-glow: rgba(77, 140, 245, 0.14);
+  --service-icon-hover: rgba(77, 140, 245, 0.24);
+  --service-orbit-border: rgba(77, 140, 245, 0.22);
+  --service-orbit-glow: rgba(12, 92, 224, 0.3);
+  --service-connector: rgba(77, 140, 245, 0.22);
 }
-
 body.theme-diagmind .liquid-bg .blob-1 {
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(12, 92, 224, 0.26) 0%, transparent 70%);
 }
 body.theme-diagmind .liquid-bg .blob-2 {
-  background: radial-gradient(circle, rgba(2, 132, 199, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(25, 54, 98, 0.4) 0%, transparent 70%);
 }
 body.theme-diagmind .liquid-bg .blob-3 {
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(9, 73, 173, 0.2) 0%, transparent 70%);
 }
 body.theme-diagmind .scroll-progress {
-  background: linear-gradient(90deg, #0284c7, #38bdf8, #06b6d4);
+  background: linear-gradient(90deg, #193662, #0c5ce0, #6ea2ff);
 }
 body.theme-diagmind .btn-primary,
 body.theme-diagmind .m3-btn-filled {
-  background: linear-gradient(135deg, #0284c7, #38bdf8);
-  color: #04101e;
+  background: linear-gradient(135deg, #0949ad, #0c5ce0);
+  color: #ffffff;
   font-weight: 700;
 }
 body.theme-diagmind .btn-primary:hover,
 body.theme-diagmind .m3-btn-filled:hover {
-  background: linear-gradient(135deg, #38bdf8, #7dd3fc);
-  color: #04101e;
+  background: linear-gradient(135deg, #0c5ce0, #4d8cf5);
+  color: #ffffff;
+}
+body.theme-diagmind .eyebrow-blue {
+  color: #9cc0ff;
+}
+body.theme-diagmind ::selection {
+  background: #4d8cf5;
+  color: #030b1d;
 }
 
 /* --- 4. Ollin-Tep for Restaurants: Tema Ámbar Gourmet & Warm Gold (POS & KDS Gastronómico) --- */
@@ -3493,7 +3575,7 @@ body.theme-restaurant .m3-btn-filled:hover {
   height: 92px;
   border-radius: 24px;
   background: linear-gradient(160deg, #16213a, #0b1220);
-  box-shadow: inset 0 0 0 1px var(--line-strong), 0 0 50px -6px rgba(255, 122, 46, 0.45), 0 20px 40px -20px #000;
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 0 50px -6px rgba(255, 11, 239, 0.4), 0 20px 40px -20px #000;
 }
 
 .orbit3d-core img {
@@ -4014,6 +4096,11 @@ body.theme-restaurant .m3-btn-filled:hover {
 
 .ambiente-azul {
   background: radial-gradient(60% 55% at 20% 30%, rgba(79, 139, 255, 0.15), transparent 70%), radial-gradient(45% 45% at 88% 80%, rgba(56, 189, 248, 0.07), transparent 70%);
+}
+
+/* Suite CroHub: magenta y celeste de los cuadros del logo (#FF0BEF → #99D1FF) */
+.ambiente-crohub {
+  background: radial-gradient(60% 55% at 78% 30%, rgba(255, 11, 239, 0.11), transparent 70%), radial-gradient(45% 45% at 12% 80%, rgba(153, 209, 255, 0.08), transparent 70%);
 }
 
 .ambiente-violeta {
@@ -5613,7 +5700,7 @@ html {
 }
 
 .lanzador.listo {
-  box-shadow: inset 0 0 0 1px #ff7a2e, 0 30px 90px -40px rgba(255, 122, 46, 0.55);
+  box-shadow: inset 0 0 0 1px #ff5ce8, 0 30px 90px -40px rgba(255, 11, 239, 0.45);
 }
 
 .lz-barra {
@@ -6730,7 +6817,7 @@ html:has(.lz-ventana[open]) {
 /* Metaballs: iconos de las apps sobre sus gotas, nítidos (SVG) */
 .metaballs-iconos { position: absolute; inset: 0; pointer-events: none; }
 .metaballs-iconos img { position: absolute; left: 0; top: 0; display: block; opacity: 0; will-change: transform, opacity; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35)); }
-.metaballs-iconos .mb-hub { height: auto; filter: drop-shadow(0 0 14px rgba(255, 122, 46, .55)); }
+.metaballs-iconos .mb-hub { height: auto; filter: drop-shadow(0 0 14px rgba(255, 11, 239, .5)); }
 
 /* =========================================================
    BLOQUE DE CÓDIGO (A medida): pestañas, números de línea,

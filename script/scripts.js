@@ -889,7 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fondoAmbiente = document.querySelector('.liquid-bg');
     if (seccionesAmbiente.length && fondoAmbiente) {
         const capas = {};
-        ['naranja', 'azul', 'violeta'].forEach(c => {
+        ['naranja', 'azul', 'violeta', 'crohub'].forEach(c => {
             const s = document.createElement('span');
             s.className = 'ambiente ambiente-' + c;
             fondoAmbiente.append(s);

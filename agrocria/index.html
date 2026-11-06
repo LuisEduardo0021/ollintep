@@ -53,11 +53,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=8.4">
+    <link rel="stylesheet" href="../css/styles.css?v=8.5">
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-<body class="theme-agrocria bg-slate-950 text-slate-100 antialiased selection:bg-emerald-600 selection:text-white">
+<body class="theme-agrocria bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
 
     <!-- Fondo líquido -->
@@ -231,7 +231,7 @@
     </section>
 
     <!-- Sección de Capturas Reales -->
-    <div class="ascii-banda" data-ascii="screenshots/agrocria-telemetry.webp" data-color="#34d399" aria-hidden="true"></div>
+    <div class="ascii-banda" data-ascii="screenshots/agrocria-telemetry.webp" data-color="#c3cf6c" aria-hidden="true"></div>
 
     <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -240,13 +240,13 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shadow-md hover:shadow-xl group">
-                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-emerald-950/40">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-[#31694e]/25">
                     <img src="../resources/screenshots/agrocria-dashboard.webp" alt="Dashboard agronómico con polígonos satelitales, CROPWAT y telemetría de suelo" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
                 <div class="px-2 pb-2">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Satelital & Balances</span>
-                        <span class="text-[10px] text-emerald-400 font-mono">NDVI 0.84 &middot; ET0 4.82 mm/d</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#bbc863]/15 text-[#dfe6a3] font-bold uppercase">Satelital & Balances</span>
+                        <span class="text-[10px] text-[#c3cf6c] font-mono">NDVI 0.84 &middot; ET0 4.82 mm/d</span>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-1.5">Mapeo Satelital & Balance FAO-56</h3>
                     <p class="text-slate-400 text-xs leading-relaxed">Supervisión espectral con delimitación de sectores, control de válvulas matrices de fertirriego y prescripción hídrica exacta calculada por Penman-Monteith.</p>
@@ -254,13 +254,13 @@
             </div>
 
             <div class="bg-slate-900/60 rounded-2xl overflow-hidden p-3.5 hover:bg-slate-900/90 transition-[color,background-color,box-shadow,scale] active:scale-[0.97] shadow-md hover:shadow-xl group">
-                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-emerald-950/40">
+                <div class="rounded-xl overflow-hidden mb-4 border-0 aspect-video bg-[#31694e]/25">
                     <img src="../resources/screenshots/agrocria-telemetry.webp" alt="Telemetría IoT de humedad en tres profundidades y microclima en tiempo real" class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" loading="lazy">
                 </div>
                 <div class="px-2 pb-2">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold uppercase">Telemetría IoT 915 MHz</span>
-                        <span class="text-[10px] text-amber-400 font-mono">VPD 1.12 kPa &middot; 3 Profundidades</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#5aa27c]/20 text-[#b5e0c6] font-bold uppercase">Telemetría IoT 915 MHz</span>
+                        <span class="text-[10px] text-[#f0e491] font-mono">VPD 1.12 kPa &middot; 3 Profundidades</span>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-1.5">Dinámica Radicular & Microclima</h3>
                     <p class="text-slate-400 text-xs leading-relaxed">Lectura continua de sensores capacitivos SDI-12 a 15, 45 y 75 cm, radiación solar global en W/m² y déficit de presión de vapor para evitar estrés estomático.</p>
@@ -299,7 +299,7 @@
     </section>
 
     <!-- Plataformas -->
-    <div class="ascii-banda ascii-banda-baja" data-ascii-anim="olas" data-color="#34d399" aria-hidden="true"></div>
+    <div class="ascii-banda ascii-banda-baja" data-ascii-anim="olas" data-color="#c3cf6c" aria-hidden="true"></div>
 
     <section id="plataformas" class="services max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -401,8 +401,8 @@
         <div class="contact-info contact-info-centered">
             <p>Comunícate por teléfono o correo para coordinar tu demostración:</p>
             <ul>
-                <li><a href="tel:+523111275020"><i class="fas fa-phone text-emerald-400"></i> +52 311 127 5020</a></li>
-                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-emerald-400"></i> administrador@ollin-tep.com</a></li>
+                <li><a href="tel:+523111275020"><i class="fas fa-phone text-[#c3cf6c]"></i> +52 311 127 5020</a></li>
+                <li><a href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope text-[#c3cf6c]"></i> administrador@ollin-tep.com</a></li>
             </ul>
         </div>
     </section>
@@ -435,7 +435,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=8.4"></script>
-    <script src="../script/efectos.js?v=8.4"></script>
+    <script src="../script/scripts.js?v=8.5"></script>
+    <script src="../script/efectos.js?v=8.5"></script>
 </body>
 </html>
