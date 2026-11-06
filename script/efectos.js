@@ -401,7 +401,7 @@
             if (barrido <= 1) { const j = Y(barrido); for (let i = X(0) + 1; i < X(1); i++) v[j * col + i] = Math.max(v[j * col + i], .4); }
         },
         // Portada, diseño: un logo que se traza con la pluma, nodo a nodo, con sus manejadores; al cerrarse se rellena y vuelve a empezar
-        trazo: (v, col, fil, t) => {
+        trazo: (v, col, fil, t, foco) => {
             const ASPECTO = 1.75;
             const alto = fil - 2, ancho = Math.min(col - 2, Math.round(alto * ASPECTO));
             const x0 = Math.floor((col - ancho) / 2), y0 = 1;
@@ -437,6 +437,54 @@
                 // El corte en diagonal que convierte la gota en marca
                 for (let q = 0; q <= 1; q += .01) { const u = .3 + .44 * q, w = .78 - .48 * q; const i = Math.round(X(u)), j = Math.round(Y(w)); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = .02; }
             }
+            // Foco: el servicio bajo el cursor se dibuja en la escena
+            const k = foco.k;
+            if (foco.n === 'logotipos') {
+                // Construcción: círculos guía y todos los manejadores a la vista
+                [[.5, .5, .46], [.62, .38, .28], [.36, .66, .2]].forEach(([u, w, r]) => {
+                    for (let a = 0; a < 6.283; a += .035) pon(X(u + Math.cos(a) * r * alto / ancho * ASPECTO * .55), Y(w + Math.sin(a) * r), .3 * k);
+                });
+                linea(0, 1, 1, 0, .2 * k, 3); linea(0, .5, 1, .5, .14 * k, 4); linea(.5, 0, .5, 1, .14 * k, 4);
+                SEG.forEach(g => {
+                    linea(g[0][0], g[0][1], g[1][0], g[1][1], .45 * k, 2); linea(g[3][0], g[3][1], g[2][0], g[2][1], .45 * k, 2);
+                    [g[1], g[2]].forEach(([u, w]) => pon(X(u), Y(w), k));
+                });
+            } else if (foco.n === 'identidad' || foco.n === 'publicidad') {
+                const pol = SEG.flatMap(g => Array.from({ length: 24 }, (_, q) => bez(g, q / 24)));
+                const escala = foco.n === 'publicidad' ? 1 + Math.sin(t * 5) * .04 * k : 1;
+                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
+                    const u = .5 + ((i - x0) / ancho - .5) / escala, w = .5 + ((j - y0) / alto - .5) / escala;
+                    let dentro = false;
+                    for (let a = 0, b = pol.length - 1; a < pol.length; b = a++) {
+                        if ((pol[a][1] > w) !== (pol[b][1] > w) && u < (pol[b][0] - pol[a][0]) * (w - pol[a][1]) / (pol[b][1] - pol[a][1]) + pol[a][0]) dentro = !dentro;
+                    }
+                    // Identidad: franjas de la paleta; publicidad: la marca llena que late
+                    if (dentro) pon(i, j, (foco.n === 'identidad' ? [.25, .45, .65, .85][Math.floor(u * 4 + t * .6) & 3] : .6) * k);
+                }
+                if (foco.n === 'publicidad') {
+                    // Rayos que salen de la marca, como en un cartel
+                    // Rayos continuos con un pulso de luz que sale hacia fuera
+                    const pulso = .54 + ((t * .7) % 1) * .4;
+                    for (let r = 0; r < 14; r++) {
+                        const a = r / 14 * 6.283 + .11;
+                        for (let d = .54; d <= .95; d += .006) {
+                            const n = Math.max(.25, 1 - Math.abs(d - pulso) * 12);
+                            pon(X(.5 + Math.cos(a) * d * alto * ASPECTO / ancho), Y(.5 + Math.sin(a) * d), n * k);
+                        }
+                    }
+                }
+            } else if (foco.n === 'interfaces') {
+                // Una ventana de app alrededor: barra con tres botones, menú lateral y tarjetas
+                const m = (a, b, c, d, n) => { linea(a, b, c, b, n); linea(a, d, c, d, n); linea(a, b, a, d, n); linea(c, b, c, d, n); };
+                const xa = -.22, xb = 1.22;
+                const U = (q) => xa + (xb - xa) * q;
+                m(U(0), -.02, U(1), 1.02, .7 * k);
+                linea(U(0), .1, U(1), .1, .5 * k);
+                [.02, .04, .06].forEach(q => pon(X(U(q)), Y(.05), k));
+                linea(U(.18), .1, U(.18), 1.02, .4 * k);
+                for (let r = 0; r < 6; r++) linea(U(.03), .2 + r * .12, U(.03 + .1 * (.6 + azarDe(r) * .4)), .2 + r * .12, .35 * k, 1);
+                m(U(.82), .2, U(.97), .45, .4 * k); m(U(.82), .55, U(.97), .9, .4 * k);
+            }
             // Guía tenue de lo que falta y trazo firme de lo hecho
             SEG.forEach((g, k) => {
                 for (let q = 0; q <= N; q++) {
@@ -463,7 +511,7 @@
             }
         },
         // Portada, redes: router, switch y tres VLAN; los paquetes viajan sin cruzar de una VLAN a otra
-        red: (v, col, fil, t) => {
+        red: (v, col, fil, t, foco) => {
             const pon = (i, j, n) => { i = Math.round(i); j = Math.round(j); if (i >= 0 && i < col && j >= 0 && j < fil) v[j * col + i] = Math.max(v[j * col + i], n); };
             const P = (u, w) => [u * (col - 1), w * (fil - 1)];
             const tramo = (a, b, n, paso = 1) => {
@@ -493,6 +541,47 @@
             caja(sw, Math.round(col * .2), 1, .2, .9);
             for (let k = 0; k < 12; k++) pon(sw[0] - col * .18 + k * col * .033, sw[1], azarDe(k * 5 + Math.floor(t * 6)) > .5 ? 1 : .35);
             grupos.forEach(G => G.hosts.forEach((h, k) => caja(h, 1, 1, azarDe(G.g * 9 + k + Math.floor(t * 2)) > .7 ? .9 : .4, .75)));
+            // Foco: el servicio bajo el cursor se ilumina en la topología
+            const k = foco.k;
+            if (foco.n === 'planos') {
+                for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) if (j % 4 === 0 || i % 8 === 0) pon(i, j, .16 * k);
+                const r = Math.round(((t * .5) % 1) * fil);
+                for (let i = 0; i < col; i++) pon(i, r, .5 * k);
+            } else if (foco.n === 'servidores') {
+                caja(router, 3, 1, .85 * k, 1); caja(nube, 4, 1, .5 * k, 1);
+                // Rack junto al router, con unidades que se encienden
+                for (let u = 0; u < 4; u++) caja([router[0] + 12, router[1] - 3 + u * 2], 4, 0, azarDe(u + Math.floor(t * 5)) > .4 ? .9 * k : .3 * k);
+            } else if (foco.n === 'vlans') {
+                grupos.forEach((G, g) => {
+                    const a = P(G.u - .15, .6), b = P(G.u + .15, .97);
+                    for (let j = a[1]; j <= b[1]; j++) for (let i = a[0]; i <= b[0]; i++) {
+                        const borde = j === a[1] || j === b[1] || i === a[0] || i === b[0];
+                        pon(i, j, borde ? k : ((i + j + g) % (3 + g) === 0 ? .35 : .08) * k);
+                    }
+                });
+            } else if (foco.n === 'switch') {
+                caja(sw, Math.round(col * .2), 1, .45 * k, 1);
+                for (let n = 0; n < 12; n++) pon(sw[0] - col * .18 + n * col * .033, sw[1], azarDe(n * 5 + Math.floor(t * 22)) > .4 ? 1 : .3);
+            } else if (foco.n === 'firewall') {
+                // Un muro entre internet y el router; lo que llega de fuera rebota
+                const yw = Math.round((nube[1] + router[1]) / 2);
+                for (let i = -9; i <= 9; i++) { pon(router[0] + i, yw, (i + 30) % 3 ? .9 * k : .4 * k); pon(router[0] + i, yw - 1, (i + 31) % 3 ? .7 * k : .3 * k); }
+                for (let n = 0; n < 3; n++) {
+                    const q = (t * .8 + n / 3) % 1, x = router[0] - 6 + n * 6;
+                    const y = q < .5 ? nube[1] + 1 + (yw - 2 - nube[1]) * q * 2 : yw - 2 - (yw - 2 - nube[1]) * (q - .5) * 2;
+                    pon(x, y, k);
+                }
+            } else if (foco.n === 'wifi') {
+                grupos.forEach((G, g) => {
+                    // Un punto de acceso por VLAN; la cobertura baja en ondas hacia sus equipos
+                    const c = P(G.u, .62);
+                    caja(c, 2, 0, k, k);
+                    for (let o = 0; o < 3; o++) {
+                        const r = 1 + ((t * 4 + o * 2.4 + g) % 7);
+                        for (let a = Math.PI * .2; a < Math.PI * .8; a += .03) pon(c[0] + Math.cos(a) * r * 1.75, c[1] + Math.sin(a) * r, (1 - r / 8) * k);
+                    }
+                });
+            }
             // Paquetes: cada uno hace host → switch → host de su misma VLAN; de vez en cuando uno sube al router
             const ruta = (pts, q) => {
                 const largos = pts.slice(1).map((p, k) => Math.hypot(p[0] - pts[k][0], p[1] - pts[k][1]));
@@ -507,7 +596,7 @@
                 const G = grupos[n % 3], vuelta = Math.floor(t * .35 + azarDe(n) * 7);
                 const q = (t * .35 + azarDe(n) * 7) % 1;
                 const de = G.hosts[Math.floor(azarDe(n * 3 + vuelta) * 3)];
-                const sube = azarDe(n * 7 + vuelta) > .7;
+                const sube = foco.n !== 'vlans' && azarDe(n * 7 + vuelta) > (foco.n === 'servidores' ? .25 : .7);
                 const a = G.hosts[Math.floor(azarDe(n * 5 + vuelta) * 3)];
                 const bajada = P(G.u, .66);
                 const pts = sube
@@ -587,7 +676,7 @@
     };
     document.querySelectorAll('[data-ascii-anim]').forEach(caja => {
         const escena = ESCENAS[caja.dataset.asciiAnim];
-        if (!escena || ligero()) return caja.remove();
+        if (!escena || ligero()) return caja.querySelector('.paleta') ? undefined : caja.remove();   // la paleta de Diseño es CSS: se queda
         const c = lienzo('ascii-lienzo');
         caja.append(c);
         const ctx = c.getContext('2d');
@@ -600,7 +689,8 @@
         const v = new Float32Array(col * fil);
         const dibujar = (t) => {
             v.fill(0);
-            escena(v, col, fil, t);
+            const desde = +caja.dataset.focoT || 0;
+            escena(v, col, fil, t, { n: caja.dataset.foco || '', k: Math.min(1, Math.max(0, (t - desde) / .35)) });
             ctx.clearRect(0, 0, c.width, c.height);
             for (let j = 0; j < fil; j++) for (let i = 0; i < col; i++) {
                 const n = v[j * col + i];
@@ -611,6 +701,14 @@
         };
         dibujar(4);
         if (escritorio) bucle(caja, 20, dibujar);
+        // Servicios que se dibujan: al pasar el cursor por uno (o enfocarlo), la escena de su sección lo muestra
+        const seccion = caja.closest('section');
+        seccion?.querySelectorAll('.service-list li[data-foco]').forEach(li => {
+            const pon = () => { caja.dataset.foco = li.dataset.foco; caja.dataset.focoT = performance.now() / 1000; };
+            const quita = () => { if (caja.dataset.foco === li.dataset.foco) delete caja.dataset.foco; };
+            li.addEventListener('pointerenter', pon);
+            li.addEventListener('pointerleave', quita);
+        });
     });
 
     // --- GLITCH (Diagmind y 404): ráfagas breves en el título; encaja con «diagnóstico» y con una página rota

@@ -83,7 +83,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=6.9">
+    <link rel="stylesheet" href="css/styles.css?v=7.0">
     <!-- Iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -353,13 +353,15 @@
                 <p class="block-lead">El mismo equipo que programa tu sistema diseña tu logo, tu marca y tu publicidad, para que todo hable con la misma voz.</p>
                 <a href="#contacto" class="m3-btn m3-btn-filled block-cta">Cotizar un diseño <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
             </div>
-            <div class="ascii-pieza" data-ascii-anim="trazo" data-celda="fina" data-color="#b39bff" aria-hidden="true"></div>
+            <div class="ascii-pieza" data-ascii-anim="trazo" data-celda="fina" data-color="#b39bff" aria-hidden="true">
+                <div class="paleta"><span style="--c:#6ea2ff;--i:0" data-hex="#6EA2FF"></span><span style="--c:#b39bff;--i:1" data-hex="#B39BFF"></span><span style="--c:#ff7a2e;--i:2" data-hex="#FF7A2E"></span><span style="--c:#10b981;--i:3" data-hex="#10B981"></span><span style="--c:#f1f5f9;--i:4" data-hex="#F1F5F9"></span></div>
+            </div>
         </header>
         <ul class="service-list">
-            <li><i class="fas fa-pen-nib" aria-hidden="true"></i><h3>Logotipos</h3><p>Diseñamos tu logo desde cero o renovamos el que ya tienes, en versiones para pantalla e impresión.</p></li>
-            <li><i class="fas fa-swatchbook" aria-hidden="true"></i><h3>Identidad de marca</h3><p>Colores, tipografías y reglas de uso para que tu marca se vea igual en todas partes.</p></li>
-            <li><i class="fas fa-bullhorn" aria-hidden="true"></i><h3>Publicidad</h3><p>Anuncios para redes sociales, carteles, lonas y material impreso para tus campañas.</p></li>
-            <li><i class="fas fa-object-group" aria-hidden="true"></i><h3>Diseño de interfaces</h3><p>Pantallas de apps y sitios web pensadas para quien las usa, como las de nuestra propia suite.</p></li>
+            <li data-foco="logotipos"><i class="fas fa-pen-nib" aria-hidden="true"></i><h3>Logotipos</h3><p>Diseñamos tu logo desde cero o renovamos el que ya tienes, en versiones para pantalla e impresión.</p></li>
+            <li data-foco="identidad"><i class="fas fa-swatchbook" aria-hidden="true"></i><h3>Identidad de marca</h3><p>Colores, tipografías y reglas de uso para que tu marca se vea igual en todas partes.</p></li>
+            <li data-foco="publicidad"><i class="fas fa-bullhorn" aria-hidden="true"></i><h3>Publicidad</h3><p>Anuncios para redes sociales, carteles, lonas y material impreso para tus campañas.</p></li>
+            <li data-foco="interfaces"><i class="fas fa-object-group" aria-hidden="true"></i><h3>Diseño de interfaces</h3><p>Pantallas de apps y sitios web pensadas para quien las usa, como las de nuestra propia suite.</p></li>
         </ul>
     </section>
 
@@ -375,12 +377,12 @@
             <div class="ascii-pieza" data-ascii-anim="red" data-celda="fina" data-color="#6ea2ff" aria-hidden="true"></div>
         </header>
         <ul class="service-list">
-            <li><i class="fas fa-diagram-project" aria-hidden="true"></i><h3>Planos de red y servidores</h3><p>Diseñamos la topología y los planos de tu infraestructura antes de instalar nada.</p></li>
-            <li><i class="fas fa-server" aria-hidden="true"></i><h3>Implementación de servidores</h3><p>Instalamos y ponemos en marcha los servidores que planeamos contigo.</p></li>
-            <li><i class="fas fa-layer-group" aria-hidden="true"></i><h3>VLANs</h3><p>Separamos tu red para que caja, oficinas, cámaras e invitados no se mezclen.</p></li>
-            <li><i class="fas fa-network-wired" aria-hidden="true"></i><h3>Switches y routers</h3><p>Configuramos el equipo de red para que sea estable, rápido y fácil de mantener.</p></li>
-            <li><i class="fas fa-shield-halved" aria-hidden="true"></i><h3>Firewall y VPN</h3><p>Protegemos la entrada a tu red y conectamos sucursales y personal remoto de forma segura.</p></li>
-            <li><i class="fas fa-wifi" aria-hidden="true"></i><h3>Cableado y Wi-Fi</h3><p>Cableado ordenado y cobertura inalámbrica donde de verdad se necesita.</p></li>
+            <li data-foco="planos"><i class="fas fa-diagram-project" aria-hidden="true"></i><h3>Planos de red y servidores</h3><p>Diseñamos la topología y los planos de tu infraestructura antes de instalar nada.</p></li>
+            <li data-foco="servidores"><i class="fas fa-server" aria-hidden="true"></i><h3>Implementación de servidores</h3><p>Instalamos y ponemos en marcha los servidores que planeamos contigo.</p></li>
+            <li data-foco="vlans"><i class="fas fa-layer-group" aria-hidden="true"></i><h3>VLANs</h3><p>Separamos tu red para que caja, oficinas, cámaras e invitados no se mezclen.</p></li>
+            <li data-foco="switch"><i class="fas fa-network-wired" aria-hidden="true"></i><h3>Switches y routers</h3><p>Configuramos el equipo de red para que sea estable, rápido y fácil de mantener.</p></li>
+            <li data-foco="firewall"><i class="fas fa-shield-halved" aria-hidden="true"></i><h3>Firewall y VPN</h3><p>Protegemos la entrada a tu red y conectamos sucursales y personal remoto de forma segura.</p></li>
+            <li data-foco="wifi"><i class="fas fa-wifi" aria-hidden="true"></i><h3>Cableado y Wi-Fi</h3><p>Cableado ordenado y cobertura inalámbrica donde de verdad se necesita.</p></li>
         </ul>
     </section>
 
@@ -720,7 +722,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=6.9"></script>
-    <script src="script/efectos.js?v=6.9"></script>
+    <script src="script/scripts.js?v=7.0"></script>
+    <script src="script/efectos.js?v=7.0"></script>
 </body>
 </html>

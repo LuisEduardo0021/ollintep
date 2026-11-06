@@ -6059,3 +6059,159 @@ html {
   .pixel-flota { right: 1rem; }
   .pajaro { width: 72px; height: 60px; top: -57px; }
 }
+
+/* ==========================================================================
+   DISEÑO Y REDES: paleta en abanico, selección con manejadores, cable con paquetes y LEDs
+   ========================================================================== */
+/* Paleta: cinco muestras de color que se abren en abanico al entrar y se separan con el cursor */
+.paleta {
+  position: absolute;
+  right: 6px;
+  bottom: 8px;
+  z-index: 2;
+  width: 64px;
+  height: 92px;
+  pointer-events: auto;
+}
+.paleta span {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: linear-gradient(var(--c) 0 68%, #f8fafc 68%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .12);
+  transform-origin: 50% 92%;
+  rotate: calc((var(--i) - 2) * 9deg);
+  transition: rotate .45s var(--ease-out), translate .45s var(--ease-out);
+}
+.paleta span::after {
+  content: attr(data-hex);
+  position: absolute;
+  left: 6px;
+  bottom: 7px;
+  font: 600 8px/1 ui-monospace, monospace;
+  letter-spacing: .02em;
+  color: #334155;
+}
+.paleta:hover span {
+  rotate: calc((var(--i) - 2) * 17deg);
+  translate: calc((var(--i) - 2) * 6px) -6px;
+}
+@supports (animation-timeline: view()) {
+  .paleta span {
+    animation: paleta-abre linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 40%;
+  }
+}
+@keyframes paleta-abre {
+  from { rotate: 0deg; translate: 0 18px; opacity: 0; }
+}
+
+/* Línea superior de la lista: en Diseño se traza como una pluma; en Redes es un cable por el que pasan paquetes */
+#diseno .service-list,
+#redes .service-list { position: relative; }
+#diseno .service-list::before,
+#redes .service-list::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  pointer-events: none;
+}
+#diseno .service-list::before {
+  background: linear-gradient(90deg, #b39bff, #6ea2ff 60%, transparent);
+  transform-origin: left;
+}
+@supports (animation-timeline: view()) {
+  #diseno .service-list::before {
+    animation: traza-linea linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+  }
+}
+@keyframes traza-linea { from { scale: 0 1; } }
+
+#redes .service-list::before {
+  height: 2px;
+  top: -1.5px;
+  background: linear-gradient(90deg, transparent, #6ea2ff, #e0ecff, #6ea2ff, transparent) no-repeat;
+  background-size: 160px 100%;
+  animation: paquete-cable 3.2s linear infinite;
+}
+@keyframes paquete-cable {
+  from { background-position: -30% 0; }
+  to { background-position: 130% 0; }
+}
+
+/* LEDs de actividad junto al icono de cada servicio de red, cada uno a su ritmo */
+#redes .service-list li { position: relative; }
+#redes .service-list li::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1.75rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+  animation: led-red 1.7s steps(1, end) infinite;
+  animation-delay: calc(var(--n, 0) * -.37s);
+}
+#redes .service-list li:nth-child(2)::after { --n: 1; animation-duration: 1.1s; }
+#redes .service-list li:nth-child(3)::after { --n: 2; animation-duration: 2.3s; }
+#redes .service-list li:nth-child(4)::after { --n: 3; animation-duration: .9s; }
+#redes .service-list li:nth-child(5)::after { --n: 4; animation-duration: 1.9s; background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+#redes .service-list li:nth-child(6)::after { --n: 5; animation-duration: 1.4s; }
+@keyframes led-red {
+  0%, 100% { opacity: 1; }
+  18% { opacity: .25; }
+  30% { opacity: 1; }
+  52% { opacity: .2; }
+  60% { opacity: 1; }
+}
+
+/* Servicios que se dibujan: el cursor sobre un servicio lo marca y la escena de arriba lo muestra */
+@media (hover: hover) and (pointer: fine) {
+  #diseno .service-list li,
+  #redes .service-list li { cursor: default; }
+  /* Diseño: caja de selección con sus cuatro manejadores, como en un editor vectorial */
+  #diseno .service-list li { position: relative; }
+  #diseno .service-list li::before {
+    content: "";
+    position: absolute;
+    inset: -14px -16px;
+    border: 1px dashed rgba(179, 155, 255, .55);
+    background:
+      linear-gradient(#b39bff, #b39bff) 0 0 / 7px 7px no-repeat,
+      linear-gradient(#b39bff, #b39bff) 100% 0 / 7px 7px no-repeat,
+      linear-gradient(#b39bff, #b39bff) 0 100% / 7px 7px no-repeat,
+      linear-gradient(#b39bff, #b39bff) 100% 100% / 7px 7px no-repeat;
+    opacity: 0;
+    scale: 1.04;
+    transition: opacity .2s var(--ease-out), scale .25s var(--ease-out);
+    pointer-events: none;
+  }
+  #diseno .service-list li:hover::before { opacity: 1; scale: 1; }
+  #diseno .service-list li i,
+  #redes .service-list li i { transition: color .2s var(--ease-out), translate .25s var(--ease-out); }
+  #diseno .service-list li:hover i { color: #b39bff; translate: 0 -2px; }
+  #redes .service-list li:hover i { color: #9cc0ff; translate: 0 -2px; }
+  #redes .service-list li:hover::after { animation-duration: .25s; }
+}
+
+/* Pausa fuera de pantalla, modo ligero y movimiento reducido */
+#redes.fuera .service-list::before,
+#redes.fuera .service-list li::after { animation-play-state: paused; }
+.ligero #redes .service-list::before { animation: none; background: none; }
+.ligero #redes .service-list li::after { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  #redes .service-list::before { animation: none; background: none; }
+  #redes .service-list li::after,
+  #diseno .service-list::before,
+  .paleta span { animation: none; }
+  .paleta span,
+  #diseno .service-list li::before { transition: none; }
+}
