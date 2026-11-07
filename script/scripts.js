@@ -1177,6 +1177,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
+    document.querySelectorAll('[data-explica]').forEach(caja => {
+        const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');
+        const pasos = [...caja.querySelectorAll('.explica-paso')];
+        if (EN) audio.src = audio.getAttribute('src').replace('-es.mp3', '-en.mp3');
+        const marcas = (EN ? caja.dataset.marcasEn : caja.dataset.marcas).split(',').map(Number);
+        const total = EN ? 27.6 : 31.1;
+        tiempo.textContent = `0:${String(Math.round(total)).padStart(2, '0')}`;
+        // cada palabra del texto en su propio span, para resaltarla cuando la voz llega a ella
+        const palabras = pasos.map(li => {
+            const p = li.querySelector('p');
+            p.innerHTML = p.textContent.trim().split(/\s+/).map(w => `<span class="explica-palabra">${w}</span>`).join(' ');
+            return [...p.children];
+        });
+        let marco = 0;
+        const pintar = () => {
+            const t = audio.currentTime;
+            let activo = -1;
+            marcas.forEach((m, i) => { if (t >= m) activo = i; });
+            pasos.forEach((li, i) => {
+                const fin = i + 1 < marcas.length ? marcas[i + 1] - 0.75 : total - 0.6;
+                const avance = Math.min(1, Math.max(0, (t - marcas[i]) / (fin - marcas[i])));
+                li.classList.toggle('is-on', i === activo && !audio.paused);
+                li.classList.toggle('is-hecho', i < activo || (audio.ended));
+                li.style.setProperty('--avance', avance.toFixed(3));
+                // las palabras se encienden en proporción al largo de cada una (aproxima el ritmo de la voz)
+                const ws = palabras[i], largo = ws.reduce((s, w) => s + w.textContent.length + 1, 0);
+                let acumulado = 0;
+                ws.forEach(w => { acumulado += w.textContent.length + 1; w.classList.toggle('dicha', i < activo || (i === activo && acumulado / largo <= avance + 0.02)); });
+            });
+            caja.style.setProperty('--progreso', (t / total).toFixed(4));
+            caja.classList.toggle('iniciado', t > 0 && !audio.ended);
+            const resta = Math.max(0, Math.round(total - t));
+            tiempo.textContent = `0:${String(resta).padStart(2, '0')}`;
+            if (!audio.paused) marco = requestAnimationFrame(pintar);
+        };
+        const estado = () => {
+            const sonando = !audio.paused && !audio.ended;
+            caja.classList.toggle('sonando', sonando);
+            caja.classList.toggle('iniciado', audio.currentTime > 0 && !audio.ended);
+            boton.setAttribute('aria-pressed', sonando ? 'true' : 'false');
+            boton.querySelector('small').textContent = sonando ? T('Toca para pausar', 'Tap to pause') : audio.ended ? T('Toca para escucharlo otra vez', 'Tap to listen again') : T('Escúchalo; el texto sigue a la voz', 'Listen; the text follows the voice');
+            cancelAnimationFrame(marco); pintar();
+        };
+        boton.addEventListener('click', () => {
+            if (audio.paused) { if (audio.ended) audio.currentTime = 0; audio.play().catch(() => {}); }
+            else audio.pause();
+        });
+        // tocar un paso salta a esa parte de la narración
+        pasos.forEach((li, i) => li.addEventListener('click', () => { audio.currentTime = marcas[i]; if (audio.paused) audio.play().catch(() => {}); else pintar(); }));
+        ['play', 'pause', 'ended', 'seeked', 'loadedmetadata'].forEach(ev => audio.addEventListener(ev, estado));
+        audio.addEventListener('ended', () => { caja.classList.add('terminado'); });
+        // si la sección sale de pantalla mientras suena, se pausa
+        new IntersectionObserver(([e]) => { if (!e.isIntersecting && !audio.paused) audio.pause(); }, { threshold: 0 }).observe(caja);
+    });
+
     // --- En uso: las capturas reales se montan en perspectiva sobre la pantalla de la foto (homografía → matrix3d) ---
     document.querySelectorAll('.uso').forEach(sec => {
         const figura = sec.querySelector('.uso-escena'), foto = figura.querySelector('.uso-foto');

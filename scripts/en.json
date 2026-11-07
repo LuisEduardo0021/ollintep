@@ -807,5 +807,15 @@
   "Tu marca, en tus manos.": "Your brand, in your hands.",
   "Nuestro logo, levantado en 3D desde su dibujo vectorial. Mueve el cursor para girarlo; con un clic se separan sus piezas.": "Our logo, raised into 3D from its vector drawing. Move the cursor to turn it; click to pull its pieces apart.",
   "Marca en 3D": "Brand in 3D",
-  "Extrusión de vectores · WebGL · luz especular": "Vector extrusion · WebGL · specular light"
+  "Extrusión de vectores · WebGL · luz especular": "Vector extrusion · WebGL · specular light",
+  "Cómo trabajamos, en 30 segundos": "How we work, in 30 seconds",
+  "Escúchalo; el texto sigue a la voz": "Listen; the text follows the voice",
+  "Escuchamos": "We listen",
+  "Diseñamos": "We design",
+  "Construimos": "We build",
+  "Te acompañamos": "We stay with you",
+  "Primero te escuchamos. Platicamos contigo, vemos cómo trabaja tu negocio y qué te quita tiempo.": "First, we listen. We talk with you and see how your business works, and what slows it down.",
+  "Después diseñamos la solución contigo: pantallas, flujos y un presupuesto claro, antes de escribir una sola línea de código.": "Then we design the solution with you: screens, workflows and a clear budget, before writing a single line of code.",
+  "Construimos por etapas y te mostramos avances en cada una, con datos reales de tu operación.": "We build in stages and show you progress at every one, with real data from your operation.",
+  "Y cuando ya está funcionando, seguimos contigo: capacitación, soporte directo y mejoras. Siempre hablas con quien lo construyó.": "And once it's running, we stay with you: training, direct support and improvements. You always talk to the people who built it."
 }

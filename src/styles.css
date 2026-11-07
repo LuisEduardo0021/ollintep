@@ -7327,3 +7327,53 @@ html.visor-abierto { overflow: hidden; }
   .uso-vistas button { font-size: .78rem; padding: .5rem .8rem; }
 }
 @media (prefers-reduced-motion: reduce) { .uso-pantalla img { transition: none; } }
+
+/* ==========================================================================
+   EXPLICATIVO NARRADO: cuatro pasos que se iluminan al ritmo de la voz
+   ========================================================================== */
+.explica { --progreso: 0; margin-top: clamp(3rem, 7vw, 5rem); padding: clamp(1.25rem, 3vw, 2rem); border-radius: 28px; background: linear-gradient(160deg, rgba(110, 162, 255, .07), rgba(192, 132, 252, .05)); box-shadow: inset 0 0 0 1px var(--line-strong, rgba(255, 255, 255, .12)); }
+.explica-play {
+  display: flex; align-items: center; gap: 1rem; width: 100%; max-width: 30rem; margin: 0 auto clamp(1.5rem, 3vw, 2.25rem); padding: .7rem 1.1rem .7rem .7rem;
+  border: 0; border-radius: 999px; cursor: pointer; text-align: left; color: #fff; background: rgba(10, 15, 27, .8);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 20px 40px -20px rgba(0, 0, 0, .9); transition: scale .15s var(--ease-out), box-shadow .2s;
+}
+.explica-play:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .26), 0 20px 40px -20px rgba(0, 0, 0, .9); }
+.explica-play:active { scale: .98; }
+.explica-play:focus-visible { outline: 2px solid var(--md-sys-color-primary, #8ab4ff); outline-offset: 3px; }
+.explica-ico { position: relative; flex: none; width: 46px; height: 46px; border-radius: 50%; background: conic-gradient(var(--md-sys-color-primary, #6ea2ff) calc(var(--progreso) * 360deg), rgba(255, 255, 255, .12) 0); }
+.explica-ico::before { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--md-sys-color-primary, #6ea2ff); }
+.explica.iniciado .explica-ico::before { background: #0d1424; }
+.explica-ico::after { content: ''; position: absolute; left: 18px; top: 15px; border-left: 13px solid #06101f; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+.explica.iniciado .explica-ico::after { border-left-color: #fff; }
+.explica.sonando .explica-ico::after { left: 16px; top: 16px; width: 14px; height: 14px; border: 0; border-left: 4.5px solid #fff; border-right: 4.5px solid #fff; box-sizing: border-box; }
+.explica-txt { flex: 1; display: grid; gap: .15rem; min-width: 0; }
+.explica-txt b { font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+.explica-txt small { font-size: .8rem; color: rgba(214, 223, 240, .66); }
+.explica-tiempo { font-variant-numeric: tabular-nums; font-size: .85rem; font-weight: 600; color: rgba(214, 223, 240, .7); }
+.explica-pasos { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.75rem, 2vw, 1.25rem); margin: 0; padding: 0; list-style: none; }
+/* línea que une los pasos y se llena con la narración */
+.explica-pasos::before, .explica-pasos::after { content: ''; position: absolute; left: 12.5%; right: 12.5%; top: 27px; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, .1); }
+.explica-pasos::after { background: linear-gradient(90deg, var(--md-sys-color-primary, #6ea2ff), #c084fc); transform: scaleX(min(1, calc(var(--progreso) * 1.12))); transform-origin: left; }
+.explica-paso { position: relative; z-index: 1; display: grid; align-content: start; justify-items: center; gap: .55rem; padding: 0 .25rem; text-align: center; cursor: pointer; }
+.explica-num {
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; font-size: 1.15rem; color: rgba(214, 223, 240, .8);
+  background: #0c1322; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .14); transition: background-color .3s, color .3s, box-shadow .3s, scale .4s var(--ease-out);
+}
+.explica-paso h3 { margin: .3rem 0 0; font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+.explica-paso p { margin: 0; font-size: .9rem; line-height: 1.5; color: rgba(214, 223, 240, .72); text-wrap: pretty; }
+.explica-paso:hover .explica-num { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .35); }
+.explica-paso.is-hecho .explica-num { color: #fff; background: color-mix(in srgb, var(--md-sys-color-primary, #6ea2ff) 30%, #0c1322); }
+.explica-paso.is-on .explica-num { scale: 1.12; color: #06101f; background: var(--md-sys-color-primary, #6ea2ff); box-shadow: 0 0 0 6px color-mix(in srgb, var(--md-sys-color-primary, #6ea2ff) 22%, transparent), 0 0 40px -6px var(--md-sys-color-primary, #6ea2ff); }
+/* mientras suena, las palabras aún no dichas se atenúan y se encienden al decirse */
+.explica.iniciado .explica-palabra { color: rgba(214, 223, 240, .38); transition: color .18s ease; }
+.explica.iniciado .explica-palabra.dicha { color: #fff; }
+.explica.terminado:not(.iniciado) .explica-palabra { color: inherit; }
+@media (max-width: 860px) {
+  .explica-pasos { grid-template-columns: 1fr; gap: 1.1rem; }
+  .explica-pasos::before, .explica-pasos::after { left: 27px; right: auto; top: 28px; bottom: 28px; width: 2px; height: auto; }
+  .explica-pasos::after { transform: scaleY(min(1, calc(var(--progreso) * 1.12))); transform-origin: top; }
+  .explica-paso { grid-template-columns: 56px 1fr; justify-items: start; column-gap: 1rem; row-gap: .2rem; text-align: left; }
+  .explica-num { grid-row: span 2; }
+  .explica-paso h3 { margin: .45rem 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .explica-num, .explica-palabra { transition: none !important; } }
