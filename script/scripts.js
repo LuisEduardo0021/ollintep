@@ -839,6 +839,36 @@ document.addEventListener('DOMContentLoaded', () => {
             [T('¿También dan servicio técnico?', 'Do you also offer technical service?'), T('PC, servidores, impresoras, firmware', 'PCs, servers, printers, firmware'), T('reparacion mantenimiento computadora', 'repair maintenance computer')],
             [T('¿Dónde están?', 'Where are you located?'), T('Tepic, Nayarit, México', 'Tepic, Nayarit, Mexico'), T('ubicacion direccion tepic nayarit', 'location address tepic nayarit')],
         ].map(([q, r, clave], i) => [q, r, raizIdioma + `index.html#pregunta-${i + 1}`, 'fa-book-open', clave + T(' pregunta frecuente', ' faq question')]),
+        // preguntas de cada plataforma: [página, pregunta, respuesta corta, sinónimos]; el orden es el de su página
+        ...[
+            ['centzontle', T('¿Para qué negocios sirve Centzontle?', 'Which businesses is Centzontle for?'), T('Doce giros, del restaurante al taller', 'Twelve business types, from restaurants to repair shops'), T('giros tienda farmacia boutique', 'business types store pharmacy boutique')],
+            ['centzontle', T('¿En qué equipos funciona Centzontle?', 'What devices does Centzontle run on?'), T('Windows y Linux', 'Windows and Linux'), 'windows linux tablet terminal'],
+            ['centzontle', T('¿Dónde guarda Centzontle mi información?', 'Where does Centzontle store my data?'), T('Base de datos local, con respaldos', 'Local database, with backups'), T('datos respaldo red local internet', 'data backup local network internet')],
+            ['centzontle', T('¿Puedo facturar desde Centzontle?', 'Can I invoice from Centzontle?'), T('Sí, CFDI 4.0 desde la venta', 'Yes, CFDI 4.0 from the sale'), T('factura cfdi sat', 'invoice cfdi sat')],
+            ['centzontle', T('¿La IA de Centzontle cuesta aparte?', 'Does Centzontle’s AI cost extra?'), T('Usa tu cuenta de Claude, OpenAI o Gemini', 'It uses your Claude, OpenAI or Gemini account'), 'ia ai nexo claude openai gemini chatgpt'],
+            ['centzontle', T('¿Puedo ver Centzontle con mi negocio?', 'Can I see Centzontle with my business?'), T('Sí, con una demo configurada', 'Yes, with a tailored demo'), 'demo prueba'],
+            ['actapro', T('¿Para quién es ActaPro?', 'Who is ActaPro for?'), T('Secretarías, patronatos, comités y asambleas', 'Secretariats, boards, committees and assemblies'), T('gobierno municipio cabildo', 'government municipality council')],
+            ['actapro', T('¿Dónde guarda ActaPro los datos?', 'Where does ActaPro store data?'), T('Nube, nube dedicada o servidor propio', 'Cloud, dedicated cloud or your own server'), T('nube servidor on premise', 'cloud server on premise')],
+            ['actapro', T('¿Puedo probar ActaPro?', 'Can I try ActaPro?'), T('Plan Piloto, sin costo de entrada', 'Pilot plan, no setup fee'), T('prueba piloto gratis', 'trial pilot free')],
+            ['actapro', T('¿ActaPro importa mis actas de Excel?', 'Does ActaPro import my minutes from Excel?'), T('Sí, en el plan Nube', 'Yes, with the Cloud plan'), 'excel migracion importar migration import'],
+            ['actapro', T('¿Quién puede cambiar cada acta?', 'Who can change each minute?'), T('Perfiles con accesos distintos e historial', 'Profiles with distinct access and history'), T('permisos roles historial', 'permissions roles history')],
+            ['actapro', T('¿ActaPro saca reportes?', 'Does ActaPro produce reports?'), T('Búsqueda y exportación a Excel', 'Search and export to Excel'), T('reportes exportar excel graficas', 'reports export excel charts')],
+            ['agrocria', T('¿Agro-Cria funciona sin señal?', 'Does Agro-Cria work without signal?'), T('Sí, y se sincroniza al volver la cobertura', 'Yes, and it syncs when coverage returns'), T('sin internet offline lorawan', 'no internet offline lorawan')],
+            ['agrocria', T('¿En qué dispositivos funciona Agro-Cria?', 'What devices does Agro-Cria run on?'), 'Windows, Linux, Android, iOS', 'windows linux android ios celular tablet'],
+            ['agrocria', T('¿Cómo calcula Agro-Cria el riego?', 'How does Agro-Cria compute irrigation?'), T('Balance hídrico FAO-56', 'FAO-56 water balance'), 'riego fao cropwat agua irrigation water'],
+            ['agrocria', T('¿Agro-Cria sirve para ganado?', 'Does Agro-Cria handle livestock?'), T('Sí: aretes, pesaje, vacunas', 'Yes: ear tags, weighing, vaccines'), T('ganado vacas aretes', 'cattle cows ear tags')],
+            ['agrocria', T('¿Para qué tamaño de operación es Agro-Cria?', 'What size of operation is Agro-Cria for?'), T('De ranchos familiares a corporativos', 'From family ranches to corporations'), T('rancho huerta vivero', 'ranch orchard nursery')],
+            ['agrocria', T('¿Agro-Cria se conecta con mi riego?', 'Does Agro-Cria connect to my irrigation?'), T('PLC y estaciones meteorológicas', 'PLCs and weather stations'), 'plc estacion meteorologica weather station'],
+            ['diagmind', T('¿Diagmind necesita root?', 'Does Diagmind need root?'), T('No, ADB por USB', 'No, ADB over USB'), 'root adb usb garantia warranty'],
+            ['diagmind', T('¿Qué revisa Diagmind?', 'What does Diagmind check?'), T('Batería, pantalla, sensores, CPU y memoria', 'Battery, screen, sensors, CPU and memory'), T('bateria pantalla diagnostico', 'battery screen diagnostics')],
+            ['diagmind', T('¿Diagmind envía datos a internet?', 'Does Diagmind send data online?'), T('No, la IA corre en tu equipo', 'No, the AI runs on your computer'), T('privacidad nube datos clientes', 'privacy cloud customer data')],
+            ['diagmind', T('¿En qué sistemas funciona Diagmind?', 'Which systems does Diagmind run on?'), T('Windows y Linux', 'Windows and Linux'), 'windows linux'],
+            ['diagmind', T('¿Diagmind revisa varios teléfonos a la vez?', 'Can Diagmind check several phones at once?'), T('Sí, en el plan Centro de servicio', 'Yes, with the Service center plan'), T('lote varios telefonos', 'batch several phones')],
+            ['diagmind', T('¿Puedo probar Diagmind en mi taller?', 'Can I try Diagmind in my shop?'), T('Sí, con una licencia de prueba', 'Yes, with a trial license'), T('prueba licencia', 'trial license')],
+        ].map(([pag, q, r, clave], i, todas) => {
+            const n = todas.slice(0, i).filter(x => x[0] === pag).length + 1;
+            return [q, r, raizIdioma + `${pag}/index.html#pregunta-${n}`, 'fa-book-open', clave + ' ' + pag + T(' pregunta frecuente', ' faq question')];
+        }),
     ];
     // sinónimos de los destinos principales (se buscan pero no se muestran)
     const CLAVES = {
@@ -871,7 +901,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const q = sinAcentos(input.value.trim());
             // cada palabra cuenta por separado; los sinónimos (quinto campo) también se buscan
             const palabras = q.split(/\s+/).filter(Boolean);
-            visibles = ENTRADAS.filter(e => { const t = sinAcentos(e[0] + ' ' + e[1] + ' ' + (e[4] || '')); return palabras.every(w => t.includes(w)); });
+            // primero lo que coincide al inicio de una palabra (o la palabra entera); lo que solo la contiene por dentro va al final
+            const inicio = palabras.map(w => new RegExp('(^|[^a-z0-9])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+            const puntaje = (t) => palabras.reduce((n, w, k) => n + (inicio[k].test(t) ? 2 : t.includes(w) ? 1 : -99), 0);
+            visibles = ENTRADAS.map((e, i) => ({ e, i, p: puntaje(sinAcentos(e[0] + ' ' + e[1] + ' ' + (e[4] || ''))) }))
+                .filter(x => x.p > 0 || !palabras.length)
+                .sort((a, b) => (b.p - a.p) || (a.i - b.i))
+                .map(x => x.e);
+            // si hay coincidencias de palabra, las que solo contienen el texto por dentro sobran
+            if (palabras.length) { const mejor = Math.max(0, ...visibles.map(e => puntaje(sinAcentos(e[0] + ' ' + e[1] + ' ' + (e[4] || ''))))); if (mejor >= palabras.length * 2) visibles = visibles.filter(e => puntaje(sinAcentos(e[0] + ' ' + e[1] + ' ' + (e[4] || ''))) >= palabras.length * 2); }
             sel = Math.min(sel, Math.max(0, visibles.length - 1));
             lista.innerHTML = '';
             visibles.forEach((e, i) => {
