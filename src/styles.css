@@ -7432,3 +7432,9 @@ html.visor-abierto { overflow: hidden; }
 .app-tile.app-apagada { opacity: .28; filter: grayscale(.85); }
 .app-tile.app-elegida { translate: 0 -4px; box-shadow: 0 0 0 1.5px var(--app), 0 24px 50px -24px var(--app); }
 @media (prefers-reduced-motion: reduce) { .app-tile.app-elegida { translate: none; } }
+.servicio-pedir { display: inline-flex; align-items: center; gap: .4rem; margin-top: .8rem; font-size: .85rem; font-weight: 600; color: var(--md-sys-color-primary, #8ab4ff); text-decoration: none; }
+.servicio-pedir i { font-size: .7em; transition: translate .2s var(--ease-out); }
+.servicio-pedir:hover i { translate: 0 2px; }
+.servicio-pedir:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
+.armar.armar-aviso { animation: armar-aviso 1.4s ease-out; }
+@keyframes armar-aviso { 0%, 30% { box-shadow: inset 0 0 0 1.5px var(--md-sys-color-primary, #6ea2ff), 0 0 60px -10px var(--md-sys-color-primary, #6ea2ff); } }

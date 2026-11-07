@@ -1242,6 +1242,51 @@ document.addEventListener('DOMContentLoaded', () => {
         armar();
     });
 
+    // --- Pedir un servicio: lleva al asistente de solicitud con la opción ya marcada y el servicio escrito ---
+    const armarCaja = document.querySelector('[data-armar]');
+    if (armarCaja) {
+        // cada sección marca su opción del paso 1: a medida → software, diseño → marca, redes → infraestructura, servicio técnico → soporte
+        const OPCION = { 'a-medida': '0', diseno: '6', redes: '7', 'servicio-tecnico': '8' };
+        document.querySelectorAll('.service-list li').forEach(li => {
+            const opcion = OPCION[li.closest('section')?.id];
+            if (!opcion) return;
+            const a = document.createElement('a');
+            a.href = '#contacto';
+            a.className = 'servicio-pedir';
+            a.dataset.pedir = opcion;
+            a.dataset.servicio = li.querySelector('h3')?.textContent.trim() || '';
+            a.innerHTML = `${T('Lo quiero', 'I want this')} <i class="fas fa-arrow-down" aria-hidden="true"></i>`;
+            li.append(a);
+        });
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('[data-pedir]');
+            if (!a) return;
+            e.preventDefault();
+            const casilla = armarCaja.querySelector(`input[name="necesita"][value="${a.dataset.pedir}"]`);
+            if (casilla && !casilla.checked) casilla.checked = true;
+            if (a.dataset.servicio) {
+                const detalle = armarCaja.querySelector('[name="detalle"]');
+                const prefijo = T('En particular: ', 'Specifically: ');
+                if (!detalle.value.includes(a.dataset.servicio)) {
+                    // varios servicios se juntan en una sola frase
+                    const i = detalle.value.indexOf(prefijo);
+                    if (i >= 0) {
+                        const fin = detalle.value.indexOf('.', i);
+                        const antes = detalle.value.slice(i + prefijo.length, fin < 0 ? undefined : fin).split(/, | y | and /).filter(Boolean);
+                        antes.push(a.dataset.servicio);
+                        const unidos = antes.slice(0, -1).join(', ') + T(' y ', ' and ') + antes[antes.length - 1];
+                        detalle.value = detalle.value.slice(0, i) + prefijo + unidos + '.' + (fin < 0 ? '' : detalle.value.slice(fin + 1));
+                    } else detalle.value = (detalle.value ? detalle.value + ' ' : '') + prefijo + a.dataset.servicio + '.';
+                }
+            }
+            armarCaja.dispatchEvent(new Event('change', { bubbles: true }));
+            armarCaja.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+            armarCaja.classList.remove('armar-aviso'); void armarCaja.offsetWidth; armarCaja.classList.add('armar-aviso');
+            // el foco va al siguiente paso por responder
+            setTimeout(() => armarCaja.querySelector('fieldset:not(.hecho) input')?.focus({ preventScroll: true }), prefersReducedMotion ? 0 : 700);
+        });
+    }
+
     // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
     document.querySelectorAll('[data-explica]').forEach(caja => {
         const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');
