@@ -1177,6 +1177,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Asistente de solicitud: con lo que el visitante elige se escribe el mensaje; el correo lo envía él ---
+    document.querySelectorAll('[data-armar]').forEach(caja => {
+        const vista = caja.querySelector('.armar-mensaje'), correo = caja.querySelector('.armar-correo'), copiar = caja.querySelector('.armar-copiar');
+        const elegidos = (nombre) => [...caja.querySelectorAll(`input[name="${nombre}"]:checked`)].map(i => i.nextElementSibling.textContent.trim());
+        const valor = (nombre) => (caja.querySelector(`[name="${nombre}"]`).value || '').trim();
+        const armar = () => {
+            const necesita = elegidos('necesita'), negocio = elegidos('negocio')[0], tamano = elegidos('tamano')[0], cuando = elegidos('cuando')[0];
+            const detalle = valor('detalle'), nombre = valor('nombre');
+            const lineas = [T('Hola, Ollin-Tep:', 'Hello, Ollin-Tep:'), ''];
+            if (necesita.length) lineas.push(T('Me interesa: ', 'I’m interested in: ') + necesita.join(', ') + '.');
+            if (negocio || tamano) lineas.push(T('Mi negocio: ', 'My business: ') + [negocio, tamano && `(${tamano.toLowerCase()})`].filter(Boolean).join(' ') + '.');
+            if (cuando) lineas.push(T('Lo necesito: ', 'Timing: ') + cuando.toLowerCase() + '.');
+            if (detalle) lineas.push('', detalle);
+            lineas.push('', T('¿Me pueden enviar una propuesta?', 'Could you send me a proposal?'), '', T('Saludos', 'Best regards') + (nombre ? `,\n${nombre}` : '.'));
+            const texto = lineas.join('\n');
+            const listo = necesita.length > 0;
+            caja.classList.toggle('armar-listo', listo);
+            vista.textContent = listo ? texto : T('Elige al menos una opción en el paso 1 y aquí aparecerá tu mensaje.', 'Pick at least one option in step 1 and your message will appear here.');
+            const asunto = T('Solicitud: ', 'Request: ') + (necesita.join(', ') || T('proyecto', 'project'));
+            correo.href = `mailto:administrador@ollin-tep.com?subject=${encodeURIComponent(asunto.slice(0, 120))}` + (listo ? `&body=${encodeURIComponent(texto)}` : '');
+            // marca los pasos ya respondidos
+            caja.querySelectorAll('fieldset').forEach((f, i) => f.classList.toggle('hecho', [necesita.length > 0, !!negocio, !!cuando][i]));
+            return texto;
+        };
+        caja.addEventListener('input', armar);
+        caja.addEventListener('change', armar);
+        copiar.addEventListener('click', async () => {
+            const texto = armar(), etiqueta = copiar.querySelector('span');
+            try { await navigator.clipboard.writeText(texto); }
+            catch (e) { const r = document.createRange(); r.selectNodeContents(vista); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('copy'); s.removeAllRanges(); }
+            etiqueta.textContent = T('¡Copiado!', 'Copied!');
+            setTimeout(() => { etiqueta.textContent = T('Copiar el mensaje', 'Copy the message'); }, 1800);
+        });
+        armar();
+    });
+
     // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
     document.querySelectorAll('[data-explica]').forEach(caja => {
         const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');

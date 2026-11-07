@@ -77,8 +77,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=10.2">
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=10.2">
+    <link rel="stylesheet" href="../css/styles.css?v=10.3">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=10.3">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -544,6 +544,62 @@ ip dhcp snooping vlan 10,20,30
                 <a href="tel:+523111275020" class="m3-btn m3-btn-tonal"><i class="fas fa-phone" aria-hidden="true"></i> +52 311 127 5020</a>
             </div>
         </div>
+        <div class="armar" data-armar>
+            <div class="armar-form">
+                <p class="armar-ceja">Build your request</p>
+                <h3 class="armar-titulo">Three taps and your message is ready.</h3>
+                <fieldset>
+                    <legend><span class="armar-num" aria-hidden="true">1</span>What do you need?</legend>
+                    <div class="chips">
+                        <label class="chip"><input type="checkbox" name="necesita" value="0"><span>Custom software</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="1"><span>An app from the CroHub suite</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="2"><span>Point of sale (Centzontle)</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="3"><span>Minutes and government (ActaPro)</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="4"><span>Farming and livestock (Agro-Cria)</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="5"><span>Phone diagnostics (Diagmind)</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="6"><span>Brand design</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="7"><span>Networks and infrastructure</span></label>
+                        <label class="chip"><input type="checkbox" name="necesita" value="8"><span>Technical support</span></label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><span class="armar-num" aria-hidden="true">2</span>What is your business like?</legend>
+                    <div class="chips">
+                        <label class="chip"><input type="radio" name="negocio" value="0"><span>Restaurant or shop</span></label>
+                        <label class="chip"><input type="radio" name="negocio" value="1"><span>Government or association</span></label>
+                        <label class="chip"><input type="radio" name="negocio" value="2"><span>Farming or livestock</span></label>
+                        <label class="chip"><input type="radio" name="negocio" value="3"><span>Repair shop or technical service</span></label>
+                        <label class="chip"><input type="radio" name="negocio" value="4"><span>Office or firm</span></label>
+                        <label class="chip"><input type="radio" name="negocio" value="5"><span>Other</span></label>
+                    </div>
+                    <div class="chips chips-chicas">
+                        <label class="chip"><input type="radio" name="tamano" value="0"><span>Just me</span></label>
+                        <label class="chip"><input type="radio" name="tamano" value="1"><span>2 to 10 people</span></label>
+                        <label class="chip"><input type="radio" name="tamano" value="2"><span>11 to 50 people</span></label>
+                        <label class="chip"><input type="radio" name="tamano" value="3"><span>More than 50</span></label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><span class="armar-num" aria-hidden="true">3</span>By when?</legend>
+                    <div class="chips">
+                        <label class="chip"><input type="radio" name="cuando" value="0"><span>As soon as possible</span></label>
+                        <label class="chip"><input type="radio" name="cuando" value="1"><span>In one to three months</span></label>
+                        <label class="chip"><input type="radio" name="cuando" value="2"><span>Just exploring</span></label>
+                    </div>
+                    <label class="armar-campo"><span>Tell us in one sentence (optional)</span><textarea name="detalle" rows="2" maxlength="400" placeholder="For example: I have two branches and want to see the sales of both in one place."></textarea></label>
+                    <label class="armar-campo"><span>Your name (optional)</span><input type="text" name="nombre" maxlength="80" autocomplete="name"></label>
+                </fieldset>
+            </div>
+            <div class="armar-vista">
+                <p class="armar-vista-cab">Your message</p>
+                <pre class="armar-mensaje" aria-live="polite"></pre>
+                <div class="armar-acciones">
+                    <a class="m3-btn m3-btn-filled armar-correo" href="mailto:administrador@ollin-tep.com"><i class="fas fa-envelope" aria-hidden="true"></i> Send by email</a>
+                    <button type="button" class="m3-btn m3-btn-tonal armar-copiar"><i class="fas fa-copy" aria-hidden="true"></i> <span>Copy the message</span></button>
+                </div>
+                <p class="armar-nota">Your email opens with the message written; you decide whether to send it.</p>
+            </div>
+        </div>
     </section>
 
     <section id="nayarit" class="section-block" data-ambiente="naranja">
@@ -819,7 +875,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=10.2"></script>
-    <script src="../script/efectos.js?v=10.2"></script>
+    <script src="../script/scripts.js?v=10.3"></script>
+    <script src="../script/efectos.js?v=10.3"></script>
 </body>
 </html>
