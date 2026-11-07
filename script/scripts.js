@@ -1458,6 +1458,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     }
 
+    // --- Preguntas frecuentes: el buscador filtra mientras escribes (sin acentos ni mayúsculas) y abre la única coincidencia ---
+    document.querySelectorAll('.faq').forEach(sec => {
+        const campo = sec.querySelector('.faq-buscar input'), items = [...sec.querySelectorAll('.faq-item')], vacio = sec.querySelector('.faq-vacio');
+        if (!campo) return;
+        const normal = (t) => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        const textos = items.map(d => normal(d.textContent));
+        campo.addEventListener('input', () => {
+            const q = normal(campo.value.trim()).split(/\s+/).filter(Boolean);
+            let visibles = 0;
+            items.forEach((d, i) => {
+                const si = q.every(w => textos[i].includes(w));
+                d.hidden = !si;
+                if (si) visibles++;
+            });
+            vacio.hidden = visibles > 0;
+            const unica = items.filter(d => !d.hidden);
+            items.forEach(d => { if (q.length && unica.length === 1 && d === unica[0]) d.open = true; });
+        });
+        // solo una abierta a la vez, para que la lista no crezca de más
+        items.forEach(d => d.addEventListener('toggle', () => { if (d.open && !campo.value) items.forEach(o => { if (o !== d) o.open = false; }); }));
+    });
+
     // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
     document.querySelectorAll('[data-explica]').forEach(caja => {
         const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');

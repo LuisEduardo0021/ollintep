@@ -35,7 +35,7 @@ def html_a_en(trozo, pagina):
 
 
 def ld_a_en(trozo, pagina):
-    return re.sub(r'"(description|name|applicationCategory|areaServed)": "([^"]+)"',
+    return re.sub(r'"(description|name|text|applicationCategory|areaServed)": "([^"]+)"',
                   lambda m: f'"{m.group(1)}": "{traducir(m.group(2), pagina)}"', trozo)
 
 

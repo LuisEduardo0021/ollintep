@@ -31,6 +31,9 @@
 
     <!-- Datos estructurados (schema.org) -->
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿En qué sistemas funcionan las apps de CroHub?", "acceptedAnswer": {"@type": "Answer", "text": "En Windows, macOS y Linux. El lanzador CroHub descarga, instala, actualiza y activa cada app."}}, {"@type": "Question", "name": "¿Tengo que comprar toda la suite?", "acceptedAnswer": {"@type": "Answer", "text": "No. Compra solo las apps que necesitas o el paquete completo; CroHub administra la licencia de cada una."}}, {"@type": "Question", "name": "¿Qué pasa si se cae el internet?", "acceptedAnswer": {"@type": "Answer", "text": "Nuestro software guarda en tu equipo y sincroniza solo cuando vuelve la conexión: una caída de internet no detiene tu operación."}}, {"@type": "Question", "name": "¿Mis documentos y fotos se suben a la nube?", "acceptedAnswer": {"@type": "Answer", "text": "No. La IA de Crovite PDF y Croma Studio corre en tu equipo; tus documentos y fotos no se suben a ningún servidor."}}, {"@type": "Question", "name": "¿Centzontle emite facturas?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Emite facturas electrónicas CFDI 4.0 del SAT desde la misma venta, sin capturar dos veces."}}, {"@type": "Question", "name": "¿Cuánto cuesta un proyecto a medida?", "acceptedAnswer": {"@type": "Answer", "text": "Depende de lo que necesites. Cuéntanos tu caso y te enviamos una propuesta clara, sin compromiso. ActaPro, Agro-Cria Pro y Diagmind tienen sus planes y precios publicados en sus páginas."}}, {"@type": "Question", "name": "¿Me ayudan después de la entrega?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Seguimos contigo con capacitación, soporte directo y mejoras, y siempre hablas con quien construyó tu software."}}, {"@type": "Question", "name": "¿También dan servicio técnico?", "acceptedAnswer": {"@type": "Answer", "text": "Sí: armado de PC, mantenimiento de computadoras, servidores e impresoras industriales como las HiTi, actualización de firmware e instalación de GrapheneOS en teléfonos Pixel."}}, {"@type": "Question", "name": "¿Dónde están?", "acceptedAnswer": {"@type": "Answer", "text": "En Tepic, Nayarit, México. Escríbenos a administrador@ollin-tep.com o llámanos al +52 311 127 5020."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -83,9 +86,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=11.0">
+    <link rel="stylesheet" href="css/styles.css?v=11.1">
     <!-- Iconos (Font Awesome) -->
-    <link rel="stylesheet" href="resources/iconos/iconos.css?v=11.0">
+    <link rel="stylesheet" href="resources/iconos/iconos.css?v=11.1">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -569,6 +572,56 @@ ip dhcp snooping vlan 10,20,30
         </div>
     </section>
 
+    <!-- Preguntas frecuentes: las respuestas resumen lo que ya dice el sitio -->
+    <section id="preguntas" class="section-block faq" data-ambiente="violeta">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Preguntas frecuentes</p>
+                <h2 class="block-title">Lo que más nos preguntan.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Busca: internet, factura, Linux, precio…" aria-label="Buscar en las preguntas frecuentes"></label>
+        <div class="faq-lista">
+            <details class="faq-item">
+                <summary>¿En qué sistemas funcionan las apps de CroHub?</summary>
+                <p>En Windows, macOS y Linux. El lanzador CroHub descarga, instala, actualiza y activa cada app.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Tengo que comprar toda la suite?</summary>
+                <p>No. Compra solo las apps que necesitas o el paquete completo; CroHub administra la licencia de cada una.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Qué pasa si se cae el internet?</summary>
+                <p>Nuestro software guarda en tu equipo y sincroniza solo cuando vuelve la conexión: una caída de internet no detiene tu operación.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Mis documentos y fotos se suben a la nube?</summary>
+                <p>No. La IA de Crovite PDF y Croma Studio corre en tu equipo; tus documentos y fotos no se suben a ningún servidor.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Centzontle emite facturas?</summary>
+                <p>Sí. Emite facturas electrónicas CFDI 4.0 del SAT desde la misma venta, sin capturar dos veces.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Cuánto cuesta un proyecto a medida?</summary>
+                <p>Depende de lo que necesites. Cuéntanos tu caso y te enviamos una propuesta clara, sin compromiso. ActaPro, Agro-Cria Pro y Diagmind tienen sus planes y precios publicados en sus páginas.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Me ayudan después de la entrega?</summary>
+                <p>Sí. Seguimos contigo con capacitación, soporte directo y mejoras, y siempre hablas con quien construyó tu software.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿También dan servicio técnico?</summary>
+                <p>Sí: armado de PC, mantenimiento de computadoras, servidores e impresoras industriales como las HiTi, actualización de firmware e instalación de GrapheneOS en teléfonos Pixel.</p>
+            </details>
+            <details class="faq-item">
+                <summary>¿Dónde están?</summary>
+                <p>En Tepic, Nayarit, México. Escríbenos a administrador@ollin-tep.com o llámanos al +52 311 127 5020.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>No encontramos esa pregunta. <a href="#contacto">Escríbenos</a> y te respondemos.</p>
+    </section>
+
     <!-- Contacto -->
     <section id="contacto" class="section-block" data-ambiente="azul" data-video="lluvia">
         <div class="cta-band cristal">
@@ -916,7 +969,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=11.0"></script>
-    <script src="script/efectos.js?v=11.0"></script>
+    <script src="script/scripts.js?v=11.1"></script>
+    <script src="script/efectos.js?v=11.1"></script>
 </body>
 </html>
