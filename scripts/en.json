@@ -927,5 +927,12 @@
   "Órdenes de servicio.": "Service orders.",
   "Recibe el equipo con anticipo, diagnostica, repara y entrega cobrando lo que falta.": "Take in the device with a deposit, diagnose, repair and hand it back collecting the balance.",
   "Cómo trabajamos, paso a paso": "How we work, step by step",
-  "Míralo paso a paso": "Watch it step by step"
+  "Míralo paso a paso": "Watch it step by step",
+  "Elige un giro": "Choose a business type",
+  "Centzontle corre en la terminal de tu caja, en una tablet o en la computadora que ya tienes. Elige tu giro y toca una vista para verla en la pantalla.": "Centzontle runs on your checkout terminal, a tablet or the computer you already have. Pick your business type and tap a view to see it on the screen.",
+  "Terminal punto de venta en el mostrador de unos abarrotes, con lector de código de barras y anaqueles con productos": "Point-of-sale terminal on a grocery store counter, with a barcode scanner and shelves of products",
+  "Terminal punto de venta en el mostrador de una farmacia, junto a la impresora de tickets y anaqueles con medicamentos": "Point-of-sale terminal on a pharmacy counter, next to the receipt printer and shelves of medicine",
+  "Tablet en el mostrador de una boutique de ropa, junto a prendas dobladas y una bolsa de papel": "Tablet on a clothing boutique counter, next to folded clothes and a paper bag",
+  "Tablet en la recepción de una estética y barbería, con productos para el cabello y sillas al fondo": "Tablet at the front desk of a salon and barbershop, with hair products and chairs in the background",
+  "Agenda": "Schedule"
 }

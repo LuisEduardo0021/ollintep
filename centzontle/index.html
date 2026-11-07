@@ -50,9 +50,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.3">
+    <link rel="stylesheet" href="../css/styles.css?v=11.4">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.3">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.4">
 </head>
 <body class="theme-centzontle">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -204,8 +204,16 @@
         <div class="uso-cab">
             <p class="uso-ceja">En tu negocio</p>
             <h2 id="uso-titulo" class="uso-titulo">Así se ve en el mostrador.</h2>
-            <p class="uso-lead">Centzontle corre en la terminal de tu caja, en una tablet o en la computadora que ya tienes. Toca una vista para verla en la pantalla.</p>
+            <p class="uso-lead">Centzontle corre en la terminal de tu caja, en una tablet o en la computadora que ya tienes. Elige tu giro y toca una vista para verla en la pantalla.</p>
         </div>
+        <div class="uso-giros" role="group" aria-label="Elige un giro">
+            <button type="button" data-uso-giro="restaurante" aria-pressed="true">Restaurante</button>
+            <button type="button" data-uso-giro="abarrotes" aria-pressed="false">Abarrotes</button>
+            <button type="button" data-uso-giro="farmacia" aria-pressed="false">Farmacia</button>
+            <button type="button" data-uso-giro="boutique" aria-pressed="false">Boutique</button>
+            <button type="button" data-uso-giro="estetica" aria-pressed="false">Estética</button>
+        </div>
+        <div class="uso-par" data-giro="restaurante">
         <figure class="uso-escena" data-quad="387,175 992,176 1002,556 377,557">
             <img class="uso-foto" src="../resources/escenas/centzontle.webp" alt="Terminal punto de venta sobre el mostrador de una marisquería, junto a la impresora de tickets y el cajón de dinero" width="1344" height="752" loading="lazy">
             <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Centzontle.</figcaption>
@@ -215,6 +223,44 @@
                 <button type="button" data-vista="screenshots/centzontle-caja.webp" aria-pressed="false">Caja</button>
                 <button type="button" data-vista="screenshots/centzontle-mesas.webp" aria-pressed="false">Mesas</button>
                 <button type="button" data-vista="screenshots/centzontle-cocina.webp" aria-pressed="false">Cocina</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="abarrotes" hidden>
+        <figure class="uso-escena" data-quad="360,123 1015,122 1036,550 338,552">
+            <img class="uso-foto" src="../resources/escenas/centzontle-abarrotes.webp" alt="Terminal punto de venta en el mostrador de unos abarrotes, con lector de código de barras y anaqueles con productos" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Centzontle.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/centzontle-abarrotes-caja.webp" aria-pressed="true">Caja</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="farmacia" hidden>
+        <figure class="uso-escena" data-quad="369,158 991,158 1014,543 349,543">
+            <img class="uso-foto" src="../resources/escenas/centzontle-farmacia.webp" alt="Terminal punto de venta en el mostrador de una farmacia, junto a la impresora de tickets y anaqueles con medicamentos" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Centzontle.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/centzontle-farmacia-lotes.webp" aria-pressed="true">Lotes y caducidades</button>
+                <button type="button" data-vista="screenshots/centzontle-farmacia-caja.webp" aria-pressed="false">Caja</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="boutique" hidden>
+        <figure class="uso-escena" data-quad="386,176 993,177 1009,566 365,565">
+            <img class="uso-foto" src="../resources/escenas/centzontle-boutique.webp" alt="Tablet en el mostrador de una boutique de ropa, junto a prendas dobladas y una bolsa de papel" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Centzontle.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/centzontle-boutique-caja.webp" aria-pressed="true">Caja</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="estetica" hidden>
+        <figure class="uso-escena" data-quad="387,211 944,203 970,589 373,590">
+            <img class="uso-foto" src="../resources/escenas/centzontle-estetica.webp" alt="Tablet en la recepción de una estética y barbería, con productos para el cabello y sillas al fondo" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Centzontle.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/centzontle-estetica-agenda.webp" aria-pressed="true">Agenda</button>
+        </div>
         </div>
     </section>
 
@@ -375,7 +421,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=11.3"></script>
-    <script src="../script/efectos.js?v=11.3"></script>
+    <script src="../script/scripts.js?v=11.4"></script>
+    <script src="../script/efectos.js?v=11.4"></script>
 </body>
 </html>

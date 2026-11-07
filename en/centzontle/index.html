@@ -44,8 +44,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=11.3">
-    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=11.3">
+    <link rel="stylesheet" href="../../css/styles.css?v=11.4">
+    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=11.4">
 </head>
 <body class="theme-centzontle">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -191,8 +191,16 @@
         <div class="uso-cab">
             <p class="uso-ceja">In your business</p>
             <h2 id="uso-titulo" class="uso-titulo">This is how it looks at the counter.</h2>
-            <p class="uso-lead">Centzontle runs on your checkout terminal, a tablet or the computer you already have. Tap a view to see it on the screen.</p>
+            <p class="uso-lead">Centzontle runs on your checkout terminal, a tablet or the computer you already have. Pick your business type and tap a view to see it on the screen.</p>
         </div>
+        <div class="uso-giros" role="group" aria-label="Choose a business type">
+            <button type="button" data-uso-giro="restaurante" aria-pressed="true">Restaurant</button>
+            <button type="button" data-uso-giro="abarrotes" aria-pressed="false">Grocery</button>
+            <button type="button" data-uso-giro="farmacia" aria-pressed="false">Pharmacy</button>
+            <button type="button" data-uso-giro="boutique" aria-pressed="false">Boutique</button>
+            <button type="button" data-uso-giro="estetica" aria-pressed="false">Salon</button>
+        </div>
+        <div class="uso-par" data-giro="restaurante">
         <figure class="uso-escena" data-quad="387,175 992,176 1002,556 377,557">
             <img class="uso-foto" src="../../resources/escenas/centzontle.webp" alt="Point-of-sale terminal on the counter of a seafood restaurant, next to the receipt printer and the cash drawer" width="1344" height="752" loading="lazy">
             <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Centzontle screenshots.</figcaption>
@@ -202,6 +210,44 @@
                 <button type="button" data-vista="screenshots/centzontle-caja.webp" aria-pressed="false">Checkout</button>
                 <button type="button" data-vista="screenshots/centzontle-mesas.webp" aria-pressed="false">Tables</button>
                 <button type="button" data-vista="screenshots/centzontle-cocina.webp" aria-pressed="false">Kitchen</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="abarrotes" hidden>
+        <figure class="uso-escena" data-quad="360,123 1015,122 1036,550 338,552">
+            <img class="uso-foto" src="../../resources/escenas/centzontle-abarrotes.webp" alt="Point-of-sale terminal on a grocery store counter, with a barcode scanner and shelves of products" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Centzontle screenshots.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Screen views">
+                <button type="button" data-vista="screenshots/centzontle-abarrotes-caja.webp" aria-pressed="true">Checkout</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="farmacia" hidden>
+        <figure class="uso-escena" data-quad="369,158 991,158 1014,543 349,543">
+            <img class="uso-foto" src="../../resources/escenas/centzontle-farmacia.webp" alt="Point-of-sale terminal on a pharmacy counter, next to the receipt printer and shelves of medicine" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Centzontle screenshots.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Screen views">
+                <button type="button" data-vista="screenshots/centzontle-farmacia-lotes.webp" aria-pressed="true">Batches and expiration dates</button>
+                <button type="button" data-vista="screenshots/centzontle-farmacia-caja.webp" aria-pressed="false">Checkout</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="boutique" hidden>
+        <figure class="uso-escena" data-quad="386,176 993,177 1009,566 365,565">
+            <img class="uso-foto" src="../../resources/escenas/centzontle-boutique.webp" alt="Tablet on a clothing boutique counter, next to folded clothes and a paper bag" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Centzontle screenshots.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Screen views">
+                <button type="button" data-vista="screenshots/centzontle-boutique-caja.webp" aria-pressed="true">Checkout</button>
+        </div>
+        </div>
+        <div class="uso-par" data-giro="estetica" hidden>
+        <figure class="uso-escena" data-quad="387,211 944,203 970,589 373,590">
+            <img class="uso-foto" src="../../resources/escenas/centzontle-estetica.webp" alt="Tablet at the front desk of a salon and barbershop, with hair products and chairs in the background" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Centzontle screenshots.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Screen views">
+                <button type="button" data-vista="screenshots/centzontle-estetica-agenda.webp" aria-pressed="true">Schedule</button>
+        </div>
         </div>
     </section>
 
@@ -359,7 +405,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=11.3"></script>
-    <script src="../../script/efectos.js?v=11.3"></script>
+    <script src="../../script/scripts.js?v=11.4"></script>
+    <script src="../../script/efectos.js?v=11.4"></script>
 </body>
 </html>

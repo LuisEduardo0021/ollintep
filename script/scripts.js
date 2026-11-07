@@ -1578,17 +1578,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) { t = total; pintar(); estado(); }
     });
     // --- En uso: las capturas reales se montan en perspectiva sobre la pantalla de la foto (homografía → matrix3d) ---
-    document.querySelectorAll('.uso').forEach(sec => {
-        const figura = sec.querySelector('.uso-escena'), foto = figura.querySelector('.uso-foto');
+    // cada escena con sus vistas (en Centzontle hay una por giro, dentro de .uso-par)
+    document.querySelectorAll('.uso-escena').forEach(figura => {
+        const sec = figura.closest('.uso-par') || figura.closest('.uso'), foto = figura.querySelector('.uso-foto');
         const botones = [...sec.querySelectorAll('.uso-vistas button')];
         if (!botones.length) return;
-        const W = 1440, H = 900, BASE = 1344;   // tamaño de la capa de capturas y ancho original de la foto
+        const W = 1440, BASE = 1344;   // ancho de la capa de capturas y ancho original de la foto
         // esquinas de la pantalla en la foto (sup. izq., sup. der., inf. der., inf. izq.), un poco hacia fuera para tapar el borde negro
         const q = figura.dataset.quad.split(' ').map(p => p.split(',').map(Number));
         const cx = q.reduce((s, p) => s + p[0], 0) / 4, cy = q.reduce((s, p) => s + p[1], 0) / 4;
         const esquinas = q.map(([x, y]) => { const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy); return [x + dx / d * 2.5, y + dy / d * 2.5]; });
+        // la capa toma la proporción de la pantalla de la foto: la captura se recorta por abajo en vez de deformarse
+        const largo = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+        const H = Math.round(W / ((largo(q[0], q[1]) + largo(q[3], q[2])) / (largo(q[0], q[3]) + largo(q[1], q[2]))));
         const pantalla = document.createElement('div');
         pantalla.className = 'uso-pantalla';
+        pantalla.style.height = H + 'px';
         pantalla.setAttribute('aria-hidden', 'true');
         // las rutas son relativas a resources/: se resuelven desde la foto para que funcionen igual en /en/
         const ruta = (v) => new URL('../' + v, foto.src).href;
@@ -1645,6 +1650,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // precarga las demás vistas cuando la escena se acerca
         new IntersectionObserver(([e], o) => { if (e.isIntersecting) { capas.forEach((c, i) => { if (!c.src) c.src = ruta(botones[i].dataset.vista); }); o.disconnect(); } }, { rootMargin: '300px' }).observe(figura);
     });
+
+    // --- En uso por giro (Centzontle): las fichas cambian la escena y sus vistas ---
+    const usoGiros = document.querySelector('.uso-giros');
+    if (usoGiros) {
+        const fichas = [...usoGiros.querySelectorAll('[data-uso-giro]')], pares = [...document.querySelectorAll('.uso-par')];
+        const elegirUso = (giro) => {
+            fichas.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.usoGiro === giro)));
+            pares.forEach(p => { p.hidden = p.dataset.giro !== giro; });
+        };
+        fichas.forEach(b => b.addEventListener('click', () => elegirUso(b.dataset.usoGiro)));
+        // el giro elegido en la demo de vocabulario también cambia la escena (los giros sin escena propia usan la más parecida)
+        const ESCENA = ['restaurante', 'restaurante', 'restaurante', 'abarrotes', 'abarrotes', 'farmacia', 'abarrotes', 'boutique', 'abarrotes', 'estetica', 'abarrotes', 'abarrotes'];
+        document.querySelectorAll('.voc-giros button').forEach((b, k) => b.addEventListener('click', () => elegirUso(ESCENA[k])));
+    }
 
     // --- Recorrido guiado: puntos sobre la captura principal que explican cada parte de la app ---
     // x, y en % de la captura; [título, texto] en español e inglés
