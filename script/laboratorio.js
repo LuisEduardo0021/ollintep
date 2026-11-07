@@ -795,7 +795,167 @@ void main(){
             },
         };
     }
+    // 07: la palabra se dibuja nítida en una textura y la GPU la deforma con ruido suave; el borde se recorta
+    // con antialiasing exacto (fwidth), así que sigue definido aunque la tinta se estire mucho
+    const TINTA_FS = `
+uniform sampler2D U; uniform sampler2D V; uniform sampler2D W; uniform vec4 B; uniform float A; uniform float H; uniform vec2 O;
+// ruido con interpolación quíntica: sin pliegues, así el borde de la tinta se curva suave
+float rs(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*f*(f*(f*6.-15.)+10.);
+  return mix(mix(hh(i),hh(i+vec2(1,0)),u.x),mix(hh(i+vec2(0,1)),hh(i+vec2(1,1)),u.x),u.y);}
+float fbm(vec2 p){return .62*rs(p)+.25*rs(rot(.6)*p*2.02+3.1);}
+vec2 campo(vec2 p){
+  vec2 q=vec2(fbm(p+vec2(0.,T*.10)),fbm(p+vec2(5.2,1.3)-T*.08));
+  return vec2(fbm(p+1.5*q+vec2(1.7,9.2)+T*.07),fbm(p+1.5*q+vec2(8.3,2.8)-T*.06))-.42;
+}
+// fwidth se acota: junto a los píxeles descartados la derivada no está definida
+float cubre(float v){if(v<.08)return 0.;float w=min(fwidth(v)*.7,.2)+1e-4;return smoothstep(.5-w,.5+w,v);}
+// V es la palabra muy desenfocada: entre dos letras casi pegadas vale mucho y cierra la rendija; en el borde exterior no alcanza
+float tinta(vec2 q){return max(texture2D(U,q).r,(texture2D(V,q).r-.3)*1.3);}
+void main(){
+  vec2 f=gl_FragCoord.xy, p=f/H;
+  // lejos de toda letra (más de lo que la tinta puede estirarse) no hay nada que calcular
+  if(texture2D(W,f/R).r<.006){gl_FragColor=vec4(0.);return;}
+  vec2 m=M*R; vec2 dm=(f-m)/H; float d=length(dm);
+  float cerca=exp(-d*d*1.6);
+  vec2 w=campo(p*.75)*(.16+.06*sin(T*.6)+A*.42+cerca*.16);
+  // la tinta cae un poco, como en agua
+  w.y+=(rs(vec2(p.x*1.4,T*.15))-.5)*.06*(1.+A);
+  // al hacer clic sale una onda desde el cursor
+  float anillo=(1.-P)*1.6;
+  w+=normalize(dm+1e-4)*exp(-pow((d-anillo)*4.,2.))*P*.18;
+  vec2 o=w*H/R, uv=f/R;
+  float vp=tinta(uv+o);
+  float vr=tinta(uv+o*1.18+vec2(O.x,-O.y)/R);
+  float vb=tinta(uv+o*.84+vec2(-O.x,O.y)/R);
+  float ap=cubre(vp), ar=cubre(vr)*.9, ab=cubre(vb)*.9;
+  // degradado de la tinta: azul arriba a la izquierda, morado, naranja abajo a la derecha (como el SVG original)
+  float g=clamp(((f.x-B.x)/(B.z-B.x)+(B.w-f.y)/(B.w-B.y))*.5,0.,1.);
+  vec3 c1=vec3(.431,.635,1.),c2=vec3(.753,.518,.988),c3=vec3(1.,.478,.18);
+  vec3 grad=g<.5?mix(c1,c2,g*2.):mix(c2,c3,g*2.-1.);
+  // brillo interior que se mueve con la tinta
+  grad+=.08*(rs(p*1.6+w*4.+T*.05)-.5);
+  vec3 cr=vec3(1.,.239,.431), cb=vec3(.239,.863,1.);
+  vec3 col=1.-(1.-cr*ar)*(1.-cb*ab);
+  float a=max(ar,ab);
+  col=col*(1.-ap)+grad*ap; a=a*(1.-ap)+ap;
+  // halo tenue donde la tinta se disuelve
+  float halo=smoothstep(.04,.5,vp)*(1.-ap)*.22;
+  col+=grad*halo; a=max(a,halo);
+  // col ya va multiplicado por su cobertura: se entrega premultiplicado, en un solo dibujo y sin mezcla
+  gl_FragColor=vec4(min(col,vec3(a)),a);
+}`;
     function crearTinta(sec) {
+        const svg = sec.querySelector('.tinta'), txt = svg.querySelector('.tinta-p');
+        const canvas = document.createElement('canvas');
+        canvas.className = 'tinta-gl';
+        canvas.setAttribute('aria-hidden', 'true');
+        const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: true, depth: false, stencil: false });
+        if (!gl || !gl.getExtension('OES_standard_derivatives')) return crearTintaSVG(sec);
+        const sh = (tipo, src) => { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error('tinta', gl.getShaderInfoLog(s)); return s; };
+        const prog = gl.createProgram();
+        gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+        gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, CABECERA + TINTA_FS));
+        gl.bindAttribLocation(prog, 0, 'a');
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return crearTintaSVG(sec);
+        gl.useProgram(prog);
+        const u = {};
+        ['R', 'T', 'M', 'P', 'U', 'V', 'W', 'B', 'A', 'H', 'O'].forEach((k) => (u[k] = gl.getUniformLocation(prog, k)));
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+        const textura = (unidad) => {
+            const t = gl.createTexture();
+            gl.activeTexture(gl.TEXTURE0 + unidad);
+            gl.bindTexture(gl.TEXTURE_2D, t);
+            [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach((k) => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE));
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            return t;
+        };
+        const tex = textura(0), tex2 = textura(1), tex3 = textura(2);
+        gl.uniform1i(u.U, 0); gl.uniform1i(u.V, 1); gl.uniform1i(u.W, 2);
+        sec.append(canvas);
+        sec.classList.add('tinta-con-gl');
+        svg.querySelector('g')?.removeAttribute('filter');   // el SVG queda solo como texto accesible
+
+        const mascara = document.createElement('canvas'), mc = mascara.getContext('2d');
+        const nitida = document.createElement('canvas'), nc = nitida.getContext('2d');
+        let caja = { x: 0, y: 0, w: 1, h: 1 }, k = dpr, esc = 1, listo = false;
+        let agite = 0, lx = 0, ly = 0;
+        const medir = () => {
+            // el lienzo cubre la palabra con margen para que la tinta pueda salirse
+            const rs = sec.getBoundingClientRect(), rv = svg.getBoundingClientRect();
+            if (!rv.width) return;
+            esc = rv.width / 1200;
+            const mx = rv.width * .06, my = rv.height * .25;
+            caja = { x: rv.left - rs.left - mx, y: rv.top - rs.top - my, w: rv.width + mx * 2, h: rv.height + my * 2 };
+            k = Math.min(dpr, Math.sqrt(2.6e6 / (caja.w * caja.h)));
+            Object.assign(canvas.style, { left: caja.x + 'px', top: caja.y + 'px', width: caja.w + 'px', height: caja.h + 'px' });
+            canvas.width = mascara.width = Math.round(caja.w * k);
+            canvas.height = mascara.height = Math.round(caja.h * k);
+            // la palabra, con la misma fuente, tamaño y espaciado que el SVG
+            const cs = getComputedStyle(txt);
+            const fs = parseFloat(cs.fontSize) * esc * k, ls = (parseFloat(cs.letterSpacing) || 0) * esc * k;
+            // las letras se juntan primero en un lienzo aparte (se solapan por el espaciado negativo)
+            nitida.width = mascara.width; nitida.height = mascara.height;
+            nc.font = `${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+            nc.fillStyle = '#fff'; nc.textBaseline = 'alphabetic';
+            const letras = [...(txt.textContent || '').trim()];
+            const anchos = letras.map((l) => nc.measureText(l).width);
+            const total = anchos.reduce((s, a) => s + a, 0) + ls * (letras.length - 1);
+            let x = (rv.left - rs.left + rv.width / 2 - caja.x) * k - total / 2;
+            const base = (rv.top - rs.top + 270 * esc - caja.y) * k;
+            if ('letterSpacing' in nc) {
+                // la palabra entera de una vez: dibujar letra por letra deja costuras donde se solapan
+                nc.letterSpacing = ls + 'px';
+                nc.fillText(letras.join(''), x, base);
+            } else letras.forEach((l, i) => { nc.fillText(l, x, base); x += anchos[i] + ls; });
+            // la palabra se desenfoca un poco (U: el borde queda como rampa suave que el shader recorta limpio a cualquier escala)
+            // y mucho (V: sirve para cerrar las rendijas entre letras; W: marca hasta dónde puede llegar la tinta)
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);   // el lienzo 2D tiene y hacia abajo; GL, hacia arriba
+            [[tex, 0, 1.4], [tex2, 1, 6], [tex3, 2, 40]].forEach(([t, unidad, radio]) => {
+                mc.filter = 'none';
+                mc.fillStyle = '#000'; mc.fillRect(0, 0, mascara.width, mascara.height);
+                mc.filter = `blur(${(radio * esc * k).toFixed(2)}px)`;
+                mc.drawImage(nitida, 0, 0);
+                mc.filter = 'none';
+                gl.activeTexture(gl.TEXTURE0 + unidad);
+                gl.bindTexture(gl.TEXTURE_2D, t);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mascara);
+            });
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            const bx = (rv.left - rs.left + rv.width * .2 - caja.x) * k, bw = rv.width * .6 * k;
+            const byArr = (rv.bottom - rs.top - rv.height * .2 - caja.y) * k, bh = rv.height * .55 * k;
+            // caja del degradado en coordenadas GL (y hacia arriba)
+            gl.uniform4f(u.B, bx, canvas.height - byArr, bx + bw, canvas.height - byArr + bh);
+            gl.uniform1f(u.H, rv.height * .5 * k);
+            gl.uniform2f(u.O, 7 * esc * k, 2 * esc * k);
+            listo = true;
+        };
+        return {
+            preparar: medir,
+            medir() { if (listo) medir(); },
+            dibujar(t, ptr, dt) {
+                if (!listo) return;
+                const mov = Math.hypot(ptr.x - lx, ptr.y - ly); lx = ptr.x; ly = ptr.y;
+                agite = Math.min(1, agite * Math.pow(.96, (dt || .016) * 60) + (ptr.dentro ? mov * 6 : 0) + ptr.pulso * .05);
+                const rs = sec.getBoundingClientRect();
+                // puntero de la sección (0..1, y arriba) → píxeles del lienzo de la tinta, normalizados
+                const px = (ptr.sx * rs.width - caja.x) / caja.w, py = ((1 - ptr.sy) * rs.height - caja.y) / caja.h;
+                gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.uniform2f(u.R, canvas.width, canvas.height);
+                gl.uniform1f(u.T, t);
+                gl.uniform2f(u.M, px, 1 - py);
+                gl.uniform1f(u.P, ptr.pulso);
+                gl.uniform1f(u.A, agite);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            },
+        };
+    }
+    // sin WebGL: el filtro SVG original
+    function crearTintaSVG(sec) {
         const turb = sec.querySelector('feTurbulence'), desp = sec.querySelector('feDisplacementMap');
         let agite = 0, lx = 0, ly = 0;
         return {
