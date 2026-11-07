@@ -1287,6 +1287,133 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- ActaPro: votación simulada; el acta se sella con una huella SHA-256 real de su contenido y sus votos ---
+    document.querySelectorAll('[data-votacion]').forEach(caja => {
+        const v = (n) => caja.querySelector(`[data-v="${n}"]`);
+        const btn = (a) => caja.querySelector(`[data-a="${a}"]`);
+        const hemi = caja.querySelector('.vot-hemiciclo'), bitacora = caja.querySelector('.vot-bitacora'), sello = caja.querySelector('.vot-sello');
+        const NOMBRES = [T('Presidencia', 'Mayor'), T('Sindicatura', 'Trustee'), ...[1, 2, 3, 4, 5, 6].map(n => T(`Regiduría ${n}`, `Councilor ${n}`)), T('Tú', 'You')];
+        const TU = 8;
+        const ETIQ = { favor: T('a favor', 'in favor'), contra: T('en contra', 'against'), abst: T('se abstuvo', 'abstained') };
+        // asientos en semicírculo: el tuyo queda al centro, al frente
+        const orden = [0, 1, 2, 3, 8, 4, 5, 6, 7];
+        const asientos = NOMBRES.map((nombre, i) => {
+            const pos = orden.indexOf(i), a = Math.PI * (1 - pos / (orden.length - 1));
+            const el = document.createElement('span');
+            el.className = 'vot-asiento' + (i === TU ? ' vot-tu' : '');
+            el.style.left = (50 + Math.cos(a) * 42).toFixed(2) + '%';
+            el.style.top = (88 - Math.sin(a) * 74).toFixed(2) + '%';
+            el.innerHTML = `<i></i><small>${nombre}</small>`;
+            hemi.append(el);
+            return el;
+        });
+        let votos = [], estado = 'lista', reloj = [], huella = '', contenido = '';
+        const hora = () => new Date().toLocaleTimeString(EN ? 'en-US' : 'es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const anotar = (texto, tipo = '') => {
+            const li = document.createElement('li');
+            li.className = tipo;
+            li.innerHTML = `<time>${hora()}</time><span></span>`;
+            li.lastChild.textContent = texto;
+            bitacora.prepend(li);
+        };
+        const ver = (...activos) => caja.querySelectorAll('[data-a]').forEach(b => { b.hidden = !activos.includes(b.dataset.a); });
+        const contar = () => {
+            const c = { favor: 0, contra: 0, abst: 0 };
+            votos.forEach(x => x && c[x]++);
+            Object.entries(c).forEach(([k, n]) => { v(k).textContent = n; });
+            return c;
+        };
+        const ponerEstado = (texto, clase) => { v('estado').textContent = texto; v('estado').className = 'vot-estado ' + (clase || ''); };
+        const votar = (i, voto) => {
+            votos[i] = voto;
+            asientos[i].dataset.voto = voto;
+            anotar(`${NOMBRES[i]}: ${ETIQ[voto]}`);
+            contar();
+            if (votos.filter(Boolean).length === NOMBRES.length) cerrar();
+        };
+        const cerrar = () => {
+            const c = contar();
+            const aprobada = c.favor >= 5;
+            estado = 'cerrada';
+            ponerEstado(aprobada ? T('Aprobada', 'Approved') : T('Rechazada', 'Rejected'), aprobada ? 'ok' : 'no');
+            v('turno').textContent = aprobada
+                ? T(`Aprobada con ${c.favor} votos a favor. Falta firmarla y sellarla.`, `Approved with ${c.favor} votes in favor. It still needs to be signed and sealed.`)
+                : T(`Rechazada: solo ${c.favor} votos a favor. Igual se sella, para que quede constancia.`, `Rejected: only ${c.favor} votes in favor. It’s sealed anyway, so there’s a record.`);
+            anotar(T('Votación cerrada', 'Voting closed'), 'hito');
+            ver('sellar');
+        };
+        const sha256 = async (texto) => {
+            if (crypto?.subtle) {
+                const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));
+                return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            let h = 2166136261; for (const ch of texto) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16).padStart(8, '0').repeat(8);
+        };
+        const contenidoActa = () => JSON.stringify({ folio: 'ACTA-2026-0004', punto: 3, votos: NOMBRES.map((n, i) => [n, votos[i]]) });
+        const abrir = () => {
+            votos = Array(NOMBRES.length).fill(null); huella = '';
+            asientos.forEach(a => { delete a.dataset.voto; a.classList.remove('alterado'); });
+            bitacora.innerHTML = ''; sello.hidden = true; contar();
+            estado = 'votando';
+            ponerEstado(T('En votación', 'Voting'), 'vivo');
+            anotar(T('Votación abierta · quórum: 9 de 9 presentes', 'Vote opened · quorum: 9 of 9 present'), 'hito');
+            v('turno').textContent = T('Tu turno: ¿cómo votas?', 'Your turn: how do you vote?');
+            asientos[TU].classList.add('esperando');
+            ver('favor', 'contra', 'abst');
+            // los demás votan uno a uno (mayoría a favor, como suele pasar con un presupuesto ya revisado)
+            const otros = [0, 1, 2, 3, 4, 5, 6, 7].sort(() => Math.random() - .5);
+            otros.forEach((i, n) => reloj.push(setTimeout(() => {
+                const r = Math.random();
+                votar(i, r < .8 ? 'favor' : r < .92 ? 'contra' : 'abst');
+            }, (prefersReducedMotion ? 80 : 650) * (n + 1))));
+        };
+        ['favor', 'contra', 'abst'].forEach(op => btn(op).addEventListener('click', () => {
+            if (estado !== 'votando' || votos[TU]) return;
+            asientos[TU].classList.remove('esperando');
+            ver();
+            v('turno').textContent = votos.filter(Boolean).length < NOMBRES.length - 1 ? T('Esperando al resto del cabildo…', 'Waiting for the rest of the council…') : '';
+            votar(TU, op);
+        }));
+        btn('abrir').addEventListener('click', abrir);
+        btn('sellar').addEventListener('click', async () => {
+            contenido = contenidoActa();
+            huella = await sha256(contenido);
+            const fecha = new Date();
+            estado = 'sellada';
+            sello.hidden = false;
+            v('huella').textContent = huella.slice(0, 16) + '…' + huella.slice(-8);
+            v('huella').title = huella;
+            v('fecha').textContent = T('Firmada y sellada el ', 'Signed and sealed on ') + fecha.toLocaleString(EN ? 'en-US' : 'es-MX', { dateStyle: 'long', timeStyle: 'medium' });
+            ponerEstado(T('Sellada', 'Sealed'), 'sellada');
+            anotar(T(`Acta firmada y sellada · huella ${huella.slice(0, 12)}…`, `Minute signed and sealed · fingerprint ${huella.slice(0, 12)}…`), 'hito');
+            v('turno').textContent = T('El acta ya no se puede modificar sin que se note. Pruébalo:', 'The minute can no longer be changed without it showing. Try it:');
+            if (!prefersReducedMotion) sello.animate([{ transform: 'scale(1.4) rotate(-8deg)', opacity: 0 }, { transform: 'scale(1) rotate(-3deg)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.2,1.4,.4,1)' });
+            ver('alterar', 'reiniciar');
+        });
+        btn('alterar').addEventListener('click', async () => {
+            // se cambia un voto a escondidas y se recalcula la huella: ya no coincide con la sellada
+            const i = votos.findIndex((x, k) => k !== TU && x === 'favor');
+            const k = i < 0 ? 0 : i;
+            const antes = votos[k];
+            votos[k] = antes === 'favor' ? 'contra' : 'favor';
+            const nueva = await sha256(contenidoActa());
+            votos[k] = antes;
+            asientos[k].classList.add('alterado');
+            setTimeout(() => asientos[k].classList.remove('alterado'), 1600);
+            anotar(T(`Intento de cambiar el voto de ${NOMBRES[k]} · huella nueva ${nueva.slice(0, 12)}… ≠ sellada. Cambio rechazado.`, `Attempt to change ${NOMBRES[k]}’s vote · new fingerprint ${nueva.slice(0, 12)}… ≠ sealed. Change rejected.`), 'alerta');
+            v('turno').textContent = T('Rechazado: la huella del acta modificada no coincide con la sellada.', 'Rejected: the modified minute’s fingerprint doesn’t match the sealed one.');
+        });
+        btn('reiniciar').addEventListener('click', () => {
+            reloj.forEach(clearTimeout); reloj = [];
+            estado = 'lista'; votos = []; contar();
+            asientos.forEach(a => { delete a.dataset.voto; a.classList.remove('esperando'); });
+            bitacora.innerHTML = ''; sello.hidden = true;
+            ponerEstado(T('Lista para votar', 'Ready to vote'));
+            v('turno').textContent = T('Pulsa «Abrir votación» para empezar.', 'Press “Open vote” to start.');
+            ver('abrir');
+        });
+    });
+
     // --- Planes: el botón de cada plan lo deja anotado en Contacto y el correo sale ya escrito para ese plan ---
     const contactoPlan = document.querySelector('#contacto');
     const botonesPlan = document.querySelectorAll('.plan-card .plan-cta');

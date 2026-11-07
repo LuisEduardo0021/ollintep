@@ -82,8 +82,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=10.8">
-    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=10.8">
+    <link rel="stylesheet" href="../../css/styles.css?v=10.9">
+    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=10.9">
     <style>
         .video-thumb.screenshot-thumb {
             padding: 0;
@@ -217,6 +217,48 @@
     </section>
 
     <div class="ascii-banda" data-ascii="actapro/actapro-dashboard-dark.jpg" data-color="#1fe3d2" aria-hidden="true"></div>
+
+    <section class="section-block" id="votacion">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Voting and seal</p>
+                <h2 class="block-title">Vote, sign and seal. No paper.</h2>
+                <p class="block-lead">Take a seat on the council and put a minute to a vote. When it’s sealed, ActaPro computes its digital fingerprint: if anyone changed a single vote, the fingerprint would no longer match. Simulation with sample data.</p>
+            </div>
+        </header>
+        <div class="vot" data-votacion>
+            <div class="vot-acta">
+                <div class="vot-acta-cab"><span class="vot-folio">ACTA-2026-0004</span><span class="vot-estado" data-v="estado">Ready to vote</span></div>
+                <p class="vot-tipo">Regular session · Item 3 on the agenda</p>
+                <h3 class="vot-asunto">Approval of the budget for street lighting maintenance</h3>
+                <div class="vot-cuenta">
+                    <div><strong data-v="favor">0</strong><span>In favor</span></div>
+                    <div><strong data-v="contra">0</strong><span>Against</span></div>
+                    <div><strong data-v="abst">0</strong><span>Abstain</span></div>
+                </div>
+                <p class="vot-regla">Passes with a simple majority: 5 of 9 votes.</p>
+                <div class="vot-sello" hidden>
+                    <p class="vot-sello-t">Sealed</p>
+                    <p class="vot-huella"><span>SHA-256 fingerprint</span><code data-v="huella"></code></p>
+                    <p class="vot-fecha" data-v="fecha"></p>
+                </div>
+            </div>
+            <div class="vot-sala">
+                <div class="vot-hemiciclo" aria-hidden="true"></div>
+                <p class="vot-turno" role="status" data-v="turno">Press “Open vote” to start.</p>
+                <div class="vot-botones">
+                    <button type="button" class="m3-btn m3-btn-filled" data-a="abrir">Open vote</button>
+                    <button type="button" class="vot-voto" data-a="favor" hidden>In favor</button>
+                    <button type="button" class="vot-voto" data-a="contra" hidden>Against</button>
+                    <button type="button" class="vot-voto" data-a="abst" hidden>Abstain</button>
+                    <button type="button" class="m3-btn m3-btn-filled" data-a="sellar" hidden>Sign and seal</button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="alterar" hidden>Try to change a vote</button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="reiniciar" hidden>Start over</button>
+                </div>
+                <ol class="vot-bitacora" aria-label="Minute log"></ol>
+            </div>
+        </div>
+    </section>
 
     <section id="en-uso" class="uso" style="--acento: #1fe3d2" aria-labelledby="uso-titulo">
         <div class="uso-cab">
@@ -454,7 +496,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=10.8"></script>
-    <script src="../../script/efectos.js?v=10.8"></script>
+    <script src="../../script/scripts.js?v=10.9"></script>
+    <script src="../../script/efectos.js?v=10.9"></script>
 </body>
 </html>

@@ -88,9 +88,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=10.8">
+    <link rel="stylesheet" href="../css/styles.css?v=10.9">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=10.8">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=10.9">
     <style>
         .video-thumb.screenshot-thumb {
             padding: 0;
@@ -229,6 +229,49 @@
 
     <!-- Sección de Capturas Reales -->
     <div class="ascii-banda" data-ascii="actapro/actapro-dashboard-dark.jpg" data-color="#1fe3d2" aria-hidden="true"></div>
+
+    <!-- Votación simulada: el visitante vota, se calcula el resultado y el acta se sella con su huella SHA-256 -->
+    <section class="section-block" id="votacion">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Votación y sello</p>
+                <h2 class="block-title">Vota, firma y sella. Sin papel.</h2>
+                <p class="block-lead">Ocupa un asiento del cabildo y somete un acta a votación. Al sellarla, ActaPro calcula su huella digital: si alguien cambiara un solo voto, la huella dejaría de coincidir. Simulación con datos de ejemplo.</p>
+            </div>
+        </header>
+        <div class="vot" data-votacion>
+            <div class="vot-acta">
+                <div class="vot-acta-cab"><span class="vot-folio">ACTA-2026-0004</span><span class="vot-estado" data-v="estado">Lista para votar</span></div>
+                <p class="vot-tipo">Sesión ordinaria · Punto 3 del orden del día</p>
+                <h3 class="vot-asunto">Aprobación del presupuesto para el mantenimiento del alumbrado público</h3>
+                <div class="vot-cuenta">
+                    <div><strong data-v="favor">0</strong><span>A favor</span></div>
+                    <div><strong data-v="contra">0</strong><span>En contra</span></div>
+                    <div><strong data-v="abst">0</strong><span>Abstención</span></div>
+                </div>
+                <p class="vot-regla">Se aprueba con mayoría simple: 5 de 9 votos.</p>
+                <div class="vot-sello" hidden>
+                    <p class="vot-sello-t">Sellada</p>
+                    <p class="vot-huella"><span>Huella SHA-256</span><code data-v="huella"></code></p>
+                    <p class="vot-fecha" data-v="fecha"></p>
+                </div>
+            </div>
+            <div class="vot-sala">
+                <div class="vot-hemiciclo" aria-hidden="true"></div>
+                <p class="vot-turno" role="status" data-v="turno">Pulsa «Abrir votación» para empezar.</p>
+                <div class="vot-botones">
+                    <button type="button" class="m3-btn m3-btn-filled" data-a="abrir">Abrir votación</button>
+                    <button type="button" class="vot-voto" data-a="favor" hidden>A favor</button>
+                    <button type="button" class="vot-voto" data-a="contra" hidden>En contra</button>
+                    <button type="button" class="vot-voto" data-a="abst" hidden>Abstención</button>
+                    <button type="button" class="m3-btn m3-btn-filled" data-a="sellar" hidden>Firmar y sellar</button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="alterar" hidden>Intentar cambiar un voto</button>
+                    <button type="button" class="m3-btn m3-btn-tonal" data-a="reiniciar" hidden>Reiniciar</button>
+                </div>
+                <ol class="vot-bitacora" aria-label="Bitácora del acta"></ol>
+            </div>
+        </div>
+    </section>
 
     <!-- En uso: escena ilustrativa con capturas reales montadas en perspectiva sobre la pantalla -->
     <section id="en-uso" class="uso" style="--acento: #1fe3d2" aria-labelledby="uso-titulo">
@@ -474,7 +517,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=10.8"></script>
-    <script src="../script/efectos.js?v=10.8"></script>
+    <script src="../script/scripts.js?v=10.9"></script>
+    <script src="../script/efectos.js?v=10.9"></script>
 </body>
 </html>
