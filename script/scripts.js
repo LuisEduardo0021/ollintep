@@ -819,8 +819,37 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Impresoras y photobooths', 'Printers and photobooths'), T('Mantenimiento, también HiTi', 'Maintenance, including HiTi'), raizIdioma + 'index.html#servicio-tecnico', 'fa-print'],
         [T('GrapheneOS en Pixel', 'GrapheneOS on Pixel'), T('Instalación en Google Pixel', 'Installed on Google Pixel'), raizIdioma + 'index.html#servicio-tecnico', 'fa-mobile-screen-button'],
         [T('Cómo trabajamos', 'How we work'), T('Principios y cifras', 'Principles and numbers'), raizIdioma + 'index.html#principios', 'fa-pen-ruler'],
-        [T('Contacto', 'Contact'), T('Correo y teléfono', 'Email and phone'), raizIdioma + 'index.html#contacto', 'fa-envelope'],
+        [T('Contacto', 'Contact'), T('Correo y teléfono', 'Email and phone'), raizIdioma + 'index.html#contacto', 'fa-envelope', T('correo telefono llamar escribir', 'email phone call write')],
+        [T('Arma tu solicitud', 'Build your request'), T('Tres toques y tu mensaje queda listo', 'Three taps and your message is ready'), raizIdioma + 'index.html#contacto', 'fa-paper-plane', T('cotizar cotizacion presupuesto propuesta pedir', 'quote estimate budget proposal request')],
+        [T('Cómo trabajamos, en 30 segundos', 'How we work, in 30 seconds'), T('Explicativo narrado', 'Narrated explainer'), raizIdioma + 'index.html#principios', 'fa-play', T('proceso pasos audio video', 'process steps audio video')],
+        [T('Votación y sello de actas', 'Minute voting and seal'), T('Demo interactiva de ActaPro', 'Interactive ActaPro demo'), raizIdioma + 'actapro/index.html#votacion', 'fa-check-to-slot', T('cabildo votar firma sha', 'council vote signature sha')],
+        [T('Balance hídrico', 'Water balance'), T('Simulador de riego de Agro-Cria Pro', 'Agro-Cria Pro irrigation simulator'), raizIdioma + 'agrocria/index.html#balance', 'fa-droplet', T('riego agua fao cultivo', 'irrigation water fao crop')],
+        [T('Precios de ActaPro', 'ActaPro pricing'), T('Planes y costos', 'Plans and costs'), raizIdioma + 'actapro/index.html#precios', 'fa-file-invoice', T('plan costo cuanto cuesta', 'plan cost how much')],
+        [T('Precios de Agro-Cria Pro', 'Agro-Cria Pro pricing'), T('Planes y costos', 'Plans and costs'), raizIdioma + 'agrocria/index.html#precios', 'fa-file-invoice', T('plan costo cuanto cuesta', 'plan cost how much')],
+        [T('Precios de Diagmind', 'Diagmind pricing'), T('Planes y costos', 'Plans and costs'), raizIdioma + 'diagmind/index.html#precios', 'fa-file-invoice', T('plan costo cuanto cuesta licencia', 'plan cost how much license')],
+        // preguntas frecuentes: llevan a la pregunta exacta, que se abre sola
+        ...[
+            [T('¿En qué sistemas funcionan las apps?', 'Which systems do the apps run on?'), T('Windows, macOS y Linux', 'Windows, macOS and Linux'), 'windows mac macos linux sistema operativo compatible'],
+            [T('¿Tengo que comprar toda la suite?', 'Do I have to buy the whole suite?'), T('No: por app o en paquete', 'No: per app or as a bundle'), T('comprar licencia paquete precio', 'buy license bundle price')],
+            [T('¿Qué pasa si se cae el internet?', 'What if the internet goes down?'), T('Guarda en tu equipo y sincroniza después', 'Saves locally and syncs later'), T('internet sin conexion offline sincroniza', 'internet offline connection sync')],
+            [T('¿Mis archivos se suben a la nube?', 'Are my files uploaded to the cloud?'), T('No: la IA corre en tu equipo', 'No: the AI runs on your computer'), T('nube privacidad ia datos fotos documentos', 'cloud privacy ai data photos documents')],
+            [T('¿Centzontle emite facturas?', 'Does Centzontle issue invoices?'), T('Sí, CFDI 4.0 desde la venta', 'Yes, CFDI 4.0 from the sale'), T('factura facturacion cfdi sat', 'invoice invoicing cfdi sat')],
+            [T('¿Cuánto cuesta un proyecto a medida?', 'How much does a custom project cost?'), T('Propuesta clara, sin compromiso', 'A clear proposal, no commitment'), T('precio costo cuanto cotizacion', 'price cost how much quote')],
+            [T('¿Me ayudan después de la entrega?', 'Do you help after delivery?'), T('Capacitación, soporte y mejoras', 'Training, support and improvements'), T('soporte capacitacion garantia ayuda', 'support training warranty help')],
+            [T('¿También dan servicio técnico?', 'Do you also offer technical service?'), T('PC, servidores, impresoras, firmware', 'PCs, servers, printers, firmware'), T('reparacion mantenimiento computadora', 'repair maintenance computer')],
+            [T('¿Dónde están?', 'Where are you located?'), T('Tepic, Nayarit, México', 'Tepic, Nayarit, Mexico'), T('ubicacion direccion tepic nayarit', 'location address tepic nayarit')],
+        ].map(([q, r, clave], i) => [q, r, raizIdioma + `index.html#pregunta-${i + 1}`, 'fa-book-open', clave + T(' pregunta frecuente', ' faq question')]),
     ];
+    // sinónimos de los destinos principales (se buscan pero no se muestran)
+    const CLAVES = {
+        Centzontle: T('pos punto de venta caja tienda restaurante abarrotes farmacia inventario', 'pos point of sale checkout store restaurant grocery pharmacy inventory'),
+        ActaPro: T('actas gobierno cabildo municipio tramites asamblea', 'minutes government council municipality procedures assembly'),
+        'Agro-Cria Pro': T('campo agricultura ganado riego sensores rancho', 'farm agriculture cattle irrigation sensors ranch'),
+        Diagmind: T('celular telefono android diagnostico reparacion taller', 'phone android diagnostics repair shop'),
+        'Crovite PDF': T('pdf firmar documentos convertir', 'pdf sign documents convert'),
+        CroGuard: T('vpn antivirus seguridad', 'vpn antivirus security'),
+    };
+    ENTRADAS.forEach(e => { if (!e[4] && CLAVES[e[0]]) e[4] = CLAVES[e[0]]; });
     const navUlBuscar = document.querySelector('.nav-links');
     if (navUlBuscar) {
         const sinAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -830,7 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dlg.setAttribute('aria-label', T('Buscar en el sitio', 'Search the site'));
         dlg.innerHTML = `<div class="cmdk-box">
             <div class="cmdk-input"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-                <input type="text" placeholder="${T('Busca una app, una plataforma o una sección', 'Search for an app, a platform or a section')}" aria-label="${T('Buscar', 'Search')}" role="combobox" aria-expanded="true" aria-controls="cmdk-lista" autocomplete="off" spellcheck="false">
+                <input type="text" placeholder="${T('Busca una app, una sección o una pregunta', 'Search for an app, a section or a question')}" aria-label="${T('Buscar', 'Search')}" role="combobox" aria-expanded="true" aria-controls="cmdk-lista" autocomplete="off" spellcheck="false">
                 <kbd>Esc</kbd></div>
             <ul class="cmdk-lista" id="cmdk-lista" role="listbox"></ul>
             <p class="cmdk-vacio" hidden>${T('Sin resultados.', 'No results.')}</p>
@@ -840,7 +869,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let visibles = [], sel = 0;
         const pintar = () => {
             const q = sinAcentos(input.value.trim());
-            visibles = ENTRADAS.filter(e => !q || sinAcentos(e[0] + ' ' + e[1]).includes(q));
+            // cada palabra cuenta por separado; los sinónimos (quinto campo) también se buscan
+            const palabras = q.split(/\s+/).filter(Boolean);
+            visibles = ENTRADAS.filter(e => { const t = sinAcentos(e[0] + ' ' + e[1] + ' ' + (e[4] || '')); return palabras.every(w => t.includes(w)); });
             sel = Math.min(sel, Math.max(0, visibles.length - 1));
             lista.innerHTML = '';
             visibles.forEach((e, i) => {
@@ -863,7 +894,14 @@ document.addEventListener('DOMContentLoaded', () => {
             input.setAttribute('aria-activedescendant', visibles.length ? 'cmdk-op-' + sel : '');
             lista.children[sel]?.scrollIntoView({ block: 'nearest' });
         };
-        const ir = (e) => { dlg.close(); window.location.href = e[2]; };
+        const ir = (e) => {
+            dlg.close();
+            // en la misma página, un cambio solo de ancla no recarga: se avisa para abrir la pregunta
+            const destino = new URL(e[2], location.href);
+            const ruta = (u) => u.replace(/index\.html$/, '');
+            if (ruta(destino.pathname) === ruta(location.pathname) && destino.hash) { history.pushState(null, '', destino.hash); window.dispatchEvent(new HashChangeEvent('hashchange')); document.querySelector(destino.hash)?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' }); }
+            else window.location.href = e[2];
+        };
         const abrir = () => { input.value = ''; sel = 0; pintar(); dlg.showModal(); input.focus(); };
         input.addEventListener('input', () => { sel = 0; pintar(); });
         input.addEventListener('keydown', (ev) => {
@@ -1476,6 +1514,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const unica = items.filter(d => !d.hidden);
             items.forEach(d => { if (q.length && unica.length === 1 && d === unica[0]) d.open = true; });
         });
+        // un enlace a #pregunta-N abre esa pregunta (desde el buscador del sitio o un enlace compartido)
+        const abrirPorAncla = () => {
+            const d = location.hash.startsWith('#pregunta-') && sec.querySelector(location.hash);
+            if (!d) return;
+            items.forEach(o => { o.open = o === d; });
+            setTimeout(() => d.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' }), 60);
+        };
+        addEventListener('hashchange', abrirPorAncla);
+        abrirPorAncla();
         // solo una abierta a la vez, para que la lista no crezca de más
         items.forEach(d => d.addEventListener('toggle', () => { if (d.open && !campo.value) items.forEach(o => { if (o !== d) o.open = false; }); }));
     });
