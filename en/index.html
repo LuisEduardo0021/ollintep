@@ -80,8 +80,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=11.9">
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.9">
+    <link rel="stylesheet" href="../css/styles.css?v=12.0">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=12.0">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -437,6 +437,51 @@ ip dhcp snooping vlan 10,20,30
             <li data-foco="publicidad"><i class="fas fa-bullhorn" aria-hidden="true"></i><h3>Advertising</h3><p>Social media pieces, posters, banners and print, aligned with the goals of each campaign.</p></li>
             <li data-foco="interfaces"><i class="fas fa-object-group" aria-hidden="true"></i><h3>Interface design</h3><p>User-centered app and website interfaces, built to the same standard we apply to our own suite.</p></li>
         </ul>
+        <div class="red-demo dis-demo" data-marca-demo>
+            <div class="red-cab">
+                <h3>Your brand in ten seconds.</h3>
+                <p>Type your business name and pick a style. We’ll show you how it would look across different pieces.</p>
+            </div>
+            <div class="dis-controles">
+                <label class="dis-campo"><span>Your business name</span><input type="text" class="dis-nombre" maxlength="22" value="Café Nayar" autocomplete="off" spellcheck="false"></label>
+                <div class="dis-grupo"><span>Business type</span>
+                    <div class="red-modos" role="group" aria-label="Business type">
+                        <button type="button" data-giro="cafe" aria-pressed="true">Coffee shop</button>
+                        <button type="button" data-giro="taller" aria-pressed="false">Repair shop</button>
+                        <button type="button" data-giro="tienda" aria-pressed="false">Store</button>
+                        <button type="button" data-giro="salud" aria-pressed="false">Clinic</button>
+                    </div>
+                </div>
+                <div class="dis-grupo"><span>Style</span>
+                    <div class="red-modos" role="group" aria-label="Style">
+                        <button type="button" data-estilo="moderno" aria-pressed="true">Modern</button>
+                        <button type="button" data-estilo="clasico" aria-pressed="false">Classic</button>
+                        <button type="button" data-estilo="artesanal" aria-pressed="false">Handcrafted</button>
+                        <button type="button" data-estilo="tecnologico" aria-pressed="false">Tech</button>
+                    </div>
+                </div>
+                <div class="dis-grupo"><span>Palette</span>
+                    <div class="dis-paletas" role="group" aria-label="Palette">
+                        <button type="button" data-paleta="oceano" aria-pressed="true" aria-label="Ocean"></button>
+                        <button type="button" data-paleta="atardecer" aria-pressed="false" aria-label="Sunset"></button>
+                        <button type="button" data-paleta="bosque" aria-pressed="false" aria-label="Forest"></button>
+                        <button type="button" data-paleta="uva" aria-pressed="false" aria-label="Grape"></button>
+                        <button type="button" data-paleta="carbon" aria-pressed="false" aria-label="Charcoal"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="dis-lienzo" aria-hidden="true">
+                <figure class="dis-pieza dis-logo"><div class="dis-marca"><span class="dis-simbolo"></span><span class="dis-textos"><b class="dis-n"></b><small class="dis-lema"></small></span></div><figcaption>Logo</figcaption></figure>
+                <figure class="dis-pieza dis-tarjeta"><div class="dis-tarjeta-cara"><span class="dis-simbolo"></span><b class="dis-n"></b><small class="dis-lema"></small><i class="dis-dato">Tepic, Nayarit</i></div><figcaption>Business card</figcaption></figure>
+                <figure class="dis-pieza dis-redes"><div class="dis-perfil"><span class="dis-simbolo"></span><span><b class="dis-n"></b><small class="dis-lema"></small></span></div><div class="dis-post"><b class="dis-oferta"></b><span class="dis-n"></span></div><figcaption>Social profile</figcaption></figure>
+                <figure class="dis-pieza dis-lona"><div class="dis-lona-cara"><small>Grand opening</small><b class="dis-n"></b><span class="dis-lema"></span></div><figcaption>Banner</figcaption></figure>
+            </div>
+            <div class="tec-pie dis-pie">
+                <p>This is an automatic sketch to give you an idea: we create the real design with you, from scratch.</p>
+                <a href="#contacto" class="m3-btn m3-btn-filled dis-pedir" data-pedir="6">Request this design <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
+            </div>
+            <p class="sr-only dis-estado" role="status"></p>
+        </div>
     </section>
 
     <section id="redes" class="section-block" data-ambiente="azul">
@@ -992,7 +1037,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=11.9"></script>
-    <script src="../script/efectos.js?v=11.9"></script>
+    <script src="../script/scripts.js?v=12.0"></script>
+    <script src="../script/efectos.js?v=12.0"></script>
 </body>
 </html>

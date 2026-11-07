@@ -811,6 +811,9 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Diseño', 'Design'), T('Logos, identidad de marca y publicidad', 'Logos, brand identity and advertising'), raizIdioma + 'index.html#diseno', 'fa-pen-nib'],
         [T('Laboratorio visual', 'Visual lab'), T('Shaders, partículas y tipografía viva', 'Shaders, particles and living type'), raizIdioma + 'laboratorio/index.html', 'fa-wand-magic-sparkles'],
         [T('Publicidad', 'Advertising'), T('Anuncios, carteles y lonas', 'Ads, posters and banners'), raizIdioma + 'index.html#diseno', 'fa-bullhorn'],
+        [T('Prueba tu marca', 'Try your brand'), T('Tu nombre en logo, tarjeta, redes y lona', 'Your name on a logo, card, social post and banner'), raizIdioma + 'index.html#diseno', 'fa-swatchbook', T('logo logotipo boceto tarjeta paleta colores nombre negocio', 'logo sketch card palette colors name business')],
+        [T('Demo de VLANs', 'VLAN demo'), T('Qué pasa si un celular infectado entra a tu Wi-Fi', 'What happens when an infected phone joins your Wi-Fi'), raizIdioma + 'index.html#redes', 'fa-network-wired', T('virus seguridad wifi invitados red caja camaras', 'virus security wifi guests network register cameras')],
+        [T('¿Qué le pasa a tu equipo?', 'What’s wrong with your device?'), T('Causas probables y lo que revisamos', 'Likely causes and what we check'), raizIdioma + 'index.html#servicio-tecnico', 'fa-screwdriver-wrench', T('falla lenta calienta enciende disco raid impresora atasca diagnostico', 'slow overheats power drive raid printer jam diagnosis')],
         [T('Redes e infraestructura', 'Networks and infrastructure'), T('Planos, servidores, VLANs, switches y routers', 'Plans, servers, VLANs, switches and routers'), raizIdioma + 'index.html#redes', 'fa-network-wired'],
         [T('VLANs', 'VLANs'), T('Segmentación de tu red', 'Segmenting your network'), raizIdioma + 'index.html#redes', 'fa-layer-group'],
         [T('Servicio técnico', 'Technical service'), T('Mantenimiento de hardware y firmware', 'Hardware and firmware maintenance'), raizIdioma + 'index.html#servicio-tecnico', 'fa-screwdriver-wrench'],
@@ -1372,6 +1375,58 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         caja.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => ponerModo(b.dataset.modo)));
         caja.querySelectorAll('[data-destino]').forEach(b => { b.setAttribute('aria-pressed', 'false'); b.addEventListener('click', () => probar(b.dataset.destino)); });
+    });
+
+    // --- Diseño: el visitante escribe el nombre de su negocio y elige giro, estilo y paleta; se arma un boceto en cuatro piezas ---
+    document.querySelectorAll('[data-marca-demo]').forEach(caja => {
+        const lienzo = caja.querySelector('.dis-lienzo'), campo = caja.querySelector('.dis-nombre');
+        const pedir = caja.querySelector('.dis-pedir'), estado = caja.querySelector('.dis-estado');
+        // [lema, oferta para la publicación]
+        const GIROS = {
+            cafe: [T('Café de especialidad', 'Specialty coffee'), T('2×1 en lattes', '2-for-1 lattes')],
+            taller: [T('Servicio automotriz', 'Auto repair'), T('Afinación con 15 % menos', 'Tune-up 15% off')],
+            tienda: [T('Tu tienda de confianza', 'Your neighborhood store'), T('Ofertas de la semana', 'Deals of the week')],
+            salud: [T('Salud para tu familia', 'Care for your family'), T('Agenda tu cita', 'Book your visit')],
+        };
+        const ESTILOS = { moderno: T('moderno', 'modern'), clasico: T('clásico', 'classic'), artesanal: T('artesanal', 'handcrafted'), tecnologico: T('tecnológico', 'tech') };
+        const PALETAS = { oceano: T('océano', 'ocean'), atardecer: T('atardecer', 'sunset'), bosque: T('bosque', 'forest'), uva: T('uva', 'grape'), carbon: T('carbón', 'charcoal') };
+        const sel = { giro: 'cafe', estilo: 'moderno', paleta: 'oceano' };
+        // dos iniciales de las palabras con peso («Café Nayar» → CN; «Taller de Juan» → TJ)
+        const iniciales = (n) => {
+            const SOBRA = /^(dr|dra|lic|ing|arq|mtro|mtra|el|la|los|las|the)\.?$/i;
+            const p = n.split(/\s+/).filter(w => !SOBRA.test(w) && (w.length > 2 || /^[A-ZÁÉÍÓÚÑ]/.test(w)));
+            return (p.length > 1 ? p[0][0] + p[1][0] : (p[0] || n || '?').slice(0, 2)).toUpperCase();
+        };
+        let anim;
+        const pintar = (cambio) => {
+            const nombre = campo.value.trim() || T('Tu negocio', 'Your business');
+            const [lema, oferta] = GIROS[sel.giro];
+            lienzo.dataset.estilo = sel.estilo;
+            lienzo.dataset.paleta = sel.paleta;
+            lienzo.querySelectorAll('.dis-n').forEach(el => { el.textContent = nombre; });
+            lienzo.querySelectorAll('.dis-lema').forEach(el => { el.textContent = lema; });
+            lienzo.querySelectorAll('.dis-oferta').forEach(el => { el.textContent = oferta; });
+            const sim = sel.estilo === 'artesanal' || sel.estilo === 'clasico' ? iniciales(nombre)[0] : iniciales(nombre);
+            lienzo.querySelectorAll('.dis-simbolo').forEach(el => { el.textContent = sim; });
+            // el asistente separa servicios por «, » e « y »: el nombre no puede llevarlos
+            const limpio = nombre.replace(/,/g, '').replace(/ (y|and) /gi, ' & ');
+            pedir.dataset.servicio = T(`Logotipo para ${limpio} (estilo ${ESTILOS[sel.estilo]} en tonos ${PALETAS[sel.paleta]})`, `Logo for ${limpio} (${ESTILOS[sel.estilo]} style in ${PALETAS[sel.paleta]} tones)`);
+            if (!cambio) return;
+            estado.textContent = T(`Boceto de ${nombre}: estilo ${ESTILOS[sel.estilo]}, paleta ${PALETAS[sel.paleta]}.`, `Sketch for ${nombre}: ${ESTILOS[sel.estilo]} style, ${PALETAS[sel.paleta]} palette.`);
+            if (prefersReducedMotion || cambio === 'texto') return;
+            lienzo.classList.remove('dis-cambia'); void lienzo.offsetWidth; lienzo.classList.add('dis-cambia');
+            clearTimeout(anim); anim = setTimeout(() => lienzo.classList.remove('dis-cambia'), 700);
+        };
+        ['giro', 'estilo', 'paleta'].forEach(k => caja.querySelectorAll(`button[data-${k}]`).forEach(b => b.addEventListener('click', () => {
+            sel[k] = b.dataset[k];
+            caja.querySelectorAll(`button[data-${k}]`).forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+            pintar(k);
+        })));
+        // al escribir se pinta al momento; el aviso para lectores de pantalla espera a que termine
+        let espera;
+        campo.addEventListener('input', () => { pintar(); clearTimeout(espera); espera = setTimeout(() => pintar('texto'), 600); });
+        if (EN && campo.value === 'Café Nayar') campo.value = 'Nayar Coffee';
+        pintar();
     });
 
     // --- Servicio técnico: el visitante elige su equipo y el síntoma; se muestran las causas probables y lo que revisamos ---

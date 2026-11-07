@@ -86,9 +86,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=11.9">
+    <link rel="stylesheet" href="css/styles.css?v=12.0">
     <!-- Iconos (Font Awesome) -->
-    <link rel="stylesheet" href="resources/iconos/iconos.css?v=11.9">
+    <link rel="stylesheet" href="resources/iconos/iconos.css?v=12.0">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -455,6 +455,52 @@ ip dhcp snooping vlan 10,20,30
             <li data-foco="publicidad"><i class="fas fa-bullhorn" aria-hidden="true"></i><h3>Publicidad</h3><p>Piezas para redes sociales, carteles, lonas e impresos, alineadas con los objetivos de cada campaña.</p></li>
             <li data-foco="interfaces"><i class="fas fa-object-group" aria-hidden="true"></i><h3>Diseño de interfaces</h3><p>Interfaces de apps y sitios web centradas en el usuario, con el mismo estándar que aplicamos a nuestra suite.</p></li>
         </ul>
+        <!-- Demo de marca: el visitante escribe el nombre de su negocio y elige giro, estilo y paleta; se arma un boceto en cuatro piezas -->
+        <div class="red-demo dis-demo" data-marca-demo>
+            <div class="red-cab">
+                <h3>Tu marca en diez segundos.</h3>
+                <p>Escribe el nombre de tu negocio y elige un estilo. Te mostramos cómo se vería en distintas piezas.</p>
+            </div>
+            <div class="dis-controles">
+                <label class="dis-campo"><span>Nombre de tu negocio</span><input type="text" class="dis-nombre" maxlength="22" value="Café Nayar" autocomplete="off" spellcheck="false"></label>
+                <div class="dis-grupo"><span>Giro</span>
+                    <div class="red-modos" role="group" aria-label="Giro">
+                        <button type="button" data-giro="cafe" aria-pressed="true">Cafetería</button>
+                        <button type="button" data-giro="taller" aria-pressed="false">Taller</button>
+                        <button type="button" data-giro="tienda" aria-pressed="false">Tienda</button>
+                        <button type="button" data-giro="salud" aria-pressed="false">Consultorio</button>
+                    </div>
+                </div>
+                <div class="dis-grupo"><span>Estilo</span>
+                    <div class="red-modos" role="group" aria-label="Estilo">
+                        <button type="button" data-estilo="moderno" aria-pressed="true">Moderno</button>
+                        <button type="button" data-estilo="clasico" aria-pressed="false">Clásico</button>
+                        <button type="button" data-estilo="artesanal" aria-pressed="false">Artesanal</button>
+                        <button type="button" data-estilo="tecnologico" aria-pressed="false">Tecnológico</button>
+                    </div>
+                </div>
+                <div class="dis-grupo"><span>Paleta</span>
+                    <div class="dis-paletas" role="group" aria-label="Paleta">
+                        <button type="button" data-paleta="oceano" aria-pressed="true" aria-label="Océano"></button>
+                        <button type="button" data-paleta="atardecer" aria-pressed="false" aria-label="Atardecer"></button>
+                        <button type="button" data-paleta="bosque" aria-pressed="false" aria-label="Bosque"></button>
+                        <button type="button" data-paleta="uva" aria-pressed="false" aria-label="Uva"></button>
+                        <button type="button" data-paleta="carbon" aria-pressed="false" aria-label="Carbón"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="dis-lienzo" aria-hidden="true">
+                <figure class="dis-pieza dis-logo"><div class="dis-marca"><span class="dis-simbolo"></span><span class="dis-textos"><b class="dis-n"></b><small class="dis-lema"></small></span></div><figcaption>Logotipo</figcaption></figure>
+                <figure class="dis-pieza dis-tarjeta"><div class="dis-tarjeta-cara"><span class="dis-simbolo"></span><b class="dis-n"></b><small class="dis-lema"></small><i class="dis-dato">Tepic, Nayarit</i></div><figcaption>Tarjeta de presentación</figcaption></figure>
+                <figure class="dis-pieza dis-redes"><div class="dis-perfil"><span class="dis-simbolo"></span><span><b class="dis-n"></b><small class="dis-lema"></small></span></div><div class="dis-post"><b class="dis-oferta"></b><span class="dis-n"></span></div><figcaption>Perfil en redes</figcaption></figure>
+                <figure class="dis-pieza dis-lona"><div class="dis-lona-cara"><small>Gran apertura</small><b class="dis-n"></b><span class="dis-lema"></span></div><figcaption>Lona</figcaption></figure>
+            </div>
+            <div class="tec-pie dis-pie">
+                <p>Es un boceto automático para darte una idea: el diseño real lo hacemos contigo, desde cero.</p>
+                <a href="#contacto" class="m3-btn m3-btn-filled dis-pedir" data-pedir="6">Pedir este diseño <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
+            </div>
+            <p class="sr-only dis-estado" role="status"></p>
+        </div>
     </section>
 
     <!-- Redes e infraestructura -->
@@ -1021,7 +1067,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=11.9"></script>
-    <script src="script/efectos.js?v=11.9"></script>
+    <script src="script/scripts.js?v=12.0"></script>
+    <script src="script/efectos.js?v=12.0"></script>
 </body>
 </html>
