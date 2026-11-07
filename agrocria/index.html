@@ -54,9 +54,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=9.8">
+    <link rel="stylesheet" href="../css/styles.css?v=9.9">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=9.8">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=9.9">
 </head>
 <body class="theme-agrocria bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -245,6 +245,23 @@
 
     <!-- Sección de Capturas Reales -->
     <div class="ascii-banda" data-ascii="screenshots/agrocria-telemetry.webp" data-color="#c3cf6c" aria-hidden="true"></div>
+
+    <!-- En uso: escena ilustrativa con capturas reales montadas en perspectiva sobre la pantalla -->
+    <section id="en-uso" class="uso" style="--acento: #c3cf6c" aria-labelledby="uso-titulo">
+        <div class="uso-cab">
+            <p class="uso-ceja">En tu negocio</p>
+            <h2 id="uso-titulo" class="uso-titulo">Así se ve en pleno campo.</h2>
+            <p class="uso-lead">La tablet aguanta sol y polvo, y los sensores de humedad le reportan por LoRaWAN aunque no haya internet. Toca una vista para verla en la pantalla.</p>
+        </div>
+        <figure class="uso-escena" data-quad="715,143 1169,143 1170,430 712,434">
+            <img class="uso-foto" src="../resources/escenas/agrocria.webp" alt="Tablet resistente montada en un poste a la orilla de un huerto de aguacate al atardecer, con un sensor de humedad en el suelo" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Agro-Cria Pro.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/agrocria-dashboard.webp" aria-pressed="true">Panel agronómico</button>
+                <button type="button" data-vista="screenshots/agrocria-telemetry.webp" aria-pressed="false">Telemetría</button>
+        </div>
+    </section>
 
     <section id="capturas" class="videos-section max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
@@ -450,7 +467,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=9.8"></script>
-    <script src="../script/efectos.js?v=9.8"></script>
+    <script src="../script/scripts.js?v=9.9"></script>
+    <script src="../script/efectos.js?v=9.9"></script>
 </body>
 </html>

@@ -7285,3 +7285,45 @@ html.visor-abierto { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .guia-punto::before { animation: none; }
 }
+
+/* ==========================================================================
+   EN USO: escena con las capturas reales montadas en perspectiva sobre la pantalla
+   ========================================================================== */
+.uso { position: relative; z-index: 10; max-width: 1180px; margin: 0 auto; padding: clamp(4rem, 9vw, 7rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem); }
+.uso-cab { max-width: 46rem; margin: 0 auto clamp(1.75rem, 4vw, 2.75rem); text-align: center; }
+.uso-ceja { display: inline-flex; align-items: center; gap: .6rem; margin: 0 0 .9rem; font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--acento); }
+.uso-ceja::before, .uso-ceja::after { content: ''; width: 22px; height: 2px; border-radius: 2px; background: currentColor; opacity: .6; }
+.uso-titulo { margin: 0; font-family: var(--font-display, inherit); font-size: clamp(1.9rem, 4.6vw, 3.1rem); font-weight: 800; line-height: 1.04; letter-spacing: -.035em; color: #fff; text-wrap: balance; }
+.uso-lead { margin: 1rem auto 0; max-width: 40rem; font-size: clamp(.98rem, 1.6vw, 1.1rem); line-height: 1.55; color: rgba(214, 223, 240, .78); text-wrap: pretty; }
+.uso-escena {
+  position: relative; margin: 0; aspect-ratio: 1344 / 752; overflow: hidden; border-radius: clamp(14px, 2vw, 26px); cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 50px 100px -40px rgba(0, 0, 0, .95), 0 0 80px -30px var(--acento);
+}
+.uso-foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.uso-pantalla { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; transform-origin: 0 0; border-radius: 10px; overflow: hidden; background: #05070c; pointer-events: none; }
+.uso-pantalla img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity .55s ease; filter: brightness(.94) saturate(1.04); }
+.uso-pantalla img.is-on { opacity: 1; }
+/* reflejo del cristal y viñeta: la captura se integra con la luz de la escena */
+.uso-brillo { position: absolute; inset: 0; background: linear-gradient(118deg, rgba(255, 255, 255, .13) 0%, rgba(255, 255, 255, .03) 28%, transparent 46%), radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(0, 0, 0, .28) 100%); mix-blend-mode: screen; }
+.uso-nota { position: absolute; left: 12px; bottom: 10px; max-width: calc(100% - 24px); padding: .3rem .65rem; border-radius: 999px; font-size: .72rem; line-height: 1.3; color: rgba(255, 255, 255, .78); background: rgba(5, 8, 15, .62); backdrop-filter: blur(8px); }
+.uso-vistas { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.1rem; }
+.uso-vistas button {
+  position: relative; overflow: hidden; padding: .55rem 1rem; border: 0; border-radius: 999px; cursor: pointer; font: 600 .86rem/1 inherit; color: rgba(225, 232, 245, .78);
+  background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: background-color .2s, color .2s, box-shadow .2s, scale .15s var(--ease-out);
+}
+.uso-vistas button:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.uso-vistas button:active { scale: .96; }
+.uso-vistas button:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.uso-vistas button[aria-pressed="true"] { color: #fff; background: color-mix(in srgb, var(--acento) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 70%, transparent); }
+/* barra que avanza mientras la vista cambia sola */
+.uso-vistas button::after { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--acento); transform: scaleX(0); transform-origin: left; }
+.uso-auto .uso-vistas button[aria-pressed="true"]::after { animation: uso-avance 4.2s linear forwards; }
+@keyframes uso-avance { to { transform: scaleX(1); } }
+@media (max-width: 640px) {
+  /* en pantallas angostas la nota va debajo de la foto para no taparla */
+  .uso-escena { aspect-ratio: auto; background: rgba(8, 12, 22, .9); }
+  .uso-foto { position: relative; height: auto; }
+  .uso-nota { position: static; max-width: none; padding: .55rem .8rem; border-radius: 0; font-size: .7rem; background: none; backdrop-filter: none; color: rgba(225, 232, 245, .62); }
+  .uso-vistas button { font-size: .78rem; padding: .5rem .8rem; }
+}
+@media (prefers-reduced-motion: reduce) { .uso-pantalla img { transition: none; } }

@@ -48,8 +48,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=9.8">
-    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=9.8">
+    <link rel="stylesheet" href="../../css/styles.css?v=9.9">
+    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=9.9">
 </head>
 <body class="theme-diagmind bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -211,6 +211,22 @@
                 <li><button type="button" data-capa="placa" aria-pressed="false"><i class="fas fa-microchip" aria-hidden="true"></i><span><strong>CPU, memory and storage</strong><small>SoC, cores, RAM and internal storage health.</small></span></button></li>
                 <li><button type="button" data-capa="usb" aria-pressed="false"><i class="fas fa-plug" aria-hidden="true"></i><span><strong>ADB connection without root</strong><small>Detects the phone when plugged in over USB, without voiding the warranty.</small></span></button></li>
             </ol>
+        </div>
+    </section>
+
+    <section id="en-uso" class="uso" style="--acento: #4d8cf5" aria-labelledby="uso-titulo">
+        <div class="uso-cab">
+            <p class="uso-ceja">In your business</p>
+            <h2 id="uso-titulo" class="uso-titulo">This is how it looks on the repair bench.</h2>
+            <p class="uso-lead">Plug the phone in over USB and Diagmind audits it without root while you keep working. Tap a view to see it on the screen.</p>
+        </div>
+        <figure class="uso-escena" data-quad="222,91 928,75 928,510 216,511">
+            <img class="uso-foto" src="../../resources/escenas/diagmind.webp" alt="Laptop on an electronics repair bench, next to an opened phone connected over USB, screwdrivers and a microscope" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Illustrative scene; what you see on the screen are real Diagmind screenshots.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Screen views">
+                <button type="button" data-vista="screenshots/diagmind-report.webp" aria-pressed="true">Report</button>
+                <button type="button" data-vista="screenshots/diagmind-pcb.webp" aria-pressed="false">Board schematic</button>
         </div>
     </section>
 
@@ -407,7 +423,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=9.8"></script>
-    <script src="../../script/efectos.js?v=9.8"></script>
+    <script src="../../script/scripts.js?v=9.9"></script>
+    <script src="../../script/efectos.js?v=9.9"></script>
 </body>
 </html>

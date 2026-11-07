@@ -54,9 +54,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=9.8">
+    <link rel="stylesheet" href="../css/styles.css?v=9.9">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=9.8">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=9.9">
 </head>
 <body class="theme-diagmind bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -223,6 +223,23 @@
                 <li><button type="button" data-capa="placa" aria-pressed="false"><i class="fas fa-microchip" aria-hidden="true"></i><span><strong>CPU, memoria y almacenamiento</strong><small>SoC, núcleos, RAM y salud de la memoria interna.</small></span></button></li>
                 <li><button type="button" data-capa="usb" aria-pressed="false"><i class="fas fa-plug" aria-hidden="true"></i><span><strong>Conexión ADB sin root</strong><small>Detecta el teléfono al conectarlo por USB, sin anular la garantía.</small></span></button></li>
             </ol>
+        </div>
+    </section>
+
+    <!-- En uso: escena ilustrativa con capturas reales montadas en perspectiva sobre la pantalla -->
+    <section id="en-uso" class="uso" style="--acento: #4d8cf5" aria-labelledby="uso-titulo">
+        <div class="uso-cab">
+            <p class="uso-ceja">En tu negocio</p>
+            <h2 id="uso-titulo" class="uso-titulo">Así se ve en el banco de reparación.</h2>
+            <p class="uso-lead">Conectas el teléfono por USB y Diagmind lo audita sin root mientras sigues trabajando. Toca una vista para verla en la pantalla.</p>
+        </div>
+        <figure class="uso-escena" data-quad="222,91 928,75 928,510 216,511">
+            <img class="uso-foto" src="../resources/escenas/diagmind.webp" alt="Laptop en una mesa de reparación de electrónica, junto a un teléfono abierto conectado por USB, desarmadores y un microscopio" width="1344" height="752" loading="lazy">
+            <figcaption class="uso-nota">Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Diagmind.</figcaption>
+        </figure>
+        <div class="uso-vistas" role="group" aria-label="Vistas de la pantalla">
+                <button type="button" data-vista="screenshots/diagmind-report.webp" aria-pressed="true">Informe</button>
+                <button type="button" data-vista="screenshots/diagmind-pcb.webp" aria-pressed="false">Esquema de la placa</button>
         </div>
     </section>
 
@@ -427,7 +444,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=9.8"></script>
-    <script src="../script/efectos.js?v=9.8"></script>
+    <script src="../script/scripts.js?v=9.9"></script>
+    <script src="../script/efectos.js?v=9.9"></script>
 </body>
 </html>

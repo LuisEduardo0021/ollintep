@@ -1177,6 +1177,75 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- En uso: las capturas reales se montan en perspectiva sobre la pantalla de la foto (homografía → matrix3d) ---
+    document.querySelectorAll('.uso').forEach(sec => {
+        const figura = sec.querySelector('.uso-escena'), foto = figura.querySelector('.uso-foto');
+        const botones = [...sec.querySelectorAll('.uso-vistas button')];
+        if (!botones.length) return;
+        const W = 1440, H = 900, BASE = 1344;   // tamaño de la capa de capturas y ancho original de la foto
+        // esquinas de la pantalla en la foto (sup. izq., sup. der., inf. der., inf. izq.), un poco hacia fuera para tapar el borde negro
+        const q = figura.dataset.quad.split(' ').map(p => p.split(',').map(Number));
+        const cx = q.reduce((s, p) => s + p[0], 0) / 4, cy = q.reduce((s, p) => s + p[1], 0) / 4;
+        const esquinas = q.map(([x, y]) => { const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy); return [x + dx / d * 2.5, y + dy / d * 2.5]; });
+        const pantalla = document.createElement('div');
+        pantalla.className = 'uso-pantalla';
+        pantalla.setAttribute('aria-hidden', 'true');
+        // las rutas son relativas a resources/: se resuelven desde la foto para que funcionen igual en /en/
+        const ruta = (v) => new URL('../' + v, foto.src).href;
+        const capas = botones.map((b, i) => {
+            const img = document.createElement('img');
+            img.alt = '';
+            img.decoding = 'async';
+            if (i === 0) img.src = ruta(b.dataset.vista);
+            if (i === 0) img.classList.add('is-on');
+            pantalla.append(img);
+            return img;
+        });
+        const brillo = document.createElement('span');
+        brillo.className = 'uso-brillo';
+        pantalla.append(brillo);
+        figura.insertBefore(pantalla, foto.nextSibling);
+        const homografia = (pts, w, h) => {
+            const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = pts;
+            const sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3;
+            const dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2;
+            const den = dx1 * dy2 - dx2 * dy1;
+            const g = (sx * dy2 - dx2 * sy) / den, k = (dx1 * sy - sx * dy1) / den;
+            const a = x1 - x0 + g * x1, b = x3 - x0 + k * x3, d = y1 - y0 + g * y1, e = y3 - y0 + k * y3;
+            return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${k / h},0,0,1,0,${x0},${y0},0,1)`;
+        };
+        const colocar = () => {
+            const s = figura.clientWidth / BASE;
+            if (!s) return;
+            pantalla.style.transform = homografia(esquinas.map(([x, y]) => [x * s, y * s]), W, H);
+        };
+        new ResizeObserver(colocar).observe(figura);
+        colocar();
+        // vistas: botón o paso automático mientras la escena está en pantalla (se detiene al pasar el cursor o al elegir una)
+        let actual = 0, giro = 0, enVista = false, manual = false;
+        const mostrar = (i) => {
+            actual = i;
+            const img = capas[i];
+            if (!img.src) img.src = ruta(botones[i].dataset.vista);
+            const encender = () => capas.forEach((c, k) => c.classList.toggle('is-on', k === i));
+            img.complete ? encender() : img.addEventListener('load', encender, { once: true });
+            botones.forEach((b, k) => b.setAttribute('aria-pressed', k === i ? 'true' : 'false'));
+        };
+        const programar = () => {
+            clearTimeout(giro);
+            sec.classList.toggle('uso-auto', enVista && !manual && !prefersReducedMotion && botones.length > 1);
+            if (enVista && !manual && !prefersReducedMotion && botones.length > 1) giro = setTimeout(() => { mostrar((actual + 1) % capas.length); programar(); }, 4200);
+        };
+        botones.forEach((b, i) => b.addEventListener('click', () => { manual = true; mostrar(i); programar(); }));
+        figura.addEventListener('pointerenter', () => { clearTimeout(giro); sec.classList.remove('uso-auto'); });
+        figura.addEventListener('pointerleave', programar);
+        // tocar la pantalla de la foto pasa a la siguiente vista
+        figura.addEventListener('click', () => { manual = true; mostrar((actual + 1) % capas.length); programar(); });
+        new IntersectionObserver(([e]) => { enVista = e.isIntersecting; programar(); }, { threshold: 0.4 }).observe(figura);
+        // precarga las demás vistas cuando la escena se acerca
+        new IntersectionObserver(([e], o) => { if (e.isIntersecting) { capas.forEach((c, i) => { if (!c.src) c.src = ruta(botones[i].dataset.vista); }); o.disconnect(); } }, { rootMargin: '300px' }).observe(figura);
+    });
+
     // --- Recorrido guiado: puntos sobre la captura principal que explican cada parte de la app ---
     // x, y en % de la captura; [título, texto] en español e inglés
     const GUIAS = {
