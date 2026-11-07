@@ -236,3 +236,11 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 700px) {
   #globo::after, #aurora::after { background: linear-gradient(0deg, rgba(5, 7, 13, .85), transparent 55%); }
 }
+/* Pantallas muy angostas (320 px): la etiqueta «Laboratorio» se oculta para que quepa el botón */
+@media (max-width: 380px) {
+  .marca em { display: none; }
+  .barra-der { gap: .4rem; }
+  .barra-cta, .idioma { font-size: .8rem; }
+}
+/* En pantallas táctiles el deslizamiento horizontal mueve el experimento; el vertical sigue desplazando la página */
+@media (pointer: coarse) { .exp { touch-action: pan-y; } }

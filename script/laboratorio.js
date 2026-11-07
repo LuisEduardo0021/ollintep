@@ -15,6 +15,28 @@
         idioma.addEventListener('click', () => { try { localStorage.setItem('ollintep-idioma', EN ? 'es' : 'en'); } catch (e) {} });
     }
 
+    // --- En pantallas táctiles no hay cursor: las instrucciones hablan del dedo (el deslizamiento horizontal mueve el experimento) ---
+    if (tactil) {
+        const CAMBIOS = EN ? [
+            ['Move the cursor and scroll', 'Swipe sideways and scroll'], ['Your cursor is one more drop.', 'Your finger is one more drop.'],
+            ['Tap or click to scatter them.', 'Tap to scatter them.'], ['Move the cursor to', 'Swipe sideways to'],
+            ['Hover over them to stir them up.', 'Swipe across them to stir them up.'], ['wherever your cursor goes; click to send', 'wherever your finger goes; tap to send'],
+            ['; click to pull', '; tap to pull'], ['Click to flip', 'Tap to flip'],
+        ] : [
+            ['Mueve el cursor y desplázate', 'Desliza de lado y desplázate'], ['Tu cursor es una gota más.', 'Tu dedo es una gota más.'],
+            ['Toca o haz clic para dispersarlas.', 'Toca para dispersarlas.'], ['Mueve el cursor para', 'Desliza el dedo de lado para'],
+            ['Pasa el cursor por encima para agitarlas.', 'Desliza el dedo encima para agitarlas.'], ['Donde pasa tu cursor, se levantan; con un clic, lanzas', 'Donde pasa tu dedo, se levantan; con un toque, lanzas'],
+            ['; con un clic se separan', '; con un toque se separan'], ['Haz clic para invertir', 'Toca para invertir'],
+        ];
+        document.querySelectorAll('.exp-texto p, .pista').forEach(p => {
+            const nodo = [...p.childNodes].filter(n => n.nodeType === 3).pop();
+            if (!nodo) return;
+            let t = nodo.textContent;
+            CAMBIOS.forEach(([a, b]) => { t = t.replace(a, b); });
+            nodo.textContent = t;
+        });
+    }
+
     // --- Desplazamiento: velocidad suavizada (el túnel acelera con ella) ---
     let ultimoY = scrollY, velScroll = 0;
     addEventListener('scroll', () => { velScroll += Math.abs(scrollY - ultimoY); ultimoY = scrollY; }, { passive: true });
@@ -32,6 +54,7 @@
         el.addEventListener('pointermove', mover, { passive: true });
         el.addEventListener('pointerdown', (e) => { mover(e); p.pulso = 1; }, { passive: true });
         el.addEventListener('pointerleave', () => { p.dentro = false; });
+        el.addEventListener('pointercancel', () => { p.dentro = false; });
         return p;
     };
 

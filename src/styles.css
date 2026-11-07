@@ -6582,6 +6582,8 @@ html:has(.lz-ventana[open]) {
    SERVICIO TÉCNICO: barra de diagnóstico, palomita de revisado y herramienta en hover
    ========================================================================== */
 #servicio-tecnico .service-list { position: relative; }
+/* los marcos de diagnóstico sobresalen de la tarjeta: en ventanas angostas no deben ensanchar la página */
+#servicio-tecnico { overflow-x: clip; }
 /* La línea superior es una barra de diagnóstico que se llena al recorrer la sección */
 #servicio-tecnico .service-list::before {
   content: "";
