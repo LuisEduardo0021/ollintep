@@ -1287,6 +1287,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Planes: el botón de cada plan lo deja anotado en Contacto y el correo sale ya escrito para ese plan ---
+    const contactoPlan = document.querySelector('#contacto');
+    const botonesPlan = document.querySelectorAll('.plan-card .plan-cta');
+    if (contactoPlan && botonesPlan.length) {
+        const APP = { actapro: 'ActaPro', agrocria: 'Agro-Cria Pro', diagmind: 'Diagmind' }[location.pathname.split('/').filter(Boolean).pop()] || 'Ollin-Tep';
+        const correo = contactoPlan.querySelector('a[href^="mailto:"]');
+        const DIRECCION = 'administrador@ollin-tep.com';
+        const ficha = document.createElement('div');
+        ficha.className = 'plan-elegido';
+        ficha.hidden = true;
+        ficha.setAttribute('aria-live', 'polite');
+        (contactoPlan.querySelector('.contact-info') || contactoPlan).before(ficha);
+        const escribir = (plan, precio) => {
+            const asunto = plan ? T(`Plan ${plan} de ${APP}`, `${APP} ${plan} plan`) : T(`Demo de ${APP}`, `${APP} demo`);
+            const cuerpo = plan
+                ? T(`Hola, Ollin-Tep:\n\nMe interesa el plan ${plan} de ${APP} (${precio}). Quisiera agendar una demo y resolver algunas dudas.\n\nSaludos.`, `Hello, Ollin-Tep:\n\nI’m interested in the ${APP} ${plan} plan (${precio}). I’d like to schedule a demo and ask a few questions.\n\nBest regards.`)
+                : T(`Hola, Ollin-Tep:\n\nQuisiera agendar una demo de ${APP}.\n\nSaludos.`, `Hello, Ollin-Tep:\n\nI’d like to schedule a ${APP} demo.\n\nBest regards.`);
+            if (correo) correo.href = `mailto:${DIRECCION}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+        };
+        escribir();
+        botonesPlan.forEach(b => b.addEventListener('click', () => {
+            const card = b.closest('.plan-card');
+            const plan = card.querySelector('.plan-name')?.textContent.trim();
+            const precio = [card.querySelector('.plan-price-amount')?.textContent, card.querySelector('.plan-price-period')?.textContent].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.toggle('plan-marcado', c === card));
+            ficha.hidden = false;
+            ficha.innerHTML = '';
+            const txt = document.createElement('p');
+            txt.innerHTML = `<i class="fas fa-check" aria-hidden="true"></i> ${T('Elegiste', 'You chose')}: <b></b> <span></span>`;
+            txt.querySelector('b').textContent = plan;
+            txt.querySelector('span').textContent = '· ' + precio;
+            const cambiar = document.createElement('a');
+            cambiar.href = '#precios';
+            cambiar.textContent = T('Cambiar', 'Change');
+            const enviar = document.createElement('a');
+            enviar.className = 'plan-elegido-enviar';
+            enviar.innerHTML = `<i class="fas fa-envelope" aria-hidden="true"></i> ${T('Escribir sobre este plan', 'Write about this plan')}`;
+            ficha.append(txt, enviar, cambiar);
+            escribir(plan, precio);
+            enviar.href = correo ? correo.href : `mailto:${DIRECCION}`;
+            ficha.classList.remove('plan-aviso'); void ficha.offsetWidth; ficha.classList.add('plan-aviso');
+        }));
+    }
+
     // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
     document.querySelectorAll('[data-explica]').forEach(caja => {
         const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');

@@ -7453,3 +7453,17 @@ html.visor-abierto { overflow: hidden; }
 .feature-col li.recomendada { color: #fff; font-weight: 600; }
 .feature-col li:not(.recomendada) { opacity: .62; transition: opacity .3s ease, color .3s ease; }
 .feature-col li.recomendada::before { background: var(--md-sys-color-primary, #5a8af6); box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary, #5a8af6) 30%, transparent), 0 0 12px var(--md-sys-color-primary, #5a8af6); }
+
+/* --- Planes: el plan elegido queda anotado en Contacto --- */
+.plan-card { transition: box-shadow .3s ease, translate .3s var(--ease-out); }
+.plan-card.plan-marcado { box-shadow: 0 0 0 2px var(--md-sys-color-primary, #6ea2ff), 0 30px 60px -30px var(--md-sys-color-primary, #6ea2ff); }
+.plan-elegido { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .6rem 1rem; max-width: 40rem; margin: 0 auto 1.5rem; padding: .9rem 1.2rem; border-radius: 18px; text-align: center; background: rgba(10, 15, 27, .8); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--md-sys-color-primary, #6ea2ff) 60%, transparent); }
+.plan-elegido p { margin: 0; color: rgba(225, 232, 245, .85); }
+.plan-elegido p i { color: var(--md-sys-color-primary, #6ea2ff); margin-right: .2rem; }
+.plan-elegido b { color: #fff; }
+.plan-elegido a { font-weight: 600; font-size: .9rem; color: var(--md-sys-color-primary, #8ab4ff); text-decoration: none; }
+.plan-elegido a:hover { text-decoration: underline; }
+.plan-elegido-enviar { display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .95rem; border-radius: 999px; color: #06101f !important; background: var(--md-sys-color-primary, #8ab4ff); }
+.plan-elegido-enviar:hover { text-decoration: none !important; filter: brightness(1.08); }
+.plan-elegido.plan-aviso { animation: plan-aviso 1.4s ease-out; }
+@keyframes plan-aviso { 0%, 25% { box-shadow: inset 0 0 0 2px var(--md-sys-color-primary, #6ea2ff), 0 0 50px -10px var(--md-sys-color-primary, #6ea2ff); } }
