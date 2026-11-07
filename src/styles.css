@@ -6201,10 +6201,12 @@ html:has(.lz-ventana[open]) {
    ========================================================================== */
 /* Morph líquido: mancha detrás del logo de la portada */
 .morph-liquido { position: absolute; left: 50%; top: -3.25rem; z-index: -1; width: 15rem; height: 15rem; margin-left: -7.5rem; background: linear-gradient(135deg, #1a56db, #6ea2ff 45%, #ff7a2e); opacity: .34; filter: blur(14px); border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; animation: morph-liquido 16s ease-in-out infinite; pointer-events: none; }
+/* Solo rotación y escala (la GPU las mueve sin repintar): animar border-radius con el desenfoque costaba la mitad del hilo principal en celular con la portada quieta. La forma irregular fija + estirar distinto en X y en Y da el mismo «líquido» */
+.morph-liquido { will-change: transform; }
 @keyframes morph-liquido {
-  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; rotate: 0deg; scale: 1; }
-  33% { border-radius: 68% 32% 41% 59% / 58% 66% 34% 42%; rotate: 70deg; scale: 1.12; }
-  66% { border-radius: 36% 64% 52% 48% / 33% 52% 48% 67%; rotate: 150deg; scale: .94; }
+  0%, 100% { rotate: 0deg; scale: 1 1; }
+  33% { rotate: 70deg; scale: 1.18 1.02; }
+  66% { rotate: 150deg; scale: .9 1.06; }
 }
 .hero.fuera .morph-liquido { animation-play-state: paused; }
 
