@@ -969,7 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
         enlaceIdioma.hreflang = EN ? 'es' : 'en';
         enlaceIdioma.lang = EN ? 'es' : 'en';
         enlaceIdioma.textContent = EN ? 'ES' : 'EN';
-        enlaceIdioma.setAttribute('aria-label', EN ? 'Ver en español' : 'View in English');
+        enlaceIdioma.setAttribute('aria-label', EN ? 'ES: ver en español' : 'EN: view in English'); // el nombre accesible empieza con el texto visible (WCAG 2.5.3)
         enlaceIdioma.addEventListener('click', () => { try { localStorage.setItem('ollintep-idioma', EN ? 'es' : 'en'); } catch (e) {} });
         liIdioma.append(enlaceIdioma);
         li.before(liIdioma);
