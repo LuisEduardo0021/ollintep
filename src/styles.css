@@ -7138,15 +7138,17 @@ html:has(.lz-ventana[open]) {
    VISOR DE CAPTURAS: pantalla completa con zoom, gestos y miniaturas
    ========================================================================== */
 .ampliable { cursor: zoom-in; position: relative; }
-.ampliable:focus-visible { outline: 2px solid var(--md-sys-color-primary, #8ab4ff); outline-offset: 3px; }
+.ampliar-ico:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .ampliar-ico {
   position: absolute; z-index: 3; right: 12px; bottom: 12px; width: 34px; height: 34px; border-radius: 50%;
   background: rgba(8, 12, 22, .72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6'/%3E%3C/svg%3E") center / 16px no-repeat;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); backdrop-filter: blur(6px);
-  opacity: 0; scale: .8; transition: opacity .18s ease, scale .22s var(--ease-out); pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); backdrop-filter: blur(6px); border: 0; padding: 0; cursor: zoom-in;
+  opacity: 0; scale: .8; transition: opacity .18s ease, scale .22s var(--ease-out);
 }
-.ampliable:hover .ampliar-ico, .ampliable:focus-visible .ampliar-ico { opacity: 1; scale: 1; }
+.ampliable:hover .ampliar-ico, .ampliar-ico:focus-visible { opacity: 1; scale: 1; }
 @media (hover: none) { .ampliar-ico { opacity: .9; scale: 1; } }
+.product-shot .ampliar-ico { z-index: 8; top: 22px; right: 22px; bottom: auto; }
+@media (max-width: 767px) { .product-shot .ampliar-ico { top: 12px; right: 12px; width: 30px; height: 30px; } }
 html.visor-abierto { overflow: hidden; }
 
 .visor {
@@ -7197,3 +7199,89 @@ html.visor-abierto { overflow: hidden; }
   .visor-tiras button { width: 58px; }
 }
 @media (prefers-reduced-motion: reduce) { .visor[open] { animation: none; } }
+
+/* ==========================================================================
+   RECORRIDO GUIADO: puntos numerados sobre la captura principal
+   ========================================================================== */
+.guia { position: absolute; inset: 0.6rem; z-index: 7; pointer-events: none; }
+.guia > * { pointer-events: auto; }
+.product-shot:has(.guia-punto:hover, .guia-tarjeta:hover, .guia-play:hover) .lupa,
+.product-shot.en-guia .lupa { opacity: 0; }
+.product-shot:has(.guia-punto:hover, .guia-tarjeta:hover, .guia-play:hover) .ampliar-ico { opacity: 0; }
+
+.guia-foco {
+  position: absolute; inset: 0; border-radius: 18px; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 0, transparent 110px, rgba(3, 6, 12, .62) 230px);
+  transition: opacity .3s ease, background-position .4s;
+}
+.guia.abierta .guia-foco { opacity: 1; }
+
+.guia-punto {
+  position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; font: 700 .8rem/1 var(--font-sans, inherit); color: #06101f;
+  background: #fff; box-shadow: 0 0 0 4px color-mix(in srgb, var(--md-sys-color-primary, #8ab4ff) 45%, transparent), 0 8px 20px -6px rgba(0, 0, 0, .8);
+  opacity: 0; scale: .4; transition: scale .25s var(--ease-out), opacity .25s ease, background-color .2s, color .2s;
+}
+.guia.visible .guia-punto { opacity: 1; scale: 1; transition-delay: calc(var(--i) * 90ms + 200ms), calc(var(--i) * 90ms + 200ms), 0s, 0s; }
+.guia-punto::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--md-sys-color-primary, #8ab4ff);
+  animation: guia-late 2.4s ease-out infinite; animation-delay: calc(var(--i) * .35s); pointer-events: none;
+}
+@keyframes guia-late { 0% { opacity: .9; scale: 1; } 70%, 100% { opacity: 0; scale: 1.9; } }
+.guia-punto:hover, .guia-punto:focus-visible, .guia-punto.is-on { scale: 1.15; background: var(--md-sys-color-primary, #8ab4ff); color: #04101e; transition-delay: 0s; }
+.guia-punto:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.guia.abierta .guia-punto:not(.is-on) { opacity: .55; }
+.guia.abierta .guia-punto::before { animation: none; opacity: 0; }
+
+.guia-tarjeta {
+  position: absolute; z-index: 2; width: min(290px, 70vw); padding: .95rem 1rem .7rem; border-radius: 16px; text-align: left;
+  background: rgba(10, 15, 27, .94); backdrop-filter: blur(12px); color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 24px 50px -16px rgba(0, 0, 0, .95);
+  opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility 0s .18s;
+}
+.guia.abierta .guia-tarjeta { opacity: 1; visibility: visible; transition: opacity .18s ease; }
+.guia-tarjeta[data-lado="db"] { translate: 26px 10px; }
+.guia-tarjeta[data-lado="ib"] { translate: calc(-100% - 26px) 10px; }
+.guia-tarjeta[data-lado="da"] { translate: 26px calc(-100% - 10px); }
+.guia-tarjeta[data-lado="ia"] { translate: calc(-100% - 26px) calc(-100% - 10px); }
+.guia-num { display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: .5rem; border-radius: 50%; font-size: .72rem; font-weight: 700; color: #04101e; background: var(--md-sys-color-primary, #8ab4ff); vertical-align: 1px; }
+.guia-tarjeta b { font-size: .98rem; font-weight: 700; letter-spacing: -.01em; }
+.guia-tarjeta p { margin: .45rem 0 .55rem; font-size: .86rem; line-height: 1.45; color: rgba(225, 232, 245, .8); }
+.guia-nav { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, .08); padding-top: .45rem; }
+.guia-nav button { width: 30px; height: 30px; border: 0; border-radius: 50%; cursor: pointer; color: #fff; font-size: 1.25rem; line-height: 1; background: rgba(255, 255, 255, .07); transition: background-color .15s; }
+.guia-nav button:hover { background: rgba(255, 255, 255, .16); }
+.guia-nav button:focus-visible { outline: 2px solid #8ab4ff; outline-offset: 2px; }
+.guia-pasos { font-size: .75rem; font-variant-numeric: tabular-nums; color: rgba(255, 255, 255, .55); }
+
+.guia-play {
+  position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: .55rem; overflow: hidden;
+  padding: .55rem .95rem .55rem .7rem; border: 0; border-radius: 999px; cursor: pointer; color: #fff; font-size: .82rem; font-weight: 600;
+  background: rgba(10, 15, 27, .86); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 14px 30px -12px rgba(0, 0, 0, .9);
+  opacity: 0; transition: opacity .3s ease .9s, background-color .15s, scale .15s var(--ease-out);
+}
+.guia.visible .guia-play { opacity: 1; }
+.guia-play:hover { background: rgba(22, 30, 48, .94); }
+.guia-play:active { scale: .96; }
+.guia-play:focus-visible { outline: 2px solid #8ab4ff; outline-offset: 2px; }
+.guia-play-ico { width: 20px; height: 20px; border-radius: 50%; background: var(--md-sys-color-primary, #8ab4ff); position: relative; flex: none; }
+.guia-play-ico::before { content: ''; position: absolute; left: 7.5px; top: 6px; border-left: 7px solid #04101e; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+.guia.en-marcha .guia-play-ico::before { left: 6.5px; top: 6.5px; width: 7px; height: 7px; border: 0; border-left: 2.5px solid #04101e; border-right: 2.5px solid #04101e; box-sizing: border-box; }
+.guia-barra { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; opacity: 0; }
+.guia-barra i { display: block; height: 100%; background: var(--md-sys-color-primary, #8ab4ff); transform: scaleX(0); transform-origin: left; }
+.guia.en-marcha .guia-barra { opacity: 1; }
+.guia.abierta:not(.en-marcha) .guia-play { opacity: 0; pointer-events: none; transition-delay: 0s; }
+
+@media (max-width: 767px) {
+  .guia { inset: 0.35rem; }
+  .guia-punto { width: 22px; height: 22px; margin: -11px 0 0 -11px; font-size: .66rem; }
+  .guia-foco { border-radius: 12px; background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 0, transparent 40px, rgba(3, 6, 12, .6) 110px); }
+  /* en pantallas angostas la explicación va sobre la captura, a todo lo ancho, en la mitad opuesta al punto */
+  .guia-tarjeta, .guia-tarjeta[data-lado] { left: 6px !important; right: 6px; top: auto !important; bottom: 6px; width: auto; translate: none; padding: .7rem .8rem .5rem; }
+  .guia-tarjeta[data-v="arriba"] { top: 6px !important; bottom: auto; }
+  .guia-tarjeta p { font-size: .8rem; margin: .3rem 0 .4rem; }
+  .guia.abierta .guia-play { opacity: 0; pointer-events: none; }
+  .guia-play { bottom: 8px; font-size: .74rem; padding: .4rem .8rem .4rem .5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guia-punto::before { animation: none; }
+}

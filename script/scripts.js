@@ -1177,6 +1177,144 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Recorrido guiado: puntos sobre la captura principal que explican cada parte de la app ---
+    // x, y en % de la captura; [título, texto] en español e inglés
+    const GUIAS = {
+        'centzontle-resumen': [
+            [17.6, 31, ['Todo el negocio en un menú', 'Mesas, comandas, cocina, caja, ventas, promociones y reservaciones, a un clic.'], ['Your whole business in one menu', 'Tables, orders, kitchen, checkout, sales, promotions and bookings, one click away.']],
+            [23.5, 19.5, ['Te dice qué funcionó', 'Compara cada mes con el anterior y explica en palabras por qué subieron o bajaron las ventas.'], ['It tells you what worked', 'Compares each month with the last one and explains in plain words why sales went up or down.']],
+            [45, 50, ['Ventas día a día', 'La curva del mes contra el mes pasado, por semana, mes, trimestre o año.'], ['Sales day by day', 'This month’s curve against last month, by week, month, quarter or year.']],
+            [84, 36.5, ['Meta de ventas', 'Cuánto llevas contra tu meta y qué falta: clientes nuevos, ticket promedio y ritmo diario.'], ['Sales goal', 'How far along you are and what’s missing: new customers, average ticket and daily pace.']],
+            [39, 81, ['Ganancia real', 'No solo lo que vendes: gastos, margen y cuántos clientes regresan.'], ['Real profit', 'Not just what you sell: expenses, margin and how many customers come back.']],
+            [24, 93.5, ['Tu gerente Nexo', 'Un asistente que sugiere qué hacer esta semana para ganar más.'], ['Nexo, your manager', 'An assistant that suggests what to do this week to earn more.']],
+        ],
+        'actapro-dashboard-dark': [
+            [8, 13, ['Actas y directorio', 'El panel, las actas y el directorio de personas, siempre a la mano.'], ['Minutes and directory', 'The dashboard, the minutes and the people directory, always at hand.']],
+            [17.1, 18.7, ['Fecha y hora exactas', 'Cada registro queda con la hora oficial del centro del país.'], ['Exact date and time', 'Every record carries the official time.']],
+            [19.7, 39.5, ['Equipo en línea', 'Quién está conectado, ausente o desconectado en este momento.'], ['Team online', 'Who is connected, away or offline right now.']],
+            [19.7, 65.5, ['Tus pendientes', 'Las actas que te toca revisar, con su estado y cuánto llevan vencidas.'], ['Your to-dos', 'The minutes waiting for your review, with their status and how overdue they are.']],
+            [17.1, 86.8, ['Filtros para las gráficas', 'Agrupa por mes, revisor o rango de fechas; un filtro puede aplicar a todas las gráficas.'], ['Chart filters', 'Group by month, reviewer or date range; one filter can apply to every chart.']],
+            [89, 3.4, ['Búsqueda, avisos e IA', 'Busca cualquier acta, revisa notificaciones y pregúntale al asistente.'], ['Search, alerts and AI', 'Find any minute, check notifications and ask the assistant.']],
+        ],
+        'agrocria-dashboard': [
+            [18.6, 9, ['Humedad del suelo', 'El promedio de los sensores y si está en el rango óptimo para el cultivo.'], ['Soil moisture', 'The sensor average and whether it’s in the best range for the crop.']],
+            [30, 52, ['Mapa NDVI', 'El vigor de la vegetación por satélite (Sentinel-2) sobre la topografía de cada sector.'], ['NDVI map', 'Plant vigor from satellite (Sentinel-2) over the terrain of each plot.']],
+            [48.2, 74, ['Alertas por sensor', 'Cada nodo reporta humedad y nutrientes; los que tienen estrés hídrico se marcan en ámbar.'], ['Per-sensor alerts', 'Each node reports moisture and nutrients; those under water stress turn amber.']],
+            [63.6, 12, ['Balance hídrico FAO-56', 'Calcula cuánta agua necesita la raíz y cuándo conviene el siguiente riego.'], ['FAO-56 water balance', 'Works out how much water the roots need and when the next irrigation should run.']],
+            [63.6, 47, ['Fertirriego', 'Nitrógeno, fósforo, potasio y salinidad del suelo, con una recomendación agronómica.'], ['Fertigation', 'Soil nitrogen, phosphorus, potassium and salinity, with an agronomic recommendation.']],
+            [72, 6.6, ['Sensores sin depender de internet', 'Red LoRaWAN en el campo y datos que se guardan aunque no haya conexión.'], ['Sensors that don’t need internet', 'A LoRaWAN network in the field and data that’s saved even without a connection.']],
+        ],
+        'diagmind-report': [
+            [1.4, 11.5, ['Identidad del teléfono', 'Modelo, procesador, Android y parche de seguridad, leídos por ADB sin root.'], ['Phone identity', 'Model, chip, Android version and security patch, read over ADB without root.']],
+            [1.4, 28.3, ['Salud de la batería', 'Capacidad real contra la de fábrica, ciclos de carga y si la batería es original.'], ['Battery health', 'Real versus factory capacity, charge cycles and whether the battery is original.']],
+            [1.4, 47.2, ['Velocidad de memoria', 'Prueba de lectura y escritura del almacenamiento y desgaste de la memoria.'], ['Memory speed', 'Storage read and write test and memory wear.']],
+            [50.8, 11.7, ['Pantalla original', 'Comprueba con la firma del fabricante que la pantalla no fue reemplazada.'], ['Original screen', 'Checks the maker’s signature to confirm the screen was never replaced.']],
+            [50.8, 28.8, ['Seguridad', 'Bootloader, arranque verificado, root y bloqueos MDM, de un vistazo.'], ['Security', 'Bootloader, verified boot, root and MDM locks at a glance.']],
+            [50.8, 49.3, ['Dictamen por IA local', 'Un resumen en lenguaje claro, generado en tu equipo sin enviar datos a la nube.'], ['Local AI verdict', 'A plain-language summary generated on your computer, without sending data to the cloud.']],
+            [90, 6.3, ['Reporte en PDF', 'Un informe firmado criptográficamente para entregar al cliente.'], ['PDF report', 'A cryptographically signed report to hand to the customer.']],
+        ],
+    };
+    document.querySelectorAll('.product-shot').forEach(figura => {
+        const img = figura.querySelector(':scope > img');
+        const clave = img && (img.getAttribute('src').match(/([\w-]+)\.\w+$/) || [])[1];
+        const puntos = GUIAS[clave];
+        if (!puntos) return;
+        const capa = document.createElement('div');
+        capa.className = 'guia';
+        capa.innerHTML = `<div class="guia-foco" aria-hidden="true"></div>
+            <button type="button" class="guia-play" aria-pressed="false"><span class="guia-play-ico" aria-hidden="true"></span><span class="guia-play-txt">${T('Recorrido guiado', 'Guided tour')}</span><span class="guia-barra" aria-hidden="true"><i></i></span></button>
+            <div class="guia-tarjeta" role="status" aria-live="polite"><span class="guia-num"></span><b></b><p></p><div class="guia-nav"><button type="button" class="guia-ant" aria-label="${T('Anterior', 'Previous')}">‹</button><span class="guia-pasos"></span><button type="button" class="guia-sig" aria-label="${T('Siguiente', 'Next')}">›</button></div></div>`;
+        const tarjeta = capa.querySelector('.guia-tarjeta'), foco = capa.querySelector('.guia-foco'), play = capa.querySelector('.guia-play');
+        const botones = puntos.map(([x, y, es, en], i) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'guia-punto';
+            b.style.left = x + '%'; b.style.top = y + '%';
+            b.style.setProperty('--i', i);
+            b.textContent = i + 1;
+            b.setAttribute('aria-label', `${i + 1}. ${(EN ? en : es)[0]}`);
+            capa.append(b);
+            return b;
+        });
+        figura.append(capa);
+        let activo = -1, cerrar = 0, auto = 0, inicioAuto = 0;
+        const PASO = 4200;
+        const mostrar = (i) => {
+            clearTimeout(cerrar);
+            activo = i;
+            const [x, y, es, en] = puntos[i];
+            const [titulo, texto] = EN ? en : es;
+            tarjeta.querySelector('.guia-num').textContent = i + 1;
+            tarjeta.querySelector('b').textContent = titulo;
+            tarjeta.querySelector('p').textContent = texto;
+            tarjeta.querySelector('.guia-pasos').textContent = `${i + 1} / ${puntos.length}`;
+            // la tarjeta se abre hacia el lado con más espacio
+            tarjeta.style.left = x + '%'; tarjeta.style.top = y + '%';
+            tarjeta.dataset.lado = (x > 55 ? 'i' : 'd') + (y > 58 ? 'a' : 'b');
+            tarjeta.dataset.v = y > 48 ? 'arriba' : 'abajo';   // en móvil va sobre la mitad de la captura donde no está el punto
+            foco.style.setProperty('--x', x + '%'); foco.style.setProperty('--y', y + '%');
+            botones.forEach((b, k) => b.classList.toggle('is-on', k === i));
+            capa.classList.add('abierta');
+            figura.classList.add('en-guia');
+            if (!prefersReducedMotion) tarjeta.animate([{ opacity: 0, scale: .94 }, { opacity: 1, scale: 1 }], { duration: 220, easing: 'cubic-bezier(.23,1,.32,1)' });
+        };
+        const ocultar = () => {
+            activo = -1;
+            botones.forEach(b => b.classList.remove('is-on'));
+            capa.classList.remove('abierta');
+            figura.classList.remove('en-guia');
+        };
+        const parar = () => {
+            if (!auto) return;
+            cancelAnimationFrame(auto); auto = 0;
+            capa.classList.remove('en-marcha');
+            play.setAttribute('aria-pressed', 'false');
+            play.querySelector('.guia-play-txt').textContent = T('Recorrido guiado', 'Guided tour');
+        };
+        // el recorrido avanza solo; la barra del botón muestra cuánto falta para el siguiente punto
+        const avanzar = (t) => {
+            const p = (t - inicioAuto) / PASO;
+            play.querySelector('.guia-barra i').style.transform = `scaleX(${Math.min(1, p)})`;
+            if (p >= 1) {
+                if (activo + 1 >= puntos.length) { parar(); ocultar(); return; }
+                mostrar(activo + 1); inicioAuto = t;
+            }
+            auto = requestAnimationFrame(avanzar);
+        };
+        const arrancar = () => {
+            capa.classList.add('en-marcha');
+            play.setAttribute('aria-pressed', 'true');
+            play.querySelector('.guia-play-txt').textContent = T('Pausar', 'Pause');
+            mostrar(activo >= 0 && activo < puntos.length - 1 ? activo : 0);
+            inicioAuto = performance.now();
+            auto = requestAnimationFrame(avanzar);
+        };
+        play.addEventListener('click', () => (auto ? parar() : arrancar()));
+        botones.forEach((b, i) => {
+            b.addEventListener('click', () => { parar(); activo === i ? ocultar() : mostrar(i); });
+            if (canHover) {
+                b.addEventListener('pointerenter', () => { if (!auto) mostrar(i); });
+                b.addEventListener('pointerleave', () => { if (!auto) cerrar = setTimeout(ocultar, 260); });
+            }
+            b.addEventListener('focus', () => { if (!auto) mostrar(i); });
+        });
+        tarjeta.addEventListener('pointerenter', () => clearTimeout(cerrar));
+        tarjeta.addEventListener('pointerleave', () => { if (!auto) cerrar = setTimeout(ocultar, 260); });
+        tarjeta.querySelector('.guia-ant').addEventListener('click', () => { parar(); mostrar((activo - 1 + puntos.length) % puntos.length); });
+        tarjeta.querySelector('.guia-sig').addEventListener('click', () => { parar(); mostrar((activo + 1) % puntos.length); });
+        capa.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && activo >= 0) { parar(); ocultar(); play.focus(); }
+            else if (activo >= 0 && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); parar(); const n = (activo + (e.key === 'ArrowRight' ? 1 : -1) + puntos.length) % puntos.length; mostrar(n); botones[n].focus(); }
+        });
+        // tocar fuera cierra la explicación en pantallas táctiles
+        document.addEventListener('pointerdown', (e) => { if (activo >= 0 && !capa.contains(e.target)) { parar(); ocultar(); } }, { passive: true });
+        // los puntos aparecen uno tras otro la primera vez que la captura entra en pantalla, y el recorrido se pausa si sale
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) capa.classList.add('visible');
+            else parar();
+        }, { threshold: 0.35 }).observe(figura);
+    });
+
     // --- Visor: las capturas se abren a pantalla completa, con zoom (rueda, pellizco, doble toque) y paso entre ellas ---
     const fotos = [...document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img')]
         .filter(img => !img.closest('a'));
@@ -1318,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dlg.addEventListener('close', () => {
                 document.documentElement.classList.remove('visor-abierto');
                 // la imagen vuelve a su sitio en la página
-                fotos[actual].closest('[tabindex]')?.focus({ preventScroll: true });
+                fotos[actual].parentElement.querySelector('.ampliar-ico')?.focus({ preventScroll: true });
             });
         };
         const abrir = (i) => {
@@ -1337,12 +1475,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fotos.forEach((img, i) => {
             const caja = img.parentElement;
             caja.classList.add('ampliable');
-            const ico = document.createElement('span'); ico.className = 'ampliar-ico'; ico.setAttribute('aria-hidden', 'true'); caja.append(ico);
-            caja.tabIndex = 0;
-            caja.setAttribute('role', 'button');
-            caja.setAttribute('aria-label', T('Ampliar captura: ', 'Enlarge screenshot: ') + img.alt);
-            caja.addEventListener('click', (e) => { if (!e.target.closest('a, button')) abrir(i); });
-            caja.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(i); } });
+            // el control accesible es el botón de la esquina; el clic en cualquier parte de la captura también abre el visor
+            const ico = document.createElement('button');
+            ico.type = 'button';
+            ico.className = 'ampliar-ico';
+            ico.setAttribute('aria-label', T('Ampliar captura: ', 'Enlarge screenshot: ') + img.alt);
+            caja.append(ico);
+            caja.addEventListener('click', (e) => { const b = e.target.closest('a, button, .guia-tarjeta'); if (!b || b === ico) abrir(i); });
         });
     }
 
