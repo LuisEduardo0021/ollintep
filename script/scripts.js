@@ -1374,6 +1374,93 @@ document.addEventListener('DOMContentLoaded', () => {
         caja.querySelectorAll('[data-destino]').forEach(b => { b.setAttribute('aria-pressed', 'false'); b.addEventListener('click', () => probar(b.dataset.destino)); });
     });
 
+    // --- Servicio técnico: el visitante elige su equipo y el síntoma; se muestran las causas probables y lo que revisamos ---
+    document.querySelectorAll('[data-tec-demo]').forEach(caja => {
+        const lista = caja.querySelector('.tec-sintomas'), panel = caja.querySelector('.tec-resultado'), estado = caja.querySelector('.tec-estado');
+        const causas = caja.querySelector('.tec-causas'), pasos = caja.querySelector('.tec-pasos'), pedir = caja.querySelector('.tec-pedir');
+        // [síntoma, causas probables, lo que revisamos]; sin «, » ni « y » en los textos que van al asistente, que los usa para juntar servicios
+        const CASOS = {
+            pc: [T('Computadora', 'Computer'), [
+                [T('Se calienta o se apaga sola', 'Overheats or shuts down'),
+                    [T('Polvo en ventiladores y disipador', 'Dust in fans and heatsink'), T('Pasta térmica seca', 'Dried thermal paste'), T('Fuente de poder que ya no entrega lo necesario', 'A power supply that no longer delivers enough')],
+                    [T('Temperaturas en reposo y con carga', 'Idle and load temperatures'), T('Limpieza interna completa', 'Full internal cleaning'), T('Cambio de pasta térmica', 'Thermal paste replacement'), T('Prueba de estrés para confirmar', 'Stress test to confirm')]],
+                [T('Está muy lenta', 'It’s very slow'),
+                    [T('Disco mecánico o desgastado', 'Hard drive that is mechanical or worn out'), T('Poca memoria RAM para lo que usas', 'Not enough RAM for your work'), T('Programas de más al arrancar o malware', 'Too many startup programs, or malware')],
+                    [T('Salud del disco (SMART)', 'Drive health (SMART)'), T('Uso de memoria y procesador', 'Memory and CPU usage'), T('Programas de arranque y malware', 'Startup programs and malware'), T('Propuesta de SSD o RAM si conviene', 'SSD or RAM upgrade if it makes sense')]],
+                [T('No enciende o no da imagen', 'Won’t power on or no display'),
+                    [T('Fuente de poder dañada', 'Failed power supply'), T('Memoria RAM mal asentada o dañada', 'Loose or faulty RAM'), T('Tarjeta de video o configuración del BIOS', 'Graphics card or BIOS settings')],
+                    [T('Prueba de la fuente de poder', 'Power supply test'), T('Arranque mínimo (POST) pieza por pieza', 'Minimal boot (POST), part by part'), T('Memoria módulo por módulo', 'RAM, one module at a time'), T('Reporte de qué falló y qué cambiar', 'Report of what failed and what to replace')]],
+                [T('Quiero armar una nueva', 'I want a new build'),
+                    [T('Definir para qué la vas a usar', 'Defining what you’ll use it for'), T('Elegir piezas compatibles para tu presupuesto', 'Picking compatible parts for your budget')],
+                    [T('Lista de componentes para tu uso', 'Parts list for your use'), T('Armado con cableado ordenado', 'Assembly with tidy cabling'), T('Actualización del BIOS', 'BIOS update'), T('Prueba de estrés antes de entregar', 'Stress test before delivery')]],
+            ]],
+            servidor: [T('Servidor', 'Server'), [
+                [T('Se reinicia o se cae', 'Reboots or goes down'),
+                    [T('Sobrecalentamiento', 'Overheating'), T('Fuente de poder o memoria con errores', 'Power supply or memory errors'), T('Una actualización que salió mal', 'An update that went wrong')],
+                    [T('Bitácoras del sistema y de la tarjeta de administración (BMC)', 'System and management controller (BMC) logs'), T('Errores de memoria corregidos (ECC)', 'Corrected memory errors (ECC)'), T('Temperaturas y ventiladores', 'Temperatures and fans'), T('Plan para que no vuelva a pasar', 'A plan so it doesn’t happen again')]],
+                [T('Un disco marca alerta', 'A drive shows a warning'),
+                    [T('Disco cerca de fallar', 'A drive close to failing'), T('Arreglo RAID degradado', 'Degraded RAID array')],
+                    [T('Respaldo antes de tocar nada', 'Backup before touching anything'), T('Salud de cada disco (SMART)', 'Health of each drive (SMART)'), T('Estado del arreglo RAID', 'RAID array status'), T('Cambio del disco y reconstrucción', 'Drive replacement and rebuild')]],
+                [T('Tiene el firmware atrasado', 'Its firmware is out of date'),
+                    [T('Fallas de seguridad ya corregidas por el fabricante', 'Security flaws the vendor has already fixed'), T('Incompatibilidad con discos o tarjetas nuevas', 'Incompatibility with newer drives or cards')],
+                    [T('Respaldo de la configuración', 'Configuration backup'), T('BIOS/UEFI, BMC y controladora', 'BIOS/UEFI, BMC and controller'), T('Plan para regresar si algo falla', 'A rollback plan if something fails'), T('Verificación después de actualizar', 'Checks after the update')]],
+            ]],
+            impresora: [T('Impresora o photobooth', 'Printer or photobooth'), [
+                [T('Salen rayas o colores corridos', 'Prints have streaks or off colors'),
+                    [T('Cabezal térmico sucio', 'Dirty thermal print head'), T('Cinta (ribbon) mal colocada', 'Misloaded ribbon'), T('Perfil de color equivocado', 'Wrong color profile')],
+                    [T('Limpieza de cabezal y rodillos', 'Print head and roller cleaning'), T('Colocación de la cinta', 'Ribbon loading'), T('Calibración del color', 'Color calibration'), T('Impresión de prueba', 'Test print')]],
+                [T('Se atasca el papel', 'Paper jams'),
+                    [T('Rodillos gastados', 'Worn rollers'), T('Papel o cinta que no corresponde al modelo', 'Paper or ribbon that doesn’t match the model'), T('Sensor sucio', 'Dirty sensor')],
+                    [T('Recorrido del papel', 'Paper path'), T('Estado de los rodillos', 'Roller condition'), T('Consumibles correctos para tu modelo', 'The right supplies for your model'), T('Varias impresiones seguidas de prueba', 'Several test prints in a row')]],
+                [T('La computadora del photobooth no la reconoce', 'The photobooth computer doesn’t detect it'),
+                    [T('Controlador desactualizado', 'Outdated driver'), T('Cable USB o puerto dañado', 'Faulty USB cable or port'), T('Firmware de la impresora', 'Printer firmware')],
+                    [T('Conexión y cable', 'Connection and cable'), T('Controlador y firmware', 'Driver and firmware'), T('Configuración del software del photobooth', 'Photobooth software settings'), T('Sesión de prueba completa', 'A full test session')]],
+            ]],
+            pixel: [T('Teléfono Pixel', 'Pixel phone'), [
+                [T('Quiero instalar GrapheneOS', 'I want GrapheneOS installed'),
+                    [T('Que tu modelo de Pixel siga recibiendo actualizaciones', 'Your Pixel model still getting updates'), T('Respaldar tus datos: la instalación borra el teléfono', 'Backing up your data: installing wipes the phone')],
+                    [T('Modelo y compatibilidad', 'Model and compatibility'), T('Respaldo de tus datos', 'Backup of your data'), T('Instalación con el instalador oficial', 'Install with the official installer'), T('Bootloader bloqueado de nuevo', 'Bootloader locked again')]],
+                [T('Algo falla con GrapheneOS', 'Something fails on GrapheneOS'),
+                    [T('Una app que necesita los servicios de Google', 'An app that needs Google services'), T('Permisos o perfiles mal configurados', 'Misconfigured permissions or profiles')],
+                    [T('Qué app o función falla', 'Which app or feature fails'), T('Servicios de Google aislados, si los quieres', 'Sandboxed Google services, if you want them'), T('Permisos y perfiles', 'Permissions and profiles'), T('Prueba de la app contigo', 'Testing the app with you')]],
+            ]],
+        };
+        let equipo = 'pc', temporizadores = [];
+        // a media frase: en español va en minúscula; en inglés se deja (I, GrapheneOS)
+        const enFrase = (t) => (EN ? t : t[0].toLowerCase() + t.slice(1));
+        const limpiar = () => { temporizadores.forEach(clearTimeout); temporizadores = []; };
+        const elegirEquipo = (e) => {
+            equipo = e; limpiar();
+            caja.querySelectorAll('[data-equipo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.equipo === e)));
+            lista.replaceChildren(...CASOS[e][1].map((c, i) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.textContent = c[0]; b.setAttribute('aria-pressed', 'false');
+                b.addEventListener('click', () => mostrar(i));
+                return b;
+            }));
+            panel.hidden = true;
+            estado.textContent = T('Elige lo que notas para ver el diagnóstico.', 'Pick what you notice to see the diagnosis.');
+        };
+        const mostrar = (i) => {
+            limpiar();
+            const [nombreEquipo, casos] = CASOS[equipo], [sintoma, lasCausas, losPasos] = casos[i];
+            lista.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+            causas.replaceChildren(...lasCausas.map(t => Object.assign(document.createElement('li'), { textContent: t })));
+            pasos.replaceChildren(...losPasos.map(t => Object.assign(document.createElement('li'), { textContent: t })));
+            panel.hidden = false;
+            // los pasos se van revisando uno por uno, como en el taller
+            pasos.querySelectorAll('li').forEach((li, j) => {
+                if (prefersReducedMotion) { li.classList.add('hecho'); return; }
+                temporizadores.push(setTimeout(() => li.classList.add('revisando'), 120 + j * 420));
+                temporizadores.push(setTimeout(() => { li.classList.remove('revisando'); li.classList.add('hecho'); }, 470 + j * 420));
+            });
+            pedir.dataset.servicio = `${enFrase(sintoma)} (${enFrase(nombreEquipo)})`;
+            estado.textContent = T(`${nombreEquipo}: ${enFrase(sintoma)}. Mostramos ${lasCausas.length} causas probables y ${losPasos.length} revisiones.`, `${nombreEquipo}: ${enFrase(sintoma)}. Showing ${lasCausas.length} likely causes and ${losPasos.length} checks.`);
+        };
+        caja.querySelectorAll('[data-equipo]').forEach(b => b.addEventListener('click', () => elegirEquipo(b.dataset.equipo)));
+        elegirEquipo('pc');
+    });
+
     // --- Asistente de solicitud: con lo que el visitante elige se escribe el mensaje; el correo lo envía él ---
     document.querySelectorAll('[data-armar]').forEach(caja => {
         const vista = caja.querySelector('.armar-mensaje'), correo = caja.querySelector('.armar-correo'), copiar = caja.querySelector('.armar-copiar');

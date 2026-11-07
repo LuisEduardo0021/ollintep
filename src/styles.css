@@ -7608,3 +7608,29 @@ html.visor-abierto { overflow: hidden; }
 @keyframes red-alerta { 50% { fill: rgba(239, 68, 89, .3); } }
 .red-resultado { min-height: 3em; margin: .6rem 0 0; font-size: .95rem; line-height: 1.5; color: #fff; }
 @media (prefers-reduced-motion: reduce) { .red-zona.red-alcanzada .red-zona-caja { animation: none; } }
+/* Servicio técnico: diagnóstico por equipo y síntoma (usa la tarjeta y los botones de .red-demo) */
+.tec-controles { flex-direction: column; align-items: flex-start; }
+.tec-demo button i { margin-right: .3rem; opacity: .8; }
+.tec-sintomas:empty { display: none; }
+.tec-resultado { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; margin-top: 1rem; padding-top: 1.1rem; border-top: 1px solid rgba(255, 255, 255, .1); animation: tec-entra .35s var(--ease-out); }
+.tec-resultado[hidden] { display: none; }
+@keyframes tec-entra { from { opacity: 0; translate: 0 6px; } }
+.tec-col h4 { margin: 0 0 .6rem; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(214, 223, 240, .65); }
+.tec-causas, .tec-pasos { margin: 0; padding: 0; list-style: none; display: grid; gap: .45rem; }
+.tec-causas li, .tec-pasos li { position: relative; padding-left: 1.6rem; font-size: .93rem; line-height: 1.45; color: rgba(235, 241, 252, .92); }
+.tec-causas li::before { content: ""; position: absolute; left: .35rem; top: .55em; width: .45rem; height: .45rem; border-radius: 50%; background: #ffb020; box-shadow: 0 0 8px rgba(255, 176, 32, .6); }
+.tec-pasos li { color: rgba(214, 223, 240, .55); transition: color .25s ease; }
+.tec-pasos li::before { content: ""; position: absolute; left: 0; top: .2em; width: 1.05rem; height: 1.05rem; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .25); transition: background-color .25s ease, box-shadow .25s ease; }
+.tec-pasos li.revisando { color: #fff; }
+.tec-pasos li.revisando::before { box-shadow: inset 0 0 0 2px #6ea2ff; animation: tec-gira .6s linear infinite; background: conic-gradient(#6ea2ff 0 25%, transparent 25%); -webkit-mask: radial-gradient(circle, transparent 52%, #000 55%); mask: radial-gradient(circle, transparent 52%, #000 55%); }
+@keyframes tec-gira { to { rotate: 1turn; } }
+.tec-pasos li.hecho { color: #fff; }
+.tec-pasos li.hecho::before { background: #34d399; box-shadow: none; }
+.tec-pasos li.hecho::after { content: ""; position: absolute; left: .37rem; top: .42em; width: .28rem; height: .52rem; border: solid #08131f; border-width: 0 2px 2px 0; rotate: 45deg; }
+.tec-pie { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem 1.2rem; }
+.tec-pie p { margin: 0; font-size: .85rem; color: rgba(214, 223, 240, .65); }
+.tec-estado { min-height: 0; font-size: .85rem; color: rgba(214, 223, 240, .7); }
+/* con el resultado a la vista, el aviso queda solo para lectores de pantalla */
+.tec-resultado:not([hidden]) ~ .tec-estado { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 640px) { .tec-resultado { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .tec-resultado { animation: none; } .tec-pasos li.revisando::before { animation: none; } }

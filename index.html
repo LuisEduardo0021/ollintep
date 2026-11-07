@@ -535,6 +535,37 @@ ip dhcp snooping vlan 10,20,30
             <li data-foco="impresoras"><i class="fas fa-print" aria-hidden="true"></i><h3>Impresoras y photobooths</h3><p>Mantenimiento de impresoras industriales, como las HiTi, y de equipos de photobooth.</p></li>
             <li data-foco="graphene"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i><h3>GrapheneOS en Pixel</h3><p>Instalación de GrapheneOS, el sistema operativo enfocado en privacidad y seguridad, en teléfonos Google Pixel.</p></li>
         </ul>
+        <!-- Demo de diagnóstico: el visitante elige su equipo y el síntoma; se muestran las causas probables y lo que revisamos -->
+        <div class="red-demo tec-demo" data-tec-demo>
+            <div class="red-cab">
+                <h3>¿Qué le pasa a tu equipo?</h3>
+                <p>Elige el equipo y lo que notas. Te decimos qué suele causarlo y qué revisamos primero.</p>
+            </div>
+            <div class="red-controles tec-controles">
+                <div class="red-modos" role="group" aria-label="Tipo de equipo">
+                    <button type="button" data-equipo="pc" aria-pressed="true"><i class="fas fa-desktop" aria-hidden="true"></i> Computadora</button>
+                    <button type="button" data-equipo="servidor" aria-pressed="false"><i class="fas fa-server" aria-hidden="true"></i> Servidor</button>
+                    <button type="button" data-equipo="impresora" aria-pressed="false"><i class="fas fa-print" aria-hidden="true"></i> Impresora o photobooth</button>
+                    <button type="button" data-equipo="pixel" aria-pressed="false"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Teléfono Pixel</button>
+                </div>
+                <div class="red-destinos tec-sintomas" role="group" aria-label="Lo que notas"></div>
+            </div>
+            <div class="tec-resultado" hidden>
+                <div class="tec-col">
+                    <h4>Lo más probable</h4>
+                    <ul class="tec-causas"></ul>
+                </div>
+                <div class="tec-col">
+                    <h4>Lo que revisamos</h4>
+                    <ol class="tec-pasos"></ol>
+                </div>
+                <div class="tec-pie">
+                    <p>Es una orientación: el diagnóstico real se hace con el equipo en mano.</p>
+                    <a href="#contacto" class="m3-btn m3-btn-filled tec-pedir" data-pedir="8">Pedir este servicio <i class="fas fa-arrow-down text-xs" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <p class="red-resultado tec-estado" role="status">Elige lo que notas para ver el diagnóstico.</p>
+        </div>
     </section>
 
     <div class="ascii-banda" data-ascii="ollintep.svg" data-color="#6ea2ff" aria-hidden="true"></div>
