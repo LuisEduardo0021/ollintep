@@ -7415,3 +7415,20 @@ html.visor-abierto { overflow: hidden; }
   .armar { grid-template-columns: 1fr; }
   .armar-vista { position: static; }
 }
+
+/* ==========================================================================
+   SUITE: buscador de apps por tarea
+   ========================================================================== */
+.app-filtro { margin: clamp(2rem, 5vw, 3rem) 0 1.25rem; text-align: center; }
+.app-filtro-pregunta { margin: 0 0 .8rem; font-size: 1.05rem; font-weight: 700; color: #fff; }
+.app-filtro-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+.app-filtro-chips button { padding: .55rem .95rem; border: 0; border-radius: 999px; cursor: pointer; font: 500 .88rem/1 inherit; color: rgba(225, 232, 245, .82); background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); transition: background-color .18s, color .18s, box-shadow .18s, scale .15s var(--ease-out); }
+.app-filtro-chips button:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.app-filtro-chips button:active { scale: .96; }
+.app-filtro-chips button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.app-filtro-chips button[aria-pressed="true"] { color: #fff; background: rgba(255, 92, 232, .2); box-shadow: inset 0 0 0 1.5px #ff5ce8; }
+.app-filtro-res { min-height: 1.5em; margin: .9rem 0 0; font-size: .95rem; color: rgba(225, 232, 245, .85); }
+.app-tile { transition: opacity .35s ease, filter .35s ease, box-shadow .35s ease, translate .35s var(--ease-out); }
+.app-tile.app-apagada { opacity: .28; filter: grayscale(.85); }
+.app-tile.app-elegida { translate: 0 -4px; box-shadow: 0 0 0 1.5px var(--app), 0 24px 50px -24px var(--app); }
+@media (prefers-reduced-motion: reduce) { .app-tile.app-elegida { translate: none; } }

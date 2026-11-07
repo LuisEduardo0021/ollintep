@@ -848,5 +848,14 @@
   "Tu mensaje": "Your message",
   "Enviar por correo": "Send by email",
   "Copiar el mensaje": "Copy the message",
-  "Se abre tu correo con el mensaje escrito; tú decides si lo envías.": "Your email opens with the message written; you decide whether to send it."
+  "Se abre tu correo con el mensaje escrito; tú decides si lo envías.": "Your email opens with the message written; you decide whether to send it.",
+  "¿Qué quieres hacer?": "What do you want to do?",
+  "Firmar y editar PDF": "Sign and edit PDFs",
+  "Editar fotos": "Edit photos",
+  "Diseñar logos e interfaces": "Design logos and interfaces",
+  "Editar video": "Edit video",
+  "Grabar audio o pódcast": "Record audio or podcasts",
+  "Hacer música": "Make music",
+  "Contenido para redes": "Social media content",
+  "Proteger mi equipo": "Protect my computer"
 }

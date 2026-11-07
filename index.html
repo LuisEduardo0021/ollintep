@@ -83,9 +83,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=10.3">
+    <link rel="stylesheet" href="css/styles.css?v=10.4">
     <!-- Iconos (Font Awesome) -->
-    <link rel="stylesheet" href="resources/iconos/iconos.css?v=10.3">
+    <link rel="stylesheet" href="resources/iconos/iconos.css?v=10.4">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -249,16 +249,32 @@
             <img src="resources/screenshots/crohub-apps.webp" alt="El lanzador CroHub con las apps de la suite, su estado de instalación, su versión y su licencia" width="1196" height="720" loading="lazy">
         </figure>
 
+        <!-- Buscador de apps: al elegir una tarea se resaltan las apps que sirven para ella -->
+        <div class="app-filtro" data-app-filtro>
+            <p class="app-filtro-pregunta" id="app-filtro-q">¿Qué quieres hacer?</p>
+            <div class="app-filtro-chips" role="group" aria-labelledby="app-filtro-q">
+                <button type="button" data-uso="pdf" aria-pressed="false">Firmar y editar PDF</button>
+                <button type="button" data-uso="fotos" aria-pressed="false">Editar fotos</button>
+                <button type="button" data-uso="diseno" aria-pressed="false">Diseñar logos e interfaces</button>
+                <button type="button" data-uso="video" aria-pressed="false">Editar video</button>
+                <button type="button" data-uso="audio" aria-pressed="false">Grabar audio o pódcast</button>
+                <button type="button" data-uso="musica" aria-pressed="false">Hacer música</button>
+                <button type="button" data-uso="redes" aria-pressed="false">Contenido para redes</button>
+                <button type="button" data-uso="seguridad" aria-pressed="false">Proteger mi equipo</button>
+            </div>
+            <p class="app-filtro-res" aria-live="polite"></p>
+        </div>
+
         <ul class="app-grid">
-            <li class="app-tile" style="--app: #FF8A3D"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="46" height="46"><div><h3>Crovite PDF</h3><p class="app-cat">Documentos PDF</p><p>Edita, firma, convierte y organiza tus documentos PDF.</p></div></li>
-            <li class="app-tile" style="--app: #FFCF3A"><img src="resources/suite/croma-studio-icono.svg" alt="" width="46" height="46"><div><h3>Croma Studio</h3><p class="app-cat">Fotos y montajes</p><p>Capas, color, fondos quitados con IA, revelado con preajustes y collages para redes.</p></div></li>
-            <li class="app-tile" style="--app: #C2EC3E"><img src="resources/suite/cronmy-icono.svg" alt="" width="46" height="46"><div><h3>Cronmy</h3><p class="app-cat">Fotos y color</p><p>Edición de fotos y corrección de color.</p></div></li>
-            <li class="app-tile" style="--app: #C04DF6"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="46" height="46"><div><h3>Crovect Studio</h3><p class="app-cat">Diseño vectorial</p><p>Diseño vectorial, prototipos de interfaz y animación Lottie.</p></div></li>
-            <li class="app-tile" style="--app: #2FD6C4"><img src="resources/suite/cromofi-icono.svg" alt="" width="46" height="46"><div><h3>Cromofi</h3><p class="app-cat">Video</p><p>Edita video, corrige el color y pon subtítulos automáticos.</p></div></li>
-            <li class="app-tile" style="--app: #FF5562"><img src="resources/suite/croudio-icono.svg" alt="" width="46" height="46"><div><h3>Croudio</h3><p class="app-cat">Audio</p><p>Graba, edita y limpia audio.</p></div></li>
-            <li class="app-tile" style="--app: #8A86FF"><img src="resources/suite/crobeat-icono.svg" alt="" width="46" height="46"><div><h3>CroBeat</h3><p class="app-cat">Música</p><p>Crea ritmos y produce música.</p></div></li>
-            <li class="app-tile" style="--app: #22D3EE"><img src="resources/suite/cromix-icono.svg" alt="" width="46" height="46"><div><h3>CroGroove</h3><p class="app-cat">Música y DJ</p><p>Mezcla como DJ: 4 platos, efectos, stems, sampler y controladoras.</p></div></li>
-            <li class="app-tile" style="--app: #4FC4FF"><img src="resources/suite/croguard-icono.svg" alt="" width="46" height="46"><div><h3>CroGuard</h3><p class="app-cat">VPN</p><p>VPN, antivirus y herramientas de red para proteger tu equipo.</p></div></li>
+            <li class="app-tile" data-usos="pdf" style="--app: #FF8A3D"><img src="resources/suite/crovite-pdf-icono.svg" alt="" width="46" height="46"><div><h3>Crovite PDF</h3><p class="app-cat">Documentos PDF</p><p>Edita, firma, convierte y organiza tus documentos PDF.</p></div></li>
+            <li class="app-tile" data-usos="fotos diseno redes" style="--app: #FFCF3A"><img src="resources/suite/croma-studio-icono.svg" alt="" width="46" height="46"><div><h3>Croma Studio</h3><p class="app-cat">Fotos y montajes</p><p>Capas, color, fondos quitados con IA, revelado con preajustes y collages para redes.</p></div></li>
+            <li class="app-tile" data-usos="fotos" style="--app: #C2EC3E"><img src="resources/suite/cronmy-icono.svg" alt="" width="46" height="46"><div><h3>Cronmy</h3><p class="app-cat">Fotos y color</p><p>Edición de fotos y corrección de color.</p></div></li>
+            <li class="app-tile" data-usos="diseno redes" style="--app: #C04DF6"><img src="resources/suite/crovect-studio-icono.svg" alt="" width="46" height="46"><div><h3>Crovect Studio</h3><p class="app-cat">Diseño vectorial</p><p>Diseño vectorial, prototipos de interfaz y animación Lottie.</p></div></li>
+            <li class="app-tile" data-usos="video redes" style="--app: #2FD6C4"><img src="resources/suite/cromofi-icono.svg" alt="" width="46" height="46"><div><h3>Cromofi</h3><p class="app-cat">Video</p><p>Edita video, corrige el color y pon subtítulos automáticos.</p></div></li>
+            <li class="app-tile" data-usos="audio musica" style="--app: #FF5562"><img src="resources/suite/croudio-icono.svg" alt="" width="46" height="46"><div><h3>Croudio</h3><p class="app-cat">Audio</p><p>Graba, edita y limpia audio.</p></div></li>
+            <li class="app-tile" data-usos="musica" style="--app: #8A86FF"><img src="resources/suite/crobeat-icono.svg" alt="" width="46" height="46"><div><h3>CroBeat</h3><p class="app-cat">Música</p><p>Crea ritmos y produce música.</p></div></li>
+            <li class="app-tile" data-usos="musica" style="--app: #22D3EE"><img src="resources/suite/cromix-icono.svg" alt="" width="46" height="46"><div><h3>CroGroove</h3><p class="app-cat">Música y DJ</p><p>Mezcla como DJ: 4 platos, efectos, stems, sampler y controladoras.</p></div></li>
+            <li class="app-tile" data-usos="seguridad" style="--app: #4FC4FF"><img src="resources/suite/croguard-icono.svg" alt="" width="46" height="46"><div><h3>CroGuard</h3><p class="app-cat">VPN</p><p>VPN, antivirus y herramientas de red para proteger tu equipo.</p></div></li>
         </ul>
 
         <!-- Lanzador simulado: las apps se leen de la lista de arriba -->
@@ -900,7 +916,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=10.3"></script>
-    <script src="script/efectos.js?v=10.3"></script>
+    <script src="script/scripts.js?v=10.4"></script>
+    <script src="script/efectos.js?v=10.4"></script>
 </body>
 </html>

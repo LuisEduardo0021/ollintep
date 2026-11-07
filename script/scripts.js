@@ -1177,6 +1177,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Suite: buscador de apps por tarea (resalta las que sirven y atenúa las demás) ---
+    document.querySelectorAll('[data-app-filtro]').forEach(caja => {
+        const botones = [...caja.querySelectorAll('[data-uso]')], res = caja.querySelector('.app-filtro-res');
+        const fichas = [...document.querySelectorAll('.app-grid .app-tile[data-usos]')];
+        const lista = (n) => n.length < 2 ? n.join('') : n.slice(0, -1).join(', ') + T(' y ', ' and ') + n[n.length - 1];
+        let actual = null;
+        const aplicar = () => {
+            botones.forEach(b => b.setAttribute('aria-pressed', b.dataset.uso === actual ? 'true' : 'false'));
+            const sirven = [];
+            fichas.forEach(f => {
+                const si = !actual || f.dataset.usos.split(' ').includes(actual);
+                f.classList.toggle('app-apagada', !si);
+                f.classList.toggle('app-elegida', !!actual && si);
+                if (actual && si) sirven.push(f.querySelector('h3').textContent);
+            });
+            caja.closest('section')?.classList.toggle('filtrando', !!actual);
+            res.textContent = !actual ? '' : sirven.length === 1
+                ? T(`Para eso te sirve ${sirven[0]}.`, `${sirven[0]} is the one for that.`)
+                : T(`Para eso te sirven ${lista(sirven)}.`, `${lista(sirven)} can do that.`);
+        };
+        botones.forEach(b => b.addEventListener('click', () => {
+            actual = actual === b.dataset.uso ? null : b.dataset.uso;
+            aplicar();
+            // en pantallas chicas, lleva la vista a la primera app que sirve
+            const primera = fichas.find(f => f.classList.contains('app-elegida'));
+            if (primera && innerWidth < 760) primera.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' });
+        }));
+    });
+
     // --- Asistente de solicitud: con lo que el visitante elige se escribe el mensaje; el correo lo envía él ---
     document.querySelectorAll('[data-armar]').forEach(caja => {
         const vista = caja.querySelector('.armar-mensaje'), correo = caja.querySelector('.armar-correo'), copiar = caja.querySelector('.armar-copiar');
