@@ -1926,10 +1926,52 @@ document.addEventListener('DOMContentLoaded', () => {
             b.addEventListener('click', () => {
                 grupo.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
                 pintarPalabras(v);
+                recomendar(k);
             });
             grupo.append(b);
         });
+        // --- Además del vocabulario, el giro elegido marca las funciones que conviene encender y se resalta en la lista de giros ---
+        // v = venta, i = inventario, c = clientes, g = gestión; el número es el renglón de cada columna en #funciones
+        const RECOMIENDA = [
+            'v0 v1 v2 v3 i4 c0 g1 g3', 'v0 v1 v3 i0 i4 c0 g2', 'v0 v2 v3 i4 c0 c4 g1', 'v0 v4 i0 i1 i2 c1 g1',
+            'v0 i1 i2 i3 c1', 'v0 i1 i2 i3 c1 g3', 'v0 i0 i1 i2 c1 c2 g3', 'v0 v3 i4 c0 c2 c4',
+            'v0 i0 i1 c2 g3', 'v0 c0 c3 c4 g2', 'v0 i0 c2 c3 g3', 'v0 g0 g2 g4',
+        ];
+        const columnas = { venta: 'v', inventario: 'i', clientes: 'c', gestion: 'g' };
+        const funciones = {};
+        document.querySelectorAll('#funciones .feature-col').forEach(col => {
+            const letra = columnas[col.dataset.foco];
+            col.querySelectorAll('li').forEach((li, n) => { funciones[letra + n] = li; });
+        });
+        const girosLista = [...document.querySelectorAll('.giro-grid li')];
+        const reco = document.createElement('p');
+        reco.className = 'voc-reco';
+        reco.setAttribute('aria-live', 'polite');
+        vocDemo.after(reco);
+        const recomendar = (k) => {
+            const ids = RECOMIENDA[k].split(' ');
+            Object.entries(funciones).forEach(([id, li]) => li.classList.toggle('recomendada', ids.includes(id)));
+            girosLista.forEach((li, n) => { li.classList.toggle('giro-on', n === k); li.querySelector('.giro-btn')?.setAttribute('aria-pressed', String(n === k)); });
+            const nombres = ids.slice(1).map(id => funciones[id]?.textContent.split(/[;(]/)[0].trim()).filter(Boolean).slice(0, 4);
+            const giro = girosLista[k]?.textContent.trim() || '';
+            reco.innerHTML = '';
+            const nombre = document.createElement('strong'); nombre.textContent = giro + ': ';
+            reco.append(nombre, T('además de la caja, conviene encender ', 'besides checkout, turn on '));
+            const b = document.createElement('b'); b.textContent = nombres.join(' · '); reco.append(b, ' ');
+            const ir = document.createElement('a'); ir.href = '#funciones'; ir.textContent = T('Ver en funciones ↓', 'See in features ↓'); reco.append(ir);
+        };
+        // la lista de giros también elige
+        girosLista.forEach((li, n) => {
+            // el contenido del giro pasa a un botón de verdad (la lista sigue siendo lista)
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'giro-btn';
+            btn.append(...li.childNodes);
+            li.append(btn);
+            btn.addEventListener('click', () => { grupo.children[n]?.click(); vocDemo.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' }); });
+        });
         pintarPalabras(VOC[0][1]);
+        recomendar(0);
     }
 
     // --- AgroCría: balance hídrico FAO-56 (Dr = Dr anterior − lluvia − riego + ETc). Valores de ejemplo ---

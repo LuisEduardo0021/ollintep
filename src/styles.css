@@ -7438,3 +7438,18 @@ html.visor-abierto { overflow: hidden; }
 .servicio-pedir:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
 .armar.armar-aviso { animation: armar-aviso 1.4s ease-out; }
 @keyframes armar-aviso { 0%, 30% { box-shadow: inset 0 0 0 1.5px var(--md-sys-color-primary, #6ea2ff), 0 0 60px -10px var(--md-sys-color-primary, #6ea2ff); } }
+
+/* --- Centzontle: el giro elegido marca las funciones recomendadas --- */
+.voc-reco { max-width: 52rem; margin: 1rem auto 0; text-align: center; font-size: .95rem; line-height: 1.55; color: var(--md-sys-color-on-surface-variant); text-wrap: balance; }
+.voc-reco b, .voc-reco strong { color: #fff; font-weight: 600; }
+.voc-reco a { margin-left: .35rem; font-weight: 600; color: var(--md-sys-color-primary, #8ab4ff); text-decoration: none; white-space: nowrap; }
+.voc-reco a:hover { text-decoration: underline; }
+.giro-grid li { cursor: pointer; transition: box-shadow .25s ease, background-color .25s ease, color .25s ease; }
+.giro-grid li:has(.giro-btn) { padding: 0; }
+.giro-btn { display: flex; align-items: center; gap: .75rem; width: 100%; height: 100%; padding: .95rem 1.1rem; border: 0; border-radius: inherit; font: inherit; color: inherit; text-align: left; background: none; cursor: pointer; }
+.giro-btn:focus-visible { outline: 2px solid var(--md-sys-color-primary, #8ab4ff); outline-offset: 2px; }
+.giro-grid li.giro-on { color: #fff; background: color-mix(in srgb, var(--md-sys-color-primary, #5a8af6) 18%, transparent); box-shadow: inset 0 0 0 1.5px var(--md-sys-color-primary, #5a8af6); }
+.feature-col li { transition: color .3s ease; }
+.feature-col li.recomendada { color: #fff; font-weight: 600; }
+.feature-col li:not(.recomendada) { opacity: .62; transition: opacity .3s ease, color .3s ease; }
+.feature-col li.recomendada::before { background: var(--md-sys-color-primary, #5a8af6); box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary, #5a8af6) 30%, transparent), 0 0 12px var(--md-sys-color-primary, #5a8af6); }
