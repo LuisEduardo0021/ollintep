@@ -1959,6 +1959,13 @@ document.addEventListener('DOMContentLoaded', () => {
             reco.append(nombre, T('además de la caja, conviene encender ', 'besides checkout, turn on '));
             const b = document.createElement('b'); b.textContent = nombres.join(' · '); reco.append(b, ' ');
             const ir = document.createElement('a'); ir.href = '#funciones'; ir.textContent = T('Ver en funciones ↓', 'See in features ↓'); reco.append(ir);
+            // el correo para agendar la demo ya lleva el giro elegido
+            const demo = document.querySelector('#contacto a[href^="mailto:"]');
+            if (demo) {
+                const base = demo.href.split('&body=')[0];
+                const cuerpo = T(`Hola, Ollin-Tep:\n\nMe gustaría ver una demo de Centzontle para mi negocio (${giro}).\n\nSaludos.`, `Hello, Ollin-Tep:\n\nI’d like a Centzontle demo for my business (${giro}).\n\nBest regards.`);
+                demo.href = base + (base.includes('?') ? '&' : '?') + 'body=' + encodeURIComponent(cuerpo);
+            }
         };
         // la lista de giros también elige
         girosLista.forEach((li, n) => {
