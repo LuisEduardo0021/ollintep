@@ -1177,6 +1177,175 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Visor: las capturas se abren a pantalla completa, con zoom (rueda, pellizco, doble toque) y paso entre ellas ---
+    const fotos = [...document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img')]
+        .filter(img => !img.closest('a'));
+    if (fotos.length) {
+        const svg = d => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+        const ICO = { x: svg('<path d="M6 6l12 12M18 6L6 18"/>'), izq: svg('<path d="M15 5l-7 7 7 7"/>'), der: svg('<path d="M9 5l7 7-7 7"/>'),
+            mas: svg('<circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-4-4"/>'), menos: svg('<circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-4-4"/>') };
+        let dlg, escena, imagen, pie, cuenta, tiras, actual = 0, z = 1, tx = 0, ty = 0, origen = null;
+        // el zoom máximo depende de la resolución real de la captura: más allá de 2 píxeles de pantalla por píxel se vería borrosa
+        const tope = () => Math.min(4, Math.max(1.6, (imagen.naturalWidth / (imagen.offsetWidth || 1)) * 2));
+        const paso = () => Math.min(2.5, tope());
+        const limitar = () => {
+            // el desplazamiento no deja ver más allá del borde de la imagen ampliada
+            const ax = Math.max(0, (imagen.offsetWidth * z - escena.clientWidth) / 2), ay = Math.max(0, (imagen.offsetHeight * z - escena.clientHeight) / 2);
+            tx = Math.min(ax, Math.max(-ax, tx)); ty = Math.min(ay, Math.max(-ay, ty));
+        };
+        const aplicar = (suave) => {
+            limitar();
+            imagen.style.transition = suave ? 'transform .32s cubic-bezier(.23,1,.32,1)' : 'none';
+            imagen.style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
+            dlg.classList.toggle('con-zoom', z > 1.01);
+            dlg.querySelector('.visor-zoom').innerHTML = z > 1.01 ? ICO.menos : ICO.mas;
+            dlg.querySelector('.visor-zoom').setAttribute('aria-label', z > 1.01 ? T('Alejar', 'Zoom out') : T('Acercar', 'Zoom in'));
+        };
+        // ampliar hacia el punto (cx, cy) de la pantalla, para que lo que está bajo el dedo o el cursor no se mueva
+        const zoomEn = (nz, cx, cy, suave) => {
+            nz = Math.min(tope(), Math.max(1, nz));
+            const r = escena.getBoundingClientRect();
+            const px = cx - (r.left + r.width / 2), py = cy - (r.top + r.height / 2);
+            tx = px - (px - tx) * (nz / z); ty = py - (py - ty) * (nz / z);
+            z = nz; if (z === 1) tx = ty = 0;
+            aplicar(suave);
+        };
+        const mostrar = (i, dir) => {
+            actual = (i + fotos.length) % fotos.length;
+            const f = fotos[actual];
+            z = 1; tx = ty = 0; aplicar(false);
+            imagen.src = f.currentSrc || f.src;
+            imagen.alt = f.alt;
+            pie.textContent = f.alt;
+            cuenta.textContent = `${actual + 1} / ${fotos.length}`;
+            tiras.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-current', k === actual ? 'true' : 'false'));
+            tiras.children[actual]?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+            if (dir && !prefersReducedMotion) imagen.animate([{ opacity: 0, translate: `${dir * 40}px 0` }, { opacity: 1, translate: '0 0' }], { duration: 260, easing: 'cubic-bezier(.23,1,.32,1)' });
+        };
+        const crear = () => {
+            dlg = document.createElement('dialog');
+            dlg.className = 'visor';
+            dlg.setAttribute('aria-label', T('Visor de capturas', 'Screenshot viewer'));
+            dlg.innerHTML = `
+                <div class="visor-barra"><span class="visor-cuenta" aria-live="polite"></span>
+                    <span class="visor-ayuda">${T(canHover ? 'Rueda o clic para acercar · ← → para cambiar' : 'Pellizca o toca dos veces para acercar · desliza para cambiar', canHover ? 'Scroll or click to zoom · ← → to switch' : 'Pinch or double-tap to zoom · swipe to switch')}</span>
+                    <button type="button" class="visor-btn visor-zoom"></button>
+                    <button type="button" class="visor-btn visor-cerrar" aria-label="${T('Cerrar', 'Close')}">${ICO.x}</button></div>
+                <div class="visor-escena"><img class="visor-img" alt="" draggable="false"></div>
+                <button type="button" class="visor-btn visor-flecha visor-ant" aria-label="${T('Anterior', 'Previous')}">${ICO.izq}</button>
+                <button type="button" class="visor-btn visor-flecha visor-sig" aria-label="${T('Siguiente', 'Next')}">${ICO.der}</button>
+                <p class="visor-pie"></p>
+                <div class="visor-tiras" role="group" aria-label="${T('Todas las capturas', 'All screenshots')}"></div>`;
+            document.body.append(dlg);
+            escena = dlg.querySelector('.visor-escena'); imagen = dlg.querySelector('.visor-img');
+            pie = dlg.querySelector('.visor-pie'); cuenta = dlg.querySelector('.visor-cuenta'); tiras = dlg.querySelector('.visor-tiras');
+            fotos.forEach((f, k) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.setAttribute('aria-label', f.alt);
+                b.innerHTML = `<img src="${f.currentSrc || f.src}" alt="" loading="lazy">`;
+                b.addEventListener('click', () => mostrar(k, k > actual ? 1 : -1));
+                tiras.append(b);
+            });
+            if (fotos.length < 2) dlg.classList.add('una-sola');
+            dlg.querySelector('.visor-cerrar').addEventListener('click', () => dlg.close());
+            dlg.querySelector('.visor-ant').addEventListener('click', () => mostrar(actual - 1, -1));
+            dlg.querySelector('.visor-sig').addEventListener('click', () => mostrar(actual + 1, 1));
+            dlg.querySelector('.visor-zoom').addEventListener('click', () => { const r = escena.getBoundingClientRect(); zoomEn(z > 1.01 ? 1 : paso(), r.left + r.width / 2, r.top + r.height / 2, true); });
+            dlg.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') { e.preventDefault(); mostrar(actual - 1, -1); }
+                else if (e.key === 'ArrowRight') { e.preventDefault(); mostrar(actual + 1, 1); }
+                else if (e.key === '+' || e.key === '=') zoomEn(z * 1.5, innerWidth / 2, innerHeight / 2, true);
+                else if (e.key === '-') zoomEn(z / 1.5, innerWidth / 2, innerHeight / 2, true);
+                else if (e.key === '0') zoomEn(1, 0, 0, true);
+            });
+            // clic en el fondo (fuera de la imagen y los controles) cierra
+            // con la captura del puntero el destino del evento es siempre la escena: se mira si el punto cae sobre la imagen
+            const sobreImagen = (e) => { const r = imagen.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
+            escena.addEventListener('click', (e) => { if (!movido && !sobreImagen(e)) dlg.close(); });
+            escena.addEventListener('wheel', (e) => { e.preventDefault(); zoomEn(z * Math.exp(-e.deltaY * 0.0022), e.clientX, e.clientY, false); }, { passive: false });
+
+            // gestos: arrastrar con zoom mueve la imagen; sin zoom, deslizar a los lados cambia y hacia abajo cierra; dos dedos pellizcan
+            const punteros = new Map();
+            let inicio = null, movido = false, pellizco = null, ultimoToque = 0;
+            escena.addEventListener('pointerdown', (e) => {
+                punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                escena.setPointerCapture(e.pointerId);
+                movido = false;
+                if (punteros.size === 2) {
+                    const [a, b] = [...punteros.values()];
+                    pellizco = { d: Math.hypot(a.x - b.x, a.y - b.y), z };
+                } else inicio = { x: e.clientX, y: e.clientY, tx, ty, t: performance.now() };
+            });
+            escena.addEventListener('pointermove', (e) => {
+                if (!punteros.has(e.pointerId)) return;
+                punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                if (pellizco && punteros.size === 2) {
+                    const [a, b] = [...punteros.values()];
+                    zoomEn(pellizco.z * Math.hypot(a.x - b.x, a.y - b.y) / pellizco.d, (a.x + b.x) / 2, (a.y + b.y) / 2, false);
+                    movido = true; return;
+                }
+                if (!inicio) return;
+                const dx = e.clientX - inicio.x, dy = e.clientY - inicio.y;
+                if (Math.abs(dx) + Math.abs(dy) > 6) movido = true;
+                if (z > 1.01) { tx = inicio.tx + dx; ty = inicio.ty + dy; aplicar(false); }
+                else if (movido) { imagen.style.transition = 'none'; imagen.style.transform = `translate(${dx}px, ${Math.max(0, dy)}px) scale(${1 - Math.max(0, dy) / 1600})`; dlg.style.setProperty('--velo', Math.max(0.35, 1 - Math.max(0, dy) / 500)); }
+            });
+            const soltar = (e) => {
+                if (!punteros.has(e.pointerId)) return;
+                punteros.delete(e.pointerId);
+                if (punteros.size) { const [p] = punteros.values(); inicio = { x: p.x, y: p.y, tx, ty, t: performance.now() }; pellizco = null; return; }
+                pellizco = null;
+                if (!inicio) return;
+                const dx = e.clientX - inicio.x, dy = e.clientY - inicio.y, rapido = performance.now() - inicio.t < 300;
+                inicio = null;
+                dlg.style.removeProperty('--velo');
+                if (z <= 1.01 && movido) {
+                    if (dy > 120 || (rapido && dy > 50 && dy > Math.abs(dx))) { dlg.close(); return; }
+                    if (Math.abs(dx) > 70 || (rapido && Math.abs(dx) > 30)) { mostrar(actual + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); return; }
+                    aplicar(true);
+                    return;
+                }
+                if (!movido && sobreImagen(e)) {
+                    // clic con ratón alterna el zoom; con el dedo, doble toque
+                    const ahora = performance.now();
+                    if (e.pointerType === 'mouse' || ahora - ultimoToque < 320) { zoomEn(z > 1.01 ? 1 : paso(), e.clientX, e.clientY, true); ultimoToque = 0; }
+                    else ultimoToque = ahora;
+                }
+            };
+            escena.addEventListener('pointerup', soltar);
+            escena.addEventListener('pointercancel', soltar);
+            dlg.addEventListener('close', () => {
+                document.documentElement.classList.remove('visor-abierto');
+                // la imagen vuelve a su sitio en la página
+                fotos[actual].closest('[tabindex]')?.focus({ preventScroll: true });
+            });
+        };
+        const abrir = (i) => {
+            if (!dlg) crear();
+            mostrar(i);
+            document.documentElement.classList.add('visor-abierto');
+            dlg.showModal();
+            // la captura crece desde donde estaba en la página
+            const desde = fotos[i].getBoundingClientRect(), hasta = imagen.getBoundingClientRect();
+            if (!prefersReducedMotion && hasta.width && desde.width) {
+                const s = desde.width / hasta.width;
+                imagen.animate([{ transform: `translate(${desde.left + desde.width / 2 - (hasta.left + hasta.width / 2)}px, ${desde.top + desde.height / 2 - (hasta.top + hasta.height / 2)}px) scale(${s})`, opacity: .6 }, { transform: 'none', opacity: 1 }],
+                    { duration: 380, easing: 'cubic-bezier(.23,1,.32,1)' });
+            }
+        };
+        fotos.forEach((img, i) => {
+            const caja = img.parentElement;
+            caja.classList.add('ampliable');
+            const ico = document.createElement('span'); ico.className = 'ampliar-ico'; ico.setAttribute('aria-hidden', 'true'); caja.append(ico);
+            caja.tabIndex = 0;
+            caja.setAttribute('role', 'button');
+            caja.setAttribute('aria-label', T('Ampliar captura: ', 'Enlarge screenshot: ') + img.alt);
+            caja.addEventListener('click', (e) => { if (!e.target.closest('a, button')) abrir(i); });
+            caja.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(i); } });
+        });
+    }
+
     // --- Onda desde el punto de clic en los botones ---
     if (!prefersReducedMotion) {
         document.addEventListener('pointerdown', (e) => {
