@@ -56,6 +56,8 @@ def generar(pagina):
         t = re.sub(r'((?:src|href)=")\.\./(resources|css|script)/', r'\1../../\2/', t)
     else:
         t = re.sub(r'((?:src|href)=")(resources|css|script)/', r'\1../\2/', t)
+    # srcset lleva varias rutas separadas por comas: cada una baja un nivel
+    t = re.sub(r'srcset="([^"]*)"', lambda m: 'srcset="' + re.sub(r'(^|,\s*)((?:\.\./)?)resources/', lambda r: r.group(1) + ('../../' if r.group(2) else '../') + 'resources/', m.group(1)) + '"', t)
     partes = re.split(r'(<script\b.*?</script>|<style\b.*?</style>)', t, flags=re.S)
     for i, p in enumerate(partes):
         if p.startswith('<style'):
