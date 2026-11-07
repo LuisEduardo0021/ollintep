@@ -1169,7 +1169,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const nueva = (z) => ({ x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2, z: z ?? 0.15 + Math.random() * 0.85, clara: Math.random() < 0.7 });
         const ajustar = () => {
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            W = heroEstrellas.offsetWidth; H = heroEstrellas.offsetHeight;
+            // en celular el hero mide más de dos pantallas (incluye las tarjetas): el lienzo cubre solo la primera y algo más, no todo el alto
+            W = heroEstrellas.offsetWidth; H = Math.min(heroEstrellas.offsetHeight, Math.round(window.innerHeight * 1.15));
+            lienzo.style.height = H + 'px';
             lienzo.width = W * dpr; lienzo.height = H * dpr;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             const n = Math.min(150, Math.round(W * H / 11000));
@@ -1181,8 +1183,12 @@ document.addEventListener('DOMContentLoaded', () => {
             impulso += (Math.abs(y - ultimoY) * 0.00012 - impulso) * 0.1;
             ultimoY = y;
             ox += (mx - ox) * 0.05; oy += (my - oy) * 0.05;
+            // en pantallas táctiles (sin ratón que seguir) basta con 30 cuadros por segundo: se dibuja uno de cada dos con el doble de avance
+            if (!canHover && (salto = !salto)) { marco = requestAnimationFrame(dibujar); return; }
             ctx.clearRect(0, 0, W, H);
-            const avance = 0.0007 + impulso;
+            const avance = (0.0007 + impulso) * (canHover ? 1 : 2);
+            // las estrellas se agrupan por color y brillo (2 × 6 grupos): un fill por grupo en vez de uno por estrella
+            for (const g of grupos) g.length = 0;
             for (const s of estrellas) {
                 s.z -= avance;
                 if (s.z <= 0.05) Object.assign(s, nueva(1));
@@ -1190,14 +1196,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const px = W / 2 + (s.x * W / 2) * k + ox * (1 / s.z) * 8;
                 const py = H * 0.42 + (s.y * H / 2) * k + oy * (1 / s.z) * 8;
                 if (px < -4 || px > W + 4 || py < -4 || py > H + 4) { if (s.z < 0.5) Object.assign(s, nueva(1)); continue; }
-                ctx.globalAlpha = Math.min(0.85, (1 - s.z) * 1.05);
-                ctx.fillStyle = s.clara ? '#dfe8ff' : color;
-                ctx.beginPath();
-                ctx.arc(px, py, Math.min(2.1, 0.45 / s.z * 0.55), 0, 6.283);
-                ctx.fill();
+                const nivel = Math.min(5, Math.floor(Math.min(0.85, (1 - s.z) * 1.05) / 0.85 * 6));
+                grupos[(s.clara ? 0 : 6) + nivel].push(px, py, Math.min(2.1, 0.45 / s.z * 0.55));
             }
+            grupos.forEach((g, i) => {
+                if (!g.length) return;
+                ctx.globalAlpha = ((i % 6) + 0.5) / 6 * 0.85;
+                ctx.fillStyle = i < 6 ? '#dfe8ff' : color;
+                ctx.beginPath();
+                for (let j = 0; j < g.length; j += 3) { ctx.moveTo(g[j] + g[j + 2], g[j + 1]); ctx.arc(g[j], g[j + 1], g[j + 2], 0, 6.283); }
+                ctx.fill();
+            });
             marco = requestAnimationFrame(dibujar);
         };
+        const grupos = Array.from({ length: 12 }, () => []);
+        let salto = false;
         ajustar();
         new IntersectionObserver(([e]) => {
             if (e.isIntersecting && !marco) { ultimoY = window.scrollY; marco = requestAnimationFrame(dibujar); }

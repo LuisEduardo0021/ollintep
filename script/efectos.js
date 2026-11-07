@@ -481,17 +481,22 @@
                 f.anclas.push([x, y]);
             }
         });
-        // Muestras del contorno para el boceto a lápiz
-        const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
-        svg.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden';
-        document.body.append(svg);
-        FORMAS.forEach(f => {
-            const p = document.createElementNS(ns, 'path');
-            p.setAttribute('d', f.d); svg.append(p);
-            const L = p.getTotalLength();
-            f.pts = Array.from({ length: 141 }, (_, k) => { const q = p.getPointAtLength(L * k / 140); return [q.x, q.y]; });
-        });
-        svg.remove();
+        // Muestras del contorno para el boceto a lápiz: se calculan la primera vez que se dibuja el boceto (564 getPointAtLength costaban ~40 ms al cargar la página)
+        let muestreado = false;
+        const muestrear = () => {
+            if (muestreado) return;
+            muestreado = true;
+            const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+            svg.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden';
+            document.body.append(svg);
+            FORMAS.forEach(f => {
+                const p = document.createElementNS(ns, 'path');
+                p.setAttribute('d', f.d); svg.append(p);
+                const L = p.getTotalLength();
+                f.pts = Array.from({ length: 141 }, (_, k) => { const q = p.getPointAtLength(L * k / 140); return [q.x, q.y]; });
+            });
+            svg.remove();
+        };
         const rasters = new Map();
         const raster = (an, al) => {
             const clave = an + 'x' + al;
@@ -581,6 +586,7 @@
                 // trazos a lápiz
                 const total = entre(p, .12, .82) * FORMAS.length;
                 let punta = null;
+                muestrear();
                 ctx.lineCap = 'round'; ctx.lineJoin = 'round';
                 FORMAS.forEach((f, i) => {
                     const hecho = limitar(total - i);
@@ -3078,7 +3084,7 @@
                 ['iguana', '#nayarit'], ['pata', '#nayarit'], ['capomo', '#nayarit'],
                 ['fragata', '#suite'], ['delfin', '#contacto'],
             ];
-            const franjas = new Map();
+            const franjas = new Map(), colocar = [];
             PASEANTES.forEach(([especie, ancla]) => {
                 const seccion = document.querySelector(ancla);
                 const ficha = fichas.find(f => f.dataset.especie === especie);
@@ -3113,8 +3119,10 @@
                     const margen = Math.random() * Math.max(8, franja.clientWidth * .07);
                     return Math.random() > .5 ? margen : franja.clientWidth - ANCHO_BICHO - margen;
                 };
-                let x = plantado ? orilla() : -60, dir = 1, anim = null, visible = false, retenido = false, n = 0, andando = false, espera = 0;
+                let x = -60, dir = 1, anim = null, visible = false, retenido = false, n = 0, andando = false, espera = 0;
                 b.style.translate = `${x}px 0`;
+                // los plantados se colocan después de crear todos (una sola medida de la franja, no una por animal)
+                if (plantado) colocar.push(() => { x = orilla(); b.style.translate = `${x}px 0`; });
                 const programar = (ms) => { clearTimeout(espera); espera = setTimeout(() => { espera = 0; caminar(); }, ms); };
                 const caminar = () => {
                     if (plantado) return;
@@ -3170,6 +3178,7 @@
                     else if (!plantado && !espera) programar(2000 + Math.random() * 20000);   // cada uno a su ritmo
                 }, { rootMargin: '0px', threshold: 0 }).observe(franja.querySelector('span') || franja.appendChild(document.createElement('span')));
             });
+            requestAnimationFrame(() => colocar.forEach(f => f()));
         }
     }
 
