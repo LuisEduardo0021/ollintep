@@ -80,8 +80,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css?v=11.7">
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.7">
+    <link rel="stylesheet" href="../css/styles.css?v=11.8">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.8">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -465,6 +465,27 @@ ip dhcp snooping vlan 10,20,30
             <li data-foco="firewall"><i class="fas fa-shield-halved" aria-hidden="true"></i><h3>Firewall and VPN</h3><p>Perimeter protection and secure access for branches and remote staff.</p></li>
             <li data-foco="wifi"><i class="fas fa-wifi" aria-hidden="true"></i><h3>Cabling and Wi-Fi</h3><p>Structured cabling and wireless coverage planned for each space.</p></li>
         </ul>
+        <div class="red-demo" data-red-demo>
+            <div class="red-cab">
+                <h3>See the difference.</h3>
+                <p>A phone with a virus joins the guest Wi-Fi. Choose how the network is set up and where it tries to reach.</p>
+            </div>
+            <div class="red-controles">
+                <div class="red-modos" role="group" aria-label="How the network is set up">
+                    <button type="button" data-modo="plana" aria-pressed="true">One single network</button>
+                    <button type="button" data-modo="vlan" aria-pressed="false">Split into VLANs</button>
+                </div>
+                <div class="red-destinos" role="group" aria-label="Where it tries to reach">
+                    <span>Try to reach:</span>
+                    <button type="button" data-destino="caja">The checkout</button>
+                    <button type="button" data-destino="camaras">The cameras</button>
+                    <button type="button" data-destino="oficina">The office</button>
+                    <button type="button" data-destino="internet">Internet</button>
+                </div>
+            </div>
+            <div class="red-lienzo" aria-hidden="true"></div>
+            <p class="red-resultado" role="status">Pick a destination to see the path.</p>
+        </div>
     </section>
 
     <section id="servicio-tecnico" class="section-block" data-ambiente="azul">
@@ -941,7 +962,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=11.7"></script>
-    <script src="../script/efectos.js?v=11.7"></script>
+    <script src="../script/scripts.js?v=11.8"></script>
+    <script src="../script/efectos.js?v=11.8"></script>
 </body>
 </html>

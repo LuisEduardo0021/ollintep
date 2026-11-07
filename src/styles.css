@@ -7574,3 +7574,37 @@ html.visor-abierto { overflow: hidden; }
 .uso-giros button[aria-pressed="true"] { color: #fff; background: color-mix(in srgb, var(--acento) 26%, transparent); box-shadow: inset 0 0 0 1.5px var(--acento); }
 .uso-par:not([hidden]) { animation: giro-entra .4s var(--ease-out); }
 @media (prefers-reduced-motion: reduce) { .uso-par:not([hidden]) { animation: none; } }
+
+/* ==========================================================================
+   REDES: demo de VLANs
+   ========================================================================== */
+.red-demo { margin-top: clamp(2rem, 5vw, 3rem); padding: clamp(1.1rem, 3vw, 1.75rem); border-radius: 26px; background: rgba(9, 14, 26, .7); box-shadow: inset 0 0 0 1px var(--line-strong, rgba(255, 255, 255, .12)); }
+.red-cab h3 { margin: 0; font-size: clamp(1.2rem, 2.4vw, 1.5rem); font-weight: 800; letter-spacing: -.02em; color: #fff; }
+.red-cab p { margin: .35rem 0 0; color: rgba(214, 223, 240, .78); }
+.red-controles { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .8rem 1.5rem; margin: 1.1rem 0 .4rem; }
+.red-modos, .red-destinos { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.red-destinos span { font-size: .85rem; color: rgba(214, 223, 240, .7); margin-right: .2rem; }
+.red-demo button { padding: .5rem .9rem; border: 0; border-radius: 999px; cursor: pointer; font: 600 .86rem/1 inherit; color: rgba(225, 232, 245, .82); background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); transition: background-color .18s, color .18s, box-shadow .18s, scale .15s var(--ease-out); }
+.red-demo button:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.red-demo button:active { scale: .96; }
+.red-demo button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.red-demo button[aria-pressed="true"] { color: #fff; background: rgba(110, 162, 255, .22); box-shadow: inset 0 0 0 1.5px #6ea2ff; }
+.red-svg { display: block; width: 100%; height: auto; }
+.red-cable { stroke: rgba(255, 255, 255, .18); stroke-width: 2; }
+.red-caja-nodo { fill: #101829; stroke: rgba(255, 255, 255, .22); stroke-width: 1.5; }
+.red-txt { fill: #fff; font: 700 15px/1 var(--font-sans, system-ui, sans-serif); text-anchor: middle; }
+.red-txt-chico { font-size: 12px; font-weight: 600; fill: rgba(214, 223, 240, .7); }
+.red-puerto { fill: rgba(255, 255, 255, .2); transition: fill .4s ease; }
+.red-vlan-on .red-puerto { fill: var(--c); }
+.red-zona-caja { fill: rgba(255, 255, 255, .03); stroke: rgba(255, 255, 255, .16); stroke-width: 1.5; transition: stroke .4s ease, fill .4s ease; }
+.red-vlan-on .red-zona-caja { stroke: var(--c); fill: color-mix(in srgb, var(--c) 9%, transparent); }
+.red-vlan { fill: var(--c); font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-anchor: middle; opacity: 0; transition: opacity .4s ease; }
+.red-vlan-on .red-vlan { opacity: 1; }
+.red-equipo { fill: rgba(214, 223, 240, .35); }
+.red-virus { fill: #ef4459; filter: drop-shadow(0 0 6px #ef4459); }
+.red-paquete { fill: #ef4459; filter: drop-shadow(0 0 8px #ef4459); }
+.red-tache { fill: #ffb020; font: 900 28px/1 system-ui, sans-serif; text-anchor: middle; }
+.red-zona.red-alcanzada .red-zona-caja { stroke: #ef4459; fill: rgba(239, 68, 89, .14); animation: red-alerta .8s ease-in-out 2; }
+@keyframes red-alerta { 50% { fill: rgba(239, 68, 89, .3); } }
+.red-resultado { min-height: 3em; margin: .6rem 0 0; font-size: .95rem; line-height: 1.5; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .red-zona.red-alcanzada .red-zona-caja { animation: none; } }

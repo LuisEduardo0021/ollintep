@@ -987,5 +987,17 @@
   "Sí. El plan Centro de servicio incluye el diagnóstico por lote de varios teléfonos conectados por USB.": "Yes. The Service center plan includes batch diagnostics for several phones connected over USB.",
   "¿Puedo probarlo en mi taller?": "Can I try it in my shop?",
   "Sí. Escríbenos o llámanos y habilitamos una licencia de prueba en tu taller.": "Yes. Email or call us and we’ll enable a trial license in your shop.",
-  "Punto de venta multigiro: caja, inventario, crédito, citas y CFDI 4.0 para restaurantes, abarrotes, farmacias, boutiques, talleres y más.": "Point of sale for any business: checkout, inventory, credit, appointments and CFDI 4.0 for restaurants, groceries, pharmacies, boutiques and more."
+  "Punto de venta multigiro: caja, inventario, crédito, citas y CFDI 4.0 para restaurantes, abarrotes, farmacias, boutiques, talleres y más.": "Point of sale for any business: checkout, inventory, credit, appointments and CFDI 4.0 for restaurants, groceries, pharmacies, boutiques and more.",
+  "Prueba la diferencia.": "See the difference.",
+  "Un celular con virus se conecta al Wi-Fi de invitados. Elige cómo está armada la red y a dónde intenta llegar.": "A phone with a virus joins the guest Wi-Fi. Choose how the network is set up and where it tries to reach.",
+  "Cómo está armada la red": "How the network is set up",
+  "Una sola red": "One single network",
+  "Separada en VLANs": "Split into VLANs",
+  "A dónde intenta llegar": "Where it tries to reach",
+  "Intentar llegar a:": "Try to reach:",
+  "La caja": "The checkout",
+  "Las cámaras": "The cameras",
+  "La oficina": "The office",
+  "Internet": "Internet",
+  "Elige un destino para ver el recorrido.": "Pick a destination to see the path."
 }

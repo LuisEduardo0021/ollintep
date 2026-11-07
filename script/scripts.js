@@ -1282,6 +1282,98 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     });
 
+    // --- Redes: demo de VLANs; un paquete recorre la red desde el Wi-Fi de invitados y se bloquea o no según cómo esté armada ---
+    document.querySelectorAll('[data-red-demo]').forEach(caja => {
+        const lienzo = caja.querySelector('.red-lienzo'), res = caja.querySelector('.red-resultado');
+        const ZONAS = {
+            caja: { x: 110, nombre: T('Caja', 'Checkout'), vlan: 10, color: '#6ea2ff' },
+            oficina: { x: 300, nombre: T('Oficina', 'Office'), vlan: 20, color: '#c084fc' },
+            camaras: { x: 500, nombre: T('Cámaras', 'Cameras'), vlan: 30, color: '#34d399' },
+            invitados: { x: 690, nombre: T('Invitados', 'Guests'), vlan: 40, color: '#ffb020' },
+        };
+        const ZY = 335, SW = { x: 400, y: 215 }, FW = { x: 400, y: 125 }, NET = { x: 400, y: 40 };
+        const ns = 'http://www.w3.org/2000/svg';
+        const el = (tag, at, padre) => { const e = document.createElementNS(ns, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); (padre || svg).append(e); return e; };
+        const svg = el('svg', { viewBox: '0 0 800 420', class: 'red-svg' }, lienzo);
+        // cables
+        el('line', { x1: NET.x, y1: NET.y + 22, x2: FW.x, y2: FW.y - 18, class: 'red-cable' });
+        el('line', { x1: FW.x, y1: FW.y + 18, x2: SW.x, y2: SW.y - 16, class: 'red-cable' });
+        Object.values(ZONAS).forEach(z => { z.cable = el('line', { x1: SW.x, y1: SW.y + 16, x2: z.x, y2: ZY - 45, class: 'red-cable' }); });
+        // internet, firewall y switch
+        const nube = el('g', { class: 'red-nodo' });
+        el('rect', { x: NET.x - 70, y: NET.y - 22, width: 140, height: 44, rx: 22, class: 'red-caja-nodo' }, nube);
+        el('text', { x: NET.x, y: NET.y + 5, class: 'red-txt' }, nube).textContent = 'Internet';
+        const fw = el('g', { class: 'red-nodo' });
+        el('rect', { x: FW.x - 70, y: FW.y - 18, width: 140, height: 36, rx: 10, class: 'red-caja-nodo' }, fw);
+        el('text', { x: FW.x, y: FW.y + 5, class: 'red-txt' }, fw).textContent = 'Firewall';
+        const sw = el('g', { class: 'red-nodo red-switch' });
+        el('rect', { x: SW.x - 90, y: SW.y - 16, width: 180, height: 32, rx: 8, class: 'red-caja-nodo' }, sw);
+        Object.values(ZONAS).forEach((z, i) => el('rect', { x: SW.x - 78 + i * 40, y: SW.y - 6, width: 32, height: 12, rx: 3, class: 'red-puerto', style: `--c:${z.color}` }, sw));
+        el('text', { x: SW.x, y: SW.y + 36, class: 'red-txt red-txt-chico' }).textContent = 'Switch';
+        // zonas con sus equipos
+        Object.entries(ZONAS).forEach(([k, z]) => {
+            const g = z.g = el('g', { class: 'red-zona', style: `--c:${z.color}` });
+            el('rect', { x: z.x - 80, y: ZY - 45, width: 160, height: 95, rx: 16, class: 'red-zona-caja' }, g);
+            el('text', { x: z.x, y: ZY - 15, class: 'red-txt' }, g).textContent = z.nombre;
+            el('text', { x: z.x, y: ZY + 38, class: 'red-vlan' }, g).textContent = 'VLAN ' + z.vlan;
+            [-34, 0, 34].forEach(dx => el('rect', { x: z.x + dx - 11, y: ZY + 2, width: 22, height: 16, rx: 3, class: 'red-equipo' }, g));
+        });
+        // el celular infectado, en la zona de invitados
+        el('circle', { cx: ZONAS.invitados.x + 56, cy: ZY - 30, r: 9, class: 'red-virus' });
+        const paquete = el('circle', { cx: ZONAS.invitados.x, cy: ZY, r: 8, class: 'red-paquete', opacity: 0 });
+        const tache = el('text', { x: SW.x, y: SW.y - 26, class: 'red-tache', opacity: 0 }); tache.textContent = '✕';
+        let modo = 'plana', marco = 0;
+        const ponerModo = (m) => {
+            modo = m;
+            caja.classList.toggle('red-vlan-on', m === 'vlan');
+            caja.querySelectorAll('[data-modo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.modo === m)));
+            res.textContent = m === 'vlan' ? T('Cada zona va en su propia VLAN. Elige un destino.', 'Each zone has its own VLAN. Pick a destination.') : T('Todo en una sola red. Elige un destino.', 'Everything on one network. Pick a destination.');
+            paquete.setAttribute('opacity', 0); tache.setAttribute('opacity', 0);
+            Object.values(ZONAS).forEach(z => z.g.classList.remove('red-alcanzada'));
+        };
+        const recorrer = (puntos, alFinal) => {
+            cancelAnimationFrame(marco);
+            const largos = puntos.slice(1).map((p, i) => Math.hypot(p.x - puntos[i].x, p.y - puntos[i].y));
+            const total = largos.reduce((a, b) => a + b, 0), dur = prefersReducedMotion ? 1 : total * 3.2;
+            const t0 = performance.now();
+            paquete.setAttribute('opacity', 1);
+            const paso = (ahora) => {
+                let d = Math.min(1, (ahora - t0) / dur) * total, i = 0;
+                while (i < largos.length - 1 && d > largos[i]) { d -= largos[i]; i++; }
+                const f = largos[i] ? Math.min(1, d / largos[i]) : 1, a = puntos[i], b = puntos[i + 1];
+                paquete.setAttribute('cx', a.x + (b.x - a.x) * f); paquete.setAttribute('cy', a.y + (b.y - a.y) * f);
+                if (ahora - t0 < dur) marco = requestAnimationFrame(paso); else alFinal();
+            };
+            marco = requestAnimationFrame(paso);
+        };
+        const probar = (destino) => {
+            tache.setAttribute('opacity', 0);
+            Object.values(ZONAS).forEach(z => z.g.classList.remove('red-alcanzada'));
+            caja.querySelectorAll('[data-destino]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.destino === destino)));
+            const inicio = { x: ZONAS.invitados.x, y: ZY - 45 }, alSwitch = { x: SW.x, y: SW.y + 16 };
+            if (destino === 'internet') {
+                recorrer([inicio, alSwitch, { x: FW.x, y: FW.y + 18 }, { x: NET.x, y: NET.y + 22 }], () => {
+                    res.textContent = T('Salió a internet, que es lo único que necesita un invitado.', 'It went out to the internet, which is all a guest needs.');
+                });
+                return;
+            }
+            const z = ZONAS[destino];
+            if (modo === 'vlan') {
+                recorrer([inicio, alSwitch], () => {
+                    tache.setAttribute('opacity', 1);
+                    res.textContent = T(`Bloqueado: la VLAN ${ZONAS.invitados.vlan} de invitados no puede entrar a la VLAN ${z.vlan} (${z.nombre.toLowerCase()}). Solo sale a internet.`, `Blocked: guest VLAN ${ZONAS.invitados.vlan} can’t reach VLAN ${z.vlan} (${z.nombre.toLowerCase()}). It can only go out to the internet.`);
+                });
+            } else {
+                recorrer([inicio, alSwitch, { x: z.x, y: ZY - 45 }], () => {
+                    z.g.classList.add('red-alcanzada');
+                    res.textContent = T(`Llegó a ${destino === 'camaras' ? 'las cámaras' : destino === 'caja' ? 'la caja' : 'la oficina'}. En una sola red todos los equipos se ven entre sí: un celular infectado puede intentar entrar a lo que quiera.`, `It reached the ${z.nombre.toLowerCase()}. On a single network every device can see the others: an infected phone can try to get into anything.`);
+                });
+            }
+        };
+        caja.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => ponerModo(b.dataset.modo)));
+        caja.querySelectorAll('[data-destino]').forEach(b => { b.setAttribute('aria-pressed', 'false'); b.addEventListener('click', () => probar(b.dataset.destino)); });
+    });
+
     // --- Asistente de solicitud: con lo que el visitante elige se escribe el mensaje; el correo lo envía él ---
     document.querySelectorAll('[data-armar]').forEach(caja => {
         const vista = caja.querySelector('.armar-mensaje'), correo = caja.querySelector('.armar-correo'), copiar = caja.querySelector('.armar-copiar');
