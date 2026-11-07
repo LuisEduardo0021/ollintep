@@ -803,5 +803,9 @@
   "Conectas el teléfono por USB y Diagmind lo audita sin root mientras sigues trabajando. Toca una vista para verla en la pantalla.": "Plug the phone in over USB and Diagmind audits it without root while you keep working. Tap a view to see it on the screen.",
   "Laptop en una mesa de reparación de electrónica, junto a un teléfono abierto conectado por USB, desarmadores y un microscopio": "Laptop on an electronics repair bench, next to an opened phone connected over USB, screwdrivers and a microscope",
   "Escena ilustrativa; lo que se ve en la pantalla son capturas reales de Diagmind.": "Illustrative scene; what you see on the screen are real Diagmind screenshots.",
-  "Esquema de la placa": "Board schematic"
+  "Esquema de la placa": "Board schematic",
+  "Tu marca, en tus manos.": "Your brand, in your hands.",
+  "Nuestro logo, levantado en 3D desde su dibujo vectorial. Mueve el cursor para girarlo; con un clic se separan sus piezas.": "Our logo, raised into 3D from its vector drawing. Move the cursor to turn it; click to pull its pieces apart.",
+  "Marca en 3D": "Brand in 3D",
+  "Extrusión de vectores · WebGL · luz especular": "Vector extrusion · WebGL · specular light"
 }

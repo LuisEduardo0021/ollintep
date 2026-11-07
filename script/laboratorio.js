@@ -969,6 +969,128 @@ void main(){
         };
     }
 
+    // 12: el logo de Ollin-Tep extruido en 3D desde su dibujo vectorial (mismas coordenadas que resources/ollintep.svg)
+    function crearMarca(canvas) {
+        const gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true });
+        if (!gl) return null;
+        // --- contornos del SVG (viewBox 236×225, y hacia abajo) ---
+        const arco = (cx, cy, r, a0, a1, n) => Array.from({ length: n + 1 }, (_, i) => { const a = a0 + (a1 - a0) * i / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+        const cubica = (p0, p1, p2, p3, n) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t; return [0, 1].map(k => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]); });
+        const PIEZAS = [
+            { color: [0.086, 0.157, 0.31], z: 0, grosor: 26, puntos: [[0, 222.289], [0, 95.5572], [126.054, 0], [180.949, 0], [180.949, 225], [128.087, 222.289]] },
+            { color: [0.102, 0.337, 0.859], z: 16, grosor: 18, puntos: [[123.343, 170.105], ...arco(179.593, 56.25, 56.25, Math.PI, Math.PI * 2.49, 72), [180.271, 112.495], [180.271, 170.105]] },
+            { color: [0.043, 0.388, 0.965], z: 30, grosor: 18, puntos: arco(179.593, 168.75, 56.25, 0, Math.PI * 2, 96).slice(0, -1) },
+            { color: [0.102, 0.337, 0.859], z: 16, grosor: 12, puntos: [...cubica([0, 182.053], [4.50337, 204.596], [24.2991, 221.619], [48.1133, 221.848], 24), [48.1172, 221.852], [0, 221.852]] },
+        ];
+        // triangulación por orejas (los contornos son simples; algunos tienen vértices cóncavos)
+        const area = (p) => p.reduce((s, a, i) => { const b = p[(i + 1) % p.length]; return s + a[0] * b[1] - b[0] * a[1]; }, 0) / 2;
+        const orejas = (p) => {
+            const idx = p.map((_, i) => i); if (area(p) < 0) idx.reverse();
+            const tri = [], cruz = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+            let guarda = 0;
+            while (idx.length > 3 && guarda++ < 10000) {
+                let hecho = false;
+                for (let i = 0; i < idx.length; i++) {
+                    const ia = idx[(i + idx.length - 1) % idx.length], ib = idx[i], ic = idx[(i + 1) % idx.length];
+                    const a = p[ia], b = p[ib], c = p[ic];
+                    if (cruz(a, b, c) <= 1e-9) continue;
+                    const dentro = idx.some(j => j !== ia && j !== ib && j !== ic && cruz(a, b, p[j]) > 0 && cruz(b, c, p[j]) > 0 && cruz(c, a, p[j]) > 0);
+                    if (dentro) continue;
+                    tri.push(ia, ib, ic); idx.splice(i, 1); hecho = true; break;
+                }
+                if (!hecho) break;
+            }
+            if (idx.length === 3) tri.push(...idx);
+            return tri;
+        };
+        // malla: frente, fondo y paredes (normales suaves en las curvas, planas en las esquinas)
+        const datos = [], piezaDe = [];
+        PIEZAS.forEach((pz, n) => {
+            const p = pz.puntos.map(([x, y]) => [(x - 118) / 112.5, -(y - 112.5) / 112.5]);   // centrado, y hacia arriba, ~[-1,1]
+            const zf = pz.z / 112.5, zb = (pz.z - pz.grosor) / 112.5;
+            const v = (x, y, z, nx, ny, nz) => datos.push(x, y, z, nx, ny, nz, n);
+            const t = orejas(p);
+            for (let i = 0; i < t.length; i += 3) {
+                [t[i], t[i + 1], t[i + 2]].forEach(k => v(p[k][0], p[k][1], zf, 0, 0, 1));
+                [t[i + 2], t[i + 1], t[i]].forEach(k => v(p[k][0], p[k][1], zb, 0, 0, -1));
+            }
+            const ccw = area(p) > 0, L = p.length;
+            const normal = (i) => { const a = p[i], b = p[(i + 1) % L]; let nx = b[1] - a[1], ny = -(b[0] - a[0]); if (!ccw) { nx = -nx; ny = -ny; } const d = Math.hypot(nx, ny) || 1; return [nx / d, ny / d]; };
+            for (let i = 0; i < L; i++) {
+                const a = p[i], b = p[(i + 1) % L], ne = normal(i);
+                const suave = (j, otra) => { const o = normal(otra); return ne[0] * o[0] + ne[1] * o[1] > 0.9 ? [(ne[0] + o[0]) / 2, (ne[1] + o[1]) / 2] : ne; };
+                const na = suave(i, (i + L - 1) % L), nb = suave(i + 1, (i + 1) % L);
+                const q = [[a, na, zf], [b, nb, zf], [b, nb, zb], [a, na, zb]];
+                const orden = ccw ? [0, 3, 2, 0, 2, 1] : [0, 1, 2, 0, 2, 3];
+                orden.forEach(k => v(q[k][0][0], q[k][0][1], q[k][2], q[k][1][0], q[k][1][1], 0));
+            }
+        });
+        const malla = new Float32Array(datos), cuenta = malla.length / 7;
+        const VS3 = `attribute vec3 p; attribute vec3 n; attribute float k;
+uniform mat4 MV; uniform mat4 PR; uniform float S; varying vec3 vn; varying vec3 vp; varying float vk;
+void main(){ vec3 q=p; q.z+=S*k*.28; q.xy*=1.+S*.018*k; vec4 m=MV*vec4(q,1.); vp=m.xyz; vn=mat3(MV)*n; vk=k; gl_Position=PR*m; }`;
+        const FS3 = `precision highp float; varying vec3 vn; varying vec3 vp; varying float vk;
+uniform vec3 C0; uniform vec3 C1; uniform vec3 C2; uniform vec3 C3; uniform vec2 L;
+void main(){
+  vec3 base=vk<.5?C0:vk<1.5?C1:vk<2.5?C2:C3;
+  vec3 N=normalize(vn), V=normalize(-vp);
+  if(dot(N,V)<0.)N=-N;
+  vec3 l1=normalize(vec3(L,1.2)), l2=normalize(vec3(-.8,-.4,.6));
+  float d=max(dot(N,l1),0.)*.85+max(dot(N,l2),0.)*.25+.18;
+  vec3 h=normalize(l1+V); float s=pow(max(dot(N,h),0.),70.)*.9+pow(max(dot(N,h),0.),12.)*.12;
+  float fr=pow(1.-max(dot(N,V),0.),3.);
+  // las paredes son algo más oscuras que el frente: el volumen se lee sin perder el color de la marca
+  float cara=abs(N.z);
+  vec3 col=base*d*mix(.72,1.,cara)+vec3(.85,.92,1.)*s+vec3(.35,.6,1.)*fr*.9;
+  gl_FragColor=vec4(pow(col,vec3(.95)),1.);
+}`;
+        const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error('marca', gl.getShaderInfoLog(s)); return s; };
+        const prog = gl.createProgram();
+        gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS3)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS3));
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+        gl.useProgram(prog);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, malla, gl.STATIC_DRAW);
+        [['p', 3, 0], ['n', 3, 12], ['k', 1, 24]].forEach(([nombre, tam, off]) => { const loc = gl.getAttribLocation(prog, nombre); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, tam, gl.FLOAT, false, 28, off); });
+        const u = {}; ['MV', 'PR', 'S', 'C0', 'C1', 'C2', 'C3', 'L'].forEach(k => (u[k] = gl.getUniformLocation(prog, k)));
+        PIEZAS.forEach((pz, i) => gl.uniform3fv(u['C' + i], pz.color));
+        gl.enable(gl.DEPTH_TEST);
+        // matrices
+        const mul = (a, b) => { const r = new Float32Array(16); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { let s = 0; for (let k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k]; r[i * 4 + j] = s; } return r; };
+        const rotY = (a) => new Float32Array([Math.cos(a), 0, -Math.sin(a), 0, 0, 1, 0, 0, Math.sin(a), 0, Math.cos(a), 0, 0, 0, 0, 1]);
+        const rotX = (a) => new Float32Array([1, 0, 0, 0, 0, Math.cos(a), Math.sin(a), 0, 0, -Math.sin(a), Math.cos(a), 0, 0, 0, 0, 1]);
+        const mover = (x, y, z) => new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
+        const perspectiva = (f, asp, n, l) => { const t = 1 / Math.tan(f / 2); return new Float32Array([t / asp, 0, 0, 0, 0, t, 0, 0, 0, 0, (l + n) / (n - l), -1, 0, 0, 2 * l * n / (n - l), 0]); };
+        let W = 0, H = 0, separar = 0, objetivo = 0, giro = 0, vel = 0;
+        const medir = () => {
+            const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+            if (w !== W || h !== H) { canvas.width = W = w; canvas.height = H = h; }
+        };
+        return {
+            medir,
+            separar() { objetivo = objetivo ? 0 : 1; vel += 2.5; },
+            dibujar(t, ptr, dt) {
+                medir();
+                dt = dt || .016;
+                separar += (objetivo - separar) * (1 - Math.pow(.02, dt));
+                vel *= Math.pow(.2, dt);
+                giro += (0.25 + vel) * dt;
+                gl.viewport(0, 0, W, H);
+                gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                const asp = W / H, ancho = asp < 1 ? 1.25 / asp : 1;
+                // el cursor inclina el logo; además gira despacio solo, con un vaivén
+                const yaw = Math.sin(giro * .8) * .55 + (ptr.sx - .5) * 1.5, pitch = (ptr.sy - .5) * -.9 + .08;
+                const MV = mul(mover(asp > 1.2 ? .55 : 0, asp > 1.2 ? 0 : .25, -6.4 * ancho), mul(rotX(pitch), rotY(yaw)));
+                gl.uniformMatrix4fv(u.MV, false, MV);
+                gl.uniformMatrix4fv(u.PR, false, perspectiva(.62, asp, .1, 50));
+                gl.uniform1f(u.S, separar);
+                gl.uniform2f(u.L, (ptr.sx - .5) * 2.2, (ptr.sy - .5) * 2.2 + .6);
+                gl.drawArrays(gl.TRIANGLES, 0, cuenta);
+            },
+        };
+    }
+
     // ================= REGISTRO Y BUCLE =================
     document.querySelectorAll('.exp').forEach((sec) => {
         const ptr = crearPuntero(sec);
@@ -984,7 +1106,10 @@ void main(){
         } else if (sec.querySelector('.moire')) motor = crearMoire(sec);
         else if (sec.querySelector('.tinta')) motor = crearTinta(sec);
         else if (sec.querySelector('[data-globo]')) motor = crearGlobo(sec.querySelector('[data-globo]'));
-        else if (sec.querySelector('[data-campo]')) {
+        else if (sec.querySelector('[data-marca]')) {
+            motor = crearMarca(sec.querySelector('[data-marca]'));
+            if (motor) sec.addEventListener('pointerdown', () => motor.separar());
+        } else if (sec.querySelector('[data-campo]')) {
             motor = crearCampo(sec.querySelector('[data-campo]'));
             sec.addEventListener('pointerdown', () => motor.invertir());
         }

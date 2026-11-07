@@ -150,6 +150,7 @@ a { color: inherit; text-decoration: none; }
 @keyframes moire-gira { to { transform: rotate(360deg); } }
 
 /* Tinta: WebGL (lienzo .tinta-gl) con el SVG como respaldo y texto accesible */
+.exp-marca { background: radial-gradient(ellipse at 66% 45%, #0e1d3f, #05070d 62%); cursor: pointer; }
 .exp-tinta { background: radial-gradient(ellipse at 50% 40%, #12101f, #05070d 70%); place-items: center; }
 .tinta { width: min(1200px, 100%); height: auto; overflow: visible; cursor: crosshair; }
 .tinta-txt { font: 800 250px/1 var(--titulo); letter-spacing: -14px; }
