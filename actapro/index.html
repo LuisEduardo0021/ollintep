@@ -31,6 +31,9 @@
 
     <!-- Datos estructurados -->
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Para quién es ActaPro?", "acceptedAnswer": {"@type": "Answer", "text": "Para secretarías, patronatos, comités y asambleas que llevan actas y trámites y quieren dejar atrás las hojas de cálculo y las carpetas extraviadas."}}, {"@type": "Question", "name": "¿Dónde se guardan los datos?", "acceptedAnswer": {"@type": "Answer", "text": "Tú eliges: en la nube que administra Ollin-Tep, en una nube dedicada para tu organización o en los servidores de tu institución con la licencia perpetua."}}, {"@type": "Question", "name": "¿Puedo probarlo antes de contratar?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Con el plan Piloto lo pruebas en un solo departamento, sin costo de entrada; el ambiente queda listo en 24 a 48 horas y puedes cancelar en cualquier momento."}}, {"@type": "Question", "name": "¿Se pueden pasar las actas que tengo en Excel?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. El plan Nube incluye la migración inicial de tus actas desde Excel."}}, {"@type": "Question", "name": "¿Quién puede ver o cambiar cada acta?", "acceptedAnswer": {"@type": "Answer", "text": "Capturistas, revisores y administradores tienen accesos distintos, y cada cambio queda en un historial inmutable."}}, {"@type": "Question", "name": "¿Puedo sacar reportes?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Buscas por folio, fecha, revisor o estatus y exportas a Excel; las gráficas del panel también se pueden exportar."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -88,9 +91,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.4">
+    <link rel="stylesheet" href="../css/styles.css?v=11.5">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.4">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.5">
     <style>
         .video-thumb.screenshot-thumb {
             padding: 0;
@@ -473,6 +476,44 @@
     </section>
 
     <!-- Sección Contacto -->
+    <!-- Preguntas frecuentes: las respuestas resumen lo que ya dice esta página -->
+    <section id="preguntas" class="section-block faq">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Preguntas frecuentes</p>
+                <h2 class="block-title">Lo que más nos preguntan de ActaPro.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Busca en las preguntas…" aria-label="Buscar en las preguntas frecuentes"></label>
+        <div class="faq-lista">
+            <details class="faq-item" id="pregunta-1">
+                <summary>¿Para quién es ActaPro?</summary>
+                <p>Para secretarías, patronatos, comités y asambleas que llevan actas y trámites y quieren dejar atrás las hojas de cálculo y las carpetas extraviadas.</p>
+            </details>
+            <details class="faq-item" id="pregunta-2">
+                <summary>¿Dónde se guardan los datos?</summary>
+                <p>Tú eliges: en la nube que administra Ollin-Tep, en una nube dedicada para tu organización o en los servidores de tu institución con la licencia perpetua.</p>
+            </details>
+            <details class="faq-item" id="pregunta-3">
+                <summary>¿Puedo probarlo antes de contratar?</summary>
+                <p>Sí. Con el plan Piloto lo pruebas en un solo departamento, sin costo de entrada; el ambiente queda listo en 24 a 48 horas y puedes cancelar en cualquier momento.</p>
+            </details>
+            <details class="faq-item" id="pregunta-4">
+                <summary>¿Se pueden pasar las actas que tengo en Excel?</summary>
+                <p>Sí. El plan Nube incluye la migración inicial de tus actas desde Excel.</p>
+            </details>
+            <details class="faq-item" id="pregunta-5">
+                <summary>¿Quién puede ver o cambiar cada acta?</summary>
+                <p>Capturistas, revisores y administradores tienen accesos distintos, y cada cambio queda en un historial inmutable.</p>
+            </details>
+            <details class="faq-item" id="pregunta-6">
+                <summary>¿Puedo sacar reportes?</summary>
+                <p>Sí. Buscas por folio, fecha, revisor o estatus y exportas a Excel; las gráficas del panel también se pueden exportar.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>No encontramos esa pregunta. <a href="#contacto">Escríbenos</a> y te respondemos.</p>
+    </section>
+
     <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center mb-12">
             <h2 class="section-title">Agenda una demo de ActaPro</h2>
@@ -517,7 +558,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=11.4"></script>
-    <script src="../script/efectos.js?v=11.4"></script>
+    <script src="../script/scripts.js?v=11.5"></script>
+    <script src="../script/efectos.js?v=11.5"></script>
 </body>
 </html>

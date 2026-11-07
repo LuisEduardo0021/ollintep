@@ -31,6 +31,9 @@
 
     <!-- Datos estructurados -->
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Para qué negocios sirve Centzontle?", "acceptedAnswer": {"@type": "Answer", "text": "Para restaurantes, bares, cafeterías, abarrotes, carnicerías, farmacias, ferreterías, boutiques, papelerías, estéticas, talleres y otros giros. Eliges el tuyo al empezar y Centzontle usa sus palabras y enciende sus departamentos."}}, {"@type": "Question", "name": "¿En qué equipos funciona?", "acceptedAnswer": {"@type": "Answer", "text": "En Windows y Linux: en la terminal de tu caja, en una tablet o en la computadora que ya tienes."}}, {"@type": "Question", "name": "¿Dónde se guarda mi información?", "acceptedAnswer": {"@type": "Answer", "text": "En una base de datos local en tu equipo, con respaldos completos cuando quieras. Cajas, tabletas y la pantalla de cocina se conectan por la red local del negocio."}}, {"@type": "Question", "name": "¿Puedo facturar desde Centzontle?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Emite facturas electrónicas CFDI 4.0 del SAT desde la misma venta, sin capturar dos veces."}}, {"@type": "Question", "name": "¿Tengo que pagar aparte por la inteligencia artificial?", "acceptedAnswer": {"@type": "Answer", "text": "Nexo usa tu propia cuenta de Claude, OpenAI o Gemini. Centzontle no revende IA ni cobra por uso."}}, {"@type": "Question", "name": "¿Puedo verlo con mi negocio antes de decidir?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Agenda una demo y te lo mostramos configurado como tu negocio: tus productos, tus departamentos y tu forma de cobrar."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -50,9 +53,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.4">
+    <link rel="stylesheet" href="../css/styles.css?v=11.5">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.4">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.5">
 </head>
 <body class="theme-centzontle">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -365,6 +368,44 @@
     </section>
 
     <!-- Contacto -->
+    <!-- Preguntas frecuentes: las respuestas resumen lo que ya dice esta página -->
+    <section id="preguntas" class="section-block faq">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Preguntas frecuentes</p>
+                <h2 class="block-title">Lo que más nos preguntan de Centzontle.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Busca en las preguntas…" aria-label="Buscar en las preguntas frecuentes"></label>
+        <div class="faq-lista">
+            <details class="faq-item" id="pregunta-1">
+                <summary>¿Para qué negocios sirve Centzontle?</summary>
+                <p>Para restaurantes, bares, cafeterías, abarrotes, carnicerías, farmacias, ferreterías, boutiques, papelerías, estéticas, talleres y otros giros. Eliges el tuyo al empezar y Centzontle usa sus palabras y enciende sus departamentos.</p>
+            </details>
+            <details class="faq-item" id="pregunta-2">
+                <summary>¿En qué equipos funciona?</summary>
+                <p>En Windows y Linux: en la terminal de tu caja, en una tablet o en la computadora que ya tienes.</p>
+            </details>
+            <details class="faq-item" id="pregunta-3">
+                <summary>¿Dónde se guarda mi información?</summary>
+                <p>En una base de datos local en tu equipo, con respaldos completos cuando quieras. Cajas, tabletas y la pantalla de cocina se conectan por la red local del negocio.</p>
+            </details>
+            <details class="faq-item" id="pregunta-4">
+                <summary>¿Puedo facturar desde Centzontle?</summary>
+                <p>Sí. Emite facturas electrónicas CFDI 4.0 del SAT desde la misma venta, sin capturar dos veces.</p>
+            </details>
+            <details class="faq-item" id="pregunta-5">
+                <summary>¿Tengo que pagar aparte por la inteligencia artificial?</summary>
+                <p>Nexo usa tu propia cuenta de Claude, OpenAI o Gemini. Centzontle no revende IA ni cobra por uso.</p>
+            </details>
+            <details class="faq-item" id="pregunta-6">
+                <summary>¿Puedo verlo con mi negocio antes de decidir?</summary>
+                <p>Sí. Agenda una demo y te lo mostramos configurado como tu negocio: tus productos, tus departamentos y tu forma de cobrar.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>No encontramos esa pregunta. <a href="#contacto">Escríbenos</a> y te respondemos.</p>
+    </section>
+
     <section id="contacto" class="section-block">
         <div class="cta-band">
             <div>
@@ -421,7 +462,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=11.4"></script>
-    <script src="../script/efectos.js?v=11.4"></script>
+    <script src="../script/scripts.js?v=11.5"></script>
+    <script src="../script/efectos.js?v=11.5"></script>
 </body>
 </html>

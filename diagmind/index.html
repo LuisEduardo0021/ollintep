@@ -31,6 +31,9 @@
 
     <!-- Schema.org -->
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Necesita root el teléfono?", "acceptedAnswer": {"@type": "Answer", "text": "No. Diagmind lo revisa por cable USB con ADB, sin root y sin anular la garantía."}}, {"@type": "Question", "name": "¿Qué revisa?", "acceptedAnswer": {"@type": "Answer", "text": "Batería, pantalla y táctil, sensores, procesador, memoria RAM y almacenamiento, con un dictamen generado por IA local."}}, {"@type": "Question", "name": "¿Los datos de mis clientes salen a internet?", "acceptedAnswer": {"@type": "Answer", "text": "No. La IA corre en la computadora del técnico y toda la información de diagnóstico se queda en tu equipo, sin cuentas obligatorias en la nube."}}, {"@type": "Question", "name": "¿En qué sistemas funciona?", "acceptedAnswer": {"@type": "Answer", "text": "En Windows, con un instalador que deja listos los controladores ADB, y en Linux, con permisos para usar el USB sin sudo."}}, {"@type": "Question", "name": "¿Puedo revisar varios teléfonos a la vez?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. El plan Centro de servicio incluye el diagnóstico por lote de varios teléfonos conectados por USB."}}, {"@type": "Question", "name": "¿Puedo probarlo en mi taller?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Escríbenos o llámanos y habilitamos una licencia de prueba en tu taller."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -54,9 +57,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.4">
+    <link rel="stylesheet" href="../css/styles.css?v=11.5">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.4">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.5">
 </head>
 <body class="theme-diagmind bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -400,6 +403,44 @@
     </section>
 
     <!-- Sección Contacto -->
+    <!-- Preguntas frecuentes: las respuestas resumen lo que ya dice esta página -->
+    <section id="preguntas" class="section-block faq">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Preguntas frecuentes</p>
+                <h2 class="block-title">Lo que más nos preguntan de Diagmind.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Busca en las preguntas…" aria-label="Buscar en las preguntas frecuentes"></label>
+        <div class="faq-lista">
+            <details class="faq-item" id="pregunta-1">
+                <summary>¿Necesita root el teléfono?</summary>
+                <p>No. Diagmind lo revisa por cable USB con ADB, sin root y sin anular la garantía.</p>
+            </details>
+            <details class="faq-item" id="pregunta-2">
+                <summary>¿Qué revisa?</summary>
+                <p>Batería, pantalla y táctil, sensores, procesador, memoria RAM y almacenamiento, con un dictamen generado por IA local.</p>
+            </details>
+            <details class="faq-item" id="pregunta-3">
+                <summary>¿Los datos de mis clientes salen a internet?</summary>
+                <p>No. La IA corre en la computadora del técnico y toda la información de diagnóstico se queda en tu equipo, sin cuentas obligatorias en la nube.</p>
+            </details>
+            <details class="faq-item" id="pregunta-4">
+                <summary>¿En qué sistemas funciona?</summary>
+                <p>En Windows, con un instalador que deja listos los controladores ADB, y en Linux, con permisos para usar el USB sin sudo.</p>
+            </details>
+            <details class="faq-item" id="pregunta-5">
+                <summary>¿Puedo revisar varios teléfonos a la vez?</summary>
+                <p>Sí. El plan Centro de servicio incluye el diagnóstico por lote de varios teléfonos conectados por USB.</p>
+            </details>
+            <details class="faq-item" id="pregunta-6">
+                <summary>¿Puedo probarlo en mi taller?</summary>
+                <p>Sí. Escríbenos o llámanos y habilitamos una licencia de prueba en tu taller.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>No encontramos esa pregunta. <a href="#contacto">Escríbenos</a> y te respondemos.</p>
+    </section>
+
     <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center mb-12">
             <h2 class="section-title">Equipa tu taller con Diagmind</h2>
@@ -444,7 +485,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=11.4"></script>
-    <script src="../script/efectos.js?v=11.4"></script>
+    <script src="../script/scripts.js?v=11.5"></script>
+    <script src="../script/efectos.js?v=11.5"></script>
 </body>
 </html>

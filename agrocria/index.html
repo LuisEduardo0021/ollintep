@@ -31,6 +31,9 @@
 
     <!-- Schema.org -->
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Funciona en el campo sin señal?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. La app táctil captura lecturas, aretes y fotos sin conexión y se sincroniza sola al recuperar cobertura; los sensores de humedad reportan por LoRaWAN."}}, {"@type": "Question", "name": "¿En qué dispositivos funciona?", "acceptedAnswer": {"@type": "Answer", "text": "El panel se instala en Windows y Linux, y la app táctil funciona en Android e iOS para operar en la parcela o en el establo."}}, {"@type": "Question", "name": "¿Cómo calcula cuánto regar?", "acceptedAnswer": {"@type": "Answer", "text": "Con el balance hídrico FAO-56 (CROPWAT): calcula la evapotranspiración del cultivo, el agua aprovechable del suelo y la lámina exacta de riego."}}, {"@type": "Question", "name": "¿Sirve también para ganado?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Lleva el control sanitario, aretes, pesaje, genealogía, calendario de vacunación y periodos de retiro."}}, {"@type": "Question", "name": "¿Para qué tamaño de operación es?", "acceptedAnswer": {"@type": "Answer", "text": "Desde ranchos, huertas y viveros independientes hasta corporativos agroindustriales, con instalación local para centros de investigación."}}, {"@type": "Question", "name": "¿Se conecta con mis equipos de riego?", "acceptedAnswer": {"@type": "Answer", "text": "El plan Servidor dedicado incluye la integración con PLC de riego y estaciones meteorológicas."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -54,9 +57,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Hojas de estilo Tailwind compiladas -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.4">
+    <link rel="stylesheet" href="../css/styles.css?v=11.5">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.4">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.5">
 </head>
 <body class="theme-agrocria bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -423,6 +426,44 @@
     </section>
 
     <!-- Sección Contacto -->
+    <!-- Preguntas frecuentes: las respuestas resumen lo que ya dice esta página -->
+    <section id="preguntas" class="section-block faq">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Preguntas frecuentes</p>
+                <h2 class="block-title">Lo que más nos preguntan de Agro-Cria Pro.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Busca en las preguntas…" aria-label="Buscar en las preguntas frecuentes"></label>
+        <div class="faq-lista">
+            <details class="faq-item" id="pregunta-1">
+                <summary>¿Funciona en el campo sin señal?</summary>
+                <p>Sí. La app táctil captura lecturas, aretes y fotos sin conexión y se sincroniza sola al recuperar cobertura; los sensores de humedad reportan por LoRaWAN.</p>
+            </details>
+            <details class="faq-item" id="pregunta-2">
+                <summary>¿En qué dispositivos funciona?</summary>
+                <p>El panel se instala en Windows y Linux, y la app táctil funciona en Android e iOS para operar en la parcela o en el establo.</p>
+            </details>
+            <details class="faq-item" id="pregunta-3">
+                <summary>¿Cómo calcula cuánto regar?</summary>
+                <p>Con el balance hídrico FAO-56 (CROPWAT): calcula la evapotranspiración del cultivo, el agua aprovechable del suelo y la lámina exacta de riego.</p>
+            </details>
+            <details class="faq-item" id="pregunta-4">
+                <summary>¿Sirve también para ganado?</summary>
+                <p>Sí. Lleva el control sanitario, aretes, pesaje, genealogía, calendario de vacunación y periodos de retiro.</p>
+            </details>
+            <details class="faq-item" id="pregunta-5">
+                <summary>¿Para qué tamaño de operación es?</summary>
+                <p>Desde ranchos, huertas y viveros independientes hasta corporativos agroindustriales, con instalación local para centros de investigación.</p>
+            </details>
+            <details class="faq-item" id="pregunta-6">
+                <summary>¿Se conecta con mis equipos de riego?</summary>
+                <p>El plan Servidor dedicado incluye la integración con PLC de riego y estaciones meteorológicas.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>No encontramos esa pregunta. <a href="#contacto">Escríbenos</a> y te respondemos.</p>
+    </section>
+
     <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center mb-12">
             <h2 class="section-title">Transforma la gestión de tu operación agropecuaria</h2>
@@ -467,7 +508,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="../script/scripts.js?v=11.4"></script>
-    <script src="../script/efectos.js?v=11.4"></script>
+    <script src="../script/scripts.js?v=11.5"></script>
+    <script src="../script/efectos.js?v=11.5"></script>
 </body>
 </html>

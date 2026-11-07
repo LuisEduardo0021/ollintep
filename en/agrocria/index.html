@@ -28,6 +28,9 @@
     <meta name="twitter:image" content="https://ollin-tep.com/resources/og/agrocria-og-en-v4.jpg">
 
     <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does it work in the field without signal?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The touch app captures readings, ear tags and photos offline and syncs on its own when coverage returns; the moisture sensors report over LoRaWAN."}}, {"@type": "Question", "name": "What devices does it run on?", "acceptedAnswer": {"@type": "Answer", "text": "The dashboard installs on Windows and Linux, and the touch app runs on Android and iOS for work in the plot or the barn."}}, {"@type": "Question", "name": "How does it work out how much to irrigate?", "acceptedAnswer": {"@type": "Answer", "text": "With the FAO-56 (CROPWAT) water balance: it computes crop evapotranspiration, the soil’s available water and the exact irrigation depth."}}, {"@type": "Question", "name": "Does it work for livestock too?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It tracks health records, ear tags, weighing, genealogy, vaccination schedules and withdrawal periods."}}, {"@type": "Question", "name": "What size of operation is it for?", "acceptedAnswer": {"@type": "Answer", "text": "From independent ranches, orchards and nurseries to agro-industrial corporations, with on-premises installation for research centers."}}, {"@type": "Question", "name": "Does it connect to my irrigation equipment?", "acceptedAnswer": {"@type": "Answer", "text": "The Dedicated server plan includes integration with irrigation PLCs and weather stations."}}]}
+    </script>
+    <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -48,8 +51,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/styles.css?v=11.4">
-    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=11.4">
+    <link rel="stylesheet" href="../../css/styles.css?v=11.5">
+    <link rel="stylesheet" href="../../resources/iconos/iconos.css?v=11.5">
 </head>
 <body class="theme-agrocria bg-slate-950 text-slate-100 antialiased">
     <a class="skip-link" href="#inicio">Skip to content</a>
@@ -405,6 +408,43 @@
         </div>
     </section>
 
+    <section id="preguntas" class="section-block faq">
+        <header class="block-head">
+            <div>
+                <p class="eyebrow eyebrow-blue">Frequently asked questions</p>
+                <h2 class="block-title">What people ask most about Agro-Cria Pro.</h2>
+            </div>
+        </header>
+        <label class="faq-buscar"><i class="fas fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Search the questions…" aria-label="Search the FAQ"></label>
+        <div class="faq-lista">
+            <details class="faq-item" id="pregunta-1">
+                <summary>Does it work in the field without signal?</summary>
+                <p>Yes. The touch app captures readings, ear tags and photos offline and syncs on its own when coverage returns; the moisture sensors report over LoRaWAN.</p>
+            </details>
+            <details class="faq-item" id="pregunta-2">
+                <summary>What devices does it run on?</summary>
+                <p>The dashboard installs on Windows and Linux, and the touch app runs on Android and iOS for work in the plot or the barn.</p>
+            </details>
+            <details class="faq-item" id="pregunta-3">
+                <summary>How does it work out how much to irrigate?</summary>
+                <p>With the FAO-56 (CROPWAT) water balance: it computes crop evapotranspiration, the soil’s available water and the exact irrigation depth.</p>
+            </details>
+            <details class="faq-item" id="pregunta-4">
+                <summary>Does it work for livestock too?</summary>
+                <p>Yes. It tracks health records, ear tags, weighing, genealogy, vaccination schedules and withdrawal periods.</p>
+            </details>
+            <details class="faq-item" id="pregunta-5">
+                <summary>What size of operation is it for?</summary>
+                <p>From independent ranches, orchards and nurseries to agro-industrial corporations, with on-premises installation for research centers.</p>
+            </details>
+            <details class="faq-item" id="pregunta-6">
+                <summary>Does it connect to my irrigation equipment?</summary>
+                <p>The Dedicated server plan includes integration with irrigation PLCs and weather stations.</p>
+            </details>
+        </div>
+        <p class="faq-vacio" hidden>We couldn’t find that question. <a href="#contacto">Write to us</a> and we’ll answer.</p>
+    </section>
+
     <section id="contacto" class="contact max-w-4xl mx-auto px-6 py-20 relative z-10">
         <div class="text-center mb-12">
             <h2 class="section-title">Transform how you manage your farm operation</h2>
@@ -446,7 +486,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <script src="../../script/scripts.js?v=11.4"></script>
-    <script src="../../script/efectos.js?v=11.4"></script>
+    <script src="../../script/scripts.js?v=11.5"></script>
+    <script src="../../script/efectos.js?v=11.5"></script>
 </body>
 </html>
