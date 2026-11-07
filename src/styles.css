@@ -7714,3 +7714,9 @@ html.visor-abierto { overflow: hidden; }
 @media (max-width: 720px) { .dis-controles { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 480px) { .dis-lienzo { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .dis-cambia .dis-pieza > div { animation: none; } .dis-simbolo, .dis-pieza > div { transition: none; } }
+/* Pie: enlace a los textos legales de CroHub (activation.ollin-tep.com/legal; ahí aparecen los nuevos al publicarse) */
+.footer-legal { margin: .5rem 0 0; text-align: center; font-size: .8rem; }
+.footer-legal a { color: #75829b; text-decoration: underline; text-decoration-color: rgba(117, 130, 155, .4); text-underline-offset: 3px; transition: color .18s; }
+.footer-legal a:hover, .footer-legal a:focus-visible { color: var(--md-sys-color-primary, #6ea2ff); }
+/* donde el texto de derechos va alineado a la retícula del pie, el enlace legal lo sigue */
+.footer-grid + .footer-copy + .footer-legal { max-width: 1200px; margin-inline: auto; text-align: left; }
