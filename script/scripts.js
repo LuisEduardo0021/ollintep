@@ -1601,7 +1601,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const img = document.createElement('img');
             img.alt = '';
             img.decoding = 'async';
-            if (i === 0) img.src = ruta(b.dataset.vista);
+            // las escenas de giros ocultos no descargan nada hasta que se muestran (lo hace la precarga de abajo)
+            if (i === 0 && !figura.closest('[hidden]')) img.src = ruta(b.dataset.vista);
             if (i === 0) img.classList.add('is-on');
             pantalla.append(img);
             return img;
