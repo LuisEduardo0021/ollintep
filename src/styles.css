@@ -7554,3 +7554,14 @@ html.visor-abierto { overflow: hidden; }
 .faq-vacio { margin: 1rem 0 0; color: rgba(214, 223, 240, .75); }
 .faq-vacio a { color: var(--md-sys-color-primary, #8ab4ff); font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { .faq-item[open] p { animation: none; } }
+
+/* --- Centzontle: pestañas de capturas por giro --- */
+.giro-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.5rem; }
+.giro-tabs button { padding: .6rem 1.05rem; border: 0; border-radius: 999px; cursor: pointer; font: 600 .9rem/1 inherit; color: rgba(225, 232, 245, .78); background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); transition: background-color .18s, color .18s, box-shadow .18s, scale .15s var(--ease-out); }
+.giro-tabs button:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.giro-tabs button:active { scale: .96; }
+.giro-tabs button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.giro-tabs button[aria-selected="true"] { color: #fff; background: color-mix(in srgb, var(--md-sys-color-primary, #5a8af6) 24%, transparent); box-shadow: inset 0 0 0 1.5px var(--md-sys-color-primary, #5a8af6); }
+.giro-panel:not([hidden]) { animation: giro-entra .35s var(--ease-out); }
+@keyframes giro-entra { from { opacity: 0; translate: 0 8px; } }
+@media (prefers-reduced-motion: reduce) { .giro-panel:not([hidden]) { animation: none; } }

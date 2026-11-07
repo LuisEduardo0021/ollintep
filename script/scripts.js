@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Cómo trabajamos', 'How we work'), T('Principios y cifras', 'Principles and numbers'), raizIdioma + 'index.html#principios', 'fa-pen-ruler'],
         [T('Contacto', 'Contact'), T('Correo y teléfono', 'Email and phone'), raizIdioma + 'index.html#contacto', 'fa-envelope', T('correo telefono llamar escribir', 'email phone call write')],
         [T('Arma tu solicitud', 'Build your request'), T('Tres toques y tu mensaje queda listo', 'Three taps and your message is ready'), raizIdioma + 'index.html#contacto', 'fa-paper-plane', T('cotizar cotizacion presupuesto propuesta pedir', 'quote estimate budget proposal request')],
-        [T('Cómo trabajamos, en 30 segundos', 'How we work, in 30 seconds'), T('Explicativo narrado', 'Narrated explainer'), raizIdioma + 'index.html#principios', 'fa-play', T('proceso pasos audio video', 'process steps audio video')],
+        [T('Cómo trabajamos, paso a paso', 'How we work, step by step'), T('Recorrido animado en cuatro pasos', 'Animated four-step walkthrough'), raizIdioma + 'index.html#principios', 'fa-play', T('proceso pasos', 'process steps')],
         [T('Votación y sello de actas', 'Minute voting and seal'), T('Demo interactiva de ActaPro', 'Interactive ActaPro demo'), raizIdioma + 'actapro/index.html#votacion', 'fa-check-to-slot', T('cabildo votar firma sha', 'council vote signature sha')],
         [T('Balance hídrico', 'Water balance'), T('Simulador de riego de Agro-Cria Pro', 'Agro-Cria Pro irrigation simulator'), raizIdioma + 'agrocria/index.html#balance', 'fa-droplet', T('riego agua fao cultivo', 'irrigation water fao crop')],
         [T('Precios de ActaPro', 'ActaPro pricing'), T('Planes y costos', 'Plans and costs'), raizIdioma + 'actapro/index.html#precios', 'fa-file-invoice', T('plan costo cuanto cuesta', 'plan cost how much')],
@@ -1527,62 +1527,56 @@ document.addEventListener('DOMContentLoaded', () => {
         items.forEach(d => d.addEventListener('toggle', () => { if (d.open && !campo.value) items.forEach(o => { if (o !== d) o.open = false; }); }));
     });
 
-    // --- Explicativo narrado: los pasos se iluminan con la voz y las palabras se resaltan al decirse ---
+    // --- Cómo trabajamos: recorrido animado en silencio; los pasos se iluminan uno tras otro y las palabras se encienden a ritmo de lectura ---
     document.querySelectorAll('[data-explica]').forEach(caja => {
-        const audio = caja.querySelector('audio'), boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');
+        const boton = caja.querySelector('.explica-play'), tiempo = caja.querySelector('.explica-tiempo');
         const pasos = [...caja.querySelectorAll('.explica-paso')];
-        if (EN) audio.src = audio.getAttribute('src').replace('-es.mp3', '-en.mp3');
-        const marcas = (EN ? caja.dataset.marcasEn : caja.dataset.marcas).split(',').map(Number);
-        const total = EN ? 27.6 : 31.1;
-        tiempo.textContent = `0:${String(Math.round(total)).padStart(2, '0')}`;
-        // cada palabra del texto en su propio span, para resaltarla cuando la voz llega a ella
+        // cada paso dura lo que tarda en leerse su texto (unas 14 letras por segundo, mínimo 5 s)
         const palabras = pasos.map(li => {
             const p = li.querySelector('p');
             p.innerHTML = p.textContent.trim().split(/\s+/).map(w => `<span class="explica-palabra">${w}</span>`).join(' ');
             return [...p.children];
         });
-        let marco = 0;
+        const duraciones = pasos.map(li => Math.max(5, li.querySelector('p').textContent.length / 14));
+        const marcas = duraciones.map((_, i) => duraciones.slice(0, i).reduce((a, b) => a + b, 0));
+        const total = duraciones.reduce((a, b) => a + b, 0);
+        let t = 0, corriendo = false, desde = 0, marco = 0;
+        const formato = (seg) => `0:${String(Math.max(0, Math.round(seg))).padStart(2, '0')}`;
+        tiempo.textContent = formato(total);
         const pintar = () => {
-            const t = audio.currentTime;
+            if (corriendo) t = Math.min(total, (performance.now() - desde) / 1000);
             let activo = -1;
             marcas.forEach((m, i) => { if (t >= m) activo = i; });
+            const terminado = t >= total;
             pasos.forEach((li, i) => {
-                const fin = i + 1 < marcas.length ? marcas[i + 1] - 0.75 : total - 0.6;
-                const avance = Math.min(1, Math.max(0, (t - marcas[i]) / (fin - marcas[i])));
-                li.classList.toggle('is-on', i === activo && !audio.paused);
-                li.classList.toggle('is-hecho', i < activo || (audio.ended));
-                li.style.setProperty('--avance', avance.toFixed(3));
-                // las palabras se encienden en proporción al largo de cada una (aproxima el ritmo de la voz)
+                const avance = Math.min(1, Math.max(0, (t - marcas[i]) / (duraciones[i] * .85)));
+                li.classList.toggle('is-on', i === activo && !terminado && (corriendo || t > 0));
+                li.classList.toggle('is-hecho', i < activo || terminado);
                 const ws = palabras[i], largo = ws.reduce((s, w) => s + w.textContent.length + 1, 0);
                 let acumulado = 0;
-                ws.forEach(w => { acumulado += w.textContent.length + 1; w.classList.toggle('dicha', i < activo || (i === activo && acumulado / largo <= avance + 0.02)); });
+                ws.forEach(w => { acumulado += w.textContent.length + 1; w.classList.toggle('dicha', i < activo || terminado || (i === activo && acumulado / largo <= avance + .02)); });
             });
             caja.style.setProperty('--progreso', (t / total).toFixed(4));
-            caja.classList.toggle('iniciado', t > 0 && !audio.ended);
-            const resta = Math.max(0, Math.round(total - t));
-            tiempo.textContent = `0:${String(resta).padStart(2, '0')}`;
-            if (!audio.paused) marco = requestAnimationFrame(pintar);
+            caja.classList.toggle('iniciado', t > 0 && !terminado);
+            caja.classList.toggle('terminado', terminado);
+            tiempo.textContent = formato(total - t);
+            if (terminado && corriendo) { corriendo = false; estado(); return; }
+            if (corriendo) marco = requestAnimationFrame(pintar);
         };
         const estado = () => {
-            const sonando = !audio.paused && !audio.ended;
-            caja.classList.toggle('sonando', sonando);
-            caja.classList.toggle('iniciado', audio.currentTime > 0 && !audio.ended);
-            boton.setAttribute('aria-pressed', sonando ? 'true' : 'false');
-            boton.querySelector('small').textContent = sonando ? T('Toca para pausar', 'Tap to pause') : audio.ended ? T('Toca para escucharlo otra vez', 'Tap to listen again') : T('Escúchalo; el texto sigue a la voz', 'Listen; the text follows the voice');
-            cancelAnimationFrame(marco); pintar();
+            caja.classList.toggle('sonando', corriendo);
+            boton.setAttribute('aria-pressed', String(corriendo));
+            boton.querySelector('small').textContent = corriendo ? T('Toca para pausar', 'Tap to pause') : t >= total ? T('Toca para verlo otra vez', 'Tap to watch again') : T('Míralo paso a paso', 'Watch it step by step');
         };
-        boton.addEventListener('click', () => {
-            if (audio.paused) { if (audio.ended) audio.currentTime = 0; audio.play().catch(() => {}); }
-            else audio.pause();
-        });
-        // tocar un paso salta a esa parte de la narración
-        pasos.forEach((li, i) => li.addEventListener('click', () => { audio.currentTime = marcas[i]; if (audio.paused) audio.play().catch(() => {}); else pintar(); }));
-        ['play', 'pause', 'ended', 'seeked', 'loadedmetadata'].forEach(ev => audio.addEventListener(ev, estado));
-        audio.addEventListener('ended', () => { caja.classList.add('terminado'); });
-        // si la sección sale de pantalla mientras suena, se pausa
-        new IntersectionObserver(([e]) => { if (!e.isIntersecting && !audio.paused) audio.pause(); }, { threshold: 0 }).observe(caja);
+        const reproducir = () => { if (t >= total) t = 0; desde = performance.now() - t * 1000; corriendo = true; estado(); cancelAnimationFrame(marco); marco = requestAnimationFrame(pintar); };
+        const pausar = () => { corriendo = false; cancelAnimationFrame(marco); estado(); pintar(); };
+        boton.addEventListener('click', () => (corriendo ? pausar() : reproducir()));
+        // tocar un paso salta a esa parte
+        pasos.forEach((li, i) => li.addEventListener('click', () => { t = marcas[i]; if (corriendo) desde = performance.now() - t * 1000; else reproducir(); }));
+        // si la sección sale de pantalla, se pausa
+        new IntersectionObserver(([e]) => { if (!e.isIntersecting && corriendo) pausar(); }, { threshold: 0 }).observe(caja);
+        if (prefersReducedMotion) { t = total; pintar(); estado(); }
     });
-
     // --- En uso: las capturas reales se montan en perspectiva sobre la pantalla de la foto (homografía → matrix3d) ---
     document.querySelectorAll('.uso').forEach(sec => {
         const figura = sec.querySelector('.uso-escena'), foto = figura.querySelector('.uso-foto');
@@ -2219,6 +2213,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         pintarPalabras(VOC[0][1]);
         recomendar(0);
+    }
+
+    // --- Centzontle: capturas por giro en pestañas (teclado con flechas, como pide el patrón de pestañas) ---
+    const giroTabs = document.querySelector('.giro-tabs');
+    if (giroTabs) {
+        const tabs = [...giroTabs.querySelectorAll('[role="tab"]')];
+        const elegirTab = (tab, foco = false) => {
+            tabs.forEach(t => {
+                const si = t === tab;
+                t.setAttribute('aria-selected', String(si));
+                t.tabIndex = si ? 0 : -1;
+                const panel = document.getElementById(t.getAttribute('aria-controls'));
+                if (panel) panel.hidden = !si;
+            });
+            if (foco) tab.focus();
+        };
+        tabs.forEach((t, i) => {
+            t.addEventListener('click', () => elegirTab(t));
+            t.addEventListener('keydown', (e) => {
+                const n = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+                if (n) { e.preventDefault(); elegirTab(tabs[(i + n + tabs.length) % tabs.length], true); }
+                else if (e.key === 'Home') { e.preventDefault(); elegirTab(tabs[0], true); }
+                else if (e.key === 'End') { e.preventDefault(); elegirTab(tabs[tabs.length - 1], true); }
+            });
+        });
+        // el giro elegido en la demo de vocabulario también cambia las capturas (los giros sin capturas propias usan el más parecido)
+        const PARECIDO = ['restaurante', 'restaurante', 'restaurante', 'abarrotes', 'abarrotes', 'farmacia', 'ferreteria', 'boutique', 'abarrotes', 'estetica', 'taller', 'restaurante'];
+        document.querySelectorAll('.voc-giros button').forEach((b, k) => b.addEventListener('click', () => {
+            const t = tabs.find(x => x.dataset.giroTab === PARECIDO[k]);
+            if (t) elegirTab(t);
+        }));
     }
 
     // --- AgroCría: balance hídrico FAO-56 (Dr = Dr anterior − lluvia − riego + ETc). Valores de ejemplo ---

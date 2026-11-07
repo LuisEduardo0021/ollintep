@@ -50,9 +50,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos -->
-    <link rel="stylesheet" href="../css/styles.css?v=11.2">
+    <link rel="stylesheet" href="../css/styles.css?v=11.3">
     <!-- Iconos -->
-    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.2">
+    <link rel="stylesheet" href="../resources/iconos/iconos.css?v=11.3">
 </head>
 <body class="theme-centzontle">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -223,9 +223,19 @@
             <div>
                 <p class="eyebrow eyebrow-blue">Así se ve</p>
                 <h2 class="block-title">Hecho para la operación de todos los días.</h2>
-                <p class="block-lead">Capturas reales de Centzontle con un negocio de ejemplo.</p>
+                <p class="block-lead">Capturas reales de Centzontle configurado para cada giro, con datos de ejemplo. Elige uno:</p>
             </div>
         </header>
+        <div class="giro-tabs" role="tablist" aria-label="Capturas por giro">
+                <button type="button" role="tab" aria-selected="true" aria-controls="giro-panel-restaurante" id="giro-tab-restaurante" data-giro-tab="restaurante">Restaurante</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-abarrotes" id="giro-tab-abarrotes" data-giro-tab="abarrotes" tabindex="-1">Abarrotes</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-farmacia" id="giro-tab-farmacia" data-giro-tab="farmacia" tabindex="-1">Farmacia</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-boutique" id="giro-tab-boutique" data-giro-tab="boutique" tabindex="-1">Boutique</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-estetica" id="giro-tab-estetica" data-giro-tab="estetica" tabindex="-1">Estética</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-ferreteria" id="giro-tab-ferreteria" data-giro-tab="ferreteria" tabindex="-1">Ferretería</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="giro-panel-taller" id="giro-tab-taller" data-giro-tab="taller" tabindex="-1">Taller</button>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-restaurante" aria-labelledby="giro-tab-restaurante">
         <div class="shot-grid">
             <figure class="shot shot-wide">
                 <div class="work-shot"><img src="../resources/screenshots/centzontle-caja.webp" alt="Punto de venta de Centzontle: catálogo por categorías, ticket actual y formas de pago" width="1440" height="900" loading="lazy"></div>
@@ -239,6 +249,59 @@
                 <div class="work-shot"><img src="../resources/screenshots/centzontle-cocina.webp" alt="Pantalla de cocina de Centzontle con las órdenes por mesa y sus tiempos" width="1440" height="900" loading="lazy"></div>
                 <figcaption><strong>Cocina.</strong> Órdenes por estación, tiempos y platillos listos para servir.</figcaption>
             </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-abarrotes" aria-labelledby="giro-tab-abarrotes" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-abarrotes-caja.webp" alt="Caja de Centzontle configurado para unos abarrotes, con productos de limpieza, básicos a granel, lácteos y bebidas" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Caja.</strong> Venta por pieza y a granel por kilo, con lector de código de barras y crédito a clientes.</figcaption>
+            </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-farmacia" aria-labelledby="giro-tab-farmacia" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-farmacia-lotes.webp" alt="Lotes y caducidades de una farmacia en Centzontle, con un lote caducado y dos por caducar" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Lotes y caducidades.</strong> Cada lote con su fecha: avisa lo que está por caducar y vende primero lo que vence antes.</figcaption>
+            </figure>
+            <figure class="shot">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-farmacia-caja.webp" alt="Caja de Centzontle configurado para una farmacia, con analgésicos, curación, higiene e hidratación" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Caja.</strong> Productos por categoría y cobro en efectivo, tarjeta o QR/SPEI.</figcaption>
+            </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-boutique" aria-labelledby="giro-tab-boutique" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-boutique-caja.webp" alt="Caja de Centzontle configurado para una boutique, con accesorios, calzado, vestidos, pantalones y playeras" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Caja.</strong> Ropa, calzado y accesorios por categoría; las tallas y los colores se manejan como variantes, y hay apartados.</figcaption>
+            </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-estetica" aria-labelledby="giro-tab-estetica" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-estetica-agenda.webp" alt="Agenda del día de una estética en Centzontle, con citas por especialista, atendidas y programadas" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Agenda.</strong> Citas por especialista: avisa si alguien ya está ocupado a esa hora y marca las que se atendieron.</figcaption>
+            </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-ferreteria" aria-labelledby="giro-tab-ferreteria" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-ferreteria-cotizaciones.webp" alt="Cotizaciones abiertas de una ferretería en Centzontle, con su vigencia y total" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Cotizaciones.</strong> Cotiza con los precios de tu catálogo y, cuando el cliente acepta, conviértela en venta con un clic.</figcaption>
+            </figure>
+        </div>
+        </div>
+        <div class="giro-panel" role="tabpanel" id="giro-panel-taller" aria-labelledby="giro-tab-taller" hidden>
+        <div class="shot-grid">
+            <figure class="shot shot-wide">
+                <div class="work-shot"><img src="../resources/screenshots/centzontle-taller-ordenes.webp" alt="Órdenes de servicio de un taller en Centzontle: equipos recibidos, en reparación y listos para entregar" width="1440" height="900" loading="lazy"></div>
+                <figcaption><strong>Órdenes de servicio.</strong> Recibe el equipo con anticipo, diagnostica, repara y entrega cobrando lo que falta.</figcaption>
+            </figure>
+        </div>
         </div>
     </section>
 
@@ -312,7 +375,7 @@
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="../script/scripts.js?v=11.2"></script>
-    <script src="../script/efectos.js?v=11.2"></script>
+    <script src="../script/scripts.js?v=11.3"></script>
+    <script src="../script/efectos.js?v=11.3"></script>
 </body>
 </html>

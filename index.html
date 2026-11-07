@@ -86,9 +86,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
     <!-- Estilos (Tailwind compilado + sistema propio) -->
-    <link rel="stylesheet" href="css/styles.css?v=11.2">
+    <link rel="stylesheet" href="css/styles.css?v=11.3">
     <!-- Iconos (Font Awesome) -->
-    <link rel="stylesheet" href="resources/iconos/iconos.css?v=11.2">
+    <link rel="stylesheet" href="resources/iconos/iconos.css?v=11.3">
 </head>
 <body class="home selection:bg-sky-400 selection:text-slate-950">
     <a class="skip-link" href="#inicio">Saltar al contenido</a>
@@ -539,11 +539,11 @@ ip dhcp snooping vlan 10,20,30
                 <li class="principle"><span class="mini-caja" aria-hidden="true"><span class="mini mini-chat"><span class="burbuja ellos"></span><span class="burbuja escribe"><span></span><span></span><span></span></span><span class="burbuja nos"></span></span></span><i class="fas fa-handshake" aria-hidden="true"></i><h3>Trato directo</h3><p>Hablas con quien construye tu software. Sin intermediarios ni respuestas de plantilla.</p></li>
             </ul>
         </div>
-        <!-- Explicativo narrado: los pasos se iluminan al ritmo de la voz (las marcas son los segundos en que empieza cada paso) -->
-        <div class="explica" data-explica data-marcas="0.35,7.94,16.91,23.62" data-marcas-en="0.35,6.38,13.23,19.29">
+        <!-- Cómo trabajamos: recorrido animado en silencio (scripts.js calcula la duración de cada paso por su texto) -->
+        <div class="explica" data-explica>
             <button type="button" class="explica-play" aria-pressed="false">
                 <span class="explica-ico" aria-hidden="true"></span>
-                <span class="explica-txt"><b>Cómo trabajamos, en 30 segundos</b><small>Escúchalo; el texto sigue a la voz</small></span>
+                <span class="explica-txt"><b>Cómo trabajamos, paso a paso</b><small>Míralo paso a paso</small></span>
                 <span class="explica-tiempo" aria-hidden="true">0:31</span>
             </button>
             <ol class="explica-pasos">
@@ -568,7 +568,6 @@ ip dhcp snooping vlan 10,20,30
                     <p>Y cuando ya está funcionando, seguimos contigo: capacitación, soporte directo y mejoras. Siempre hablas con quien lo construyó.</p>
                 </li>
             </ol>
-            <audio preload="none" src="resources/audio/como-trabajamos-es.mp3"></audio>
         </div>
     </section>
 
@@ -969,7 +968,7 @@ ip dhcp snooping vlan 10,20,30
         <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <script src="script/scripts.js?v=11.2"></script>
-    <script src="script/efectos.js?v=11.2"></script>
+    <script src="script/scripts.js?v=11.3"></script>
+    <script src="script/efectos.js?v=11.3"></script>
 </body>
 </html>
