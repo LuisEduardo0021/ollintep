@@ -2275,18 +2275,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!prefersReducedMotion) {
-        // --- Antetítulos: las letras se descifran al entrar en pantalla (el ancho se fija para que nada baile) ---
+        // --- Antetítulos: las letras se descifran al entrar en pantalla (ancho y alto fijos mientras tanto: las letras al azar
+        //     miden distinto y, en celular, el texto pasaba de 2 líneas a 1 y movía todo lo de abajo; contaba como CLS) ---
         const LETRAS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const descifrar = (el) => {
             const nodo = [...el.childNodes].filter(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim()).pop();
             if (!nodo) return;
             const final = nodo.textContent;
             el.style.minWidth = el.offsetWidth + 'px';
+            el.style.height = el.offsetHeight + 'px';
             const t0 = performance.now(), dura = 650;
             const paso = (ahora) => {
                 const p = Math.min(1, (ahora - t0) / dura), fijas = Math.floor(p * final.length);
                 nodo.textContent = [...final].map((c, i) => (i < fijas || c === ' ' ? c : LETRAS[Math.floor(Math.random() * LETRAS.length)])).join('');
-                if (p < 1) requestAnimationFrame(paso); else { nodo.textContent = final; el.style.minWidth = ''; }
+                if (p < 1) requestAnimationFrame(paso); else { nodo.textContent = final; el.style.minWidth = ''; el.style.height = ''; }
             };
             requestAnimationFrame(paso);
         };
