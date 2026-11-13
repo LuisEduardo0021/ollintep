@@ -92,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const esMovil = sistema === 'ios' || sistema === 'android';
     document.documentElement.dataset.so = sistema;
     document.documentElement.classList.toggle('dev-movil', esMovil);
+    // CroHub se descarga para Windows y Linux (.deb); en Mac el botón no promete un instalador que /descargar no tiene
     const SISTEMAS = {
-        windows: ['Windows', 'fa-windows', T('También para macOS y Linux', 'Also for macOS and Linux')],
-        mac: ['Mac', 'fa-apple', T('También para Windows y Linux', 'Also for Windows and Linux')],
-        linux: [T('Linux (.deb)', 'Linux (.deb)'), 'fa-linux', T('También para Windows y macOS', 'Also for Windows and macOS')],
+        windows: ['Windows', 'fa-windows', T('También para Linux (Ubuntu y Debian)', 'Also for Linux (Ubuntu and Debian)')],
+        linux: [T('Linux (.deb)', 'Linux (.deb)'), 'fa-linux', T('También para Windows 10 y 11', 'Also for Windows 10 and 11')],
     };
     document.querySelectorAll('a.m3-btn[href*="activation.ollin-tep.com/descargar"]').forEach(a => {
         const enCabecera = !!a.closest('.nav-cta');
@@ -104,13 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = document.createElement('p');
             p.className = 'so-nota';
             p.textContent = texto;
-            (a.closest('.path-actions') || a).after(p);
+            (a.closest('.path-actions, .block-ctas') || a).after(p);
         };
         if (esMovil) {
             // CroHub es para computadora: desde el móvil lo útil es mandarse el enlace
             const pintar = (texto, icono) => { a.innerHTML = `${texto} <i class="fas ${icono} text-xs" aria-hidden="true"></i>`; };
             pintar(T('Enviar a mi computadora', 'Send to my computer'), 'fa-paper-plane');
-            ponerNota(T('CroHub es para computadora: Windows, macOS y Linux.', 'CroHub is for computers: Windows, macOS and Linux.'));
+            ponerNota(T('CroHub es para computadora: Windows y Linux.', 'CroHub is for computers: Windows and Linux.'));
             a.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const url = a.href;
@@ -128,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `<i class="fab ${icono}" aria-hidden="true"></i> ${a.textContent.trim()}`
                 : `${T('Descargar para', 'Download for')} ${nombre} <i class="fab ${icono}" aria-hidden="true"></i>`;
             ponerNota(otros);
+        } else if (sistema === 'mac') {
+            ponerNota(T('Por ahora, CroHub es para Windows y Linux.', 'For now, CroHub is for Windows and Linux.'));
         }
     });
 
@@ -792,6 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const raizIdioma = base + (EN ? 'en/' : '');
     const ENTRADAS = [
         [T('Descargar CroHub', 'Download CroHub'), T('Lanzador de la suite', 'The suite launcher'), DESCARGA, 'fa-download'],
+        [T('Comprar una licencia', 'Buy a license'), T('Tienda en Etsy, clave al momento', 'Etsy store, key right away'), 'https://activation.ollin-tep.com/comprar' + T('', '?lang=en'), 'fa-store', T('comprar licencia precio tienda etsy clave pedido', 'buy license price store etsy key order')],
         [T('Suite CroHub', 'CroHub suite'), T('Las nueve apps', 'The nine apps'), raizIdioma + 'index.html#suite', 'fa-cubes'],
         ['Crovite PDF', T('Documentos PDF', 'PDF documents'), raizIdioma + 'index.html#suite', 'fa-file-pdf'],
         ['Croma Studio', T('Fotos y montajes', 'Photos and montages'), raizIdioma + 'index.html#suite', 'fa-image'],
@@ -832,8 +835,8 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Precios de Diagmind', 'Diagmind pricing'), T('Planes y costos', 'Plans and costs'), raizIdioma + 'diagmind/index.html#precios', 'fa-file-invoice', T('plan costo cuanto cuesta licencia', 'plan cost how much license')],
         // preguntas frecuentes: llevan a la pregunta exacta, que se abre sola
         ...[
-            [T('¿En qué sistemas funcionan las apps?', 'Which systems do the apps run on?'), T('Windows, macOS y Linux', 'Windows, macOS and Linux'), 'windows mac macos linux sistema operativo compatible'],
-            [T('¿Tengo que comprar toda la suite?', 'Do I have to buy the whole suite?'), T('No: por app o en paquete', 'No: per app or as a bundle'), T('comprar licencia paquete precio', 'buy license bundle price')],
+            [T('¿En qué sistemas funcionan las apps?', 'Which systems do the apps run on?'), T('Windows y Linux', 'Windows and Linux'), 'windows mac macos linux ubuntu debian sistema operativo compatible'],
+            [T('¿Tengo que comprar toda la suite?', 'Do I have to buy the whole suite?'), T('No: por app o en paquete', 'No: per app or as a bundle'), T('comprar licencia paquete precio tienda etsy', 'buy license bundle price store etsy')],
             [T('¿Qué pasa si se cae el internet?', 'What if the internet goes down?'), T('Guarda en tu equipo y sincroniza después', 'Saves locally and syncs later'), T('internet sin conexion offline sincroniza', 'internet offline connection sync')],
             [T('¿Mis archivos se suben a la nube?', 'Are my files uploaded to the cloud?'), T('No: la IA corre en tu equipo', 'No: the AI runs on your computer'), T('nube privacidad ia datos fotos documentos', 'cloud privacy ai data photos documents')],
             [T('¿Centzontle emite facturas?', 'Does Centzontle issue invoices?'), T('Sí, CFDI 4.0 desde la venta', 'Yes, CFDI 4.0 from the sale'), T('factura facturacion cfdi sat', 'invoice invoicing cfdi sat')],

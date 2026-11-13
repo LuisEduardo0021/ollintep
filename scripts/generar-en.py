@@ -45,6 +45,7 @@ def generar(pagina):
     # la descarga y la activación tienen versión en inglés
     t = t.replace('https://activation.ollin-tep.com/legal/privacidad"', 'https://activation.ollin-tep.com/legal/privacy"')
     t = t.replace('https://activation.ollin-tep.com/descargar"', 'https://activation.ollin-tep.com/descargar?lang=en"').replace('https://activation.ollin-tep.com/"', 'https://activation.ollin-tep.com/?lang=en"')
+    t = t.replace('https://activation.ollin-tep.com/comprar"', 'https://activation.ollin-tep.com/comprar?lang=en"')
     t = t.replace('<html lang="es"', '<html lang="en"').replace('es_MX', 'en_US').replace('-og-v3.jpg', '-og-en.jpg').replace('-og-v4.jpg', '-og-en-v4.jpg')
     # direcciones: las alternas se dejan como están; las demás del sitio pasan a /en/
     alternas = re.findall(r'\s*<link rel="alternate"[^>]*>', t)
