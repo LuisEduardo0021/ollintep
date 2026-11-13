@@ -101,6 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const enCabecera = !!a.closest('.nav-cta');
         const ponerNota = (texto) => {
             if (enCabecera) return;
+            // si la página ya le guardó el hueco (fichas de las apps), se rellena: así no empuja lo de abajo al aparecer
+            const reservada = a.parentElement.querySelector('.so-nota:empty');
+            if (reservada) { reservada.textContent = texto; return; }
             const p = document.createElement('p');
             p.className = 'so-nota';
             p.textContent = texto;
@@ -796,15 +799,15 @@ document.addEventListener('DOMContentLoaded', () => {
         [T('Descargar CroHub', 'Download CroHub'), T('Lanzador de la suite', 'The suite launcher'), DESCARGA, 'fa-download'],
         [T('Comprar una licencia', 'Buy a license'), T('Tienda en Etsy, clave al momento', 'Etsy store, key right away'), 'https://activation.ollin-tep.com/comprar' + T('', '?lang=en'), 'fa-store', T('comprar licencia precio tienda etsy clave pedido', 'buy license price store etsy key order')],
         [T('Suite CroHub', 'CroHub suite'), T('Las nueve apps', 'The nine apps'), raizIdioma + 'index.html#suite', 'fa-cubes'],
-        ['Crovite PDF', T('Documentos PDF', 'PDF documents'), raizIdioma + 'index.html#suite', 'fa-file-pdf'],
-        ['Croma Studio', T('Fotos y montajes', 'Photos and montages'), raizIdioma + 'index.html#suite', 'fa-image'],
-        ['Cronmy', T('Fotos y color', 'Photos and color'), raizIdioma + 'index.html#suite', 'fa-palette'],
-        ['Crovect Studio', T('Diseño vectorial', 'Vector design'), raizIdioma + 'index.html#suite', 'fa-bezier-curve'],
-        ['Cromofi', 'Video', raizIdioma + 'index.html#suite', 'fa-film'],
-        ['Croudio', 'Audio', raizIdioma + 'index.html#suite', 'fa-microphone'],
-        ['CroBeat', T('Música', 'Music'), raizIdioma + 'index.html#suite', 'fa-drum'],
-        ['CroGroove', T('Música y DJ', 'Music and DJ'), raizIdioma + 'index.html#suite', 'fa-compact-disc'],
-        ['CroGuard', T('VPN y seguridad', 'VPN and security'), raizIdioma + 'index.html#suite', 'fa-shield-halved'],
+        ['Crovite PDF', T('Documentos PDF', 'PDF documents'), raizIdioma + 'apps/crovite-pdf/', 'fa-file-pdf'],
+        ['Croma Studio', T('Fotos y montajes', 'Photos and montages'), raizIdioma + 'apps/croma-studio/', 'fa-image'],
+        ['Cronmy', T('Fotos y color', 'Photos and color'), raizIdioma + 'apps/cronmy/', 'fa-palette'],
+        ['Crovect Studio', T('Diseño vectorial', 'Vector design'), raizIdioma + 'apps/crovect-studio/', 'fa-bezier-curve'],
+        ['Cromofi', 'Video', raizIdioma + 'apps/cromofi/', 'fa-film'],
+        ['Croudio', 'Audio', raizIdioma + 'apps/croudio/', 'fa-microphone'],
+        ['CroBeat', T('Música', 'Music'), raizIdioma + 'apps/crobeat/', 'fa-drum'],
+        ['CroGroove', T('Música y DJ', 'Music and DJ'), raizIdioma + 'apps/cromix/', 'fa-compact-disc'],
+        ['CroGuard', T('VPN y seguridad', 'VPN and security'), raizIdioma + 'apps/croguard/', 'fa-shield-halved'],
         ['Centzontle', T('Punto de venta multigiro', 'Point of sale for any business'), raizIdioma + 'centzontle/index.html', 'fa-cash-register'],
         ['ActaPro', T('Actas y trámites', 'Minutes and procedures'), raizIdioma + 'actapro/index.html', 'fa-file-signature'],
         ['Agro-Cria Pro', T('Agricultura y ganadería', 'Farming and livestock'), raizIdioma + 'agrocria/index.html', 'fa-seedling'],
@@ -1241,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canHover && !prefersReducedMotion) {
         // --- Lupa: una lente amplía la captura bajo el cursor, respetando cómo está recortada la imagen ---
         const AUMENTO = 2.2, RADIO = 105;
-        document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img').forEach(img => {
+        document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img, .ficha-shot img').forEach(img => {
             const caja = img.parentElement;
             const lente = document.createElement('span');
             lente.className = 'lupa';
@@ -2093,7 +2096,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Visor: las capturas se abren a pantalla completa, con zoom (rueda, pellizco, doble toque) y paso entre ellas ---
-    const fotos = [...document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img')]
+    const fotos = [...document.querySelectorAll('.product-shot img, .work-shot img, .video-thumb img, #capturas .aspect-video img, .ficha-shot img')]
         .filter(img => !img.closest('a'));
     if (fotos.length) {
         const svg = d => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;

@@ -1,0 +1,584 @@
+{
+ "apps": [
+  {
+   "id": "crovite-pdf",
+   "nombre": "Crovite PDF",
+   "acento": "#FF8A3D",
+   "categoria": {
+    "es": "Documentos PDF",
+    "en": "PDF documents"
+   },
+   "descripcion": {
+    "es": "Edita, firma, convierte y organiza tus documentos PDF.",
+    "en": "Edit, sign, convert and organize your PDF documents."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Cada tarea con PDF. Una sola app."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Edición real"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Rellena y firma"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Herramientas"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "IA en tu equipo"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Every PDF task. One app."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "True editing"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Fill & sign"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Tools"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "On-device AI"
+     }
+    ]
+   },
+   "version": "1.8.6",
+   "sistemas": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ]
+  },
+  {
+   "id": "croma-studio",
+   "nombre": "Croma Studio",
+   "acento": "#FFCF3A",
+   "categoria": {
+    "es": "Fotos y montajes",
+    "en": "Photos and montages"
+   },
+   "descripcion": {
+    "es": "Edita fotos por capas, ajusta el color, quita fondos con IA, revela tus fotos con preajustes y crea collages para redes.",
+    "en": "Edit photos in layers, adjust color, remove backgrounds with AI, develop your photos with presets and make collages for social media."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Tus fotos. Tu estudio."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Por capas"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Fondos con IA"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Ajustes"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Collages"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Your photos. Your studio."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Layers"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "AI backgrounds"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Adjustments"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Collages"
+     }
+    ]
+   },
+   "version": "1.0.4",
+   "sistemas": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ]
+  },
+  {
+   "id": "cronmy",
+   "nombre": "Cronmy",
+   "acento": "#C2EC3E",
+   "categoria": {
+    "es": "Fotos y color",
+    "en": "Photos and color"
+   },
+   "descripcion": {
+    "es": "Edición de fotos y corrección de color.",
+    "en": "Photo editing and color correction."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Revela tus fotos. Sin tocar el original."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Antes y después"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Ajustes locales"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Mejorar foto"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Exportación"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Develop your photos. Keep the original."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Before & after"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Local adjustments"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Enhance"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Export"
+     }
+    ]
+   },
+   "version": "1.5.3",
+   "sistemas": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ]
+  },
+  {
+   "id": "crovect-studio",
+   "nombre": "Crovect Studio",
+   "acento": "#C77DFF",
+   "categoria": {
+    "es": "Diseño vectorial",
+    "en": "Vector design"
+   },
+   "descripcion": {
+    "es": "Diseño vectorial, prototipos de interfaz y animación Lottie.",
+    "en": "Vector design, interface prototypes and Lottie animation."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Diseña. Anima. Prototipa."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Prototipos"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Modo presentar"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Exportar"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Herramientas"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Design. Animate. Prototype."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Prototyping"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Present mode"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Export"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Tools"
+     }
+    ]
+   },
+   "version": "1.0.2",
+   "sistemas": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ]
+  },
+  {
+   "id": "cromofi",
+   "nombre": "Cromofi",
+   "acento": "#2FD6C4",
+   "categoria": {
+    "es": "Video",
+    "en": "Video"
+   },
+   "descripcion": {
+    "es": "Edita video, corrige el color y pon subtítulos automáticos.",
+    "en": "Edit video, correct the color and add automatic subtitles."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Tu video, listo para redes."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Color"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Subtítulos con IA"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Sonido"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Exportar"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Your video, ready for social."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Color grading"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "AI subtitles"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Sound"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Export"
+     }
+    ]
+   },
+   "version": "1.3.1",
+   "sistemas": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ]
+  },
+  {
+   "id": "croudio",
+   "nombre": "Croudio",
+   "acento": "#FF5562",
+   "categoria": {
+    "es": "Audio",
+    "en": "Audio"
+   },
+   "descripcion": {
+    "es": "Graba, edita y limpia audio.",
+    "en": "Record, edit and clean up audio."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Graba. Edita. Suena profesional."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Mezcla"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Efectos en vivo"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Restauración"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Reparación espectral"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Record. Edit. Sound pro."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Mixing"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Live effects"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Restoration"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Spectral repair"
+     }
+    ]
+   },
+   "version": "1.0.3",
+   "sistemas": [
+    "Windows",
+    "Linux"
+   ]
+  },
+  {
+   "id": "crobeat",
+   "nombre": "CroBeat",
+   "acento": "#8A86FF",
+   "categoria": {
+    "es": "Música",
+    "en": "Music"
+   },
+   "descripcion": {
+    "es": "Crea ritmos y produce música.",
+    "en": "Make beats and produce music."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Crea ritmos. Produce música."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "Melodías"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Mezcla y máster"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Ideas"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Ecualizador"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Make beats. Produce music."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "Melodies"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Mix & master"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Ideas"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Parametric EQ"
+     }
+    ]
+   },
+   "version": "0.17.4",
+   "sistemas": [
+    "Windows",
+    "Linux"
+   ]
+  },
+  {
+   "id": "cromix",
+   "nombre": "CroGroove",
+   "acento": "#22E1F0",
+   "categoria": {
+    "es": "Música y DJ",
+    "en": "Music and DJ"
+   },
+   "descripcion": {
+    "es": "Mezcla música como DJ: 4 platos, efectos, stems, sampler y controladoras.",
+    "en": "Mix music like a DJ: 4 decks, effects, stems, sampler and controllers."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Tu sonido. Tus reglas."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "4 platos"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Modo Scratch"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "AI Blend"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Controladoras"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Your sound. Your rules."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "4 decks"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Scratch mode"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "AI Blend"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Controllers"
+     }
+    ]
+   },
+   "version": "1.2.3",
+   "sistemas": [
+    "Windows",
+    "Linux"
+   ]
+  },
+  {
+   "id": "croguard",
+   "nombre": "CroGuard",
+   "acento": "#4FC4FF",
+   "categoria": {
+    "es": "VPN",
+    "en": "VPN"
+   },
+   "descripcion": {
+    "es": "VPN, antivirus y herramientas de red para proteger tu equipo.",
+    "en": "VPN, antivirus and network tools to protect your computer."
+   },
+   "capturas": {
+    "es": [
+     {
+      "archivo": "01-es.webp",
+      "titulo": "Tu equipo, protegido."
+     },
+     {
+      "archivo": "02-es.webp",
+      "titulo": "VPN WireGuard"
+     },
+     {
+      "archivo": "03-es.webp",
+      "titulo": "Antivirus"
+     },
+     {
+      "archivo": "04-es.webp",
+      "titulo": "Tu red"
+     },
+     {
+      "archivo": "05-es.webp",
+      "titulo": "Rendimiento"
+     }
+    ],
+    "en": [
+     {
+      "archivo": "01-en.webp",
+      "titulo": "Your computer, protected."
+     },
+     {
+      "archivo": "02-en.webp",
+      "titulo": "WireGuard VPN"
+     },
+     {
+      "archivo": "03-en.webp",
+      "titulo": "Antivirus"
+     },
+     {
+      "archivo": "04-en.webp",
+      "titulo": "Your network"
+     },
+     {
+      "archivo": "05-en.webp",
+      "titulo": "Performance"
+     }
+    ]
+   },
+   "version": "0.1.1",
+   "sistemas": [
+    "Linux"
+   ]
+  }
+ ]
+}
