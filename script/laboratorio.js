@@ -466,6 +466,8 @@ void main(){
         const tope = (TOPE[nombre] || 2.4e6) * (tactil ? .6 : 1);
         const maximoPara = () => Math.min(1, Math.sqrt(tope / Math.max(1, canvas.clientWidth * canvas.clientHeight * dpr * dpr)));
         let maximo = maximoPara(), escala = maximo, media = 16, ancho = 0, alto = 0;
+        // piso de la resolución adaptativa: en celulares lentos puede bajar más para no ir a tirones
+        const piso = tactil ? .45 : .6;
         addEventListener('resize', () => { maximo = maximoPara(); escala = Math.min(escala, maximo); });
         const medir = () => {
             const w = Math.max(1, Math.round(canvas.clientWidth * dpr * escala));
@@ -491,7 +493,7 @@ void main(){
                 // resolución adaptativa: baja si el cuadro tarda, sube si sobra tiempo
                 if (dt) {
                     media += (dt * 1000 - media) * .05;
-                    if (media > 24 && escala > .6) { escala = Math.max(.6, escala * .88); media = 16; }
+                    if (media > 24 && escala > piso) { escala = Math.max(piso, escala * .88); media = 16; }
                     else if (media < 13 && escala < maximo) { escala = Math.min(maximo, escala * 1.08); media = 16; }
                 }
                 medir();
